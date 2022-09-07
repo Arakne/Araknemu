@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
@@ -30,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
@@ -105,7 +107,7 @@ final public class InvocationFighter implements Fighter {
     }
 
     @Override
-    public SpellList spells() {
+    public FighterSpellList spells() {
         return fighter.spells();
     }
 
@@ -202,5 +204,25 @@ final public class InvocationFighter implements Fighter {
     @Override
     public BuffList buffs() {
         return fighter.buffs();
+    }
+
+    @Override
+    public void perform(Consumer<FightTurn> action) {
+        fighter.perform(action);
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return fighter.isPlaying();
+    }
+
+    @Override
+    public boolean hidden() {
+        return fighter.hidden();
+    }
+
+    @Override
+    public void setHidden(PassiveFighter caster, boolean hidden) {
+        fighter.setHidden(caster, hidden);
     }
 }

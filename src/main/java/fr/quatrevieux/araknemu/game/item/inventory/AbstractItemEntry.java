@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.List;
 
@@ -43,23 +46,26 @@ public abstract class AbstractItemEntry implements ItemEntry {
         this.dispatcher = dispatcher;
     }
 
+    @Pure
     @Override
     public final int id() {
         return entity.entryId();
     }
 
+    @Pure
     @Override
     public final Item item() {
         return item;
     }
 
+    @Pure
     @Override
-    public final int quantity() {
+    public final @NonNegative int quantity() {
         return entity.quantity();
     }
 
     @Override
-    public final void add(int quantity) {
+    public final void add(@Positive int quantity) {
         if (quantity <= 0) {
             throw new InventoryException("Invalid quantity given");
         }
@@ -69,31 +75,35 @@ public abstract class AbstractItemEntry implements ItemEntry {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final void remove(int quantity) throws InventoryException {
-        if (quantity > quantity() || quantity <= 0) {
+    public final void remove(@Positive int quantity) throws InventoryException {
+        final int newQuantity = quantity() - quantity;
+
+        if (newQuantity < 0) {
             throw new InventoryException("Invalid quantity given");
         }
 
-        if (quantity == quantity()) {
+        if (newQuantity == 0) {
             entity.setQuantity(0);
             storage.delete(this);
             return;
         }
 
-        changeQuantity(quantity() - quantity);
+        changeQuantity(newQuantity);
     }
 
+    @Pure
     @Override
     public final List<ItemTemplateEffectEntry> effects() {
         return entity.effects();
     }
 
+    @Pure
     @Override
     public final int templateId() {
         return entity.itemTemplateId();
     }
 
-    private void changeQuantity(int quantity) {
+    private void changeQuantity(@Positive int quantity) {
         entity.setQuantity(quantity);
         dispatcher.dispatch(new ObjectQuantityChanged(this));
     }

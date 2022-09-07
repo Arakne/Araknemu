@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorLeaved;
+import fr.quatrevieux.araknemu.game.fight.team.event.AllowSpectatorChanged;
+import fr.quatrevieux.araknemu.game.listener.fight.SendBlockSpectatorsOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.fight.spectator.SendSpectatorHasJoined;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
@@ -74,8 +76,7 @@ public final class Spectators implements Sender, EventsSubscriber, Dispatcher {
             new Listener<FightCancelled>() {
                 @Override
                 public void on(FightCancelled event) {
-                    // Copy spectators because Spectator::leave will remove the spectator from list
-                    new ArrayList<>(spectators).forEach(Spectator::leave);
+                    kickAll();
                 }
 
                 @Override
@@ -83,15 +84,50 @@ public final class Spectators implements Sender, EventsSubscriber, Dispatcher {
                     return FightCancelled.class;
                 }
             },
+            new Listener<AllowSpectatorChanged>() {
+                @Override
+                public void on(AllowSpectatorChanged event) {
+                    // Kick all spectators when the option is disabled
+                    // Note: there is no need to check all teams options
+                    // because only one disabled team option is required to block spectators
+                    if (!event.spectatorsAllowed()) {
+                        kickAll();
+                    }
+                }
+
+                @Override
+                public Class<AllowSpectatorChanged> event() {
+                    return AllowSpectatorChanged.class;
+                }
+            },
             new SendSpectatorHasJoined(fight),
+            new SendBlockSpectatorsOptionChangedMessage(fight),
         };
+    }
+
+    /**
+     * Check if a spectator can join the fight
+     *
+     * A fight is joinable by spectators only if
+     * - the fight is active
+     * - all team allows spectators
+     *
+     * @return true if can join
+     */
+    public boolean canJoin() {
+        return fight.active() && fight.teams().stream().allMatch(team -> team.options().allowSpectators());
     }
 
     /**
      * Add a spectator to the fight
      * Will dispatch a {@link SpectatorJoined}
      *
+     * Note: this method will not check if the spectator can join the fight,
+     *       so you should call {@link Spectators#canJoin()} before call this method !
+     *
      * @throws IllegalStateException When the spectator is already added
+     *
+     * @see Spectators#canJoin() To check if a spectator can join the current fight
      */
     public void add(Spectator spectator) {
         if (!spectators.add(spectator)) {
@@ -113,6 +149,18 @@ public final class Spectators implements Sender, EventsSubscriber, Dispatcher {
         }
 
         fight.dispatch(new SpectatorLeaved(spectator));
+    }
+
+    /**
+     * Kick all spectators of the fight
+     */
+    public void kickAll() {
+        if (spectators.isEmpty()) {
+            return;
+        }
+
+        // Copy spectators because Spectator::leave will remove the spectator from list
+        new ArrayList<>(spectators).forEach(Spectator::leave);
     }
 
     /**

@@ -27,8 +27,9 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -37,20 +38,22 @@ import java.util.List;
  */
 public final class WearableFactory implements ItemFactory {
     private final SuperType type;
-    private final EffectMappers mappers;
+    private final EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper;
+    private final EffectMapper<SpecialEffect> specialEffectEffectMapper;
 
-    public WearableFactory(SuperType type, EffectMappers mappers) {
+    public WearableFactory(SuperType type, EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper, EffectMapper<SpecialEffect> specialEffectEffectMapper) {
         this.type = type;
-        this.mappers = mappers;
+        this.characteristicEffectEffectMapper = characteristicEffectEffectMapper;
+        this.specialEffectEffectMapper = specialEffectEffectMapper;
     }
 
     @Override
-    public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize) {
+    public Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, boolean maximize) {
         return create(template, type, set, template.effects(), maximize);
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
+    public Item retrieve(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects) {
         return create(template, type, set, effects, false);
     }
 
@@ -59,13 +62,13 @@ public final class WearableFactory implements ItemFactory {
         return type;
     }
 
-    private Item create(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+    private Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects, boolean maximize) {
         return new Wearable(
             template,
             type,
             set,
-            mappers.get(CharacteristicEffect.class).create(effects, maximize),
-            mappers.get(SpecialEffect.class).create(effects, maximize)
+            characteristicEffectEffectMapper.create(effects, maximize),
+            specialEffectEffectMapper.create(effects, maximize)
         );
     }
 }

@@ -91,8 +91,8 @@ class GeolocationServiceTest extends GameBaseCase {
     @Test
     void findShouldReturnTheBiggerMap() throws SQLException {
         dataSet
-            .pushMap(99001, "", 0, 0, "", "Hhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
-            .pushMap(99002, "", 0, 0, "", "HhaaeaaaaaHhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
+            .pushMap(99001, "", 1, 1, "", "Hhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
+            .pushMap(99002, "", 1, 1, "", "HhaaeaaaaaHhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
         ;
 
         assertEquals(99002, service.find(new Geolocation(42, 24), new GeolocationService.GeolocationContext()).id());
@@ -101,8 +101,8 @@ class GeolocationServiceTest extends GameBaseCase {
     @Test
     void findWithIndoor() throws SQLException {
         dataSet
-            .pushMap(99001, "", 0, 0, "", "Hhaaeaaaaa", "", new Geolocation(42, 24), 1, true)
-            .pushMap(99002, "", 0, 0, "", "HhaaeaaaaaHhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
+            .pushMap(99001, "", 1, 1, "", "Hhaaeaaaaa", "", new Geolocation(42, 24), 1, true)
+            .pushMap(99002, "", 1, 1, "", "HhaaeaaaaaHhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
         ;
 
         assertEquals(99001, service.find(new Geolocation(42, 24), new GeolocationService.GeolocationContext().indoor(true)).id());
@@ -110,9 +110,9 @@ class GeolocationServiceTest extends GameBaseCase {
 
     private void pushMapsOnSameGeoposition() throws SQLException {
         dataSet
-            .pushMap(99001, "", 0, 0, "", "", "", new Geolocation(42, 24), 440, false)
-            .pushMap(99002, "", 0, 0, "", "", "", new Geolocation(42, 24), 1, false)
-            .pushMap(99003, "", 0, 0, "", "", "", new Geolocation(42, 24), 4, false)
+            .pushMap(99001, "", 1, 1, "", "", "", new Geolocation(42, 24), 440, false)
+            .pushMap(99002, "", 1, 1, "", "", "", new Geolocation(42, 24), 1, false)
+            .pushMap(99003, "", 1, 1, "", "", "", new Geolocation(42, 24), 4, false)
         ;
     }
 }

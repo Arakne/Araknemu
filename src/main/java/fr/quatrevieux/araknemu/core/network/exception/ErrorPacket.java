@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.network.exception;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Simple error which result of an error response
  */
@@ -29,7 +31,7 @@ public class ErrorPacket extends HandlingException implements WritePacket {
         this.packet = packet;
     }
 
-    public ErrorPacket(Object packet, Throwable cause) {
+    public ErrorPacket(Object packet, @Nullable Throwable cause) {
         super(cause);
         this.packet = packet;
     }

@@ -21,9 +21,11 @@ package fr.quatrevieux.araknemu.game.handler.chat;
 
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
 import fr.quatrevieux.araknemu.network.game.out.chat.Smiley;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Send the player smiley to map
@@ -31,9 +33,12 @@ import fr.quatrevieux.araknemu.network.game.out.chat.Smiley;
 public final class SendSmileyToExplorationMap implements PacketHandler<GameSession, UseSmiley> {
     @Override
     public void handle(GameSession session, UseSmiley packet) throws Exception {
-        final ExplorationPlayer player = session.exploration();
+        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
+        final ExplorationMap map = player.map();
 
-        player.map().send(new Smiley(player, packet.smiley()));
+        if (map != null) {
+            map.send(new Smiley(player, packet.smiley()));
+        }
     }
 
     @Override

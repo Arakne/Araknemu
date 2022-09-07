@@ -43,6 +43,14 @@ class PasswordManagerTest extends TestCase {
     }
 
     @Test
+    void constructorWithInvalidAlgo() {
+        assertThrowsWithMessage(IllegalArgumentException.class, "Hash algorithms [invalid, plain] are not registered", () -> new PasswordManager(
+            Arrays.asList("argon2", "invalid", "plain"),
+            new Argon2Hash()
+        ));
+    }
+
+    @Test
     void get() {
         assertInstanceOf(PlainTextHash.PlainTextPassword.class, manager.get("plain"));
         assertEquals("plain", manager.get("plain").toString());

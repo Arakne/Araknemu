@@ -49,7 +49,7 @@ public final class LogFormatter {
         int lastPlaceholder = 0;
         int parameterNumber = 0;
 
-        for (int placeholderIndex; (placeholderIndex = message.indexOf(PLACEHOLDER, lastPlaceholder)) != -1;) {
+        for (int placeholderIndex; lastPlaceholder < message.length() && (placeholderIndex = message.indexOf(PLACEHOLDER, lastPlaceholder)) != -1;) {
             if (parameterNumber >= parameters.length) {
                 throw new IndexOutOfBoundsException("Missing parameter " + parameterNumber);
             }
@@ -62,7 +62,9 @@ public final class LogFormatter {
             lastPlaceholder = placeholderIndex + PLACEHOLDER.length();
         }
 
-        formatted.append(message.substring(lastPlaceholder));
+        if (lastPlaceholder < message.length()) {
+            formatted.append(message.substring(lastPlaceholder));
+        }
 
         return formatted.toString();
     }

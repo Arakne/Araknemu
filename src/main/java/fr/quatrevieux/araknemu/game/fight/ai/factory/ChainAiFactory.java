@@ -27,17 +27,17 @@ import java.util.Optional;
 /**
  * Chain AI factories
  */
-public final class ChainAiFactory implements AiFactory {
-    private final AiFactory[] factories;
+public final class ChainAiFactory implements AiFactory<Fighter> {
+    private final AiFactory<Fighter>[] factories;
 
-    public ChainAiFactory(AiFactory... factories) {
+    public ChainAiFactory(AiFactory<Fighter>... factories) {
         this.factories = factories;
     }
 
     @Override
-    public Optional<AI> create(Fighter fighter) {
-        for (AiFactory factory : factories) {
-            final Optional<AI> ai = factory.create(fighter);
+    public Optional<AI<Fighter>> create(Fighter fighter) {
+        for (AiFactory<Fighter> factory : factories) {
+            final Optional<AI<Fighter>> ai = factory.create(fighter);
 
             if (ai.isPresent()) {
                 return ai;

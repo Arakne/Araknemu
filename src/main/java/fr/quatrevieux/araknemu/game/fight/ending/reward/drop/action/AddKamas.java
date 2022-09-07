@@ -30,14 +30,16 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 public final class AddKamas implements DropRewardAction {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
-        if (reward.kamas() == 0) {
+        final long kamas = reward.kamas();
+
+        if (kamas == 0) {
             return;
         }
 
         fighter.apply(new FighterOperation() {
             @Override
             public void onPlayer(PlayerFighter fighter) {
-                fighter.player().inventory().addKamas(reward.kamas());
+                fighter.player().inventory().addKamas(kamas);
             }
         });
     }

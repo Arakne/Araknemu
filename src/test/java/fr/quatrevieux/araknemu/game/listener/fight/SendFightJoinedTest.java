@@ -19,10 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.listener.fight;
 
+import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
@@ -65,9 +67,9 @@ class SendFightJoinedTest extends FightBaseCase {
                 )
             ),
             new FightStartPositions(
-                new List[]{
-                    fight.team(0).startPlaces(),
-                    fight.team(1).startPlaces(),
+                new MapCell[][]{
+                    fight.team(0).startPlaces().toArray(new MapCell[0]),
+                    fight.team(1).startPlaces().toArray(new MapCell[0]),
                 },
                 0
             )

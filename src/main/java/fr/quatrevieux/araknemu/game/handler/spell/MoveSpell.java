@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.spell;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Move the spell from spell book
@@ -29,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 public final class MoveSpell implements PacketHandler<GameSession, SpellMove> {
     @Override
     public void handle(GameSession session, SpellMove packet) throws Exception {
-        session.player().properties().spells()
+        NullnessUtil.castNonNull(session.player()).properties().spells()
             .entry(packet.spellId())
             .move(packet.position())
         ;

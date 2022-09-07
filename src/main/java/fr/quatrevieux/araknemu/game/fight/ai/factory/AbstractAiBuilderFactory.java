@@ -29,17 +29,26 @@ import java.util.Optional;
 /**
  * AiFactory implementation using a generator builder for configure the AI
  */
-public abstract class AbstractAiBuilderFactory implements AiFactory {
+public abstract class AbstractAiBuilderFactory implements AiFactory<Fighter> {
     /**
      * Configure the AI generator
      */
-    public abstract void configure(GeneratorBuilder builder);
+    protected void configure(GeneratorBuilder<Fighter> builder) {
+        // To implements if configure(GeneratorBuilder, Fighter) is not implemented
+    }
+
+    /**
+     * Configure the AI generator
+     */
+    public void configure(GeneratorBuilder<Fighter> builder, Fighter fighter) {
+        configure(builder);
+    }
 
     @Override
-    public final Optional<AI> create(Fighter fighter) {
-        final GeneratorBuilder builder = new GeneratorBuilder();
+    public final Optional<AI<Fighter>> create(Fighter fighter) {
+        final GeneratorBuilder<Fighter> builder = new GeneratorBuilder<>();
 
-        configure(builder);
+        configure(builder, fighter);
 
         return Optional.of(new FighterAI(fighter, fighter.fight(), builder.build()));
     }

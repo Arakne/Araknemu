@@ -51,7 +51,7 @@ class SaveLearnedSpellTest extends GameBaseCase {
 
         listener.on(
             new SpellLearned(
-                new SpellBookEntry(entity, null)
+                new SpellBookEntry(null, entity, null)
             )
         );
 

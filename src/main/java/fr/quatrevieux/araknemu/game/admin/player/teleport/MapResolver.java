@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.util.ParseUtils;
 
 /**
  * Resolve the target map using the map id
@@ -39,7 +40,7 @@ public final class MapResolver implements LocationResolver {
 
     @Override
     public void resolve(String argument, Target target) {
-        final int mapId = Integer.parseUnsignedInt(argument);
+        final int mapId = ParseUtils.parseNonNegativeInt(argument);
 
         try {
             target.setMap(service.load(mapId));

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.listener.map.monster;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 
 /**
@@ -30,15 +31,10 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 public final class LaunchMonsterFight implements Listener<PlayerMoveFinished> {
     @Override
     public void on(PlayerMoveFinished event) {
-        event.cell().apply(new Operation() {
-            private boolean found = false;
-
+        event.cell().apply(new Operation<Fight>() {
             @Override
-            public void onMonsterGroup(MonsterGroup monsterGroup) {
-                if (!found) {
-                    monsterGroup.startFight(event.player());
-                    found = true;
-                }
+            public Fight onMonsterGroup(MonsterGroup monsterGroup) {
+                return monsterGroup.startFight(event.player());
             }
         });
     }

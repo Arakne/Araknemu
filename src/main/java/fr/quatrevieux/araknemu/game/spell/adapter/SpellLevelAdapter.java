@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.List;
 
@@ -30,14 +32,14 @@ import java.util.List;
  * Adapt {@link fr.quatrevieux.araknemu.data.world.entity.SpellTemplate.Level} to {@link Spell}
  */
 public final class SpellLevelAdapter implements Spell {
-    private final int level;
+    private final @Positive int level;
     private final SpellTemplate template;
     private final SpellTemplate.Level data;
     private final List<SpellEffect> effects;
     private final List<SpellEffect> criticalEffects;
     private final SpellLevelConstraintAdapter constraints;
 
-    public SpellLevelAdapter(int level, SpellTemplate template, SpellTemplate.Level data, List<SpellEffect> effects, List<SpellEffect> criticalEffects) {
+    public SpellLevelAdapter(@Positive int level, SpellTemplate template, SpellTemplate.Level data, List<SpellEffect> effects, List<SpellEffect> criticalEffects) {
         this.level = level;
         this.template = template;
         this.data = data;
@@ -62,7 +64,7 @@ public final class SpellLevelAdapter implements Spell {
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return level;
     }
 
@@ -77,17 +79,17 @@ public final class SpellLevelAdapter implements Spell {
     }
 
     @Override
-    public int apCost() {
+    public @NonNegative int apCost() {
         return data.apCost();
     }
 
     @Override
-    public int criticalHit() {
+    public @NonNegative int criticalHit() {
         return data.criticalHit();
     }
 
     @Override
-    public int criticalFailure() {
+    public @NonNegative int criticalFailure() {
         return data.criticalFailure();
     }
 

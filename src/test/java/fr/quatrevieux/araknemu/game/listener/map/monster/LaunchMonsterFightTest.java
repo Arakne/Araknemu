@@ -51,7 +51,7 @@ class LaunchMonsterFightTest extends GameBaseCase {
             .pushSubAreas()
         ;
 
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, 123), 1));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, 123, 1));
         map = container.get(ExplorationMapService.class).load(10340);
 
         listener = new LaunchMonsterFight();

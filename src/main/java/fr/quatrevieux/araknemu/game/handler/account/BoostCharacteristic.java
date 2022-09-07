@@ -19,9 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Boost player characteristic
@@ -29,11 +32,15 @@ import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 public final class BoostCharacteristic implements PacketHandler<GameSession, AskBoost> {
     @Override
     public void handle(GameSession session, AskBoost packet) throws Exception {
-        session.player()
-            .properties()
-            .characteristics()
-            .boostCharacteristic(packet.characteristic())
-        ;
+        try {
+            NullnessUtil.castNonNull(session.player())
+                .properties()
+                .characteristics()
+                .boostCharacteristic(packet.characteristic())
+            ;
+        } catch (RuntimeException e) {
+            throw new ErrorPacket(new Noop(), e);
+        }
     }
 
     @Override

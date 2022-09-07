@@ -20,8 +20,10 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminated;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,14 +33,15 @@ import java.util.concurrent.ScheduledFuture;
  * Handle fight action
  */
 public final class ActionHandler {
+    private final FightTurn turn;
     private final Fight fight;
 
     private final Collection<Runnable> termination = new ArrayList<>();
 
-    private Action current;
-    private ScheduledFuture future;
+    private @Nullable PendingAction pending;
 
-    public ActionHandler(Fight fight) {
+    public ActionHandler(FightTurn turn, Fight fight) {
+        this.turn = turn;
         this.fight = fight;
     }
 
@@ -50,25 +53,28 @@ public final class ActionHandler {
      * @return true if the action is successfully started, or false is cannot start the action
      */
     public boolean start(Action action) {
-        if (current != null) {
+        if (pending != null) {
             return false;
         }
 
-        if (!action.validate()) {
+        if (!action.validate(turn)) {
             return false;
         }
 
         final ActionResult result = action.start();
 
         if (result.success()) {
-            current = action;
-            future = fight.schedule(this::terminate, action.duration());
+            pending = new PendingAction(
+                action,
+                result,
+                fight.schedule(this::terminate, action.duration())
+            );
         }
 
         fight.dispatch(new FightActionStarted(action, result));
 
         if (!result.success()) {
-            action.failed();
+            result.apply(turn);
         }
 
         return true;
@@ -78,24 +84,24 @@ public final class ActionHandler {
      * Terminate the current action
      */
     public void terminate() {
-        if (current == null) {
+        final PendingAction action = pending;
+
+        if (action == null) {
             return;
         }
 
-        future.cancel(false);
+        action.future.cancel(false);
 
         // The fight is stopped (caused by a leave) during an action
         if (!fight.active()) {
             return;
         }
 
-        final Action action = current;
-
         try {
-            action.end();
+            action.result.apply(turn);
         } finally {
-            current = null;
-            fight.dispatch(new FightActionTerminated(action));
+            pending = null;
+            fight.dispatch(new FightActionTerminated(action.action));
 
             termination.forEach(Runnable::run);
             termination.clear();
@@ -108,11 +114,23 @@ public final class ActionHandler {
      * @param listener Action to execute
      */
     public void terminated(Runnable listener) {
-        if (current == null) {
+        if (pending == null) {
             listener.run();
             return;
         }
 
         termination.add(listener);
+    }
+
+    private static class PendingAction {
+        protected final Action action;
+        protected final ActionResult result;
+        protected final ScheduledFuture<?> future;
+
+        public PendingAction(Action action, ActionResult result, ScheduledFuture<?> future) {
+            this.action = action;
+            this.result = result;
+            this.future = future;
+        }
     }
 }

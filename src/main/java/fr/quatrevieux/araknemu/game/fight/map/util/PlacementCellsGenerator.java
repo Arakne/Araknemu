@@ -30,7 +30,7 @@ import java.util.List;
  */
 public final class PlacementCellsGenerator {
     private final FightMap map;
-    private final List<Integer> available;
+    private final List<FightCell> available;
     private final RandomUtil random;
 
     private int number = -1;
@@ -41,11 +41,11 @@ public final class PlacementCellsGenerator {
      * @param map The fight map
      * @param available List of placement cells
      */
-    public PlacementCellsGenerator(FightMap map, List<Integer> available) {
+    public PlacementCellsGenerator(FightMap map, List<FightCell> available) {
         this(map, available, new RandomUtil());
     }
 
-    private PlacementCellsGenerator(FightMap map, List<Integer> available, RandomUtil random) {
+    private PlacementCellsGenerator(FightMap map, List<FightCell> available, RandomUtil random) {
         this.map = map;
         this.available = available;
         this.random = random;
@@ -69,7 +69,7 @@ public final class PlacementCellsGenerator {
      * Returns the next available start cell
      */
     private FightCell nextAvailableCell() {
-        final FightCell cell = map.get(available.get(++number));
+        final FightCell cell = available.get(++number);
 
         if (cell.walkable()) {
             return cell;
@@ -82,8 +82,14 @@ public final class PlacementCellsGenerator {
      * Get a random cell from the entire map
      */
     private FightCell randomFightCell() {
+        final int size = map.size();
+
+        if (size < 1) {
+            throw new IllegalStateException("The map " + map.id() + " is empty");
+        }
+
         for (;;) {
-            final FightCell cell = map.get(random.nextInt(map.size()));
+            final FightCell cell = map.get(random.nextInt(size));
 
             if (cell.walkable()) {
                 return cell;
@@ -97,7 +103,7 @@ public final class PlacementCellsGenerator {
      * @param map The fight map
      * @param available The available cells
      */
-    public static PlacementCellsGenerator randomized(FightMap map, List<Integer> available) {
+    public static PlacementCellsGenerator randomized(FightMap map, List<FightCell> available) {
         final RandomUtil random = new RandomUtil(); // @todo keep static instance ?
 
         return new PlacementCellsGenerator(map, random.shuffle(available), random);

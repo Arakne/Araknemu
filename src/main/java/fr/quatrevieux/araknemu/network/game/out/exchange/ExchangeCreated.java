@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.network.game.out.exchange;
 
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The exchange is created
@@ -31,7 +32,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  */
 public final class ExchangeCreated {
     private final ExchangeType type;
-    private final Creature target;
+    private final @Nullable Creature target;
 
     public ExchangeCreated(ExchangeType type) {
         this(type, null);
@@ -41,7 +42,7 @@ public final class ExchangeCreated {
      * @param type The exchange type
      * @param target The exchange target. May be null
      */
-    public ExchangeCreated(ExchangeType type, Creature target) {
+    public ExchangeCreated(ExchangeType type, @Nullable Creature target) {
         this.type = type;
         this.target = target;
     }

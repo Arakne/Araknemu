@@ -66,8 +66,10 @@ public enum Element {
      * @param value The bit set
      */
     public static Set<Element> fromBitSet(int value) {
-        if (bitSetCache.containsKey(value)) {
-            return bitSetCache.get(value);
+        final Set<Element> cachedElements = bitSetCache.get(value);
+
+        if (cachedElements != null) {
+            return cachedElements;
         }
 
         final Set<Element> elements = EnumSet.noneOf(Element.class);

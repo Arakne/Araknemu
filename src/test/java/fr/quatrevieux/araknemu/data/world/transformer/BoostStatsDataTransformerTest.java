@@ -27,6 +27,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoostStatsDataTransformerTest {
     @Test
+    void invalidCalls() {
+        assertThrows(IllegalArgumentException.class, () -> new BoostStatsDataTransformer().unserialize(null));
+        assertThrows(IllegalArgumentException.class, () -> new BoostStatsDataTransformer().unserialize(""));
+        assertThrows(UnsupportedOperationException.class, () -> new BoostStatsDataTransformer().serialize(null));
+    }
+
+    @Test
     void unserialize() {
         String data = "10:0@2,50@3,150@4,250@5;11:0@1;12:0@3;13:0@1,20@2,40@3,60@4,80@5;14:0@1,20@2,40@3,60@4,80@5;15:0@1,100@2,200@3,300@4,400@5";
 

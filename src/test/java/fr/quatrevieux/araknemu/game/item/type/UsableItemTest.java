@@ -114,7 +114,7 @@ class UsableItemTest extends GameBaseCase {
     void checkOnTargetNotValid() throws Exception {
         UsableItem item = (UsableItem) container.get(ItemService.class).create(800);
 
-        assertFalse(item.checkTarget(explorationPlayer(), new ExplorationPlayer(makeOtherPlayer()), 0));
+        assertFalse(item.checkTarget(explorationPlayer(), new ExplorationPlayer(makeOtherPlayer()), null));
     }
 
     @Test
@@ -124,7 +124,7 @@ class UsableItemTest extends GameBaseCase {
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
         target.player().properties().life().set(10);
 
-        assertTrue(item.checkTarget(explorationPlayer(), target, 0));
+        assertTrue(item.checkTarget(explorationPlayer(), target, null));
     }
 
     @Test
@@ -166,7 +166,7 @@ class UsableItemTest extends GameBaseCase {
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
         target.player().properties().life().set(10);
 
-        item.applyToTarget(explorationPlayer(), target, 0);
+        item.applyToTarget(explorationPlayer(), target, null);
         assertEquals(20, target.player().properties().life().current());
     }
 

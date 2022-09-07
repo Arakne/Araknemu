@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellAction;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActionFactory;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
 
 /**
  * Create the teleport action
@@ -38,14 +38,14 @@ public final class TeleportFactory implements CellActionFactory {
 
     @Override
     public CellAction create(MapTrigger trigger) {
-        final String[] position = StringUtils.split(trigger.arguments(), ",", 2);
+        final Splitter splitter = new Splitter(trigger.arguments(), ',');
 
         return new Teleport(
             service,
             trigger.cell(),
             new Position(
-                Integer.parseInt(position[0]),
-                Integer.parseInt(position[1])
+                splitter.nextNonNegativeInt(),
+                splitter.nextNonNegativeInt()
             )
         );
     }

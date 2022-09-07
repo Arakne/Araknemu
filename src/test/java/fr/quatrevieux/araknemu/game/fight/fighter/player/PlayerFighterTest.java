@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -30,8 +31,11 @@ import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterProperties;
@@ -49,6 +53,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -136,7 +141,7 @@ class PlayerFighterTest extends FightBaseCase {
         fighter.move(map.get(123));
         fighter.move(null);
 
-        assertNull(fighter.cell());
+        assertThrows(IllegalStateException.class, fighter::cell);
         assertFalse(map.get(123).fighter().isPresent());
     }
 
@@ -177,19 +182,29 @@ class PlayerFighterTest extends FightBaseCase {
     @Test
     void turnNotSet() {
         assertThrows(FightException.class, () -> fighter.turn());
+        assertFalse(fighter.isPlaying());
     }
 
     @Test
     void playAndStop() {
-        FightTurn turn = new FightTurn(fighter, fight, Duration.ZERO);
+        FightTurn turn = new FightTurn(fighter, fight, Duration.ofSeconds(10));
         turn.start();
 
+        AtomicReference<FightTurn> ref = new AtomicReference<>();
         fighter.play(turn);
 
         assertSame(turn, fighter.turn());
+        assertTrue(fighter.isPlaying());
+        fighter.perform(ref::set);
+        assertSame(turn, ref.get());
 
+        ref.set(null);
         fighter.stop();
 
+        fighter.perform(ref::set);
+
+        assertNull(ref.get());
+        assertFalse(fighter.isPlaying());
         assertThrows(FightException.class, () -> fighter.turn());
     }
 
@@ -281,6 +296,13 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
+    void notInFight() {
+        assertThrows(IllegalStateException.class, () -> fighter.fight());
+        assertThrows(IllegalStateException.class, () -> fighter.init());
+        assertThrows(IllegalStateException.class, () -> fighter.team());
+    }
+
+    @Test
     void registerUnregister() {
         fighter.register(session);
         assertSame(fighter, session.fighter());
@@ -303,5 +325,59 @@ class PlayerFighterTest extends FightBaseCase {
 
         assertSame(operation, fighter.apply(operation));
         Mockito.verify(operation).onPlayer(fighter);
+    }
+
+    @Test
+    void hidden() {
+        fighter.joinFight(fight, fight.map().get(123));
+
+        final List<Object> events = new ArrayList<>();
+
+        fight.dispatcher().add(new Listener<FighterHidden>() {
+            @Override
+            public void on(FighterHidden event) {
+                events.add(event);
+            }
+
+            @Override
+            public Class<FighterHidden> event() {
+                return FighterHidden.class;
+            }
+        });
+        fight.dispatcher().add(new Listener<FighterVisible>() {
+            @Override
+            public void on(FighterVisible event) {
+                events.add(event);
+            }
+
+            @Override
+            public Class<FighterVisible> event() {
+                return FighterVisible.class;
+            }
+        });
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertFalse(fighter.hidden());
+        fighter.setHidden(caster, true);
+
+        assertTrue(fighter.hidden());
+        assertEquals(1, events.size());
+        assertEquals(fighter, FighterHidden.class.cast(events.get(0)).fighter());
+        assertEquals(caster, FighterHidden.class.cast(events.get(0)).caster());
+
+        fighter.setHidden(caster, true);
+        assertEquals(1, events.size());
+        assertTrue(fighter.hidden());
+
+        fighter.setHidden(caster, false);
+        assertEquals(2, events.size());
+        assertFalse(fighter.hidden());
+        assertEquals(fighter, FighterVisible.class.cast(events.get(1)).fighter());
+        assertEquals(caster, FighterVisible.class.cast(events.get(1)).caster());
+
+        fighter.setHidden(caster, false);
+        assertEquals(2, events.size());
+        assertFalse(fighter.hidden());
     }
 }

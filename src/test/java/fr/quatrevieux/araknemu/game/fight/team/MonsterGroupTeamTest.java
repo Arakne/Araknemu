@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
@@ -62,6 +63,8 @@ class MonsterGroupTeamTest extends FightBaseCase {
             .pushMonsterTemplates()
         ;
 
+        FightMap map = loadFightMap(10340);
+
         team = new MonsterGroupTeam(
             group = new MonsterGroup(
                 new LivingMonsterGroupPosition(
@@ -80,7 +83,7 @@ class MonsterGroupTeamTest extends FightBaseCase {
                 container.get(ExplorationMapService.class).load(10340).get(123),
                 new Position(0, 0)
             ),
-            Arrays.asList(123, 321),
+            Arrays.asList(map.get(123), map.get(321)),
             1
         );
     }
@@ -95,6 +98,11 @@ class MonsterGroupTeamTest extends FightBaseCase {
         assertEquals(1, team.number());
         assertTrue(team.alive());
         assertSame(group, team.group());
+
+        assertInstanceOf(DefaultTeamOptions.class, team.options());
+        assertTrue(team.options().allowJoinTeam());
+        assertTrue(team.options().allowSpectators());
+        assertFalse(team.options().needHelp());
     }
 
     @Test
@@ -122,7 +130,7 @@ class MonsterGroupTeamTest extends FightBaseCase {
         int count = 0;
 
         for (Fighter fighter : team.fighters()) {
-            fighter.joinFight(fight, fight.map().get(team.startPlaces().get(count++)));
+            fighter.joinFight(fight, team.startPlaces().get(count++));
             fighter.init();
         }
 

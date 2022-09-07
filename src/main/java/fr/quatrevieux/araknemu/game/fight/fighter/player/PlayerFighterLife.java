@@ -23,7 +23,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * Handle life points for {@link PlayerFighter}
@@ -34,7 +37,7 @@ public final class PlayerFighterLife implements FighterLife {
     private final Life baseLife;
     private final Fighter fighter;
 
-    private BaseFighterLife delegate;
+    private @MonotonicNonNull BaseFighterLife delegate;
 
     public PlayerFighterLife(Life baseLife, Fighter fighter) {
         this.baseLife = baseLife;
@@ -42,12 +45,12 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public int current() {
+    public @NonNegative int current() {
         return delegate != null ? delegate.current() : baseLife.current();
     }
 
     @Override
-    public int max() {
+    public @NonNegative int max() {
         return delegate != null ? delegate.max() : baseLife.max();
     }
 
@@ -57,12 +60,21 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public int alter(ActiveFighter caster, int value) {
+    public int alter(PassiveFighter caster, int value) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");
         }
 
         return delegate.alter(caster, value);
+    }
+
+    @Override
+    public void alterMax(PassiveFighter caster, int value) {
+        if (delegate == null) {
+            throw new IllegalStateException("PlayerFighterLife must be initialized");
+        }
+
+        delegate.alterMax(caster, value);
     }
 
     @Override

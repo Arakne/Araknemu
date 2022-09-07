@@ -85,6 +85,8 @@ class GameNpcTest extends GameBaseCase {
 
     @Test
     void join() throws SQLException {
+        assertThrows(IllegalStateException.class, npc::cell);
+
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
@@ -96,9 +98,11 @@ class GameNpcTest extends GameBaseCase {
 
     @Test
     void apply() {
-        Operation operation = Mockito.mock(Operation.class);
+        Object o = new Object();
+        Operation<Object> operation = Mockito.mock(Operation.class);
+        Mockito.when(operation.onNpc(npc)).thenReturn(o);
 
-        npc.apply(operation);
+        assertSame(o, npc.apply(operation));
 
         Mockito.verify(operation).onNpc(npc);
     }

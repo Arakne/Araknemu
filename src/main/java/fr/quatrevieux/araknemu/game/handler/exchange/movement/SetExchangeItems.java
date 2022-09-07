@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Set items into the exchange
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
 public final class SetExchangeItems implements PacketHandler<GameSession, ItemsMovement> {
     @Override
     public void handle(GameSession session, ItemsMovement packet) {
-        session.exploration().interactions().get(ExchangeDialog.class).item(packet.id(), packet.quantity());
+        NullnessUtil.castNonNull(session.exploration()).interactions().get(ExchangeDialog.class).item(packet.id(), packet.quantity());
     }
 
     @Override

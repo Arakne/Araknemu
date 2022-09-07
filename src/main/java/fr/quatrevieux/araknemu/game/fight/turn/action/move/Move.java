@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
@@ -34,22 +34,18 @@ import java.time.Duration;
  * Move the fighter
  */
 public final class Move implements Action {
-    private final FightTurn turn;
     private final Fighter fighter;
     private final Path<FightCell> path;
     private final FightPathValidator[] validators;
 
-    private MoveResult result;
-
-    public Move(FightTurn turn, Fighter fighter, Path<FightCell> path, FightPathValidator[] validators) {
-        this.turn = turn;
+    public Move(Fighter fighter, Path<FightCell> path, FightPathValidator[] validators) {
         this.fighter = fighter;
         this.path = path;
         this.validators = validators;
     }
 
     @Override
-    public boolean validate() {
+    public boolean validate(Turn turn) {
         return
             path.size() > 1
             && turn.points().movementPoints() >= path.size() - 1
@@ -59,7 +55,7 @@ public final class Move implements Action {
 
     @Override
     public ActionResult start() {
-        result = new MoveSuccess(fighter, path);
+        MoveResult result = new MoveSuccess(fighter, path);
 
         for (FightPathValidator validator : validators) {
             result = validator.validate(this, result);
@@ -70,18 +66,6 @@ public final class Move implements Action {
         }
 
         return result;
-    }
-
-    @Override
-    public void end() {
-        removePoints(result);
-        fighter.move(result.target());
-        fighter.setOrientation(result.orientation());
-    }
-
-    @Override
-    public void failed() {
-        removePoints(result);
     }
 
     @Override
@@ -103,18 +87,5 @@ public final class Move implements Action {
     @Override
     public String toString() {
         return "Move{size=" + (path.size() - 1) + ", target=" + path.target().id() + '}';
-    }
-
-    /**
-     * Remove the action and movement points to perform the move action
-     *
-     * @param result The action result
-     */
-    private void removePoints(MoveResult result) {
-        if (result.lostActionPoints() > 0) {
-            turn.points().useActionPoints(result.lostActionPoints());
-        }
-
-        turn.points().useMovementPoints(result.lostMovementPoints());
     }
 }

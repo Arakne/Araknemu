@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
  * Creates the aggressive AI
@@ -37,13 +40,49 @@ public final class Aggressive extends AbstractAiBuilderFactory {
     }
 
     @Override
-    public void configure(GeneratorBuilder builder) {
+    public void configure(GeneratorBuilder<Fighter> builder, Fighter fighter) {
         builder
             .boostSelf(simulator)
             .attack(simulator)
-            .moveToAttack(simulator)
+        ;
+
+        // Optimisation: do not execute "move to attack" is the fighter has only close combat spell
+        // because move near enemy will perform the correct movement action
+        if (hasDistanceSpell(fighter)) {
+            builder.moveToAttack(simulator);
+        }
+
+        builder
             .moveOrTeleportNearEnemy()
             .boostAllies(simulator)
+            .heal(simulator)
         ;
+    }
+
+    /**
+     * Check if the fighter has at a distance spell (i.e. a spell which can be cast from a non-adjacent cell)
+     */
+    private boolean hasDistanceSpell(Fighter fighter) {
+        for (Spell spell : fighter.spells()) {
+            final int maxRange = spell.constraints().range().max();
+
+            // The spell range is at least of 2
+            if (maxRange > 1) {
+                return true;
+            }
+
+            if (spell.effects().isEmpty()) {
+                continue;
+            }
+
+            final SpellEffect effect = spell.effects().get(0);
+
+            // Has zone effect. If the max range is 0, the effect area must have at least a size of 2
+            if (effect.area().size() > 2 - maxRange) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

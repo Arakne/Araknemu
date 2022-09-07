@@ -29,9 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import org.apache.logging.log4j.Logger;
-
-import java.util.concurrent.ScheduledExecutorService;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * Builder for pvm fight
@@ -44,26 +42,30 @@ public final class PvmBuilder implements FightBuilder {
     private final FighterFactory fighterFactory;
     private final RandomUtil random;
     private final PvmType type;
-    private final Logger logger;
-    private final ScheduledExecutorService executor;
 
-    private ExplorationMap map;
-    private GamePlayer initiator;
-    private MonsterGroup group;
+    private @MonotonicNonNull ExplorationMap map;
+    private @MonotonicNonNull GamePlayer initiator;
+    private @MonotonicNonNull MonsterGroup group;
     private boolean randomize = true;
 
-    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger, ScheduledExecutorService executor) {
+    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type) {
         this.service = service;
         this.fighterFactory = fighterFactory;
         this.random = random;
         this.type = type;
-        this.logger = logger;
-        this.executor = executor;
     }
 
     @Override
     public Fight build(int fightId) {
-        final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger, executor);
+        final ExplorationMap map = this.map;
+        final GamePlayer initiator = this.initiator;
+        final MonsterGroup group = this.group;
+
+        if (map == null || initiator == null || group == null) {
+            throw new IllegalStateException("Missing mandatory data for build the fight");
+        }
+
+        final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type);
 
         builder.map(map);
         builder.addTeam((number, startPlaces) -> new SimpleTeam(

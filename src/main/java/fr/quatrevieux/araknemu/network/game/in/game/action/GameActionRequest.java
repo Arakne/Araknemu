@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Request for start a game action
@@ -49,6 +50,10 @@ public final class GameActionRequest implements Packet {
     public static final class Parser implements SinglePacketParser<GameActionRequest> {
         @Override
         public GameActionRequest parse(String input) throws ParsePacketException {
+            if (input.length() < 3) {
+                throw new ParsePacketException(code() + input, "Invalid Game action packet");
+            }
+
             return new GameActionRequest(
                 Integer.parseInt(input.substring(0, 3)),
                 StringUtils.split(input.substring(3), ";")
@@ -56,7 +61,7 @@ public final class GameActionRequest implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "GA";
         }
     }

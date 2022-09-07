@@ -46,11 +46,14 @@ public final class NpcRepositoryCache implements NpcRepository {
 
     @Override
     public Npc get(int id) {
-        if (!cacheById.containsKey(id)) {
-            saveInCache(repository.get(id));
+        Npc npc = cacheById.get(id);
+
+        if (npc == null) {
+            npc = repository.get(id);
+            saveInCache(npc);
         }
 
-        return cacheById.get(id);
+        return npc;
     }
 
     @Override
@@ -88,16 +91,17 @@ public final class NpcRepositoryCache implements NpcRepository {
 
     @Override
     public Collection<Npc> byMapId(int mapId) {
-        if (cacheByMap.containsKey(mapId)) {
-            return cacheByMap.get(mapId);
+        Collection<Npc> entities = cacheByMap.get(mapId);
+
+        if (entities != null) {
+            return entities;
         }
 
         if (loaded) {
             return Collections.emptyList();
         }
 
-        final Collection<Npc> entities = repository.byMapId(mapId);
-
+        entities = repository.byMapId(mapId);
         entities.forEach(this::saveInCache);
 
         return entities;
@@ -105,16 +109,9 @@ public final class NpcRepositoryCache implements NpcRepository {
 
     private void saveInCache(Npc entity) {
         cacheById.put(entity.id(), entity);
-
-        final Collection<Npc> onMap;
-
-        if (cacheByMap.containsKey(entity.position().map())) {
-            onMap = cacheByMap.get(entity.position().map());
-        } else {
-            onMap = new ArrayList<>();
-            cacheByMap.put(entity.position().map(), onMap);
-        }
-
-        onMap.add(entity);
+        cacheByMap
+            .computeIfAbsent(entity.position().map(), mapId -> new ArrayList<>())
+            .add(entity)
+        ;
     }
 }

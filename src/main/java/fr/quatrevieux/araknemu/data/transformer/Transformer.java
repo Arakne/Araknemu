@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.transformer;
 
+import org.checkerframework.checker.nullness.qual.PolyNull;
+
 /**
  * Interface for data transformer
  *
@@ -30,7 +32,7 @@ public interface Transformer<T> {
      *
      * If the value is null, the method should return null
      */
-    public String serialize(T value);
+    public @PolyNull String serialize(@PolyNull T value);
 
     /**
      * Parse the serialized string to the original object value
@@ -39,5 +41,5 @@ public interface Transformer<T> {
      *
      * @throws TransformerException When invalid serialized data is given
      */
-    public T unserialize(String serialize) throws TransformerException;
+    public @PolyNull T unserialize(@PolyNull String serialize) throws TransformerException;
 }

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.game;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Cancel the current game action
@@ -29,8 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 public final class CancelGameAction implements PacketHandler<GameSession, GameActionCancel> {
     @Override
     public void handle(GameSession session, GameActionCancel packet) throws Exception {
-        session
-            .exploration()
+        NullnessUtil.castNonNull(session.exploration())
             .interactions()
             .cancel(
                 packet.actionId(),

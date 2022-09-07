@@ -145,6 +145,30 @@ public final class ActionEffect {
     }
 
     /**
+     * Boost the sight of the target for a given duration
+     *
+     * @param caster Spell caster
+     * @param target Target
+     * @param value Boosted value
+     * @param duration Effect duration
+     */
+    public static ActionEffect boostSight(PassiveFighter caster, PassiveFighter target, int value, int duration) {
+        return new ActionEffect(117, caster, target.id(), value, duration);
+    }
+
+    /**
+     * Decrease the sight of the target for a given duration
+     *
+     * @param caster Spell caster
+     * @param target Target
+     * @param value Decrease value
+     * @param duration Effect duration
+     */
+    public static ActionEffect decreaseSight(PassiveFighter caster, PassiveFighter target, int value, int duration) {
+        return new ActionEffect(116, caster, target.id(), value, duration);
+    }
+
+    /**
      * Add action points for the current turn
      *
      * @param fighter The fighter
@@ -222,5 +246,100 @@ public final class ActionEffect {
      */
     public static ActionEffect dispelBuffs(PassiveFighter caster, PassiveFighter target) {
         return new ActionEffect(132, caster, target.id());
+    }
+
+    /**
+     * The fighter has been slided (i.e. move back or front) by the caster
+     *
+     * @param caster The spell caster
+     * @param target The target (which has moved)
+     * @param destination The destination cell
+     */
+    public static ActionEffect slide(PassiveFighter caster, PassiveFighter target, FightCell destination) {
+        return new ActionEffect(5, caster, target.id(), destination.id());
+    }
+
+    /**
+     * Damage as been reflected by the target
+     *
+     * @param castTarget The original cast target
+     * @param value Reflected value
+     */
+    public static ActionEffect reflectedDamage(PassiveFighter castTarget, int value) {
+        return new ActionEffect(107, castTarget, castTarget.id(), value);
+    }
+
+    /**
+     * The target has dodged the lost of action points
+     *
+     * @param caster The spell caster
+     * @param target The target (which has dodged point lost)
+     * @param value The dodged point list value
+     */
+    public static ActionEffect dodgeActionPointLost(PassiveFighter caster, PassiveFighter target, int value) {
+        return new ActionEffect(308, caster, target.id(), value);
+    }
+
+    /**
+     * The target has dodged the lost of movement points
+     *
+     * @param caster The spell caster
+     * @param target The target (which has dodged point lost)
+     * @param value The dodged point list value
+     */
+    public static ActionEffect dodgeMovementPointLost(PassiveFighter caster, PassiveFighter target, int value) {
+        return new ActionEffect(309, caster, target.id(), value);
+    }
+
+    /**
+     * Change the appearance of the target
+     *
+     * @param caster The spell caster
+     * @param target The effect target
+     * @param newAppearance The new appearance id (can be found in `clips/sprites/[id].swf)
+     * @param duration The effect duration
+     */
+    public static ActionEffect changeAppearance(PassiveFighter caster, PassiveFighter target, int newAppearance, int duration) {
+        return new ActionEffect(149, caster, target.id(), target.sprite().gfxId(), newAppearance, duration);
+    }
+
+    /**
+     * Reset the appearance of the target
+     */
+    public static ActionEffect resetAppearance(PassiveFighter caster, PassiveFighter target) {
+        final int baseGfxId = target.sprite().gfxId();
+
+        return new ActionEffect(149, caster, target.id(), baseGfxId, baseGfxId, 0);
+    }
+
+    /**
+     * Launch visual effect of a spell
+     *
+     * @param caster The visual effect caster
+     * @param targetCell The target cell
+     * @param spell Spell which contains sprite arguments
+     */
+    public static ActionEffect launchVisualEffect(PassiveFighter caster, FightCell targetCell, Spell spell) {
+        return new ActionEffect(208, caster, targetCell.id(), spell.spriteId(), spell.spriteArgs(), spell.level());
+    }
+
+    /**
+     * The fighter has been make invisible
+     *
+     * @param caster Spell caster
+     * @param target Effect target
+     */
+    public static ActionEffect fighterHidden(PassiveFighter caster, PassiveFighter target) {
+        return new ActionEffect(150, caster, target.id(), 1);
+    }
+
+    /**
+     * The invisibility effect is terminated
+     *
+     * @param caster Spell caster
+     * @param target Effect target
+     */
+    public static ActionEffect fighterVisible(PassiveFighter caster, PassiveFighter target) {
+        return new ActionEffect(150, caster, target.id(), 0);
     }
 }

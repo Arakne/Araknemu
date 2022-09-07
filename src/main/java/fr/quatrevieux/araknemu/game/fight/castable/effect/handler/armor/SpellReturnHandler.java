@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Handle spell return buff effect
@@ -56,20 +57,20 @@ public final class SpellReturnHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onCastTarget(Buff buff, CastScope cast) {
+    public boolean onCastTarget(Buff buff, CastScope cast) {
         if (buff.target().equals(cast.caster()) || !isReturnableCast(cast)) {
-            return;
+            return true;
         }
 
-        cast.spell().ifPresent(spell -> {
-            if (!checkSpellReturned(spell, buff.effect())) {
-                fight.send(ActionEffect.returnSpell(buff.target(), false));
-                return;
-            }
+        if (!cast.spell().filter(spell -> checkSpellReturned(spell, buff.effect())).isPresent()) {
+            fight.send(ActionEffect.returnSpell(buff.target(), false));
+            return true;
+        }
 
-            cast.replaceTarget(buff.target(), cast.caster());
-            fight.send(ActionEffect.returnSpell(buff.target(), true));
-        });
+        cast.replaceTarget(buff.target(), cast.caster());
+        fight.send(ActionEffect.returnSpell(buff.target(), true));
+
+        return false;
     }
 
     /**
@@ -108,10 +109,12 @@ public final class SpellReturnHandler implements EffectHandler, BuffHook {
             return false;
         }
 
-        if (returnEffect.special() == 100) {
+        final int probability = Asserter.assertPercent(returnEffect.special());
+
+        if (probability >= 100) {
             return true;
         }
 
-        return random.bool(returnEffect.special());
+        return random.bool(probability);
     }
 }

@@ -21,7 +21,10 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.Collections;
 import java.util.SortedMap;
@@ -30,7 +33,7 @@ import java.util.TreeMap;
 /**
  *
  */
-public final class RaceBaseStatsTransformer implements Transformer<SortedMap<Integer, Characteristics>> {
+public final class RaceBaseStatsTransformer implements Transformer<SortedMap<@Positive Integer, Characteristics>> {
     private final Transformer<Characteristics> characteristicsTransformer;
 
     public RaceBaseStatsTransformer(Transformer<Characteristics> characteristicsTransformer) {
@@ -38,21 +41,26 @@ public final class RaceBaseStatsTransformer implements Transformer<SortedMap<Int
     }
 
     @Override
-    public String serialize(SortedMap<Integer, Characteristics> value) {
+    public @PolyNull String serialize(@PolyNull SortedMap<@Positive Integer, Characteristics> value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public SortedMap<Integer, Characteristics> unserialize(String serialize) {
-        final SortedMap<Integer, Characteristics> stats = new TreeMap<>(Collections.reverseOrder());
+    public @NonNull SortedMap<@Positive Integer, Characteristics> unserialize(@PolyNull String serialize) {
+        if (serialize == null || serialize.isEmpty()) {
+            throw new IllegalArgumentException("Race stats cannot be empty");
+        }
 
-        for (String levelStats : StringUtils.split(serialize, "|")) {
-            final String[] parts = StringUtils.split(levelStats, "@", 2);
+        final SortedMap<@Positive Integer, Characteristics> stats = new TreeMap<>(Collections.reverseOrder());
+        final Splitter splitter = new Splitter(serialize, '|');
 
-            stats.put(
-                Integer.parseUnsignedInt(parts[1]),
-                characteristicsTransformer.unserialize(parts[0])
-            );
+        while (splitter.hasNext()) {
+            final Splitter parts = splitter.nextSplit('@');
+
+            final Characteristics characteristics = characteristicsTransformer.unserialize(parts.nextPart());
+            final int level = parts.nextPositiveInt();
+
+            stats.put(level, characteristics);
         }
 
         return stats;

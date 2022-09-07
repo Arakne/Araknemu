@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -33,9 +34,9 @@ import java.util.function.Supplier;
  * Base command class
  */
 public abstract class AbstractCommand<A> implements Command<A> {
-    private CommandHelp help = new CommandHelp(this);
+    private @SuppressWarnings({"argument", "assignment"}) CommandHelp help = new CommandHelp(this);
     private final EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
-    private Supplier<A> argumentsFactory;
+    private @Nullable Supplier<A> argumentsFactory;
     private boolean initialized = false;
 
     /**
@@ -58,7 +59,7 @@ public abstract class AbstractCommand<A> implements Command<A> {
     }
 
     @Override
-    public A createArguments() {
+    public @Nullable A createArguments() {
         initialize();
 
         if (argumentsFactory != null) {

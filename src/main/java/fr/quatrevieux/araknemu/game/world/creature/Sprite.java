@@ -71,6 +71,12 @@ public interface Sprite {
     public int cell();
 
     /**
+     * Get the sprite appearance id
+     * The appearance will be loaded from `clips/sprites/[id].swf`
+     */
+    public int gfxId();
+
+    /**
      * Get the sprite orientation
      * Some sprites can only are restricted to 4 directions
      * The playable sprites supports all the 8 directions

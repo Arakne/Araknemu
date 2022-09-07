@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.out;
 
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Display a message box
@@ -50,9 +51,9 @@ public final class ServerMessage {
      * The message box name
      * Can be null
      */
-    private final String name;
+    private final @Nullable String name;
 
-    public ServerMessage(boolean displayNow, int messageId, Object[] parameters, String name) {
+    public ServerMessage(boolean displayNow, int messageId, Object[] parameters, @Nullable String name) {
         this.displayNow = displayNow;
         this.messageId = messageId;
         this.parameters = parameters;

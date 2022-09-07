@@ -19,32 +19,38 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
+
 /**
  * Base entity constraint class for build constraints
  *
  * @param <T> The entity type
  * @param <E> The error type
  */
-public abstract class AbstractConstraintBuilderFactory<T, E> implements EntityConstraint<T, E>, BuilderFactory<T, E> {
-    private E error;
-    private EntityConstraint<T, E> constraint;
+public abstract class AbstractConstraintBuilderFactory<T, @NonNull E> implements EntityConstraint<T, E>, BuilderFactory<T, E> {
+    private @MonotonicNonNull EntityConstraint<T, @NonNull E> constraint;
 
     @Override
+    @SuppressWarnings("contracts.conditional.postcondition")
     public boolean check(T entity) {
         return constraint().check(entity);
     }
 
     @Override
-    public E error() {
+    public @Nullable E error() {
         return constraint().error();
     }
 
-    private EntityConstraint<T, E> constraint() {
+    @Pure
+    private EntityConstraint<T, @NonNull E> constraint() {
         if (constraint != null) {
             return constraint;
         }
 
-        final ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
+        final ConstraintBuilder<T, @NonNull E> builder = new ConstraintBuilder<>();
 
         build(builder);
 

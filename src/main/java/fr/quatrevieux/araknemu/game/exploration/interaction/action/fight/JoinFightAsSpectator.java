@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
@@ -51,7 +52,9 @@ public final class JoinFightAsSpectator implements Action {
             return;
         }
 
-        if (player.map().id() != fight.map().id()) {
+        final ExplorationMap map = player.map();
+
+        if (map == null || map.id() != fight.map().id()) {
             error(JoinFightError.CANT_BECAUSE_MAP);
             return;
         }
@@ -64,7 +67,7 @@ public final class JoinFightAsSpectator implements Action {
         final Spectator spectator = spectatorFactory.create(player.player(), fight);
 
         fight.execute(() -> {
-            if (!fight.active()) {
+            if (!fight.spectators().canJoin()) {
                 player.send(Error.cantJoinFightAsSpectator());
                 return;
             }

@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.monster.Monster;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
@@ -60,5 +61,10 @@ public final class MonsterFighterCharacteristics implements FighterCharacteristi
     public void alter(Characteristic characteristic, int value) {
         buffs.add(characteristic, value);
         fighter.dispatch(new FighterCharacteristicChanged(characteristic, value));
+    }
+
+    @Override
+    public Characteristics initial() {
+        return monster.characteristics();
     }
 }

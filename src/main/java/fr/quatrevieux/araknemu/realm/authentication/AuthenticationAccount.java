@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.authentication.password.Password;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * AuthenticationAccount entity for realm
@@ -61,6 +63,8 @@ public final class AuthenticationAccount extends AbstractLivingAccount<RealmSess
      * Attach account to a session
      */
     @Override
+    @EnsuresNonNull("#1.account()")
+    @SuppressWarnings("contracts.postcondition") // Caused because non-pure methods are called
     public void attach(RealmSession session) {
         session.attach(this);
         service.login(this);
@@ -73,7 +77,10 @@ public final class AuthenticationAccount extends AbstractLivingAccount<RealmSess
      */
     @Override
     public void detach() {
-        session.detach();
+        if (session != null) {
+            session.detach();
+        }
+
         service.logout(this);
 
         super.detach();
@@ -94,7 +101,7 @@ public final class AuthenticationAccount extends AbstractLivingAccount<RealmSess
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

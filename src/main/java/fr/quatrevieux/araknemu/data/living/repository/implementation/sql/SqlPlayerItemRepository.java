@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -28,7 +29,10 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -183,20 +187,28 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
 
     private class Loader implements RepositoryUtils.Loader<PlayerItem> {
         @Override
-        public PlayerItem create(ResultSet rs) throws SQLException {
+        public PlayerItem create(Record record) throws SQLException {
             return new PlayerItem(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ITEM_ENTRY_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("QUANTITY"),
-                rs.getInt("POSITION")
+                record.getInt("PLAYER_ID"),
+                record.getInt("ITEM_ENTRY_ID"),
+                record.getInt("ITEM_TEMPLATE_ID"),
+                record.unserialize("ITEM_EFFECTS", effectsTransformer),
+                record.getPositiveInt("QUANTITY"), // Quantity must be positive (cannot be = 0)
+                checkPosition(record.getInt("POSITION"))
             );
         }
 
         @Override
         public PlayerItem fillKeys(PlayerItem entity, ResultSet keys) throws SQLException {
             throw new UnsupportedOperationException();
+        }
+
+        private @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int checkPosition(int position) {
+            if (position < -1 || position > InventorySlots.SLOT_MAX) {
+                return ItemEntry.DEFAULT_POSITION;
+            }
+
+            return position;
         }
     }
 }

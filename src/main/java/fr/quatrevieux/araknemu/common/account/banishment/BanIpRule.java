@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.common.account.banishment;
 import fr.quatrevieux.araknemu.common.account.LivingAccount;
 import fr.quatrevieux.araknemu.data.living.entity.BanIp;
 import inet.ipaddr.IPAddressString;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -33,9 +34,9 @@ import java.util.Optional;
  */
 public final class BanIpRule<A extends LivingAccount> {
     private final BanIp banIp;
-    private final A banisher;
+    private final @Nullable A banisher;
 
-    public BanIpRule(BanIp banIp, A banisher) {
+    public BanIpRule(BanIp banIp, @Nullable A banisher) {
         this.banIp = banIp;
         this.banisher = banisher;
     }

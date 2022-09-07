@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.event.GameStopped;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
@@ -32,16 +31,20 @@ import fr.quatrevieux.araknemu.game.fight.builder.FightBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
+import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
+import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -51,9 +54,9 @@ import java.util.stream.Collectors;
  * Service for create fights
  */
 public final class FightService implements EventsSubscriber {
-    private final MapTemplateRepository mapRepository;
     private final Dispatcher dispatcher;
     private final Map<Class, FightBuilderFactory> builderFactories;
+    private final FightFactory factory;
     private final Collection<FightModule.Factory> moduleFactories;
     private final GameConfiguration.FightConfiguration configuration;
     private final ScheduledExecutorService executor;
@@ -61,12 +64,12 @@ public final class FightService implements EventsSubscriber {
     private final Map<Integer, Map<Integer, Fight>> fightsByMapId = new ConcurrentHashMap<>();
     private final AtomicInteger lastFightId = new AtomicInteger();
 
-    public FightService(MapTemplateRepository mapRepository, Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories, GameConfiguration.FightConfiguration configuration) {
-        this.mapRepository = mapRepository;
+    public FightService(Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories, FightFactory factory, GameConfiguration.FightConfiguration configuration) {
         this.dispatcher = dispatcher;
         this.moduleFactories = moduleFactories;
         this.configuration = configuration;
-        this.executor = Executors.newScheduledThreadPool(configuration.threadsCount());
+        this.factory = factory;
+        this.executor = ExecutorFactory.create(configuration.threadsCount());
 
         this.builderFactories = factories.stream().collect(
             Collectors.toMap(
@@ -127,7 +130,7 @@ public final class FightService implements EventsSubscriber {
      * @param map The base map
      */
     public FightMap map(ExplorationMap map) {
-        return new FightMap(mapRepository.get(map.id()));
+        return new FightMap(map.template());
     }
 
     /**
@@ -137,10 +140,13 @@ public final class FightService implements EventsSubscriber {
      */
     @SuppressWarnings("unchecked")
     public <B extends FightBuilder> FightHandler<B> handler(Class<B> type) {
-        return new FightHandler<>(
-            this,
-            (B) builderFactories.get(type).create(this, executor)
-        );
+        final FightBuilderFactory<B> builderFactory = builderFactories.get(type);
+
+        if (builderFactory == null) {
+            throw new NoSuchElementException("Builder for fight type " + type.getSimpleName() + " is not registered");
+        }
+
+        return new FightHandler<>(this, builderFactory.create(this));
     }
 
     /**
@@ -149,8 +155,10 @@ public final class FightService implements EventsSubscriber {
      * @param mapId The map id
      */
     public Collection<Fight> fightsByMap(int mapId) {
-        if (fightsByMapId.containsKey(mapId)) {
-            return fightsByMapId.get(mapId).values();
+        final Map<Integer, Fight> fightsOnMap = fightsByMapId.get(mapId);
+
+        if (fightsOnMap != null) {
+            return fightsOnMap.values();
         }
 
         return Collections.emptyList();
@@ -174,17 +182,22 @@ public final class FightService implements EventsSubscriber {
      * @param fightId The fight id
      */
     public Fight getFromMap(int mapId, int fightId) {
-        if (!fightsByMapId.containsKey(mapId)) {
-            throw new NoSuchElementException("Fight not found");
-        }
-
         final Map<Integer, Fight> fights = fightsByMapId.get(mapId);
+        final Fight fight;
 
-        if (!fights.containsKey(fightId)) {
-            throw new NoSuchElementException("Fight not found");
+        if (fights != null && (fight = fights.get(fightId)) != null) {
+            return fight;
         }
 
-        return fights.get(fightId);
+        throw new NoSuchElementException("Fight not found");
+    }
+
+    /**
+     * Create a new fight instance
+     * Internal: must only be called by a {@link FightBuilder}
+     */
+    public Fight create(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
+        return factory.create(id, type, map, teams, statesFlow, executor);
     }
 
     /**
@@ -198,15 +211,12 @@ public final class FightService implements EventsSubscriber {
      * The fight is initialized
      */
     synchronized void created(Fight fight) {
-        if (fightsByMapId.containsKey(fight.map().id())) {
-            fightsByMapId.get(fight.map().id()).put(fight.id(), fight);
-        } else {
-            final Map<Integer, Fight> fights = new ConcurrentHashMap<>();
+        final Map<Integer, Fight> fights = fightsByMapId.computeIfAbsent(
+            fight.map().id(),
+            mapId -> new ConcurrentHashMap<>()
+        );
 
-            fights.put(fight.id(), fight);
-
-            fightsByMapId.put(fight.map().id(), fights);
-        }
+        fights.put(fight.id(), fight);
 
         dispatcher.dispatch(new FightCreated(fight));
     }
@@ -215,7 +225,11 @@ public final class FightService implements EventsSubscriber {
      * Remove the fight
      */
     synchronized void remove(Fight fight) {
-        fightsByMapId.get(fight.map().id()).remove(fight.id());
+        final Map<Integer, Fight> fightsOnMap = fightsByMapId.get(fight.map().id());
+
+        if (fightsOnMap != null) {
+            fightsOnMap.remove(fight.id());
+        }
     }
 
     /**
@@ -226,5 +240,17 @@ public final class FightService implements EventsSubscriber {
             .map(factory -> factory.create(fight))
             .collect(Collectors.toList())
         ;
+    }
+
+    /**
+     * Type for create a fight instance
+     */
+    @FunctionalInterface
+    public interface FightFactory {
+        /**
+         * Create a new fight instance
+         * Should not be used directly, but by a {@link FightBuilder}
+         */
+        public Fight create(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, ScheduledExecutorService executor);
     }
 }

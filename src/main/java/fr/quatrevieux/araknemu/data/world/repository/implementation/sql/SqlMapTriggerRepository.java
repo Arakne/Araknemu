@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
@@ -50,7 +51,7 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
                     "CELL_ID INTEGER," +
                     "ACTION INTEGER," +
                     "ARGUMENTS TEXT," +
-                    "CONDITIONS TEST," +
+                    "CONDITIONS TEXT," +
                     "PRIMARY KEY (MAP_ID, CELL_ID)" +
                 ")"
             );
@@ -107,13 +108,13 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
 
     private static class Loader implements RepositoryUtils.Loader<MapTrigger> {
         @Override
-        public MapTrigger create(ResultSet rs) throws SQLException {
+        public MapTrigger create(Record record) throws SQLException {
             return new MapTrigger(
-                rs.getInt("MAP_ID"),
-                rs.getInt("CELL_ID"),
-                rs.getInt("ACTION"),
-                rs.getString("ARGUMENTS"),
-                rs.getString("CONDITIONS")
+                record.getInt("MAP_ID"),
+                record.getNonNegativeInt("CELL_ID"),
+                record.getInt("ACTION"),
+                record.getString("ARGUMENTS"),
+                record.getString("CONDITIONS")
             );
         }
 

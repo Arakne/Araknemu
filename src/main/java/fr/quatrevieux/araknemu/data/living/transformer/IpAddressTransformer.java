@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.living.transformer;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import inet.ipaddr.IPAddressString;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Parse IP address string
@@ -29,12 +30,12 @@ import inet.ipaddr.IPAddressString;
  */
 public final class IpAddressTransformer implements Transformer<IPAddressString> {
     @Override
-    public String serialize(IPAddressString value) {
-        return value.toNormalizedString();
+    public @PolyNull String serialize(@PolyNull IPAddressString value) {
+        return value == null ? null : value.toNormalizedString();
     }
 
     @Override
-    public IPAddressString unserialize(String serialize) throws TransformerException {
-        return new IPAddressString(serialize);
+    public @PolyNull IPAddressString unserialize(@PolyNull String serialize) throws TransformerException {
+        return serialize == null ? null : new IPAddressString(serialize);
     }
 }

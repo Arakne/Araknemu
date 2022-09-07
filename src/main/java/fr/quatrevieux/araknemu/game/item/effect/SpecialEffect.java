@@ -23,6 +23,9 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.special.SpecialEffectHandler;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.ArrayLen;
 
 import java.util.Arrays;
 
@@ -32,10 +35,10 @@ import java.util.Arrays;
 public final class SpecialEffect implements ItemEffect {
     private final SpecialEffectHandler handler;
     private final Effect effect;
-    private final int[] arguments;
+    private final @NonNegative int @ArrayLen(3)[] arguments;
     private final String text;
 
-    public SpecialEffect(SpecialEffectHandler handler, Effect effect, int[] arguments, String text) {
+    public SpecialEffect(SpecialEffectHandler handler, Effect effect, @NonNegative int @ArrayLen(3)[] arguments, String text) {
         this.handler = handler;
         this.effect = effect;
         this.arguments = arguments;
@@ -58,7 +61,7 @@ public final class SpecialEffect implements ItemEffect {
         );
     }
 
-    public int[] arguments() {
+    public @NonNegative int @ArrayLen(3)[] arguments() {
         return arguments;
     }
 
@@ -81,12 +84,12 @@ public final class SpecialEffect implements ItemEffect {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 

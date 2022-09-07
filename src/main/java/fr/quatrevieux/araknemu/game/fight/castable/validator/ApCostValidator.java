@@ -23,16 +23,22 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Validate spell AP cost
  */
 public final class ApCostValidator implements CastConstraintValidator {
     @Override
-    public Error validate(Turn turn, Castable castable, FightCell target) {
-        return castable.apCost() > turn.points().actionPoints()
-            ? Error.cantCastNotEnoughActionPoints(turn.points().actionPoints(), castable.apCost())
-            : null
+    public boolean check(Turn turn, Castable castable, FightCell target) {
+        return castable.apCost() <= turn.points().actionPoints();
+    }
+
+    @Override
+    public @Nullable Error validate(Turn turn, Castable castable, FightCell target) {
+        return check(turn, castable, target)
+            ? null
+            : Error.cantCastNotEnoughActionPoints(turn.points().actionPoints(), castable.apCost())
         ;
     }
 }

@@ -19,9 +19,11 @@
 
 package fr.quatrevieux.araknemu.network.game.in.object;
 
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ObjectMoveRequestTest {
     private ObjectMoveRequest.Parser parser = new ObjectMoveRequest.Parser();
@@ -46,6 +48,11 @@ class ObjectMoveRequestTest {
 
     @Test
     void generateWithNegativeQuantity() {
-        assertThrows(NumberFormatException.class, () -> parser.parse("5|2|-2"));
+        assertThrows(ParsePacketException.class, () -> parser.parse("5|2|-2"));
+    }
+
+    @Test
+    void parseWithInvalidPosition() {
+        assertThrows(ParsePacketException.class, () -> parser.parse("5|90"));
     }
 }

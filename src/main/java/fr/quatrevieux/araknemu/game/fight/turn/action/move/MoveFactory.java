@@ -21,27 +21,29 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnEnemyValidator;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
 
 /**
  * Factory for move action
  */
-public final class MoveFactory implements MoveActionFactory {
-    private final FightTurn turn;
+public final class MoveFactory implements MoveActionFactory<Fighter> {
+    private final FightPathValidator[] validators;
 
-    public MoveFactory(FightTurn turn) {
-        this.turn = turn;
+    public MoveFactory(FightPathValidator[] validators) {
+        this.validators = validators;
     }
 
     @Override
-    public Action create(String[] arguments) {
-        return create(new Decoder<>(turn.fight().map()).decode(arguments[0], turn.fighter().cell()));
+    public Action create(Fighter fighter, String[] arguments) {
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Invalid move arguments");
+        }
+
+        return create(fighter, new Decoder<>(fighter.fight().map()).decode(arguments[0], fighter.cell()));
     }
 
     @Override
@@ -50,12 +52,7 @@ public final class MoveFactory implements MoveActionFactory {
     }
 
     @Override
-    public Move create(Path<FightCell> path) {
-        final FightPathValidator[] validators = new FightPathValidator[] {
-            new TackleValidator(),
-            new StopOnEnemyValidator(),
-        };
-
-        return new Move(turn, turn.fighter(), path, validators);
+    public Move create(Fighter performer, Path<FightCell> path) {
+        return new Move(performer, path, validators);
     }
 }

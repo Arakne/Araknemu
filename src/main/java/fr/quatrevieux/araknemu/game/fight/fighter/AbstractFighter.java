@@ -25,13 +25,18 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Base class for implements a fighter
@@ -39,23 +44,34 @@ import java.util.Optional;
  */
 public abstract class AbstractFighter implements Fighter {
     private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    @SuppressWarnings({"assignment", "argument"})
     private final BuffList buffs = new BuffList(this);
+    @SuppressWarnings({"assignment", "argument"})
     private final States states = new FighterStates(this);
     private final Map<Object, Object> attachments = new HashMap<>();
 
     // Mutable attributes
-    private FightCell cell;
-    private Fight fight;
-    private FightTurn turn;
+    private @Nullable FightCell cell;
+    private @MonotonicNonNull Fight fight;
+    private @Nullable FightTurn turn;
     private Direction orientation = Direction.SOUTH_EAST;
+    private boolean hidden = false;
 
     @Override
     public void init() {
+        if (fight == null) {
+            throw new IllegalStateException("The fighter should join the fight before initialisation");
+        }
+
         fight.dispatch(new FighterInitialized(this));
     }
 
     @Override
     public final FightCell cell() {
+        if (cell == null) {
+            throw new IllegalStateException("The fighter is not on a cell");
+        }
+
         return cell;
     }
 
@@ -70,7 +86,7 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
-    public final void move(FightCell cell) {
+    public final void move(@Nullable FightCell cell) {
         if (this.cell != null) {
             this.cell.removeFighter();
         }
@@ -103,6 +119,10 @@ public abstract class AbstractFighter implements Fighter {
 
     @Override
     public final Fight fight() {
+        if (fight == null) {
+            throw new IllegalStateException("The fighter has not join a fight");
+        }
+
         return fight;
     }
 
@@ -137,12 +157,26 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
+    public final void perform(Consumer<FightTurn> action) {
+        final FightTurn turn = this.turn;
+
+        if (turn != null) {
+            action.accept(turn);
+        }
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return turn != null && turn.active();
+    }
+
+    @Override
     public final void attach(Object key, Object value) {
         attachments.put(key, value);
     }
 
     @Override
-    public final Object attachment(Object key) {
+    public final @Nullable Object attachment(Object key) {
         return attachments.get(key);
     }
 
@@ -152,7 +186,25 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
-    public final boolean equals(Object obj) {
+    public boolean hidden() {
+        return hidden;
+    }
+
+    @Override
+    public void setHidden(PassiveFighter caster, boolean hidden) {
+        if (this.hidden == hidden) {
+            return;
+        }
+
+        this.hidden = hidden;
+
+        if (fight != null) {
+            fight.dispatch(hidden ? new FighterHidden(this, caster) : new FighterVisible(this, caster));
+        }
+    }
+
+    @Override
+    public final boolean equals(@Nullable Object obj) {
         if (obj == this) {
             return true;
         }

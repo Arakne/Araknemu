@@ -48,7 +48,7 @@ public final class PrivateChannel implements Channel {
 
     @Override
     public void send(GamePlayer from, Message message) throws ChatException {
-        if (!service.isOnline(message.target())) {
+        if (message.target() == null || !service.isOnline(message.target())) {
             throw new ChatException(ChatException.Error.USER_NOT_CONNECTED);
         }
 

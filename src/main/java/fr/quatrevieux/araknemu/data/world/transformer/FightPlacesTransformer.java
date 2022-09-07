@@ -22,38 +22,45 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 import fr.arakne.utils.encoding.Base64;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Transform map fight places
  */
-public final class FightPlacesTransformer implements Transformer<List<Integer>[]> {
+public final class FightPlacesTransformer implements Transformer<@NonNegative int[][]> {
     @Override
-    public String serialize(List<Integer>[] value) {
+    public @PolyNull String serialize(@NonNegative int @PolyNull [][] value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Integer>[] unserialize(String serialize) {
+    @SuppressWarnings("return") // returned values are non negative
+    public @NonNegative int[][] unserialize(@PolyNull String serialize) {
+        if (serialize == null) {
+            return new int[0][];
+        }
+
         try {
             return Arrays.stream(StringUtils.split(serialize, "|", 2))
                 .map(this::parseTeamPlaces)
-                .toArray(List[]::new)
+                .toArray(int[][]::new)
             ;
         } catch (RuntimeException e) {
             throw new TransformerException("Cannot parse places '" + serialize + "'", e);
         }
     }
 
-    private List<Integer> parseTeamPlaces(String places) {
-        final List<Integer> cells = new ArrayList<>(places.length() / 2);
+    @SuppressWarnings("argument") // String indexes are safe
+    private @NonNegative int[] parseTeamPlaces(String places) {
+        final @NonNegative int[] cells = new int[places.length() / 2];
 
-        for (int i = 0; i < places.length(); i += 2) {
-            cells.add(Base64.decode(places.substring(i, i + 2)));
+        for (int i = 0; i < cells.length; i++) {
+            cells[i] = Asserter.assertNonNegative(Base64.decode(places.substring(2 * i, 2 * i + 2)));
         }
 
         return cells;

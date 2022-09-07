@@ -25,6 +25,7 @@ import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 import java.util.Collections;
 
@@ -53,6 +54,11 @@ public final class MoveFailed implements MoveResult {
     @Override
     public boolean success() {
         return false;
+    }
+
+    @Override
+    public boolean secret() {
+        return performer.hidden();
     }
 
     @Override
@@ -91,5 +97,14 @@ public final class MoveFailed implements MoveResult {
     @Override
     public Object[] arguments() {
         return new Object[0];
+    }
+
+    @Override
+    public void apply(FightTurn turn) {
+        if (lostActionPoints > 0) {
+            turn.points().useActionPoints(lostActionPoints);
+        }
+
+        turn.points().useMovementPoints(turn.points().movementPoints());
     }
 }

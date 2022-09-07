@@ -22,8 +22,10 @@ package fr.quatrevieux.araknemu.game.item.effect.use;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Effect handler for add characteristic
@@ -55,7 +57,7 @@ public final class AddCharacteristicEffect implements UseEffectHandler {
     }
 
     @Override
-    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
+    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {
         return false;
     }
 }

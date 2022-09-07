@@ -76,8 +76,8 @@ class RandomCellSelectorTest extends GameBaseCase {
         }
 
         @Override
-        public void apply(Operation operation) {
-
+        public <R> R apply(Operation<R> operation) {
+            return null;
         }
 
         @Override

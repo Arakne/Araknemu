@@ -21,9 +21,12 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -33,11 +36,11 @@ public class DummyGenerator implements ActionGenerator {
     public void initialize(AI ai) {}
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI ai, ActionsFactory actions) {
         return Optional.of(
             new Action() {
                 @Override
-                public boolean validate() {
+                public boolean validate(Turn turn) {
                     return true;
                 }
 
@@ -63,6 +66,16 @@ public class DummyGenerator implements ActionGenerator {
                         public boolean success() {
                             return false;
                         }
+
+                        @Override
+                        public boolean secret() {
+                            return false;
+                        }
+
+                        @Override
+                        public void apply(FightTurn turn) {
+
+                        }
                     };
                 }
 
@@ -75,12 +88,6 @@ public class DummyGenerator implements ActionGenerator {
                 public ActionType type() {
                     return null;
                 }
-
-                @Override
-                public void failed() {}
-
-                @Override
-                public void end() {}
 
                 @Override
                 public Duration duration() {

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
@@ -96,13 +97,13 @@ final class SqlSubAreaRepository implements SubAreaRepository {
 
     private static class Loader implements RepositoryUtils.Loader<SubArea> {
         @Override
-        public SubArea create(ResultSet rs) throws SQLException {
+        public SubArea create(Record record) throws SQLException {
             return new SubArea(
-                rs.getInt("SUBAREA_ID"),
-                rs.getInt("AREA_ID"),
-                rs.getString("SUBAREA_NAME"),
-                rs.getBoolean("CONQUESTABLE"),
-                Alignment.byId(rs.getInt("ALIGNMENT"))
+                record.getInt("SUBAREA_ID"),
+                record.getInt("AREA_ID"),
+                record.getString("SUBAREA_NAME"),
+                record.getBoolean("CONQUESTABLE"),
+                Alignment.byId(record.getGTENegativeOneInt("ALIGNMENT"))
             );
         }
 

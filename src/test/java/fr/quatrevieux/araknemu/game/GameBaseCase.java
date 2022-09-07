@@ -30,7 +30,6 @@ import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
-import fr.quatrevieux.araknemu.core.config.PoolUtils;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
@@ -96,10 +95,10 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
-import org.ini4j.Profile;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,11 +109,7 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class GameBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack {
@@ -169,6 +164,14 @@ public class GameBaseCase extends DatabaseTestCase {
             }
         }
 
+        public void assertNotContainsPrefix(String prefix) {
+            for (Object message : channel.getMessages()) {
+                if (message.toString().startsWith(prefix)) {
+                    Assertions.fail("Packet '" + message + "' is not expected");
+                }
+            }
+        }
+
         public void assertOne(Object packet) {
             for (Object message : channel.getMessages()) {
                 if (message.toString().equals(packet.toString())) {
@@ -199,12 +202,14 @@ public class GameBaseCase extends DatabaseTestCase {
     protected SendingRequestStack requestStack;
     protected Araknemu app;
     protected GameDataSet dataSet;
+    protected Accessors accessors;
 
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
         RandomUtil.enableTestingMode();
+        ExecutorFactory.enableTestingMode();
 
         Configuration conf = new DefaultConfiguration(
             new IniDriver(initConfig = new Ini(new File("src/test/test_config.ini")))
@@ -213,7 +218,7 @@ public class GameBaseCase extends DatabaseTestCase {
         app = new Araknemu(
             conf,
             new DefaultDatabaseHandler(
-                conf.module(DatabaseConfiguration.class),
+                conf.module(DatabaseConfiguration.MODULE),
                 LogManager.getLogger()
             )
         );
@@ -274,12 +279,14 @@ public class GameBaseCase extends DatabaseTestCase {
         session = server.createSession();
         channel = (DummyChannel) session.channel();
         requestStack = new SendingRequestStack(channel);
+        accessors = new Accessors();
 
         container.get(GameService.class).subscribe();
     }
 
     @AfterEach
     public void tearDown() throws ContainerException {
+        ExecutorFactory.resetTestingExecutor();
         dataSet.destroy();
         app.database().stop();
     }
@@ -331,7 +338,7 @@ public class GameBaseCase extends DatabaseTestCase {
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, -1, 5481459, new Position(10540, 200), 15225));
+        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 5481459, new Position(10540, 200), 15225));
 
         if (!load) {
             session.setPlayer(
@@ -399,7 +406,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
-        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
+        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0));
         GameSession session = server.createSession();
 
         // @todo à tester

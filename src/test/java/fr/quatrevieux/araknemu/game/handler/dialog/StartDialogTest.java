@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler.dialog;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
@@ -27,6 +28,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogCreated;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogQuestion;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,6 +76,14 @@ class StartDialogTest extends GameBaseCase {
             new DialogCreated(npc),
             new DialogQuestion(npc.question(player).get(), npc.question(player).get().responses(player), player)
         );
+    }
+
+    @Test
+    void handleNotOnMap() {
+        player.leave();
+        assertThrows(ErrorPacket.class, () -> handlePacket(new CreateDialogRequest(-47204)));
+
+        assertFalse(player.interactions().interacting());
     }
 
     @Test

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.Raule
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ import java.util.Map;
 public final class RaulebaqueModule implements FightModule {
     private final Fight fight;
 
-    private Map<Fighter, FightCell> startPositions;
+    private @MonotonicNonNull Map<Fighter, FightCell> startPositions;
 
     public RaulebaqueModule(Fight fight) {
         this.fight = fight;
@@ -49,7 +50,15 @@ public final class RaulebaqueModule implements FightModule {
         handler.register(784, new RaulebaqueHandler(fight, this));
     }
 
+    /**
+     * Get all start positions of fighters
+     * The map key is the fighter, and the value is the start cell
+     */
     public Map<Fighter, FightCell> startPositions() {
+        if (startPositions == null) {
+            throw new IllegalStateException("Positions must be loaded at fight start");
+        }
+
         return startPositions;
     }
 

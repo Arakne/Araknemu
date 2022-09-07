@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.chat;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChannelTypeTest {
@@ -29,5 +31,6 @@ class ChannelTypeTest {
         assertSame(ChannelType.ADMIN, ChannelType.byChar('@'));
         assertSame(ChannelType.PRIVATE, ChannelType.byChar('p'));
         assertSame(ChannelType.FIGHT_TEAM, ChannelType.byChar('#'));
+        assertThrows(NoSuchElementException.class, () -> ChannelType.byChar('a'));
     }
 }

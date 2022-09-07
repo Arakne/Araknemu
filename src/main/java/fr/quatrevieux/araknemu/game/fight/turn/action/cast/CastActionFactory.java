@@ -20,22 +20,25 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Factory for create a cast action
  */
-public interface CastActionFactory extends FightActionFactory {
+public interface CastActionFactory<@NonNull F extends @NonNull ActiveFighter> extends FightActionFactory<F> {
     /**
      * Create the cast action
      *
+     * @param performer Fighter which perform the action
      * @param spell  The spell to cast
      * @param target The cell target
      */
-    public Action create(Spell spell, FightCell target);
+    public Action create(F performer, Spell spell, FightCell target);
 
     /**
      * Get the spell cast validator

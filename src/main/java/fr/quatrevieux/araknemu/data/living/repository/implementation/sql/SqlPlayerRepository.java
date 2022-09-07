@@ -24,6 +24,7 @@ import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -166,12 +167,12 @@ final class SqlPlayerRepository implements PlayerRepository {
     }
 
     @Override
-    public boolean nameExists(Player player) {
+    public boolean nameExists(int serverId, String name) {
         return utils.aggregate(
             "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_NAME = ? AND SERVER_ID = ?",
             stmt -> {
-                stmt.setString(1, player.name());
-                stmt.setInt(2,    player.serverId());
+                stmt.setString(1, name);
+                stmt.setInt(2, serverId);
             }
         ) > 0;
     }
@@ -281,44 +282,49 @@ final class SqlPlayerRepository implements PlayerRepository {
     }
 
     private class Loader implements RepositoryUtils.Loader<Player> {
+        private final Gender[] genders = Gender.values();
+
         @Override
-        public Player create(ResultSet rs) throws SQLException {
+        public Player create(Record record) throws SQLException {
             return new Player(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getString("PLAYER_NAME"),
-                Race.byId(rs.getInt("RACE")),
-                Gender.values()[rs.getInt("SEX")],
-                new Colors(
-                    rs.getInt("COLOR1"),
-                    rs.getInt("COLOR2"),
-                    rs.getInt("COLOR3")
-                ),
-                rs.getInt("PLAYER_LEVEL"),
-                characteristicsTransformer.unserialize(
-                    rs.getString("PLAYER_STATS")
-                ),
+                record.getInt("PLAYER_ID"),
+                record.getInt("ACCOUNT_ID"),
+                record.getInt("SERVER_ID"),
+                record.getString("PLAYER_NAME"),
+                Race.byId(record.getPositiveInt("RACE")),
+                record.getArrayValue("SEX", genders),
+                createColors(record),
+                record.getPositiveInt("PLAYER_LEVEL"),
+                record.unserialize("PLAYER_STATS", characteristicsTransformer),
                 new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
+                    record.getNonNegativeInt("MAP_ID"),
+                    record.getNonNegativeInt("CELL_ID")
                 ),
-                channelsTransformer.unserialize(rs.getString("CHANNELS")),
-                rs.getInt("BOOST_POINTS"),
-                rs.getInt("SPELL_POINTS"),
-                rs.getInt("LIFE_POINTS"),
-                rs.getLong("PLAYER_EXPERIENCE"),
+                record.unserialize("CHANNELS", channelsTransformer),
+                record.getNonNegativeInt("BOOST_POINTS"),
+                record.getNonNegativeInt("SPELL_POINTS"),
+                record.getNonNegativeInt("LIFE_POINTS"),
+                record.getNonNegativeLong("PLAYER_EXPERIENCE"),
                 new Position(
-                    rs.getInt("SAVED_MAP_ID"),
-                    rs.getInt("SAVED_CELL_ID")
+                    record.getNonNegativeInt("SAVED_MAP_ID"),
+                    record.getNonNegativeInt("SAVED_CELL_ID")
                 ),
-                rs.getLong("PLAYER_KAMAS")
+                record.getNonNegativeLong("PLAYER_KAMAS")
             );
         }
 
         @Override
         public Player fillKeys(Player entity, ResultSet keys) throws SQLException {
             return entity.withId(keys.getInt(1));
+        }
+
+        @SuppressWarnings("argument") // Ignore invalid colors error
+        private Colors createColors(Record record) throws SQLException {
+            return new Colors(
+                record.getInt("COLOR1"),
+                record.getInt("COLOR2"),
+                record.getInt("COLOR3")
+            );
         }
     }
 }

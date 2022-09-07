@@ -1,0 +1,89 @@
+/*
+ * This file is part of Araknemu.
+ *
+ * Araknemu is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Araknemu is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
+ */
+
+package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
+
+import fr.arakne.utils.maps.MapCell;
+import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.maps.path.Decoder;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+
+import java.util.Optional;
+
+/**
+ * Move front target
+ *
+ * Unlike move back, this effect do not handle area effects, and do not apply any damage when blocked
+ */
+public final class MoveFrontHandler implements EffectHandler {
+    private final Fight fight;
+    private final Decoder<FightCell> decoder;
+
+    public MoveFrontHandler(Fight fight) {
+        this.fight = fight;
+        this.decoder = new Decoder<>(fight.map());
+    }
+
+    @Override
+    public void handle(CastScope cast, CastScope.EffectScope effect) {
+        final ActiveFighter caster = cast.caster();
+
+        for (PassiveFighter target : effect.targets()) {
+            apply(caster, target, effect.effect().min());
+        }
+    }
+
+    private void apply(ActiveFighter caster, PassiveFighter target, int distance) {
+        final FightCell startCell = target.cell();
+        final Direction direction = startCell.coordinate().directionTo(caster.cell());
+
+        FightCell destination = startCell;
+
+        // Check if a cell block the movement
+        for (int i = 0; i < distance; ++i) {
+            final Optional<FightCell> nextCell = decoder
+                .nextCellByDirection(destination, direction)
+                .filter(MapCell::walkable)
+            ;
+
+            if (!nextCell.isPresent()) {
+                break;
+            }
+
+            destination = nextCell.get();
+        }
+
+        // Fighter has moved
+        if (!destination.equals(startCell)) {
+            target.move(destination);
+            fight.send(ActionEffect.slide(caster, target, destination));
+        }
+    }
+
+    @Override
+    public void buff(CastScope cast, CastScope.EffectScope effect) {
+        throw new UnsupportedOperationException("Cannot use move back as buff effect");
+    }
+}

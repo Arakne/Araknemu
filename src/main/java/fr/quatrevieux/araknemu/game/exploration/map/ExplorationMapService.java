@@ -43,8 +43,10 @@ import fr.quatrevieux.araknemu.game.listener.map.fight.SendCreatedFight;
 import fr.quatrevieux.araknemu.game.listener.map.fight.SendFightsCount;
 import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterAdded;
 import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterRemoved;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamOptionChanged;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -59,7 +61,7 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
     private final Dispatcher dispatcher;
     private final CellLoader loader;
 
-    private final ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
+    private final ConcurrentMap<@NonNegative Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
     public ExplorationMapService(MapTemplateRepository repository, FightService fightService, AreaService areaService, Dispatcher dispatcher, CellLoader loader) {
         this.repository = repository;
@@ -72,12 +74,14 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
     /**
      * Load the exploration map
      */
-    public ExplorationMap load(int mapId) throws EntityNotFoundException {
-        if (!maps.containsKey(mapId)) {
+    public ExplorationMap load(@NonNegative int mapId) throws EntityNotFoundException {
+        final ExplorationMap loadedMap = maps.get(mapId);
+
+        if (loadedMap == null) {
             return createMap(repository.get(mapId));
         }
 
-        return maps.get(mapId);
+        return loadedMap;
     }
 
     @Override
@@ -119,6 +123,7 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
                     event.fight().dispatcher().add(new SendCancelledFight(map, fightService));
                     event.fight().dispatcher().add(new SendTeamFighterRemoved(map));
                     event.fight().dispatcher().add(new SendTeamFighterAdded(map));
+                    event.fight().dispatcher().register(new SendTeamOptionChanged(map));
                 }
 
                 @Override
@@ -133,11 +138,13 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
      * Load the exploration map
      */
     public ExplorationMap load(MapTemplate template) {
-        if (maps.containsKey(template.id())) {
-            return maps.get(template.id());
+        final ExplorationMap loadedMap = maps.get(template.id());
+
+        if (loadedMap == null) {
+            return createMap(template);
         }
 
-        return createMap(template);
+        return loadedMap;
     }
 
     private ExplorationMap createMap(MapTemplate template) {

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
+import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
@@ -52,9 +53,9 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
         this.player = player;
         this.entity = entity;
         this.race = player.race();
-        this.base = new BaseCharacteristics(dispatcher, race, entity);
+        this.base = new MutableComputedCharacteristics(new BaseCharacteristics(dispatcher, race, entity));
 
-        this.stuff = computeStuffStats();
+        this.stuff = computeStuffStats(player.inventory());
     }
 
     @Override
@@ -74,11 +75,13 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
 
     @Override
     public Characteristics feats() {
+        // @todo #218
         return new DefaultCharacteristics();
     }
 
     @Override
     public Characteristics boost() {
+        // @todo #218
         return new DefaultCharacteristics();
     }
 
@@ -91,6 +94,8 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
 
     /**
      * Boost a characteristic
+     *
+     * @throws IllegalStateException When the character has no enough points for boost the required characteristic
      */
     public void boostCharacteristic(Characteristic characteristic) {
         final BoostStatsData.Interval interval = race.boost(
@@ -101,7 +106,7 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
         final int points = entity.boostPoints() - interval.cost();
 
         if (points < 0) {
-            throw new IllegalArgumentException("Not enough points for boost stats");
+            throw new IllegalStateException("Not enough points for boost stats");
         }
 
         entity.setBoostPoints(points);
@@ -150,7 +155,7 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
      * Rebuild the stuff stats
      */
     public void rebuildStuffStats() {
-        stuff = computeStuffStats();
+        stuff = computeStuffStats(player.inventory());
 
         dispatcher.dispatch(new CharacteristicsChanged());
     }
@@ -173,15 +178,15 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
     /**
      * Compute the stuff stats
      */
-    private Characteristics computeStuffStats() {
+    private static Characteristics computeStuffStats(PlayerInventory inventory) {
         final MutableCharacteristics characteristics = new DefaultCharacteristics();
 
-        for (AbstractEquipment equipment : player.inventory().equipments()) {
+        for (AbstractEquipment equipment : inventory.equipments()) {
             equipment.apply(characteristics);
         }
 
-        player.inventory().itemSets().apply(characteristics);
+        inventory.itemSets().apply(characteristics);
 
-        return characteristics;
+        return new ComputedCharacteristics<>(characteristics);
     }
 }

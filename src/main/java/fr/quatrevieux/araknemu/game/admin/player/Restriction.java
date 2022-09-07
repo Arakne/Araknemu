@@ -72,6 +72,7 @@ public final class Restriction extends AbstractCommand<List<String>> {
     }
 
     @Override
+    @SuppressWarnings("argument") // arguments are non-empty
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
         final List<Restrictions.Restriction> toSet = new ArrayList<>();
         final List<Restrictions.Restriction> toUnset = new ArrayList<>();

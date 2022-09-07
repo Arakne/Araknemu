@@ -23,16 +23,18 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellAction;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Cell which trigger an action
  */
 public final class TriggerCell implements ExplorationMapCell {
-    private final int id;
+    private final @NonNegative int id;
     private final CellAction action;
     private final ExplorationMap map;
 
-    public TriggerCell(int id, CellAction action, ExplorationMap map) {
+    public TriggerCell(@NonNegative int id, CellAction action, ExplorationMap map) {
         this.id = id;
         this.action = action;
         this.map = map;
@@ -44,7 +46,7 @@ public final class TriggerCell implements ExplorationMapCell {
     }
 
     @Override
-    public int id() {
+    public @NonNegative int id() {
         return id;
     }
 
@@ -59,7 +61,7 @@ public final class TriggerCell implements ExplorationMapCell {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

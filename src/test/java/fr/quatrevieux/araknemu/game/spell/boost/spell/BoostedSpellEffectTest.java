@@ -100,6 +100,26 @@ class BoostedSpellEffectTest extends GameBaseCase {
     }
 
     @Test
+    void baseDamageBoost() {
+        BoostedSpellEffect effect = new BoostedSpellEffect(
+            new SpellTemplateEffectAdapter(
+                new SpellTemplateEffect(95, 5, 10, 0, 5, 25, "a"),
+                new CellArea(),
+                SpellEffectTarget.DEFAULT
+            ),
+            modifiers
+        );
+
+        map.put(SpellsBoosts.Modifier.BASE_DAMAGE, 5);
+        map.put(SpellsBoosts.Modifier.HEAL, 10);
+
+        assertEquals(95, effect.effect());
+        assertEquals(10, effect.min());
+        assertEquals(15, effect.max());
+        assertEquals(0, effect.boost());
+    }
+
+    @Test
     void damageEffectFixed() {
         BoostedSpellEffect effect = new BoostedSpellEffect(
             new SpellTemplateEffectAdapter(
@@ -131,6 +151,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         );
 
         map.put(SpellsBoosts.Modifier.DAMAGE, 5);
+        map.put(SpellsBoosts.Modifier.BASE_DAMAGE, 5);
         map.put(SpellsBoosts.Modifier.HEAL, 10);
 
         assertEquals(81, effect.effect());

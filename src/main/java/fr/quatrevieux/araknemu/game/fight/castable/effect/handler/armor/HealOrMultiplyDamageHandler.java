@@ -25,10 +25,16 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.MultipliableDamage;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Suffered damage will be healed, or multiplied
+ *
+ * Note: this buff is only applied on direct damage (see: https://forums.jeuxonline.info/sujet/969716/chance-d-ecaflip)
  */
 public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHook {
     private final RandomUtil random = new RandomUtil();
@@ -46,13 +52,25 @@ public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
     }
 
     @Override
-    public void onDamage(Buff buff, Damage value) {
-        final boolean heal = random.bool(buff.effect().special());
+    public void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+        apply(buff, value);
+    }
+
+    @Override
+    public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
+        apply(buff, damage);
+    }
+
+    /**
+     * Modify the damage multiplier depending on the chance
+     */
+    private void apply(Buff buff, MultipliableDamage damage) {
+        final boolean heal = random.bool(Asserter.assertPercent(buff.effect().special()));
 
         if (heal) {
-            value.multiply(-buff.effect().max());
+            damage.multiply(-buff.effect().max());
         } else {
-            value.multiply(buff.effect().min());
+            damage.multiply(buff.effect().min());
         }
     }
 }

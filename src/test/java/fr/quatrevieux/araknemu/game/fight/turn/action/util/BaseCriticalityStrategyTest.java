@@ -36,47 +36,47 @@ class BaseCriticalityStrategyTest extends FightBaseCase {
 
         createFight();
 
-        strategy = new BaseCriticalityStrategy(player.fighter());
+        strategy = new BaseCriticalityStrategy();
     }
 
     @Test
     void hitRateWithoutBonus() {
-        assertEquals(25, strategy.hitRate(25));
+        assertEquals(25, strategy.hitRate(player.fighter(), 25));
     }
 
     @Test
     void hitRateWithFixedBonus() {
         player.properties().characteristics().base().set(Characteristic.CRITICAL_BONUS, 10);
 
-        assertEquals(15, strategy.hitRate(25));
+        assertEquals(15, strategy.hitRate(player.fighter(), 25));
     }
 
     @Test
     void hitRateWithAgility() {
         player.properties().characteristics().base().set(Characteristic.AGILITY, 100);
 
-        assertEquals(15, strategy.hitRate(25));
+        assertEquals(15, strategy.hitRate(player.fighter(), 25));
     }
 
     @Test
     void hitRate2() {
-        assertEquals(2, strategy.hitRate(2));
+        assertEquals(2, strategy.hitRate(player.fighter(), 2));
     }
 
     @Test
     void hitRate0() {
-        assertEquals(0, strategy.hitRate(0));
+        assertEquals(1, strategy.hitRate(player.fighter(), 0));
     }
 
     @Test
     void failureRate() {
-        assertEquals(100, strategy.failureRate(100));
+        assertEquals(100, strategy.failureRate(player.fighter(), 100));
     }
 
     @Test
     void failureRateWithMalus() {
         player.properties().characteristics().base().set(Characteristic.FAIL_MALUS, 10);
 
-        assertEquals(90, strategy.failureRate(100));
+        assertEquals(90, strategy.failureRate(player.fighter(), 100));
     }
 }

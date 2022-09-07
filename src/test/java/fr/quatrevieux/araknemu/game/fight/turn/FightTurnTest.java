@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
@@ -38,7 +38,6 @@ import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.Duration;
@@ -66,6 +65,7 @@ class FightTurnTest extends FightBaseCase {
         fight.dispatcher().add(new RefreshStates());
 
         turn = new FightTurn(player.fighter(), fight, Duration.ofMillis(250));
+        player.fighter().play(turn);
     }
 
     @Override
@@ -82,7 +82,6 @@ class FightTurnTest extends FightBaseCase {
         assertSame(fight, turn.fight());
         assertEquals(Duration.ofMillis(250), turn.duration());
         assertFalse(turn.active());
-        assertInstanceOf(TurnActionsFactory.class, turn.actions());
     }
 
     @Test
@@ -105,6 +104,8 @@ class FightTurnTest extends FightBaseCase {
 
     @Test
     void startWillInitPoints() {
+        assertThrows(IllegalStateException.class, turn::points);
+
         turn.start();
 
         assertInstanceOf(FighterTurnPoints.class, turn.points());
@@ -144,7 +145,7 @@ class FightTurnTest extends FightBaseCase {
         turn.start();
 
         Action action = Mockito.mock(Action.class);
-        Mockito.when(action.validate()).thenReturn(false);
+        Mockito.when(action.validate(turn)).thenReturn(false);
 
         assertThrows(FightException.class, () -> turn.perform(action));
     }
@@ -156,7 +157,7 @@ class FightTurnTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(result.success()).thenReturn(false);
 
@@ -173,7 +174,7 @@ class FightTurnTest extends FightBaseCase {
         assertTrue(turn.fighter().dead());
 
         Action action = Mockito.mock(Action.class);
-        Mockito.when(action.validate()).thenReturn(false);
+        Mockito.when(action.validate(turn)).thenReturn(false);
 
         assertThrows(FightException.class, () -> turn.perform(action));
     }
@@ -185,7 +186,7 @@ class FightTurnTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofSeconds(30));
         Mockito.when(result.success()).thenReturn(true);
@@ -193,7 +194,7 @@ class FightTurnTest extends FightBaseCase {
         turn.perform(action);
         turn.terminate();
 
-        Mockito.verify(action).end();
+        Mockito.verify(result).apply(turn);
     }
 
     @Test
@@ -206,7 +207,7 @@ class FightTurnTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofSeconds(30));
         Mockito.when(result.success()).thenReturn(true);
@@ -285,7 +286,7 @@ class FightTurnTest extends FightBaseCase {
 
         assertFalse(turn.active());
         Mockito.verify(hook).onStartTurn(buff);
-        Mockito.verify(hook).onEndTurn(buff);
+        Mockito.verify(hook).onEndTurn(buff, turn);
         assertEquals(4, buff.remainingTurns());
         assertNull(ref.get());
         assertFalse(player.fighter().states().has(5));
@@ -307,7 +308,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.verify(hook).onStartTurn(buff);
 
         turn.stop();
-        Mockito.verify(hook).onEndTurn(buff);
+        Mockito.verify(hook).onEndTurn(buff, turn);
     }
 
     @Test
@@ -324,7 +325,7 @@ class FightTurnTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(result.success()).thenReturn(true);
         Mockito.when(action.duration()).thenReturn(Duration.ofSeconds(30));

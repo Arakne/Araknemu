@@ -59,6 +59,7 @@ class TargetCellValidatorTest extends FightBaseCase {
     void notAvailableCell() {
         Spell spell = Mockito.mock(Spell.class);
 
+        assertFalse(validator.check(turn, spell, fight.map().get(0)));
         assertEquals(
             Error.cantCastCellNotAvailable().toString(),
             validator.validate(turn, spell, fight.map().get(0)).toString()
@@ -73,6 +74,7 @@ class TargetCellValidatorTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
+        assertFalse(validator.check(turn, spell, fight.map().get(185)));
         assertEquals(
             Error.cantCastInvalidCell().toString(),
             validator.validate(turn, spell, fight.map().get(185)).toString()
@@ -87,6 +89,7 @@ class TargetCellValidatorTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
+        assertTrue(validator.check(turn, spell, fight.map().get(123)));
         assertNull(validator.validate(turn, spell, fight.map().get(123)));
     }
 
@@ -98,6 +101,7 @@ class TargetCellValidatorTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
+        assertTrue(validator.check(turn, spell, fight.map().get(185)));
         assertNull(validator.validate(turn, spell, fight.map().get(185)));
     }
 }

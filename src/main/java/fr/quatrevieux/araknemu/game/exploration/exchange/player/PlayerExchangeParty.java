@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.listener.player.exchange.SendDistantPackets;
 import fr.quatrevieux.araknemu.game.listener.player.exchange.SendLocalPackets;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Party for player exchange
@@ -43,7 +44,7 @@ public final class PlayerExchangeParty extends AbstractPlayerExchangeParty {
     }
 
     @Override
-    public Creature target() {
+    public @Nullable Creature target() {
         // @todo Does the target player should be sent ?
         return null;
     }

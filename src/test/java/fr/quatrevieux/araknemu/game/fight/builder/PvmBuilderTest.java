@@ -38,15 +38,18 @@ import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PvmBuilderTest extends GameBaseCase {
@@ -70,9 +73,7 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FightService.class),
             container.get(FighterFactory.class),
             new RandomUtil(),
-            container.get(PvmType.class),
-            container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            container.get(PvmType.class)
         );
 
         MonsterService service = container.get(MonsterService.class);
@@ -96,6 +97,20 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(ExplorationMapService.class).load(10340).get(123),
             new Position(0, 0)
         );
+    }
+
+    @Test
+    void buildMissingData() throws SQLException {
+        assertThrows(IllegalStateException.class, () -> builder.build(1));
+
+        builder.initiator(gamePlayer());
+        assertThrows(IllegalStateException.class, () -> builder.build(1));
+
+        builder.map(container.get(ExplorationMapService.class).load(10340));
+        assertThrows(IllegalStateException.class, () -> builder.build(1));
+
+        builder.monsterGroup(group);
+        builder.build(1);
     }
 
     @Test
@@ -126,9 +141,7 @@ class PvmBuilderTest extends GameBaseCase {
                 container.get(FightService.class),
                 container.get(FighterFactory.class),
                 random,
-                container.get(PvmType.class),
-                container.get(Logger.class),
-                Executors.newSingleThreadScheduledExecutor()
+                container.get(PvmType.class)
             );
 
             Fight fight = builder
@@ -152,9 +165,7 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FightService.class),
             container.get(FighterFactory.class),
             null,
-            container.get(PvmType.class),
-            container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            container.get(PvmType.class)
         );
 
         for (int i = 0; i < 100; ++i) {

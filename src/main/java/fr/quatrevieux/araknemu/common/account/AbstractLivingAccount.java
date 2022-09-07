@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.common.account;
 
 import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract class for Living Account
@@ -29,7 +31,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 public abstract class AbstractLivingAccount<S extends Session> implements LivingAccount<S> {
     protected final Account account;
 
-    protected S session;
+    protected @Nullable S session;
 
     public AbstractLivingAccount(Account account) {
         this.account = account;
@@ -66,6 +68,7 @@ public abstract class AbstractLivingAccount<S extends Session> implements Living
     }
 
     @Override
+    @EnsuresNonNullIf(expression = "session", result = true)
     public boolean isLogged() {
         return session != null && session.isAlive();
     }

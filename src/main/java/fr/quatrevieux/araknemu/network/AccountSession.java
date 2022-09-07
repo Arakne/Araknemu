@@ -21,29 +21,38 @@ package fr.quatrevieux.araknemu.network;
 
 import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.core.network.session.Session;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Base session type attached with an account
  *
  * @param <A> The account type
  */
-public interface AccountSession<A extends AbstractLivingAccount<?>> extends Session {
+public interface AccountSession<A extends @NonNull AbstractLivingAccount<?>> extends Session {
     /**
-     * Attach an game account to the session
+     * Attach a game account to the session
      *
      * @param account Account to attach
      */
+    @EnsuresNonNull("account()")
     public void attach(A account);
 
     /**
      * Get the attached account
      * Can be null is not yet logged
      */
-    public A account();
+    @Pure
+    public @Nullable A account();
 
     /**
      * Check if an account is attached
      */
+    @Pure
+    @EnsuresNonNullIf(expression = "account()", result = true)
     public boolean isLogged();
 
     /**
@@ -51,5 +60,5 @@ public interface AccountSession<A extends AbstractLivingAccount<?>> extends Sess
      *
      * @return The attached account
      */
-    public A detach();
+    public @Nullable A detach();
 }

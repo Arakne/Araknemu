@@ -55,7 +55,6 @@ class SendFightActionTerminatedTest extends FightBaseCase {
     @Test
     void onFightActionTerminated() {
         Move move = new Move(
-            new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)),
             player.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),
@@ -79,7 +78,6 @@ class SendFightActionTerminatedTest extends FightBaseCase {
         player.fighter().life().alter(player.fighter(), -1000);
 
         Move move = new Move(
-            new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)),
             player.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),

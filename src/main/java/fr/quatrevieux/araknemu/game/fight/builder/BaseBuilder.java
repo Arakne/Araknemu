@@ -23,6 +23,7 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
 import fr.quatrevieux.araknemu.game.fight.state.FinishState;
@@ -32,36 +33,37 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
-import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Base builder for fight
  */
 public final class BaseBuilder implements FightBuilder {
     private final FightService service;
-    private final RandomUtil random;
+    private final @Nullable RandomUtil random;
     private final FightType type;
-    private final Logger logger;
-    private final ScheduledExecutorService executor;
 
-    private FightMap map;
+    private @MonotonicNonNull FightMap map;
     private final List<TeamFactory> teamFactories = new ArrayList<>();
 
-    public BaseBuilder(FightService service, RandomUtil random, FightType type, Logger logger, ScheduledExecutorService executor) {
+    public BaseBuilder(FightService service, @Nullable RandomUtil random, FightType type) {
         this.service = service;
         this.random = random;
         this.type = type;
-        this.logger = logger;
-        this.executor = executor;
     }
 
     @Override
     public Fight build(int fightId) {
-        return new Fight(fightId, type, map, buildTeams(), statesFlow(), logger, executor);
+        if (map == null || teamFactories.size() < 2) {
+            throw new IllegalStateException("Missing map or teams");
+        }
+
+        return service.create(fightId, type, map, buildTeams(), statesFlow());
     }
 
     /**
@@ -75,6 +77,7 @@ public final class BaseBuilder implements FightBuilder {
         teamFactories.add(factory);
     }
 
+    @RequiresNonNull("map")
     private List<FightTeam> buildTeams() {
         final List<TeamFactory> factories = random != null ? random.shuffle(teamFactories) : teamFactories;
         final List<FightTeam> teams = new ArrayList<>(factories.size());
@@ -103,6 +106,6 @@ public final class BaseBuilder implements FightBuilder {
          * @param number The team number
          * @param startPlaces The available start places
          */
-        public FightTeam create(int number, List<Integer> startPlaces);
+        public FightTeam create(int number, List<FightCell> startPlaces);
     }
 }

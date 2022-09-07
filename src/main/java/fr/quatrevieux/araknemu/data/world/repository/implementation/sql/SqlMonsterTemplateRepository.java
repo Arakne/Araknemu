@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.arakne.utils.value.Colors;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
@@ -29,7 +30,10 @@ import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import fr.quatrevieux.araknemu.util.ParseUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.index.qual.SameLen;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -117,19 +121,23 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
 
     private class Loader implements RepositoryUtils.Loader<MonsterTemplate> {
         @Override
-        public MonsterTemplate create(ResultSet rs) throws SQLException {
+        public MonsterTemplate create(Record record) throws SQLException {
+            final String[] characteristics = record.getCsvArray("CHARACTERISTICS", '|');
+            final String[] lifePoints = record.getCsvArray("LIFE_POINTS", '|');
+            final String[] initiatives = record.getCsvArray("INITIATIVES", '|');
+            final String[] spells = record.getCsvArray("SPELLS", '|');
+
+            if (characteristics.length != lifePoints.length || characteristics.length != initiatives.length || characteristics.length != spells.length) {
+                throw new IllegalArgumentException("All grade characteristics must have the same length");
+            }
+
             return new MonsterTemplate(
-                rs.getInt("MONSTER_ID"),
-                rs.getString("MONSTER_NAME"),
-                rs.getInt("GFXID"),
-                colorsTransformer.unserialize(rs.getString("COLORS")),
-                rs.getString("AI"),
-                parseGrades(
-                    StringUtils.splitPreserveAllTokens(rs.getString("CHARACTERISTICS"), "|"),
-                    StringUtils.splitPreserveAllTokens(rs.getString("LIFE_POINTS"), "|"),
-                    StringUtils.splitPreserveAllTokens(rs.getString("INITIATIVES"), "|"),
-                    StringUtils.splitPreserveAllTokens(rs.getString("SPELLS"), "|")
-                )
+                record.getInt("MONSTER_ID"),
+                record.getString("MONSTER_NAME"),
+                record.getInt("GFXID"),
+                record.unserialize("COLORS", colorsTransformer),
+                record.getString("AI"),
+                parseGrades(characteristics, lifePoints, initiatives, spells)
             );
         }
 
@@ -138,7 +146,7 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
             throw new RepositoryException("Read-only entity");
         }
 
-        private MonsterTemplate.Grade[] parseGrades(String[] characteristics, String[] lifePoints, String[] initiatives, String[] spells) {
+        private MonsterTemplate.Grade[] parseGrades(String @SameLen({"#2", "#3", "#4"}) [] characteristics, String @SameLen({"#1", "#3", "#4"}) [] lifePoints, String @SameLen({"#1", "#2", "#4"}) [] initiatives, String @SameLen({"#1", "#2", "#3"}) [] spells) {
             final MonsterTemplate.Grade[] grades = new MonsterTemplate.Grade[characteristics.length];
 
             for (int i = 0; i < characteristics.length; ++i) {
@@ -148,7 +156,7 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
                     throw new TransformerException("Invalid grade '" + grades[i] + "'");
                 }
 
-                final Map<Integer, Integer> gradeSpells = new HashMap<>();
+                final Map<Integer, @Positive Integer> gradeSpells = new HashMap<>();
 
                 for (String spell : StringUtils.split(spells[i], ";")) {
                     final String[] data = StringUtils.split(spell, "@", 2);
@@ -159,13 +167,13 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
 
                     gradeSpells.put(
                         Integer.parseInt(data[0]),
-                        Integer.parseInt(data[1])
+                        ParseUtils.parsePositiveInt(data[1])
                     );
                 }
 
                 grades[i] = new MonsterTemplate.Grade(
-                    Integer.parseInt(grade[0]),
-                    Integer.parseInt(lifePoints[i]),
+                    ParseUtils.parsePositiveInt(grade[0]),
+                    ParseUtils.parsePositiveInt(lifePoints[i]),
                     Integer.parseInt(initiatives[i]),
                     characteristicsTransformer.unserialize(grade[1]),
                     gradeSpells

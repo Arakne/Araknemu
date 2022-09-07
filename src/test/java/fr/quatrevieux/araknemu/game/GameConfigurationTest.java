@@ -34,7 +34,7 @@ class GameConfigurationTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        configuration = app.configuration().module(GameConfiguration.class);
+        configuration = app.configuration().module(GameConfiguration.MODULE);
     }
 
     @Test
@@ -97,6 +97,9 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(Duration.ofSeconds(45), configuration.fight().pvmPlacementDuration());
         setConfigValue("fight.pvm.placementDuration", "1m30s");
         assertEquals(Duration.ofSeconds(90), configuration.fight().pvmPlacementDuration());
+
+        assertEquals(1.0, configuration.fight().xpRate());
+        assertEquals(1.0, configuration.fight().dropRate());
     }
 
     @Test

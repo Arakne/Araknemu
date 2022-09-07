@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import fr.quatrevieux.araknemu.network.out.ServerMessage;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Action for open the bank
@@ -93,7 +94,7 @@ public final class OpenBank implements Action {
 
         final long payedByPlayer = cost - bank.kamas();
 
-        bank.removeKamas(bank.kamas());
+        bank.removeKamas(Asserter.castPositive(bank.kamas()));
         player.inventory().removeKamas(payedByPlayer);
         player.send(Information.bankTaxPayed(payedByPlayer));
 

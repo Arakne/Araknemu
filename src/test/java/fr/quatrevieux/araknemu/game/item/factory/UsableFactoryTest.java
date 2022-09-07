@@ -27,7 +27,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
 import fr.quatrevieux.araknemu.game.item.effect.use.AddLifeEffect;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,10 @@ class UsableFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new UsableFactory(container.get(EffectMappers.class));
+        factory = new UsableFactory(
+            container.get(EffectToUseMapping.class),
+            container.get(EffectToSpecialMapping.class)
+        );
     }
 
     @Test

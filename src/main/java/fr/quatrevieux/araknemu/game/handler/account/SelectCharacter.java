@@ -19,9 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -42,25 +44,29 @@ public final class SelectCharacter implements PacketHandler<GameSession, ChooseP
     }
 
     @Override
+    @SuppressWarnings("contracts.precondition") // Cannot prove that account is not null here
     public void handle(GameSession session, ChoosePlayingCharacter packet) {
+        final GamePlayer player;
+
         synchronized (session) {
             if (session.player() != null) {
                 throw new CloseWithPacket(new CharacterSelectionError());
             }
 
             try {
-                service.load(session, packet.id()).register(session);
+                player = service.load(session, packet.id());
+                player.register(session);
             } catch (EntityNotFoundException e) {
                 throw new CloseWithPacket(new CharacterSelectionError());
             }
         }
 
-        session.send(new CharacterSelected(session.player()));
-        session.player().dispatch(new GameJoined());
-        session.log().setPlayerId(session.player().id());
+        session.send(new CharacterSelected(player));
+        player.dispatch(new GameJoined());
+        session.log().ifPresent(log -> log.setPlayerId(player.id()));
 
         session.send(Error.welcome());
-        session.log().last().ifPresent(log -> session.send(Information.lastLogin(log.startDate(), log.ipAddress())));
+        session.log().flatMap(SessionLog::last).ifPresent(log -> session.send(Information.lastLogin(log.startDate(), log.ipAddress())));
         session.send(Information.currentIpAddress(session.channel().address().getAddress().getHostAddress()));
     }
 

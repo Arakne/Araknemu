@@ -34,11 +34,15 @@ import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterReadyState;
+import fr.quatrevieux.araknemu.game.listener.fight.SendJoinTeamOptionChangedMessage;
+import fr.quatrevieux.araknemu.game.listener.fight.SendNeedHelpOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.fight.SendNewFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
@@ -47,6 +51,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,13 +80,14 @@ class PlacementStateTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        FightMap map;
         fight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -90,8 +96,19 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
+    }
+
+    @Test
+    void notStarted() {
+        assertThrows(IllegalStateException.class, state::listeners);
+        assertThrows(IllegalStateException.class, state::remainingTime);
+        assertThrows(JoinFightException.class, () -> state.joinTeam(fighter, fight.team(0)));
+        assertThrows(InvalidFightStateException.class, () -> state.leave(fighter));
+
+        state.changePlace(fighter, fight.map().get(0));
     }
 
     @Test
@@ -114,6 +131,8 @@ class PlacementStateTest extends FightBaseCase {
         assertTrue(fight.dispatcher().has(SendFighterPositions.class));
         assertTrue(fight.dispatcher().has(SendFighterReadyState.class));
         assertTrue(fight.dispatcher().has(StartFightWhenAllReady.class));
+        assertTrue(fight.dispatcher().has(SendJoinTeamOptionChangedMessage.class));
+        assertTrue(fight.dispatcher().has(SendNeedHelpOptionChangedMessage.class));
 
         assertEquals(123, fighter.cell().id());
         assertEquals(fight.team(0), fighter.team());
@@ -146,20 +165,22 @@ class PlacementStateTest extends FightBaseCase {
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
         Mockito.when(type.placementDuration()).thenReturn(Duration.ZERO);
 
+        FightMap map;
         fight = new Fight(
             1,
             type,
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         state.start(fight);
@@ -175,20 +196,22 @@ class PlacementStateTest extends FightBaseCase {
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
         Mockito.when(type.placementDuration()).thenReturn(Duration.ofSeconds(10));
 
+        FightMap map;
         fight = new Fight(
             1,
             type,
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         state.start(fight);
@@ -209,20 +232,22 @@ class PlacementStateTest extends FightBaseCase {
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
         Mockito.when(type.placementDuration()).thenReturn(Duration.ofSeconds(10));
 
+        FightMap map;
         fight = new Fight(
             1,
             type,
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         state.start(fight);
@@ -345,7 +370,7 @@ class PlacementStateTest extends FightBaseCase {
         assertSame(fight.team(0), newFighter.team());
         assertNotNull(newFighter.cell());
         assertSame(newFighter, newFighter.cell().fighter().get());
-        assertContains(newFighter.cell().id(), fight.team(0).startPlaces());
+        assertContains(newFighter.cell(), fight.team(0).startPlaces());
 
         assertSame(newFighter, ref.get().fighter());
 
@@ -427,5 +452,49 @@ class PlacementStateTest extends FightBaseCase {
         fight.state(PlacementState.class).leave(player.fighter());
 
         assertEquals(0, player.properties().life().current());
+    }
+
+    @Test
+    void kickBadState() throws SQLException, ContainerException, JoinFightException {
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
+
+        fight.nextState();
+        state.joinTeam(newFighter, fight.team(0));
+
+        state.startFight();
+
+        AtomicReference<FighterRemoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterRemoved.class, ref::set);
+
+        assertThrows(InvalidFightStateException.class, () -> state.kick(newFighter));
+        assertNull(ref.get());
+        assertContains(newFighter, fight.fighters());
+    }
+
+    @Test
+    void kickNotLeavableShouldNotPunishDeserter() throws Exception {
+        fight = createPvmFight();
+        fight.state(PlacementState.class).kick(player.fighter());
+
+        assertEquals(player.properties().life().max(), player.properties().life().current());
+    }
+
+    @Test
+    void kickSuccess() throws SQLException, ContainerException, JoinFightException {
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
+
+        fight.nextState();
+        state.joinTeam(newFighter, fight.team(0));
+        requestStack.clear();
+
+        AtomicReference<FighterRemoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterRemoved.class, ref::set);
+
+        state.kick(newFighter);
+        assertSame(newFighter, ref.get().fighter());
+        assertFalse(fight.fighters().contains(newFighter));
+        assertFalse(newFighter.cell().fighter().isPresent());
+
+        requestStack.assertLast(new RemoveSprite(newFighter.sprite()));
     }
 }

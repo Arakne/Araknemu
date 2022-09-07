@@ -19,19 +19,22 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Create action for fight
  */
-public interface FightActionFactory {
+public interface FightActionFactory<@NonNull F extends @NonNull ActiveFighter> {
     /**
      * Create the action
      *
+     * @param fighter The action performer
      * @param arguments The action arguments
      */
-    public Action create(String[] arguments);
+    public Action create(F fighter, String[] arguments);
 
     /**
      * Get the related action type

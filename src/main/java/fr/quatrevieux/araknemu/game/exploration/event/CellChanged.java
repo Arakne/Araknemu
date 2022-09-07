@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.exploration.event;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Trigger when player change cell.
@@ -27,9 +28,9 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
  */
 public final class CellChanged {
     private final ExplorationPlayer player;
-    private final int cell;
+    private final @NonNegative int cell;
 
-    public CellChanged(ExplorationPlayer player, int cell) {
+    public CellChanged(ExplorationPlayer player, @NonNegative int cell) {
         this.player = player;
         this.cell = cell;
     }
@@ -38,7 +39,7 @@ public final class CellChanged {
         return player;
     }
 
-    public int cell() {
+    public @NonNegative int cell() {
         return cell;
     }
 }

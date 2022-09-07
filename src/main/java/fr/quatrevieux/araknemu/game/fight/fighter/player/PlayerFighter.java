@@ -25,19 +25,24 @@ import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
-import fr.quatrevieux.araknemu.game.spell.SpellList;
+import fr.quatrevieux.araknemu.game.spell.boost.DispatcherSpellsBoosts;
+import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * Fighter for a player
@@ -46,15 +51,21 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
     private final GamePlayer player;
     private final PlayerFighterProperties properties;
     private final PlayerFighterSprite sprite;
+    private final FighterSpellList spells;
 
     private boolean ready = false;
-    private CastableWeapon weapon;
-    private FightTeam team;
+    private @MonotonicNonNull CastableWeapon weapon;
+    private @MonotonicNonNull FightTeam team;
 
+    @SuppressWarnings({"assignment", "argument", "method.invocation"})
     public PlayerFighter(GamePlayer player) {
         this.player = player;
         this.properties = new PlayerFighterProperties(this, player.properties());
         this.sprite = new PlayerFighterSprite(this, player.spriteInfo());
+        this.spells = new BaseFighterSpellList(
+            properties.spells(),
+            new DispatcherSpellsBoosts(new SimpleSpellsBoosts(), dispatcher())
+        );
     }
 
     @Override
@@ -100,8 +111,8 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
     }
 
     @Override
-    public SpellList spells() {
-        return properties.spells();
+    public FighterSpellList spells() {
+        return spells;
     }
 
     @Override
@@ -142,12 +153,16 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return player.properties().experience().level();
     }
 
     @Override
     public FightTeam team() {
+        if (team == null) {
+            throw new IllegalStateException("Team is not set");
+        }
+
         return team;
     }
 

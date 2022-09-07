@@ -64,15 +64,23 @@ class FighterAITest extends FightBaseCase {
 
     @Test
     void getters() {
-        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
 
         assertSame(fighter, ai.fighter());
         assertEquals(enemy, ai.enemy().get());
     }
 
     @Test
+    void notStarted() {
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
+
+        assertThrows(IllegalStateException.class, ai::turn);
+        assertThrows(IllegalStateException.class, ai::run);
+    }
+
+    @Test
     void enemyShouldFilterDeadFighters() {
-        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
 
         enemy.life().kill(fighter);
 
@@ -84,10 +92,8 @@ class FighterAITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
         ai.start(turn);
-
-        Thread.sleep(20);
 
         assertFalse(turn.active());
     }
@@ -102,17 +108,15 @@ class FighterAITest extends FightBaseCase {
 
         FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
-        Mockito.when(generator1.generate(ai)).thenReturn(Optional.of(Mockito.mock(Action.class)));
+        Mockito.when(generator1.generate(ai, fight.actions())).thenReturn(Optional.of(Mockito.mock(Action.class)));
 
         ai.start(turn);
 
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
 
-        Thread.sleep(20);
-
-        Mockito.verify(generator1).generate(ai);
-        Mockito.verify(generator2, Mockito.never()).generate(ai);
+        Mockito.verify(generator1).generate(ai, fight.actions());
+        Mockito.verify(generator2, Mockito.never()).generate(ai, fight.actions());
 
         assertSame(turn, ai.turn());
         assertTrue(turn.active());
@@ -128,18 +132,16 @@ class FighterAITest extends FightBaseCase {
 
         FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
-        Mockito.when(generator1.generate(ai)).thenReturn(Optional.empty());
-        Mockito.when(generator2.generate(ai)).thenReturn(Optional.empty());
+        Mockito.when(generator1.generate(ai, fight.actions())).thenReturn(Optional.empty());
+        Mockito.when(generator2.generate(ai, fight.actions())).thenReturn(Optional.empty());
 
         ai.start(turn);
 
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
 
-        Thread.sleep(20);
-
-        Mockito.verify(generator1).generate(ai);
-        Mockito.verify(generator2).generate(ai);
+        Mockito.verify(generator1).generate(ai, fight.actions());
+        Mockito.verify(generator2).generate(ai, fight.actions());
 
         assertFalse(turn.active());
     }
@@ -160,22 +162,20 @@ class FighterAITest extends FightBaseCase {
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
 
-        Thread.sleep(20);
-
-        Mockito.verify(generator1, Mockito.never()).generate(ai);
-        Mockito.verify(generator2, Mockito.never()).generate(ai);
+        Mockito.verify(generator1, Mockito.never()).generate(ai, fight.actions());
+        Mockito.verify(generator2, Mockito.never()).generate(ai, fight.actions());
     }
 
     @Test
     void runWithoutStart() {
-        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
 
         assertThrows(IllegalStateException.class, ai::run);
     }
 
     @Test
     void helper() {
-        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
 
         assertInstanceOf(AIHelper.class, ai.helper());
         assertSame(ai.helper(), ai.helper());

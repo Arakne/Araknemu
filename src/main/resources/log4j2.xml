@@ -47,7 +47,7 @@
 
             <Filters>
                 <ThresholdFilter level="TRACE"/>
-                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
         </RollingFile>
 
@@ -63,7 +63,7 @@
 
             <Filters>
                 <ThresholdFilter level="TRACE"/>
-                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
         </RollingFile>
 
@@ -79,7 +79,7 @@
 
             <Filters>
                 <ThresholdFilter level="TRACE"/>
-                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
         </RollingFile>
 
@@ -99,7 +99,7 @@
         </Logger>
         <Root level="INFO">
             <AppenderRef ref="STDOUT" level="TRACE"/>
-            <AppenderRef ref="errors" level="WARN" />
+            <AppenderRef ref="errors" level="ERROR" />
         </Root>
     </Loggers>
 </Configuration>

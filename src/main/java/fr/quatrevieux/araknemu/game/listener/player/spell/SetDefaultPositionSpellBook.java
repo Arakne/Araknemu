@@ -43,10 +43,10 @@ public final class SetDefaultPositionSpellBook implements Listener<CharacterCrea
     public void on(CharacterCreated event) {
         final Player player = event.character().character();
 
-        char position = 1;
+        int position = 1;
 
         for (SpellLevels spell : service.get(player.race()).spells()) {
-            if (spell.level(1).minPlayerLevel() > player.level()) {
+            if (spell.level(1).minPlayerLevel() > player.level() || position > 63) {
                 break;
             }
 

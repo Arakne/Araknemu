@@ -20,24 +20,14 @@
 package fr.quatrevieux.araknemu.network.game.in.fight;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
-import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
-import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 
 /**
  * Leave the current fight
  *
+ * Note: the packet is the same as {@link KickFighterRequest} but without fighter id
+ *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L27
  */
 public final class LeaveFightRequest implements Packet {
-    public static final class Parser implements SinglePacketParser<LeaveFightRequest> {
-        @Override
-        public LeaveFightRequest parse(String input) throws ParsePacketException {
-            return new LeaveFightRequest();
-        }
 
-        @Override
-        public String code() {
-            return "GQ";
-        }
-    }
 }

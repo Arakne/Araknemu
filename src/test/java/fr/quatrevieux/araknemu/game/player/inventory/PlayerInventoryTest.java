@@ -33,14 +33,14 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.item.type.Resource;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
-import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
-import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
-import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,10 +48,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerInventoryTest extends GameBaseCase {
     private ListenerAggregate dispatcher;
@@ -63,11 +73,11 @@ class PlayerInventoryTest extends GameBaseCase {
         super.setUp();
 
         inventory = new PlayerInventory(
+            gamePlayer(true),
             player = dataSet.refresh(new Player(gamePlayer().id())),
             Collections.emptyList()
         );
 
-        inventory.attach(gamePlayer(true));
         dispatcher = gamePlayer().dispatcher();
     }
 
@@ -137,6 +147,7 @@ class PlayerInventoryTest extends GameBaseCase {
         Item i1, i2;
 
         inventory = new PlayerInventory(
+            gamePlayer(),
             dataSet.refresh(new Player(gamePlayer().id())),
             Arrays.asList(
                 new InventoryService.LoadedItem(
@@ -149,8 +160,6 @@ class PlayerInventoryTest extends GameBaseCase {
                 )
             )
         );
-
-        inventory.attach(gamePlayer());
 
         assertSame(i1, inventory.get(2).item());
         assertSame(i2, inventory.get(5).item());
@@ -249,11 +258,6 @@ class PlayerInventoryTest extends GameBaseCase {
     @Test
     void owner() throws SQLException, ContainerException {
         assertSame(gamePlayer(), inventory.owner());
-    }
-
-    @Test
-    void attachAlreadyAttached() {
-        assertThrows(IllegalStateException.class, () -> inventory.attach(makeOtherPlayer()));
     }
 
     @Test

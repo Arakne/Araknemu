@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -44,25 +45,29 @@ public final class DefaultItemFactory implements ItemFactory {
     }
 
     @Override
-    public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize) {
-        if (!factories.containsKey(type.superType())) {
+    public Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, boolean maximize) {
+        final ItemFactory factory = factories.get(type.superType());
+
+        if (factory == null) {
             throw new NoSuchElementException("Invalid type " + type);
         }
 
-        return factories.get(type.superType()).create(template, type, set, maximize);
+        return factory.create(template, type, set, maximize);
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
-        if (!factories.containsKey(type.superType())) {
+    public Item retrieve(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects) {
+        final ItemFactory factory = factories.get(type.superType());
+
+        if (factory == null) {
             throw new NoSuchElementException("Invalid type " + type);
         }
 
-        return factories.get(type.superType()).retrieve(template, type, set, effects);
+        return factory.retrieve(template, type, set, effects);
     }
 
     @Override
     public SuperType type() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

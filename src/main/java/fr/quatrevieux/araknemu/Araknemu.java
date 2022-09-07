@@ -38,6 +38,9 @@ import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.sql.SQLException;
 import java.time.Instant;
@@ -51,7 +54,7 @@ public class Araknemu {
     /**
      * Get the current version of the server (retrieved from pom.xml)
      */
-    public static final String VERSION = Araknemu.class.getPackage().getImplementationVersion();
+    public static final @Nullable String VERSION = Araknemu.class.getPackage() != null ? Araknemu.class.getPackage().getImplementationVersion() : null;
     public static final String NAME = "Araknemu";
     public static final String YEAR = "2017-2021";
     public static final String AUTHOR = "Vincent Quatrevieux";
@@ -62,7 +65,7 @@ public class Araknemu {
     private final DatabaseHandler database;
     private final List<Service> services = new ArrayList<>();
     private boolean started = false;
-    private Instant startDate;
+    private @MonotonicNonNull Instant startDate;
 
     public Araknemu(Configuration configuration, DatabaseHandler database) {
         this.configuration = configuration;
@@ -72,12 +75,13 @@ public class Araknemu {
     /**
      * Boot all services
      */
+    @EnsuresNonNull("startDate")
     public void boot() throws BootException {
         System.out.println(NAME + " Copyright (c) " + YEAR + " " + AUTHOR);
         System.out.println("This program comes with ABSOLUTELY NO WARRANTY.");
         System.out.println("This is free software, and you are welcome to redistribute it under certain conditions.");
 
-        logger.info("Starting {} v{}", NAME, VERSION);
+        logger.info("Starting {} v{}", NAME, VERSION != null ? VERSION : "DEV");
         logger.info("Booting services");
 
         for (Service service : services) {
@@ -146,6 +150,10 @@ public class Araknemu {
      * Get the server start date
      */
     public Instant startDate() {
+        if (startDate == null) {
+            throw new IllegalStateException("Server not started");
+        }
+
         return startDate;
     }
 
@@ -164,7 +172,7 @@ public class Araknemu {
         final Araknemu app = new Araknemu(
             configuration,
             new DefaultDatabaseHandler(
-                configuration.module(DatabaseConfiguration.class),
+                configuration.module(DatabaseConfiguration.MODULE),
                 LogManager.getLogger(DatabaseHandler.class)
             )
         );

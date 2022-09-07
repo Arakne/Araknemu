@@ -46,7 +46,7 @@ class ConstraintBuilderTest {
     void withOneConstraint() {
         ConstraintBuilder builder = new ConstraintBuilder();
 
-        EntityConstraint constraint = builder.max(5).build();
+        EntityConstraint constraint = builder.error("foo").value(entity -> 1).max(5).build();
 
         assertTrue(constraint instanceof Max);
     }
@@ -55,7 +55,7 @@ class ConstraintBuilderTest {
     void withTwoConstraints() {
         ConstraintBuilder builder = new ConstraintBuilder();
 
-        EntityConstraint constraint = builder.max(5).minLength(3).build();
+        EntityConstraint constraint = builder.error("foo").value(entity -> 1).max(5).minLength(3).build();
 
         assertTrue(constraint instanceof Must);
     }

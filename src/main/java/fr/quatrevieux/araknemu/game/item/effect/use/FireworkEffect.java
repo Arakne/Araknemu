@@ -22,7 +22,10 @@ package fr.quatrevieux.araknemu.game.item.effect.use;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.environment.LaunchFirework;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Effect for fireworks
@@ -36,11 +39,11 @@ public final class FireworkEffect implements UseEffectHandler {
     }
 
     @Override
-    public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
+    public void applyToTarget(UseEffect effect, ExplorationPlayer caster, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {
         caster.interactions().push(
             new LaunchFirework(
                 caster,
-                cell,
+                NullnessUtil.castNonNull(cell).id(),
                 effect.arguments()[2],
                 random.rand(effect.arguments())
             )
@@ -53,7 +56,7 @@ public final class FireworkEffect implements UseEffectHandler {
     }
 
     @Override
-    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
-        return true; // @todo check if cell exists
+    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {
+        return cell != null;
     }
 }

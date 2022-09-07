@@ -86,7 +86,7 @@ class AddLifeEffectTest extends GameBaseCase {
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
         target.player().properties().life().set(10);
 
-        effect.applyToTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {10, 0, 0}), player, target, 0);
+        effect.applyToTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {10, 0, 0}), player, target, null);
 
         assertEquals(20, target.properties().life().current());
     }
@@ -120,12 +120,12 @@ class AddLifeEffectTest extends GameBaseCase {
     void checkTargetFullLife() throws Exception {
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
 
-        assertTrue(effect.checkTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player, target, 0));
+        assertTrue(effect.checkTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player, target, null));
     }
 
     @Test
     void checkTargetNotPlayer() {
-        assertFalse(effect.checkTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player, null, 0));
+        assertFalse(effect.checkTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player, null, null));
     }
 
     @Test
@@ -133,7 +133,7 @@ class AddLifeEffectTest extends GameBaseCase {
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
         target.player().properties().life().set(10);
 
-        assertTrue(effect.checkTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player, target, 0));
+        assertTrue(effect.checkTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player, target, null));
     }
 
     @Test

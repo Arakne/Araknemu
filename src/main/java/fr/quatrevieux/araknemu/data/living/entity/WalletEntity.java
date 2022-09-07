@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.living.entity;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+
 /**
  * Entity type for store kamas
  */
@@ -27,12 +29,12 @@ public interface WalletEntity {
      * Get the current amount of kamas
      * The value is always positive
      */
-    public long kamas();
+    public @NonNegative long kamas();
 
     /**
      * Change the kamas quantity
      *
      * @param kamas The new kamas quantity. Must be positive
      */
-    public void setKamas(long kamas);
+    public void setKamas(@NonNegative long kamas);
 }

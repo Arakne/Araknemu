@@ -19,20 +19,41 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * Pool of configuration items
+ * The pool can be used as multimap (i.e. multiple values assigned to the same key) if supported by the driver
+ * You can also iterate over all configuration items using iterator.
+ * In case of multimap config, the iterable will return an entry for each value, with the same key.
  */
-public interface Pool {
+public interface Pool extends Iterable<Map.Entry<String, String>> {
     /**
      * Check if the pool has the key
+     *
      * @param key Configuration item to check
      */
     public boolean has(String key);
 
     /**
      * Get the value of the item
+     *
      * @param key The config item key
+     *
      * @return Configuration value
      */
-    public String get(String key);
+    public @Nullable String get(String key);
+
+    /**
+     * Get all values at the given key
+     * In case of single value item, it will return a singleton list
+     *
+     * @param key The config item key
+     *
+     * @return Configuration values. If not set an empty list will be returned.
+     */
+    public List<String> getAll(String key);
 }

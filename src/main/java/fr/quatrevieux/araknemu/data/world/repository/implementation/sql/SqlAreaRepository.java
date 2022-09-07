@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
@@ -93,11 +94,11 @@ final class SqlAreaRepository implements AreaRepository {
 
     private static class Loader implements RepositoryUtils.Loader<Area> {
         @Override
-        public Area create(ResultSet rs) throws SQLException {
+        public Area create(Record record) throws SQLException {
             return new Area(
-                rs.getInt("AREA_ID"),
-                rs.getString("AREA_NAME"),
-                rs.getInt("SUPERAREA_ID")
+                record.getInt("AREA_ID"),
+                record.getString("AREA_NAME"),
+                record.getInt("SUPERAREA_ID")
             );
         }
 

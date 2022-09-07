@@ -21,19 +21,26 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
+
+import java.util.function.BiConsumer;
 
 /**
  * Handle effect jet value
  *
  * Computed value is :
  * ( [jet + boost] * percent / 100 + fixed + effectBonus ) * multiply
+ *
+ * @todo mettre des positive et non negative de partout
  */
-public final class EffectValue {
+public final class EffectValue implements Cloneable {
     enum State {
         MINIMIZED,
         RANDOMIZED,
         MAXIMIZED,
+        FIXED,
     }
 
     /**
@@ -47,9 +54,10 @@ public final class EffectValue {
     private int boost = 0;
     private int percent = 100;
     private int fixed = 0;
-    private int multiply = 1;
+    private @NonNegative int multiply = 1;
+    private @NonNegative int value = 0;
 
-    public EffectValue(SpellEffect effect) {
+    EffectValue(SpellEffect effect) {
         this.effect = effect;
     }
 
@@ -76,6 +84,16 @@ public final class EffectValue {
      */
     public EffectValue randomize() {
         state = State.RANDOMIZED;
+
+        return this;
+    }
+
+    /**
+     * Roll the dice to fix the effect value
+     */
+    public EffectValue roll() {
+        value = jet();
+        state = State.FIXED;
 
         return this;
     }
@@ -123,7 +141,7 @@ public final class EffectValue {
      * Unlike percent, the multiplier will be used at the end of the operation.
      * So, it multiplies jet, percent and fixed bonus
      */
-    public EffectValue multiply(int value) {
+    public EffectValue multiply(@NonNegative int value) {
         this.multiply = value;
 
         return this;
@@ -132,7 +150,7 @@ public final class EffectValue {
     /**
      * Get the dice value
      */
-    public int value() {
+    public @NonNegative int value() {
         return applyBoost(jet());
     }
 
@@ -141,6 +159,9 @@ public final class EffectValue {
      */
     public Interval interval() {
         switch (state) {
+            case FIXED:
+                return Interval.of(value);
+
             case MINIMIZED:
                 return Interval.of(applyBoost(effect.min()));
 
@@ -153,8 +174,75 @@ public final class EffectValue {
         }
     }
 
-    private int jet() {
+    @Override
+    protected EffectValue clone() {
+        try {
+            return (EffectValue) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(); // Should not occur
+        }
+    }
+
+    /**
+     * Create and configure an effect value for a given caster and target
+     *
+     * @param effect The spell effect
+     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
+     * @param target The target on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue, PassiveFighter)} will be called
+     *
+     * @return The configured effect
+     */
+    public static EffectValue create(SpellEffect effect, PassiveFighter caster, PassiveFighter target) {
+        final EffectValue value = new EffectValue(effect);
+
+        caster.buffs().onEffectValueCast(value);
+        target.buffs().onEffectValueTarget(value, caster);
+
+        return value;
+    }
+
+    /**
+     * Create and configure multiple effect values for multiple targets
+     *
+     * Only one "dice" will be used for all targets, but each target will receive their own EffectValue,
+     * configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue, PassiveFighter)}.
+     *
+     * So {@link EffectValue#minimize()} and {@link EffectValue#maximize()} are effective, without change the effects value of others targets
+     *
+     * Usage:
+     * <pre>{@code
+     * public void handle(CastScope cast, CastScope.EffectScope effect) {
+     *     EffectValue.forEachTargets(effect.effect(), cast.caster(), effect.targets(), (target, effectValue) -> {
+     *         // Apply the effect (effectValue) on target
+     *         target.life().alter(cast.caster(), effectValue.value());
+     *     });
+     * }
+     * }</pre>
+     *
+     * @param effect The spell effect
+     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
+     * @param targets Targets used to configure the effect value using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue, PassiveFighter)}
+     * @param action Action to perform on each target, with their related effect value
+     */
+    public static void forEachTargets(SpellEffect effect, PassiveFighter caster, Iterable<PassiveFighter> targets, BiConsumer<PassiveFighter, EffectValue> action) {
+        final EffectValue value = new EffectValue(effect);
+
+        caster.buffs().onEffectValueCast(value);
+        value.roll();
+
+        for (PassiveFighter target : targets) {
+            final EffectValue targetValue = value.clone();
+            target.buffs().onEffectValueTarget(targetValue, caster);
+
+            action.accept(target, targetValue);
+        }
+    }
+
+    private @NonNegative int jet() {
         switch (state) {
+            case FIXED:
+                return value;
+
             case MINIMIZED:
                 return effect.min();
 
@@ -167,7 +255,7 @@ public final class EffectValue {
         }
     }
 
-    private int applyBoost(int value) {
+    private @NonNegative int applyBoost(int value) {
         return Math.max(
             ((boost + value) * percent / 100 + fixed + effect.boost()) * multiply,
             0

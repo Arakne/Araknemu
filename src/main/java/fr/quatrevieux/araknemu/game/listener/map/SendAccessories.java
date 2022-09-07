@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.listener.map;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.network.game.out.object.SpriteAccessories;
@@ -41,12 +42,11 @@ public final class SendAccessories implements Listener<EquipmentChanged> {
             return;
         }
 
-        player.map().send(
-            new SpriteAccessories(
-                player.id(),
-                player.inventory().accessories()
-            )
-        );
+        final ExplorationMap map = player.map();
+
+        if (map != null) {
+            map.send(new SpriteAccessories(player.id(), player.inventory().accessories()));
+        }
     }
 
     @Override

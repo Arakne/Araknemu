@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
@@ -297,19 +298,45 @@ class ExplorationMapTest extends GameBaseCase {
         Collection<GameNpc> npcs = new ArrayList<>();
         Collection<ExplorationPlayer> players = new ArrayList<>();
 
-        map.apply(new Operation() {
+        assertNull(map.apply(new Operation<Void>() {
             @Override
-            public void onExplorationPlayer(ExplorationPlayer player) {
+            public Void onExplorationPlayer(ExplorationPlayer player) {
                 players.add(player);
+                return null;
             }
 
             @Override
-            public void onNpc(GameNpc npc) {
+            public Void onNpc(GameNpc npc) {
                 npcs.add(npc);
+                return null;
             }
-        });
+        }));
 
         assertEquals(Arrays.asList(explorationPlayer(), other), players);
         assertEquals(Arrays.asList(npc), npcs);
+    }
+
+    @Test
+    void applyWithReturnValueShouldIgnoreNextCreatures() throws Exception {
+        dataSet.pushNpcs();
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer other = makeOtherExplorationPlayer();
+
+        GameNpc npc = container.get(NpcService.class).get(457);
+
+        map.add(npc);
+        map.add(other);
+
+        Collection<ExplorationCreature> creatures = new ArrayList<>();
+
+        assertSame(explorationPlayer(), map.apply(new Operation<ExplorationCreature>() {
+            @Override
+            public ExplorationCreature onCreature(ExplorationCreature creature) {
+                creatures.add(creature);
+                return creature;
+            }
+        }));
+
+        assertEquals(Arrays.asList(explorationPlayer()), creatures);
     }
 }

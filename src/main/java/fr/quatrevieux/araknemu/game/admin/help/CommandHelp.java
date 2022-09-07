@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.admin.help;
 
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,8 +43,8 @@ public final class CommandHelp {
 
     private final Command command;
 
-    private String synopsis;
-    private String description;
+    private @Nullable String synopsis;
+    private @Nullable String description;
     private final Map<String, String> options;
     private final List<LinkItem> examples;
     private final List<LinkItem> seeAlso;
@@ -375,10 +377,10 @@ public final class CommandHelp {
          *
          * @see Builder#with(String, String)
          */
-        public Builder with(String varName, Class<? extends Enum> value) {
+        public <E extends Enum<E>> Builder with(String varName, Class<E> value) {
             return with(
                 varName,
-                () -> Arrays.stream(value.getEnumConstants()).map(Enum::name).collect(Collectors.joining(", "))
+                () -> Arrays.stream(NullnessUtil.castNonNull(value.getEnumConstants())).map(Enum::name).collect(Collectors.joining(", "))
             );
         }
     }

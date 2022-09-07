@@ -28,9 +28,10 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,16 +48,18 @@ public final class ItemService implements PreloadableService {
     private final ItemFactory factory;
     private final ItemSetRepository itemSetRepository;
     private final ItemTypeRepository itemTypeRepository;
-    private final EffectMappers mappers;
+    private final EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper;
+    private final EffectMapper<SpecialEffect> specialEffectEffectMapper;
 
     private final ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
 
-    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, ItemTypeRepository itemTypeRepository, EffectMappers mappers) {
+    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, ItemTypeRepository itemTypeRepository, EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper, EffectMapper<SpecialEffect> specialEffectEffectMapper) {
         this.repository = repository;
         this.factory = factory;
         this.itemSetRepository = itemSetRepository;
         this.itemTypeRepository = itemTypeRepository;
-        this.mappers = mappers;
+        this.characteristicEffectEffectMapper = characteristicEffectEffectMapper;
+        this.specialEffectEffectMapper = specialEffectEffectMapper;
     }
 
     @Override
@@ -119,13 +122,13 @@ public final class ItemService implements PreloadableService {
      *
      * @return Map of item associated with the quantity
      */
-    public Map<Item, Integer> createBulk(ItemTemplate template, int quantity) {
-        final Map<Item, Integer> items = new HashMap<>();
+    public Map<Item, @Positive Integer> createBulk(ItemTemplate template, @Positive int quantity) {
+        final Map<Item, @Positive Integer> items = new HashMap<>();
 
-        for (; quantity > 0; --quantity) {
+        for (int count = 0; count < quantity; ++count) {
             final Item generated = create(template);
 
-            items.put(generated, items.getOrDefault(generated, 0) + 1);
+            items.merge(generated, 1, (a, b) -> a + b); // Do not use Integer::sum because it does not handle @Positive
         }
 
         return items;
@@ -158,11 +161,7 @@ public final class ItemService implements PreloadableService {
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the item set do not exists
      */
     public GameItemSet itemSet(int id) {
-        if (!itemSetsById.containsKey(id)) {
-            itemSetsById.put(id, createItemSet(itemSetRepository.get(id)));
-        }
-
-        return itemSetsById.get(id);
+        return itemSetsById.computeIfAbsent(id, mid -> createItemSet(itemSetRepository.get(id)));
     }
 
     private GameItemSet createItemSet(ItemSet entity) {
@@ -172,8 +171,8 @@ public final class ItemService implements PreloadableService {
             bonuses.add(
                 new GameItemSet.Bonus(
                     effects,
-                    mappers.get(CharacteristicEffect.class).create(effects),
-                    mappers.get(SpecialEffect.class).create(effects)
+                    characteristicEffectEffectMapper.create(effects),
+                    specialEffectEffectMapper.create(effects)
                 )
             );
         }

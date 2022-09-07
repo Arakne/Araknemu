@@ -117,11 +117,9 @@ public final class AuthenticationService implements EventsSubscriber {
      * Check if the account is authenticated
      */
     public boolean isAuthenticated(AuthenticationAccount account) {
-        if (!authenticated.containsKey(account.id())) {
-            return false;
-        }
+        final AuthenticationAccount alreadyAuthenticated = authenticated.get(account.id());
 
-        return authenticated.get(account.id()).isLogged();
+        return alreadyAuthenticated != null && alreadyAuthenticated.isLogged();
     }
 
     /**

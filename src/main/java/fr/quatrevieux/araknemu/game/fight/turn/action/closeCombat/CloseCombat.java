@@ -19,18 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 import java.time.Duration;
@@ -39,20 +37,16 @@ import java.time.Duration;
  * Use weapon / close combat attack
  */
 public final class CloseCombat implements Action {
-    private final FightTurn turn;
     private final Fighter caster;
     private final FightCell target;
     private final WeaponConstraintsValidator validator;
     private final CriticalityStrategy criticalityStrategy;
 
-    private CloseCombatSuccess result;
-
-    public CloseCombat(FightTurn turn, Fighter caster, FightCell target) {
-        this(turn, caster, target, new WeaponConstraintsValidator(), new BaseCriticalityStrategy(caster));
+    public CloseCombat(Fighter caster, FightCell target) {
+        this(caster, target, new WeaponConstraintsValidator(), new BaseCriticalityStrategy());
     }
 
-    public CloseCombat(FightTurn turn, Fighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
-        this.turn = turn;
+    public CloseCombat(Fighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
         this.caster = caster;
         this.target = target;
         this.validator = validator;
@@ -60,7 +54,7 @@ public final class CloseCombat implements Action {
     }
 
     @Override
-    public boolean validate() {
+    public boolean validate(Turn turn) {
         final Error error = validator.validate(turn, caster.weapon(), target);
 
         if (error != null) {
@@ -74,15 +68,15 @@ public final class CloseCombat implements Action {
 
     @Override
     public ActionResult start() {
-        if (criticalityStrategy.failed(caster.weapon().criticalFailure())) {
+        if (criticalityStrategy.failed(caster, caster.weapon().criticalFailure())) {
             return new CloseCombatFailed(caster);
         }
 
-        return result = new CloseCombatSuccess(
+        return new CloseCombatSuccess(
             caster,
             caster.weapon(),
             target,
-            criticalityStrategy.hit(caster.weapon().criticalHit())
+            criticalityStrategy.hit(caster, caster.weapon().criticalHit())
         );
     }
 
@@ -94,22 +88,6 @@ public final class CloseCombat implements Action {
     @Override
     public ActionType type() {
         return ActionType.CLOSE_COMBAT;
-    }
-
-    @Override
-    public void end() {
-        if (result.critical()) {
-            caster.fight().send(ActionEffect.criticalHitCloseCombat(caster));
-        }
-
-        turn.points().useActionPoints(caster.weapon().apCost());
-        turn.fight().effects().apply(new CastScope(caster.weapon(), caster, target).withEffects(result.effects()));
-    }
-
-    @Override
-    public void failed() {
-        turn.points().useActionPoints(caster.weapon().apCost());
-        turn.stop();
     }
 
     @Override

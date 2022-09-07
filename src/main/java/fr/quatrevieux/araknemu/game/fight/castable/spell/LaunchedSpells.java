@@ -46,12 +46,12 @@ public final class LaunchedSpells {
      * @param target The target
      */
     public void push(Spell spell, FightCell target) {
-        if (!spells.containsKey(spell.id())) {
+        final Entry entry = spells.get(spell.id());
+
+        if (entry == null) {
             spells.put(spell.id(), new Entry(spell, target));
             return;
         }
-
-        final Entry entry = spells.get(spell.id());
 
         ++entry.count;
         target.fighter().ifPresent(
@@ -71,11 +71,11 @@ public final class LaunchedSpells {
      * @return true is the spell can be launched
      */
     public boolean valid(Spell spell, FightCell target) {
-        if (!spells.containsKey(spell.id())) {
+        final Entry entry = spells.get(spell.id());
+
+        if (entry == null) {
             return true;
         }
-
-        final Entry entry = spells.get(spell.id());
 
         if (entry.cooldown > 0) {
             return false;
@@ -85,16 +85,17 @@ public final class LaunchedSpells {
             return false;
         }
 
-        if (
-            spell.constraints().launchPerTarget() > 0
-            && target.fighter().isPresent()
-            && entry.countPerTarget.containsKey(target.fighter().get())
-            && entry.countPerTarget.get(target.fighter().get()) >= spell.constraints().launchPerTarget()
-        ) {
-            return false;
+        return checkPerTarget(spell, entry, target);
+    }
+
+    private boolean checkPerTarget(Spell spell, Entry entry, FightCell target) {
+        if (spell.constraints().launchPerTarget() <= 0 || !target.fighter().isPresent()) {
+            return true;
         }
 
-        return true;
+        final Integer perTarget = entry.countPerTarget.get(target.fighter().get());
+
+        return perTarget == null || perTarget < spell.constraints().launchPerTarget();
     }
 
     private static class Entry {

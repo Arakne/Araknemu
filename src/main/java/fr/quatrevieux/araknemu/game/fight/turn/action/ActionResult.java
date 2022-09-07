@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 /**
  * Results of a fight action
@@ -46,4 +47,24 @@ public interface ActionResult {
      * A failed action will not be keep on the action handler
      */
     public boolean success();
+
+    /**
+     * Does the result should be only sent to performer ?
+     *
+     * If true, only the performer should get a feedback of the result
+     * If false, all fighters should see the action result
+     *
+     * Should be true for movement action if the fighter is hidden
+     */
+    public boolean secret();
+
+    /**
+     * Apply the action result to fight
+     *
+     * A failed action will be applied directly (i.e. after start)
+     * otherwise a failed one will be applied when action is terminated
+     *
+     * @see ActionHandler#terminate()
+     */
+    public void apply(FightTurn turn);
 }

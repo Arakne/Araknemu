@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -51,7 +53,7 @@ import java.util.Queue;
 public final class ActionQueue {
     private final Queue<Action> actions = new ArrayDeque<>();
 
-    private BlockingAction current;
+    private @Nullable BlockingAction current;
     private byte lastActionId = 0;
 
     /**

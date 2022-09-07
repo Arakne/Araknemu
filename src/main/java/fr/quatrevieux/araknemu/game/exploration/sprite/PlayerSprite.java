@@ -58,6 +58,11 @@ public final class PlayerSprite implements Sprite {
     }
 
     @Override
+    public int gfxId() {
+        return exploration.player().spriteInfo().gfxId();
+    }
+
+    @Override
     public String name() {
         return exploration.player().name();
     }
@@ -74,7 +79,7 @@ public final class PlayerSprite implements Sprite {
             id() + ";" +
             name() + ";" +
             exploration.player().spriteInfo().race().ordinal() + ";" + // @todo title
-            exploration.player().spriteInfo().gfxId() + "^" + exploration.player().spriteInfo().size() + ";" +
+            gfxId() + "^" + exploration.player().spriteInfo().size() + ";" +
             exploration.player().spriteInfo().gender().ordinal() + ";" +
             ";" + // @todo alignment
             exploration.player().spriteInfo().colors().toHexString(";") + ";" +

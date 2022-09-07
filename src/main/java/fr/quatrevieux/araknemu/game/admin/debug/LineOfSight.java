@@ -31,12 +31,12 @@ import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.kohsuke.args4j.Argument;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Display accessible cells by line of sight
@@ -68,6 +68,7 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
     }
 
     @Override
+    @SuppressWarnings("argument") // the cell is valid
     public void execute(AdminPerformer performer, Arguments arguments) {
         final AdminUser user = AdminUser.class.cast(performer);
         final FightMap map = new FightMap(repository.get(user.player().position().map()));
@@ -75,12 +76,12 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
         final CoordinateCell<FightCell> current = map.get(user.player().position().cell()).coordinate();
         final CellSight<FightCell> sight = new CellSight<>(current);
 
-        final List<Integer> accessible;
-        final List<Integer> blocked;
+        final List<FightCell> accessible;
+        final List<FightCell> blocked;
 
         if (!arguments.hasTargetCell()) {
-            accessible = sight.accessible().stream().map(MapCell::id).collect(Collectors.toList());
-            blocked = sight.blocked().stream().map(MapCell::id).collect(Collectors.toList());
+            accessible = new ArrayList<>(sight.accessible());
+            blocked = new ArrayList<>(sight.blocked());
         } else {
             final Iterator<FightCell> los = sight.to(map.get(arguments.cellId()));
 
@@ -93,15 +94,18 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
                 final FightCell cell = los.next();
 
                 if (isFree) {
-                    accessible.add(cell.id());
+                    accessible.add(cell);
                     isFree = !cell.sightBlocking();
                 } else {
-                    blocked.add(cell.id());
+                    blocked.add(cell);
                 }
             }
         }
 
-        user.send(new FightStartPositions(new List[] {blocked, accessible}, 0));
+        user.send(new FightStartPositions(new MapCell[][] {
+            blocked.toArray(new MapCell[0]),
+            accessible.toArray(new MapCell[0]),
+        }, 0));
     }
 
     @Override
@@ -109,15 +113,16 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
         return new Arguments();
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument(metaVar = "target cell id")
-        private Integer cellId;
+        private @NonNegative Integer cellId;
 
-        public void setCellId(Integer cellId) {
+        public void setCellId(@NonNegative Integer cellId) {
             this.cellId = cellId;
         }
 
-        public int cellId() {
+        public @NonNegative int cellId() {
             return cellId;
         }
 

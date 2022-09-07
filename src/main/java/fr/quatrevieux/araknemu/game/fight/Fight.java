@@ -38,10 +38,13 @@ import fr.quatrevieux.araknemu.game.fight.state.FightState;
 import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -70,15 +73,17 @@ public final class Fight implements Dispatcher, Sender {
     private final ListenerAggregate dispatcher;
     private final ScheduledExecutorService executor;
     private final Spectators spectators;
+    private final ActionsFactory<Fighter> actions;
 
     private final Lock executorLock = new ReentrantLock();
-    private final FightTurnList turnList = new FightTurnList(this);
     private final EffectsHandler effects = new EffectsHandler();
+    private final FightTurnList turnList;
 
     private final StopWatch duration = new StopWatch();
     private volatile boolean alive = true;
 
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor) {
+    @SuppressWarnings({"assignment", "argument"})
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<Fighter> actions) {
         this.id = id;
         this.type = type;
         this.map = map;
@@ -86,8 +91,12 @@ public final class Fight implements Dispatcher, Sender {
         this.statesFlow = statesFlow;
         this.logger = logger;
         this.executor = executor;
+        this.turnList = new FightTurnList(this);
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
+        this.actions = actions;
+
+        teams.forEach(team -> team.setFight(this));
     }
 
     /**
@@ -154,6 +163,7 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get the fight map
      */
+    @Pure
     public FightMap map() {
         return map;
     }
@@ -168,6 +178,7 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get the current fight state if the type corresponds
      */
+    @Pure
     @SuppressWarnings("unchecked")
     public <T extends FightState> T state(Class<T> type) {
         if (!type.isInstance(statesFlow.current())) {
@@ -188,6 +199,7 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get the fight type
      */
+    @Pure
     public FightType type() {
         return type;
     }
@@ -200,10 +212,17 @@ public final class Fight implements Dispatcher, Sender {
     }
 
     /**
-     * Get the fight effects handle
+     * Get the fight effects handler
      */
     public EffectsHandler effects() {
         return effects;
+    }
+
+    /**
+     * Get available fight actions factories
+     */
+    public ActionsFactory<Fighter> actions() {
+        return actions;
     }
 
     @Override
@@ -359,7 +378,7 @@ public final class Fight implements Dispatcher, Sender {
      * Get an attachment by its type
      */
     @SuppressWarnings("unchecked")
-    public <T> T attachment(Class<T> type) {
+    public <T> @Nullable T attachment(Class<T> type) {
         return (T) attachments.get(type);
     }
 

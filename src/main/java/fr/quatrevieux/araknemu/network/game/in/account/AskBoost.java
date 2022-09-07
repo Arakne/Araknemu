@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Boost one characteristic
@@ -51,7 +52,7 @@ public final class AskBoost implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "AB";
         }
     }

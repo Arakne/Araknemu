@@ -33,10 +33,26 @@ public interface FighterLife extends Life {
     /**
      * Change fighter life
      *
+     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onLifeAltered(int)}
+     *
      * @param caster The caster
      * @param value The modified value. Positive for heal, negative for damage
      */
-    public int alter(ActiveFighter caster, int value);
+    public int alter(PassiveFighter caster, int value);
+
+    /**
+     * Change the max life of the current fighter
+     * The current life will also be updated
+     *
+     * The `value` is simply added to `current` and `max` life point values
+     * If the current life reach 0, the fighter will be considered as dead
+     *
+     * @param caster The caster
+     * @param value Value to add to current and max. Can be negative for remove life.
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged Event triggered by this method
+     */
+    public void alterMax(PassiveFighter caster, int value);
 
     /**
      * Kill the fighter

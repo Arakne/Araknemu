@@ -22,26 +22,19 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.util;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Base algorithm for compute criticality
  */
 public final class BaseCriticalityStrategy implements CriticalityStrategy {
-    /**
-     * BaseCriticalityStrategy is a short life object, and the random is only used twice per instance
-     */
-    private static final RandomUtil RANDOM = RandomUtil.createShared();
-
-    private final ActiveFighter fighter;
-
-    public BaseCriticalityStrategy(ActiveFighter fighter) {
-        this.fighter = fighter;
-    }
+    private final RandomUtil random = new RandomUtil();
 
     @Override
-    public int hitRate(int base) {
+    public @Positive int hitRate(ActiveFighter fighter, int base) {
         if (base <= 2) {
-            return base;
+            return Math.max(base, 1);
         }
 
         base -= fighter.characteristics().get(Characteristic.CRITICAL_BONUS);
@@ -53,21 +46,21 @@ public final class BaseCriticalityStrategy implements CriticalityStrategy {
     }
 
     @Override
-    public boolean hit(int baseRate) {
+    public boolean hit(ActiveFighter fighter, @NonNegative int baseRate) {
         if (baseRate < 2) { // No criticality
             return false;
         }
 
-        return RANDOM.reverseBool(hitRate(baseRate));
+        return random.reverseBool(hitRate(fighter, baseRate));
     }
 
     @Override
-    public int failureRate(int base) {
+    public @Positive int failureRate(ActiveFighter fighter, @Positive int base) {
         return Math.max(base - fighter.characteristics().get(Characteristic.FAIL_MALUS), 2);
     }
 
     @Override
-    public boolean failed(int baseRate) {
-        return baseRate > 0 && RANDOM.reverseBool(failureRate(baseRate));
+    public boolean failed(ActiveFighter fighter, @NonNegative int baseRate) {
+        return baseRate > 0 && random.reverseBool(failureRate(fighter, baseRate));
     }
 }

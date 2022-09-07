@@ -23,6 +23,8 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Creature that can change map
@@ -31,6 +33,7 @@ public interface Explorer {
     /**
      * Get the current position
      */
+    @Pure
     public Position position();
 
     /**
@@ -45,5 +48,6 @@ public interface Explorer {
     /**
      * Get the current map
      */
-    public ExplorationMap map();
+    @Pure
+    public @Nullable ExplorationMap map();
 }

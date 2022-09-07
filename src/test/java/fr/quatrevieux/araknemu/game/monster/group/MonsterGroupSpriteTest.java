@@ -93,5 +93,6 @@ class MonsterGroupSpriteTest extends GameBaseCase {
         assertEquals(Direction.WEST, sprite.orientation());
         assertEquals(Sprite.Type.MONSTER_GROUP, sprite.type());
         assertEquals("31,34,36,36", sprite.name());
+        assertEquals(1563, sprite.gfxId());
     }
 }

@@ -34,6 +34,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.stream.Stream;
@@ -46,6 +47,7 @@ class CastSimulationTest extends FightBaseCase {
     private Fighter fighter;
     private Fighter allie;
     private Fighter ennemy;
+    private Spell spell;
 
     @Override
     @BeforeEach
@@ -60,7 +62,7 @@ class CastSimulationTest extends FightBaseCase {
 
         fight.state(PlacementState.class).joinTeam(allie = new PlayerFighter(alliePlayer), fighter.team());
 
-        simulation = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
+        simulation = new CastSimulation(spell = Mockito.mock(Spell.class), fighter, fight.map().get(123));
         fight.nextState();
     }
 
@@ -245,5 +247,47 @@ class CastSimulationTest extends FightBaseCase {
         simulation.merge(other, 20);
 
         assertEquals(.415, simulation.suicideProbability());
+    }
+
+    @Test
+    void alterActionPoints() {
+        Mockito.when(spell.apCost()).thenReturn(3);
+        assertEquals(3, simulation.actionPointsCost());
+
+        simulation.alterActionPoints(1);
+        assertEquals(2, simulation.actionPointsCost());
+
+        CastSimulation other = new CastSimulation(spell, fighter, fight.map().get(123));
+        other.alterActionPoints(2);
+
+        simulation.merge(other, 25);
+
+        assertEquals(1.5, simulation.actionPointsCost());
+    }
+
+    @Test
+    void addHealBuff() {
+        fighter.life().alter(fighter, -10);
+        simulation.addHealBuff(new Interval(5, 10), 3, fighter);
+
+        assertEquals(7.5, simulation.selfLife());
+        assertEquals(11.25, simulation.selfBoost());
+    }
+
+    @Test
+    void addHealBuffAlreadyFullLife() {
+        simulation.addHealBuff(new Interval(5, 10), 3, fighter);
+
+        assertEquals(0, simulation.selfLife());
+        assertEquals(11.25, simulation.selfBoost());
+    }
+
+    @Test
+    void addHealBuffOnlyOneTurnShouldNotSetAsBuff() {
+        fighter.life().alter(fighter, -10);
+        simulation.addHealBuff(new Interval(5, 10), 1, fighter);
+
+        assertEquals(7.5, simulation.selfLife());
+        assertEquals(0, simulation.selfBoost());
     }
 }

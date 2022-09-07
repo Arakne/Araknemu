@@ -79,6 +79,22 @@ class AskChallengeTest extends GameBaseCase {
             new GameActionResponse("", ActionType.JOIN_FIGHT, "1", "p")
         );
     }
+
+    @Test
+    void notOnMap() throws Exception {
+        ExplorationPlayer current = explorationPlayer();
+        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
+
+        current.leave();
+        requestStack.clear();
+
+        AskChallenge action = new AskChallenge(current, other.id(), container.get(FightService.class));
+
+        action.start(new ActionQueue());
+
+        requestStack.assertEmpty();
+    }
+
     @Test
     void notExplorationPlayer() throws Exception {
         dataSet.pushNpcs();

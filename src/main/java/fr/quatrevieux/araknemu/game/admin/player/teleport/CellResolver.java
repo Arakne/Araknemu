@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
+import fr.quatrevieux.araknemu.util.ParseUtils;
+
 /**
  * Resolve the target cell
  */
@@ -30,7 +32,7 @@ public final class CellResolver implements LocationResolver {
 
     @Override
     public void resolve(String argument, Target target) {
-        target.setCell(Integer.parseUnsignedInt(argument));
+        target.setCell(ParseUtils.parseNonNegativeInt(argument));
     }
 
     @Override

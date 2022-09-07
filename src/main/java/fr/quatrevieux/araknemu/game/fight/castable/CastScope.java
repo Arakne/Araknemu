@@ -19,12 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable;
 
-import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,27 +42,34 @@ import java.util.stream.Collectors;
  * Wrap casting arguments
  */
 public final class CastScope {
-    /**
-     * Cast scope is a temporary object, and the random is rarely used (only for "probable effects")
-     */
-    private static final RandomUtil RANDOM = RandomUtil.createShared();
-
     private final Castable action;
     private final ActiveFighter caster;
     private final FightCell target;
 
-    private List<EffectScope> effects;
-    private Map<PassiveFighter, PassiveFighter> targetMapping;
+    private final List<EffectScope> effects;
+    private final Map<PassiveFighter, @Nullable PassiveFighter> targetMapping = new HashMap<>();
 
-    public CastScope(Castable action, ActiveFighter caster, FightCell target) {
+    private CastScope(Castable action, ActiveFighter caster, FightCell target, List<SpellEffect> effects) {
         this.action = action;
         this.caster = caster;
         this.target = target;
+
+        this.effects = effects.stream()
+            .map(effect -> new EffectScope(effect, CastTargetResolver.resolveFromEffect(caster, target, action, effect)))
+            .collect(Collectors.toList())
+        ;
+
+        for (EffectScope effect : this.effects) {
+            for (PassiveFighter fighter : effect.targets) {
+                this.targetMapping.put(fighter, fighter);
+            }
+        }
     }
 
     /**
      * Get the casted action
      */
+    @Pure
     public Castable action() {
         return action;
     }
@@ -80,6 +88,7 @@ public final class CastScope {
     /**
      * Get the caster
      */
+    @Pure
     public ActiveFighter caster() {
         return caster;
     }
@@ -87,15 +96,23 @@ public final class CastScope {
     /**
      * Get the targeted cell
      */
+    @Pure
     public FightCell target() {
         return target;
     }
 
     /**
      * Get the cast targets
+     *
+     * This method will not resolve target mapping, nor effect target mapping
+     * It will return all targets, before the mapping is resolved
+     * So if {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)} is called,
+     * the new target will be added on this set
+     *
+     * Note: a new instance is returned to ensure that concurrent modification will not occur
      */
     public Set<PassiveFighter> targets() {
-        return new HashSet<>(targetMapping.values());
+        return new HashSet<>(targetMapping.keySet());
     }
 
     /**
@@ -106,94 +123,84 @@ public final class CastScope {
      */
     public void replaceTarget(PassiveFighter originalTarget, PassiveFighter newTarget) {
         targetMapping.put(originalTarget, newTarget);
+
+        // Add new target as target if not yet defined
+        if (!targetMapping.containsKey(newTarget)) {
+            targetMapping.put(newTarget, newTarget);
+        }
+    }
+
+    /**
+     * Remove a target of the cast
+     *
+     * Note: this method will definitively remove the target,
+     * even if {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)} is called
+     */
+    public void removeTarget(PassiveFighter target) {
+        // Set target to null without remove the key to ensure that it will effectively remove
+        // even if a replaceTarget() point to it
+        targetMapping.put(target, null);
     }
 
     /**
      * Get list of effects to apply
      */
+    @Pure
     public List<EffectScope> effects() {
         return effects;
     }
 
     /**
-     * Add effects to the cast scope
-     *
-     * @param effects Effects to add
+     * Create a basic CastScope instance
+     * Should be used for weapons
      */
-    public CastScope withEffects(List<SpellEffect> effects) {
-        this.effects = effects.stream()
-            .map(effect -> new EffectScope(effect, resolveTargets(effect)))
-            .collect(Collectors.toList())
-        ;
-
-        targetMapping = new HashMap<>();
-
-        for (EffectScope effect : this.effects) {
-            for (PassiveFighter fighter : effect.targets) {
-                targetMapping.put(fighter, fighter);
-            }
-        }
-
-        return this;
+    public static CastScope simple(Castable action, ActiveFighter caster, FightCell target, List<SpellEffect> effects) {
+        return new CastScope(action, caster, target, effects);
     }
 
     /**
-     * Add effects which can have a probability to occurs (ex: Bluff)
+     * Create a cast scope with probable effects (ex: Bluff)
+     * This method must be used if the action has probable effects
      *
-     * @param effects Effects to resolve and add
+     * @see RandomEffectSelector#select(List)
+     * @see SpellEffect#probability()
      */
-    public CastScope withRandomEffects(List<SpellEffect> effects) {
-        final List<SpellEffect> selectedEffects = new ArrayList<>(effects.size());
-        final List<SpellEffect> probableEffects = new ArrayList<>();
-
-        for (SpellEffect effect : effects) {
-            if (effect.probability() == 0) {
-                selectedEffects.add(effect);
-            }  else {
-                probableEffects.add(effect);
-            }
-        }
-
-        // No probable effects
-        if (probableEffects.isEmpty()) {
-            return withEffects(effects);
-        }
-
-        int dice = RANDOM.nextInt(100);
-
-        for (SpellEffect effect : probableEffects) {
-            dice -= effect.probability();
-
-            if (dice <= 0) {
-                selectedEffects.add(effect);
-                break;
-            }
-        }
-
-        return withEffects(selectedEffects);
+    public static CastScope probable(Castable action, ActiveFighter caster, FightCell target, List<SpellEffect> effects) {
+        return new CastScope(action, caster, target, RandomEffectSelector.select(effects));
     }
 
     /**
-     * Resolve the targets of the effect
+     * Resolve the target mapping
+     *
+     * @param baseTarget The base target of the effect
+     *
+     * @return Resolved target. Null if the target is removed
      */
-    private Collection<PassiveFighter> resolveTargets(SpellEffect effect) {
-        if (effect.target().onlyCaster()) {
-            return Collections.singleton(caster);
+    private @Nullable PassiveFighter resolveTarget(PassiveFighter baseTarget) {
+        PassiveFighter target = targetMapping.get(baseTarget);
+
+        // Target is removed, or it's the original one : do not resolve chaining
+        if (target == null || target.equals(baseTarget)) {
+            return target;
         }
 
-        if (action.constraints().freeCell()) {
-            return Collections.emptyList();
-        }
+        // Keep list of visited mapping to break recursion
+        final Set<PassiveFighter> resolved = new HashSet<>();
 
-        return effect.area()
-            .resolve(target, caster.cell())
-            .stream()
-            .map(FightCell::fighter)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .filter(fighter -> effect.target().test(caster, fighter))
-            .collect(Collectors.toList())
-        ;
+        resolved.add(baseTarget);
+        resolved.add(target);
+
+        // Resolve chaining
+        for (;;) {
+            target = targetMapping.get(target);
+
+            // The target is removed, or already visited (can be itself)
+            if (target == null || resolved.contains(target)) {
+                return target;
+            }
+
+            resolved.add(target);
+        }
     }
 
     public final class EffectScope {
@@ -208,6 +215,7 @@ public final class CastScope {
         /**
          * The related effect
          */
+        @Pure
         public SpellEffect effect() {
             return effect;
         }
@@ -216,11 +224,37 @@ public final class CastScope {
          * Get all targeted fighters for the current effect
          */
         public Collection<PassiveFighter> targets() {
-            return targets.stream()
-                .map(targetMapping::get)
-                .filter(fighter -> !fighter.dead())
-                .collect(Collectors.toList())
-            ;
+            PassiveFighter firstTarget = null;
+            Collection<PassiveFighter> resolvedTargets = null;
+
+            for (PassiveFighter baseTarget : targets) {
+                final PassiveFighter resolved = resolveTarget(baseTarget);
+
+                if (resolved == null || resolved.dead()) {
+                    continue;
+                }
+
+                if (firstTarget == null) {
+                    firstTarget = resolved;
+                } else {
+                    if (resolvedTargets == null) {
+                        resolvedTargets = new ArrayList<>();
+                        resolvedTargets.add(firstTarget);
+                    }
+
+                    resolvedTargets.add(resolved);
+                }
+            }
+
+            if (resolvedTargets != null) {
+                return resolvedTargets;
+            }
+
+            if (firstTarget != null) {
+                return Collections.singleton(firstTarget);
+            }
+
+            return Collections.emptyList();
         }
     }
 }

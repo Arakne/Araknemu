@@ -47,7 +47,7 @@ public final class MonsterFighterSprite implements Sprite {
 
     @Override
     public int cell() {
-        return fighter.cell().id();
+        return fighter.dead() || fighter.hidden() ? -1 : fighter.cell().id();
     }
 
     @Override
@@ -58,6 +58,11 @@ public final class MonsterFighterSprite implements Sprite {
     @Override
     public Type type() {
         return Type.MONSTER;
+    }
+
+    @Override
+    public int gfxId() {
+        return monster.gfxId();
     }
 
     @Override
@@ -74,7 +79,7 @@ public final class MonsterFighterSprite implements Sprite {
             id() + ";" +
             name() + ";" +
             type().id() + ";" +
-            monster.gfxId() + "^100;" + // @todo size
+            gfxId() + "^100;" + // @todo size
             monster.gradeNumber() + ";" +
             monster.colors().toHexString(";") + ";" +
             "0,0,0,0;" + // @todo accessories

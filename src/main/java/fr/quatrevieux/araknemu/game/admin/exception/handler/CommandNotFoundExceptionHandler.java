@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -36,7 +37,7 @@ import java.util.Optional;
  */
 public final class CommandNotFoundExceptionHandler implements ExceptionHandler.Function<CommandNotFoundException> {
     @Override
-    public void handle(AdminPerformer performer, CommandNotFoundException error, CommandParser.Arguments arguments) {
+    public void handle(AdminPerformer performer, CommandNotFoundException error, CommandParser.@Nullable Arguments arguments) {
         performer.error("Command '{}' is not found", error.command());
 
         if (arguments == null) {

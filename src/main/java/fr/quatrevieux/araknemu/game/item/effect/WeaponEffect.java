@@ -21,17 +21,19 @@ package fr.quatrevieux.araknemu.game.item.effect;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Effect for weapon items
  */
 public final class WeaponEffect implements ItemEffect {
     private final Effect effect;
-    private final int min;
-    private final int max;
-    private final int extra;
+    private final @NonNegative int min;
+    private final @NonNegative int max;
+    private final @NonNegative int extra;
 
-    public WeaponEffect(Effect effect, int min, int max, int extra) {
+    public WeaponEffect(Effect effect, @NonNegative int min, @NonNegative int max, @NonNegative int extra) {
         this.effect = effect;
         this.min = min;
         this.max = max;
@@ -48,25 +50,25 @@ public final class WeaponEffect implements ItemEffect {
         return new ItemTemplateEffectEntry(effect, min, max, extra, "1d" + (max - min + 1) + "+" + (min - 1));
     }
 
-    public int min() {
+    public @NonNegative int min() {
         return min;
     }
 
-    public int max() {
+    public @NonNegative int max() {
         return max;
     }
 
-    public int extra() {
+    public @NonNegative int extra() {
         return extra;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 

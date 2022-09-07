@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.AskServerList;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 import fr.quatrevieux.araknemu.realm.host.HostService;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * List servers and characters count per server
@@ -40,7 +41,7 @@ public final class ListServers implements PacketHandler<RealmSession, AskServerL
         session.send(
             new ServerList(
                 ServerList.ONE_YEAR, // @todo abo
-                service.charactersByHost(session.account())
+                service.charactersByHost(NullnessUtil.castNonNull(session.account()))
             )
         );
     }

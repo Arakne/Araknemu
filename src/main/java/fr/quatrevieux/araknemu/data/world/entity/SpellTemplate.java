@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.data.world.entity;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -33,10 +35,10 @@ public final class SpellTemplate {
     private final String name;
     private final int sprite;
     private final String spriteArgs;
-    private final Level[] levels;
+    private final @Nullable Level[] levels;
     private final int[] targets;
 
-    public SpellTemplate(int id, String name, int sprite, String spriteArgs, Level[] levels, int[] targets) {
+    public SpellTemplate(int id, String name, int sprite, String spriteArgs, @Nullable Level[] levels, int[] targets) {
         this.id = id;
         this.name = name;
         this.sprite = sprite;
@@ -61,7 +63,7 @@ public final class SpellTemplate {
         return spriteArgs;
     }
 
-    public Level[] levels() {
+    public @Nullable Level[] levels() {
         return levels;
     }
 
@@ -72,10 +74,10 @@ public final class SpellTemplate {
     public static final class Level {
         private final List<SpellTemplateEffect> effects;
         private final List<SpellTemplateEffect> criticalEffects;
-        private final int apCost;
+        private final @NonNegative int apCost;
         private final Interval range;
-        private final int criticalHit;
-        private final int criticalFailure;
+        private final @NonNegative int criticalHit;
+        private final @NonNegative int criticalFailure;
         private final boolean lineLaunch;
         private final boolean lineOfSight;
         private final boolean freeCell;
@@ -90,7 +92,7 @@ public final class SpellTemplate {
         private final int minPlayerLevel;
         private final boolean endsTurnOnFailure;
 
-        public Level(List<SpellTemplateEffect> effects, List<SpellTemplateEffect> criticalEffects, int apCost, Interval range, int criticalHit, int criticalFailure, boolean lineLaunch, boolean lineOfSight, boolean freeCell, boolean modifiableRange, int classId, int launchPerTurn, int launchPerTarget, int launchDelay, List<EffectArea> effectAreas, int[] requiredStates, int[] forbiddenStates, int minPlayerLevel, boolean endsTurnOnFailure) {
+        public Level(List<SpellTemplateEffect> effects, List<SpellTemplateEffect> criticalEffects, @NonNegative int apCost, Interval range, @NonNegative int criticalHit, @NonNegative int criticalFailure, boolean lineLaunch, boolean lineOfSight, boolean freeCell, boolean modifiableRange, int classId, int launchPerTurn, int launchPerTarget, int launchDelay, List<EffectArea> effectAreas, int[] requiredStates, int[] forbiddenStates, int minPlayerLevel, boolean endsTurnOnFailure) {
             this.effects = effects;
             this.criticalEffects = criticalEffects;
             this.apCost = apCost;
@@ -129,7 +131,7 @@ public final class SpellTemplate {
         /**
          * AP cost for launch the spell
          */
-        public int apCost() {
+        public @NonNegative int apCost() {
             return apCost;
         }
 
@@ -145,7 +147,7 @@ public final class SpellTemplate {
          *
          * @see fr.quatrevieux.araknemu.game.fight.castable.Castable#criticalHit()
          */
-        public int criticalHit() {
+        public @NonNegative int criticalHit() {
             return criticalHit;
         }
 
@@ -154,7 +156,7 @@ public final class SpellTemplate {
          *
          * @see fr.quatrevieux.araknemu.game.fight.castable.Castable#criticalFailure()
          */
-        public int criticalFailure() {
+        public @NonNegative int criticalFailure() {
             return criticalFailure;
         }
 

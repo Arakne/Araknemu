@@ -40,10 +40,16 @@ import fr.quatrevieux.araknemu.game.fight.map.util.PlacementCellsGenerator;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterReadyState;
+import fr.quatrevieux.araknemu.game.listener.fight.SendJoinTeamOptionChangedMessage;
+import fr.quatrevieux.araknemu.game.listener.fight.SendNeedHelpOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.fight.SendNewFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -56,10 +62,10 @@ import java.util.concurrent.ScheduledFuture;
  */
 public final class PlacementState implements LeavableState, EventsSubscriber {
     private long startTime;
-    private Fight fight;
-    private Listener[] listeners;
-    private Map<FightTeam, PlacementCellsGenerator> cellsGenerators;
-    private ScheduledFuture<?> timer;
+    private @MonotonicNonNull Fight fight;
+    private Listener @MonotonicNonNull[] listeners;
+    private @MonotonicNonNull Map<FightTeam, PlacementCellsGenerator> cellsGenerators;
+    private @MonotonicNonNull ScheduledFuture<?> timer;
 
     private final boolean randomize;
 
@@ -105,6 +111,12 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
             return listeners;
         }
 
+        final Fight fight = this.fight;
+
+        if (fight == null) {
+            throw new IllegalStateException("State must be started");
+        }
+
         return listeners = new Listener[] {
             new SendFighterPositions(fight),
             new SendFighterReadyState(fight),
@@ -112,6 +124,8 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
             new SendNewFighter(fight),
             new ClearFighter(),
             new SendFighterRemoved(fight),
+            new SendJoinTeamOptionChangedMessage(),
+            new SendNeedHelpOptionChangedMessage(),
         };
     }
 
@@ -119,6 +133,10 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      * Get the remaining placement time, in milliseconds
      */
     public long remainingTime() {
+        if (fight == null) {
+            throw new IllegalStateException("State must be started");
+        }
+
         if (!fight.type().hasPlacementTimeLimit()) {
             throw new UnsupportedOperationException("The fight has no placement time limit");
         }
@@ -145,7 +163,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
             throw new FightMapException("Not walkable");
         }
 
-        if (!fighter.team().startPlaces().contains(cell.id())) {
+        if (!fighter.team().startPlaces().contains(cell)) {
             throw new FightException("Bad start cell");
         }
 
@@ -186,6 +204,23 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     /**
+     * Kick a fighter during placement
+     * Unlike leave, this method will not punish the fighter
+     *
+     * @param fighter Fighter to kick
+     *
+     * @throws InvalidFightStateException When the session state has changed
+     */
+    public synchronized void kick(Fighter fighter) {
+        if (invalidState()) {
+            throw new InvalidFightStateException(getClass());
+        }
+
+        // Remove fighter
+        leaveFromFight(fighter);
+    }
+
+    /**
      * Manually start the fight
      */
     public synchronized void startFight() {
@@ -217,6 +252,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      * - The fighter is removed
      * - Check if the fight is valid (has at least two teams)
      */
+    @RequiresNonNull("fight")
     private void leaveFromFight(Fighter fighter) {
         // The team leader quit the fight => Dissolve team
         if (fighter.isTeamLeader()) {
@@ -233,6 +269,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     /**
      * Punish the deserter fighter
      */
+    @RequiresNonNull("fight")
     private void punishDeserter(Fighter fighter) {
         final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
             new EndFightResults(
@@ -245,9 +282,11 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
         fighter.dispatch(new FightLeaved(rewardsSheet.rewards().get(0)));
     }
 
+    @RequiresNonNull("fight")
+    @SuppressWarnings("dereference.of.nullable") // cellsGenerators.get(fighter.team()) cannot be null
     private void addFighters(Collection<Fighter> fighters) {
         for (Fighter fighter : fighters) {
-            fighter.joinFight(fight, cellsGenerators.get(fighter.team()).next());
+            fighter.joinFight(fight, NullnessUtil.castNonNull(cellsGenerators).get(fighter.team()).next());
         }
 
         for (Fighter fighter : fighters) {
@@ -262,6 +301,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     /**
      * Notify fight that a fighter has leave
      */
+    @RequiresNonNull("fight")
     private void removeFighter(Fighter fighter) {
         fighter.dispatch(new FightLeaved());
         fight.dispatch(new FighterRemoved(fighter, fight));
@@ -270,6 +310,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     /**
      * Check if the fight is valid after fighter leaved
      */
+    @RequiresNonNull("fight")
     private void checkFightValid() {
         if (fight.teams().stream().filter(FightTeam::alive).count() > 1) {
             return;
@@ -286,7 +327,8 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      * Check if the fight state is not placement
      * This method will return true is the state is active (or following), or if it's cancelled or finished
      */
+    @EnsuresNonNullIf(expression = "fight", result = false)
     private boolean invalidState() {
-        return fight.state() != this || !fight.alive();
+        return fight == null || fight.state() != this || !fight.alive();
     }
 }

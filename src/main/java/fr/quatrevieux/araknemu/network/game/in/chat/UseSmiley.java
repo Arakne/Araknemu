@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.network.game.in.chat;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Send a smiley to the map / fight
@@ -29,9 +32,9 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L140
  */
 public final class UseSmiley implements Packet {
-    private final int smiley;
+    private final @Positive int smiley;
 
-    public UseSmiley(int smiley) {
+    public UseSmiley(@Positive int smiley) {
         this.smiley = smiley;
     }
 
@@ -39,18 +42,18 @@ public final class UseSmiley implements Packet {
      * Get the smiley id
      * Smileys are located on "clips/smileys/[id].swf" on the Dofus client
      */
-    public int smiley() {
+    public @Positive int smiley() {
         return smiley;
     }
 
     public static final class Parser implements SinglePacketParser<UseSmiley> {
         @Override
         public UseSmiley parse(String input) throws ParsePacketException {
-            return new UseSmiley(Integer.parseInt(input));
+            return new UseSmiley(ParseUtils.parsePositiveInt(input));
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "BS";
         }
     }

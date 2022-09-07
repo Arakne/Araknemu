@@ -39,9 +39,11 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.time.Duration;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -53,9 +55,9 @@ public final class NettyServer<S extends Session> implements Server<S> {
     private final int port;
     private final Duration readTimeout;
 
-    private Channel serverChannel;
-    private EventLoopGroup loopGroup;
-    private SessionHandlerAdapter<S> handlerAdapter;
+    private @MonotonicNonNull Channel serverChannel;
+    private @MonotonicNonNull EventLoopGroup loopGroup;
+    private @MonotonicNonNull SessionHandlerAdapter<S> handlerAdapter;
 
     public NettyServer(SessionFactory<S> factory, int port, Duration readTimeout) {
         this.factory = factory;
@@ -105,13 +107,17 @@ public final class NettyServer<S extends Session> implements Server<S> {
 
     @Override
     public void stop() throws Exception {
+        if (loopGroup == null || serverChannel == null) {
+            return;
+        }
+
         loopGroup.shutdownGracefully().sync();
         serverChannel.closeFuture().sync();
     }
 
     @Override
     public Collection<S> sessions() {
-        return handlerAdapter.sessions();
+        return handlerAdapter != null ? handlerAdapter.sessions() : Collections.emptyList();
     }
 
     @ChannelHandler.Sharable

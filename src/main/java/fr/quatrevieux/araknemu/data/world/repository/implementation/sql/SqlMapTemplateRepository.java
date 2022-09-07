@@ -22,17 +22,18 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Map repository implementation for SQL database
@@ -41,9 +42,9 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     private final QueryExecutor executor;
     private final RepositoryUtils<MapTemplate> utils;
     private final Transformer<CellData[]> cellsTransformer;
-    private final Transformer<List<Integer>[]> fightPlacesTransformer;
+    private final Transformer<@NonNegative int[][]> fightPlacesTransformer;
 
-    public SqlMapTemplateRepository(QueryExecutor executor, Transformer<CellData[]> cellsTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
+    public SqlMapTemplateRepository(QueryExecutor executor, Transformer<CellData[]> cellsTransformer, Transformer<@NonNegative int[][]> fightPlacesTransformer) {
         this.executor = executor;
         this.cellsTransformer = cellsTransformer;
         this.fightPlacesTransformer = fightPlacesTransformer;
@@ -87,7 +88,7 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     }
 
     @Override
-    public MapTemplate get(int id) {
+    public MapTemplate get(@NonNegative int id) {
         return utils.findOne(
             "SELECT * FROM maps WHERE id = ?",
             stmt -> stmt.setInt(1, id)
@@ -122,23 +123,23 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
 
     private class Loader implements RepositoryUtils.Loader<MapTemplate> {
         @Override
-        public MapTemplate create(ResultSet rs) throws SQLException {
+        public MapTemplate create(Record record) throws SQLException {
             return new MapTemplate(
-                rs.getInt("id"),
-                rs.getString("date"),
+                record.getNonNegativeInt("id"),
+                record.getString("date"),
                 new Dimensions(
-                    rs.getInt("width"),
-                    rs.getInt("height")
+                    record.getPositiveInt("width"),
+                    record.getPositiveInt("height")
                 ),
-                rs.getString("key"),
-                cellsTransformer.unserialize(rs.getString("mapData")),
-                fightPlacesTransformer.unserialize(rs.getString("places")),
+                record.getString("key"),
+                record.unserialize("mapData", cellsTransformer),
+                record.unserialize("places", fightPlacesTransformer),
                 new Geolocation(
-                    rs.getInt("MAP_X"),
-                    rs.getInt("MAP_Y")
+                    record.getInt("MAP_X"),
+                    record.getInt("MAP_Y")
                 ),
-                rs.getInt("SUBAREA_ID"),
-                rs.getBoolean("INDOOR")
+                record.getInt("SUBAREA_ID"),
+                record.getBoolean("INDOOR")
             );
         }
 

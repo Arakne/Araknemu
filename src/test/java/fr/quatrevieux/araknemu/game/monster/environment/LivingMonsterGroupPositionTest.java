@@ -105,6 +105,25 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
     }
 
     @Test
+    void respawn() {
+        monsterGroupPosition.populate(map);
+        map.remove(monsterGroupPosition.available().get(0));
+        assertCount(1, monsterGroupPosition.available());
+
+        monsterGroupPosition.respawn();
+        assertCount(2, monsterGroupPosition.available());
+
+        monsterGroupPosition.respawn();
+        assertCount(2, monsterGroupPosition.available());
+    }
+
+    @Test
+    void mapNotLoaded() {
+        assertThrows(IllegalStateException.class, monsterGroupPosition::spawn);
+        assertThrows(IllegalStateException.class, monsterGroupPosition::respawn);
+    }
+
+    @Test
     void fixedGroup() {
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
@@ -114,7 +133,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
                 new MonsterGroupData.Monster(36, new Interval(5, 5), 1),
                 new MonsterGroupData.Monster(31, new Interval(2, 2), 1)
             ), "", new Position(0, 0), false),
-            new FixedCellSelector(new Position(10340, 123)), true
+            new FixedCellSelector(123), true
         );
 
         monsterGroupPosition.populate(map);

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.exploration.exchange;
 
 import fr.quatrevieux.araknemu.game.item.Item;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Processor for an exchange party
@@ -63,7 +64,7 @@ public interface ExchangePartyProcessor {
      *
      * @param kamas The amount of kamas. Must be positive
      */
-    public void addKamas(long kamas);
+    public void addKamas(@Positive long kamas);
 
     /**
      * Add an item to the party
@@ -71,5 +72,5 @@ public interface ExchangePartyProcessor {
      * @param item The item
      * @param quantity The quantity. Must be positive
      */
-    public void addItem(Item item, int quantity);
+    public void addItem(Item item, @Positive int quantity);
 }

@@ -20,14 +20,18 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
+import fr.quatrevieux.araknemu.util.SafeLinkedList;
+import org.checkerframework.checker.index.qual.Positive;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -37,7 +41,7 @@ import java.util.stream.StreamSupport;
  */
 public final class BuffList implements Iterable<Buff>, Buffs {
     private final Fighter fighter;
-    private final Collection<Buff> buffs = new LinkedList<>();
+    private final SafeLinkedList<Buff> buffs = new SafeLinkedList<>();
 
     public BuffList(Fighter fighter) {
         this.fighter = fighter;
@@ -66,8 +70,8 @@ public final class BuffList implements Iterable<Buff>, Buffs {
 
         fighter.fight().send(new AddBuff(buff));
 
-        // Add one turn on self-buff
-        if (fighter.equals(buff.caster())) {
+        // Add one turn when it's the turn of the current fighter
+        if (fighter.isPlaying()) {
             buff.incrementRemainingTurns();
         }
     }
@@ -84,33 +88,98 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onEndTurn() {
+    public void onEndTurn(Turn turn) {
         for (Buff buff : buffs) {
-            buff.hook().onEndTurn(buff);
+            buff.hook().onEndTurn(buff, turn);
         }
     }
 
     @Override
-    public void onCastTarget(CastScope cast) {
+    public void onCast(CastScope cast) {
         for (Buff buff : buffs) {
-            buff.hook().onCastTarget(buff, cast);
+            buff.hook().onCast(buff, cast);
         }
     }
 
     @Override
-    public void onDamage(Damage value) {
+    public boolean onCastTarget(CastScope cast) {
         for (Buff buff : buffs) {
-            buff.hook().onDamage(buff, value);
+            if (!buff.hook().onCastTarget(buff, cast)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onDirectDamage(ActiveFighter caster, Damage value) {
+        for (Buff buff : buffs) {
+            buff.hook().onDirectDamage(buff, caster, value);
+        }
+    }
+
+    @Override
+    public void onIndirectDamage(ActiveFighter caster, Damage value) {
+        for (Buff buff : buffs) {
+            buff.hook().onIndirectDamage(buff, caster, value);
+        }
+    }
+
+    @Override
+    public void onBuffDamage(Buff poison, Damage value) {
+        for (Buff buff : buffs) {
+            buff.hook().onBuffDamage(buff, poison, value);
+        }
+    }
+
+    @Override
+    public void onDirectDamageApplied(ActiveFighter caster, @Positive int value) {
+        for (Buff buff : buffs) {
+            buff.hook().onDirectDamageApplied(buff, caster, value);
+        }
+    }
+
+    @Override
+    public void onLifeAltered(int value) {
+        for (Buff buff : buffs) {
+            buff.hook().onLifeAltered(buff, value);
+        }
+    }
+
+    @Override
+    public void onReflectedDamage(ReflectedDamage damage) {
+        for (Buff buff : buffs) {
+            buff.hook().onReflectedDamage(buff, damage);
+        }
+    }
+
+    @Override
+    public void onCastDamage(Damage damage, PassiveFighter target) {
+        for (Buff buff : buffs) {
+            buff.hook().onCastDamage(buff, damage, target);
+        }
+    }
+
+    @Override
+    public void onEffectValueCast(EffectValue value) {
+        for (Buff buff : buffs) {
+            buff.hook().onEffectValueCast(buff, value);
+        }
+    }
+
+    @Override
+    public void onEffectValueTarget(EffectValue value, PassiveFighter caster) {
+        for (Buff buff : buffs) {
+            buff.hook().onEffectValueTarget(buff, value, caster);
         }
     }
 
     @Override
     public void refresh() {
-        removeIf(buff -> {
-            buff.decrementRemainingTurns();
-
-            return !buff.valid();
-        });
+        // invalidate buffs before removing it in case of buffs are iterated by onBuffTerminated() hook
+        buffs.forEach(Buff::decrementRemainingTurns);
+        removeIf(buff -> !buff.valid());
     }
 
     @Override

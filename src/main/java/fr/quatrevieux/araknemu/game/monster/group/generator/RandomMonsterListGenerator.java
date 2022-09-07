@@ -23,6 +23,8 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,13 +69,15 @@ public final class RandomMonsterListGenerator implements MonsterListGenerator {
     /**
      * Get a random group size from the maximal size
      */
-    private int groupSize(int maxSize) {
-        if (maxSize == 1) {
+    private @Positive int groupSize(@NonNegative int maxSize) {
+        if (maxSize == 0) {
+            maxSize = SIZE_PROBABILITIES.length + 2;
+        } else if (maxSize == 1) {
             return 1;
         }
 
         // size - 2 because size 0 do not exists, and size 1 has no randomization
-        final int[] probabilities = SIZE_PROBABILITIES[maxSize - 2];
+        final int[] probabilities = SIZE_PROBABILITIES[Math.min(maxSize - 2, SIZE_PROBABILITIES.length - 1)];
 
         int dice = random.rand(1, 100);
 

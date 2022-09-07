@@ -23,35 +23,57 @@ import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Cell of exploration map
  */
 public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
     @Override
+    public @NonNegative int id();
+
+    @Override
     public ExplorationMap map();
 
     /**
      * Does the cell is free ?
-     * A cell is free is a new sprite can be added on, and no other objects is present
+     * A cell is free if a new sprite can be added on, and no other objects is present
      */
     public boolean free();
 
     /**
-     * Apply an operation to all creatures on current cell
+     * Apply an operation to all creatures on current cell, and return the first non-null operation value
+     * If the operation return a value, the iteration will be stopped
      *
      * @see ExplorationCreature#apply(Operation)
      */
-    public default void apply(Operation operation)  {
+    public default <R> @Nullable R apply(Operation<R> operation)  {
         // Optimisation : the cell is not walkable, no creatures can be located here
         if (!walkable()) {
-            return;
+            return null;
         }
 
         for (ExplorationCreature creature : map().creatures()) {
-            if (equals(creature.cell())) {
-                creature.apply(operation);
+            try {
+                // Cell do not match : skip
+                if (!equals(creature.cell())) {
+                    continue;
+                }
+            } catch (IllegalStateException e) {
+                // Creature may leave map (and cell) during application of Operation
+                // which will cause an IllegalStateException (ex: change map or start fight)
+                // So skip the creature
+                continue;
+            }
+
+            final R result = creature.apply(operation);
+
+            if (result != null) {
+                return result;
             }
         }
+
+        return null;
     }
 }

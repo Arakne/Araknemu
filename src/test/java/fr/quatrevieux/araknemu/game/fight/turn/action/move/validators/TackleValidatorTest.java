@@ -84,7 +84,7 @@ class TackleValidatorTest extends FightBaseCase {
             )
         );
         
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
         
         MoveResult result = new MoveSuccess(fighter, path);
 
@@ -107,7 +107,7 @@ class TackleValidatorTest extends FightBaseCase {
 
         other.fighter().move(fight.map().get(198));
         
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         MoveResult result = new MoveSuccess(fighter, path);
 
@@ -131,7 +131,7 @@ class TackleValidatorTest extends FightBaseCase {
         fighter.characteristics().alter(Characteristic.AGILITY, 500);
         other.fighter().move(fight.map().get(170));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         MoveResult result = new MoveSuccess(fighter, path);
 
@@ -155,7 +155,7 @@ class TackleValidatorTest extends FightBaseCase {
         other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
         other.fighter().move(fight.map().get(170));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         MoveResult result = new MoveSuccess(fighter, path);
         MoveResult result2 = validator.validate(move, result);
@@ -185,7 +185,7 @@ class TackleValidatorTest extends FightBaseCase {
         other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
         other.fighter().move(fight.map().get(170));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         MoveResult result = validator.validate(move, new MoveSuccess(fighter, path));
 
@@ -210,7 +210,7 @@ class TackleValidatorTest extends FightBaseCase {
         other.fighter().states().push(TackleValidator.STATE_ROOTED);
         other.fighter().move(fight.map().get(170));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         MoveResult result = validator.validate(move, new MoveSuccess(fighter, path));
 
@@ -232,7 +232,7 @@ class TackleValidatorTest extends FightBaseCase {
 
         other.fighter().move(fight.map().get(170));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         int blockedCount = 0;
 
@@ -265,7 +265,7 @@ class TackleValidatorTest extends FightBaseCase {
         fighter.characteristics().alter(Characteristic.AGILITY, 10);
         other.fighter().move(fight.map().get(170));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         int blockedCount = 0;
 
@@ -298,7 +298,7 @@ class TackleValidatorTest extends FightBaseCase {
         other.fighter().characteristics().alter(Characteristic.AGILITY, 10);
         other.fighter().move(fight.map().get(170));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         int blockedCount = 0;
 
@@ -342,7 +342,7 @@ class TackleValidatorTest extends FightBaseCase {
             )
         );
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         int successCount = 0;
 
@@ -415,7 +415,7 @@ class TackleValidatorTest extends FightBaseCase {
         other.fighter().move(fight.map().get(170));
         other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
 
-        Move move = turn.actions().move().create(new Path<FightCell>(
+        Move move = (Move) fight.actions().move().create(fighter, new Path<FightCell>(
             new Decoder<FightCell>(fight.map()),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
@@ -440,7 +440,7 @@ class TackleValidatorTest extends FightBaseCase {
         other.fighter().move(fight.map().get(170));
         fighter.characteristics().alter(Characteristic.AGILITY, 500);
 
-        Move move = turn.actions().move().create(new Path<FightCell>(
+        Move move = (Move) fight.actions().move().create(fighter, new Path<FightCell>(
             new Decoder<FightCell>(fight.map()),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),

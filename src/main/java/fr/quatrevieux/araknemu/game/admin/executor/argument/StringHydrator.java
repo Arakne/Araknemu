@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Handle single string argument
@@ -29,7 +30,7 @@ import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
  */
 public final class StringHydrator extends AbstractTypedArgumentsHydrator<String> {
     @Override
-    protected String typedHydrate(Command<String> command, String commandArguments, CommandParser.Arguments parsedArguments) throws CommandException {
+    protected String typedHydrate(Command<String> command, @Nullable String commandArguments, CommandParser.Arguments parsedArguments) throws CommandException {
         if (parsedArguments.arguments().size() < 2) {
             // Use the argument as default value
             if (commandArguments != null) {

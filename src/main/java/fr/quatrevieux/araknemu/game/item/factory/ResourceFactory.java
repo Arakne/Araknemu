@@ -26,8 +26,9 @@ import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.type.Resource;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -36,19 +37,19 @@ import java.util.List;
  * Will be used as default factory
  */
 public final class ResourceFactory implements ItemFactory {
-    private final EffectMappers mappers;
+    private final EffectMapper<SpecialEffect> specialEffectEffectMapper;
 
-    public ResourceFactory(EffectMappers mappers) {
-        this.mappers = mappers;
+    public ResourceFactory(EffectMapper<SpecialEffect> specialEffectEffectMapper) {
+        this.specialEffectEffectMapper = specialEffectEffectMapper;
     }
 
     @Override
-    public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize) {
+    public Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, boolean maximize) {
         return create(template, type, template.effects(), maximize);
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
+    public Item retrieve(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects) {
         return create(template, type, effects, false);
     }
 
@@ -61,7 +62,7 @@ public final class ResourceFactory implements ItemFactory {
         return new Resource(
             template,
             type,
-            mappers.get(SpecialEffect.class).create(effects, maximize)
+            specialEffectEffectMapper.create(effects, maximize)
         );
     }
 }

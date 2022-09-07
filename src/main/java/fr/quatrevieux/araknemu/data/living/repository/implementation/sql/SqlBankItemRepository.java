@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
@@ -28,6 +29,8 @@ import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -162,26 +165,26 @@ final class SqlBankItemRepository implements BankItemRepository {
     }
 
     @Override
-    public int count(AccountBank bank) throws RepositoryException {
-        return utils.aggregate(
+    public @NonNegative int count(AccountBank bank) throws RepositoryException {
+        return Asserter.castNonNegative(utils.aggregate(
             "SELECT COUNT(*) FROM BANK_ITEM WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
             stmt -> {
                 stmt.setInt(1, bank.accountId());
                 stmt.setInt(2, bank.serverId());
             }
-        );
+        ));
     }
 
     private class Loader implements RepositoryUtils.Loader<BankItem> {
         @Override
-        public BankItem create(ResultSet rs) throws SQLException {
+        public BankItem create(Record record) throws SQLException {
             return new BankItem(
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getInt("ITEM_ENTRY_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("QUANTITY")
+                record.getInt("ACCOUNT_ID"),
+                record.getInt("SERVER_ID"),
+                record.getInt("ITEM_ENTRY_ID"),
+                record.getInt("ITEM_TEMPLATE_ID"),
+                record.unserialize("ITEM_EFFECTS", effectsTransformer),
+                record.getNonNegativeInt("QUANTITY")
             );
         }
 

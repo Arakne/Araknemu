@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ import java.util.List;
  */
 public final class ItemEffectsTransformer implements Transformer<List<ItemTemplateEffectEntry>> {
     @Override
-    public String serialize(List<ItemTemplateEffectEntry> value) {
+    public @NonNull String serialize(@PolyNull List<ItemTemplateEffectEntry> value) {
         if (value == null || value.isEmpty()) {
             return "";
         }
@@ -57,29 +59,30 @@ public final class ItemEffectsTransformer implements Transformer<List<ItemTempla
     }
 
     @Override
-    public List<ItemTemplateEffectEntry> unserialize(String serialize) {
+    public @NonNull List<ItemTemplateEffectEntry> unserialize(@PolyNull String serialize) {
         if (serialize == null || serialize.isEmpty()) {
             return new ArrayList<>();
         }
 
         final List<ItemTemplateEffectEntry> effects = new ArrayList<>();
+        final Splitter splitter = new Splitter(serialize, ',');
 
-        for (String part : StringUtils.split(serialize, ",")) {
-            final String[] args = StringUtils.split(part, "#", 5);
+        while (splitter.hasNext()) {
+            final Splitter args = splitter.nextSplit('#');
 
-            if (args.length < 4) {
-                throw new IllegalArgumentException("Cannot unserialize effect " + serialize);
+            try {
+                effects.add(
+                    new ItemTemplateEffectEntry(
+                        Effect.byId(args.nextInt(16)),
+                        args.nextNonNegativeInt(16),
+                        args.nextNonNegativeInt(16),
+                        args.nextNonNegativeInt(16),
+                        args.nextPartOrDefault("")
+                    )
+                );
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Cannot unserialize effect " + serialize, e);
             }
-
-            effects.add(
-                new ItemTemplateEffectEntry(
-                    Effect.byId(Integer.parseInt(args[0], 16)),
-                    Integer.parseInt(args[1], 16),
-                    Integer.parseInt(args[2], 16),
-                    Integer.parseInt(args[3], 16),
-                    args.length > 4 ? args[4] : ""
-                )
-            );
         }
 
         return effects;

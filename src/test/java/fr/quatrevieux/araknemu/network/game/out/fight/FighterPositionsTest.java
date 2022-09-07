@@ -67,4 +67,12 @@ class FighterPositionsTest extends GameBaseCase {
             new FighterPositions(fighters).toString()
         );
     }
+
+    @Test
+    void generateWithSingleFighter() {
+        assertEquals(
+            "GIC|" + fighters.get(0).id() + ";123",
+            new FighterPositions(fighters.get(0)).toString()
+        );
+    }
 }

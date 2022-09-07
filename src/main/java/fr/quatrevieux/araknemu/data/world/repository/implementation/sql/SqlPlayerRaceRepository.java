@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
@@ -29,11 +30,10 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.SortedMap;
 
@@ -43,10 +43,10 @@ import java.util.SortedMap;
 final class SqlPlayerRaceRepository implements PlayerRaceRepository {
     private final QueryExecutor executor;
     private final RepositoryUtils<PlayerRace> utils;
-    private final Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer;
+    private final Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer;
     private final Transformer<BoostStatsData> boostStatsDataTransformer;
 
-    public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
+    public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;
         this.boostStatsDataTransformer = boostStatsDataTransformer;
 
@@ -116,27 +116,25 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
 
     private class Loader implements RepositoryUtils.Loader<PlayerRace> {
         @Override
-        public PlayerRace create(ResultSet rs) throws SQLException {
+        public PlayerRace create(Record record) throws SQLException {
             return new PlayerRace(
-                Race.byId(rs.getInt("RACE_ID")),
-                rs.getString("RACE_NAME"),
-                characteristicsTransformer.unserialize(rs.getString("RACE_STATS")),
-                rs.getInt("START_DISCERNMENT"),
-                rs.getInt("START_PODS"),
-                rs.getInt("START_LIFE"),
-                rs.getInt("PER_LEVEL_LIFE"),
-                boostStatsDataTransformer.unserialize(rs.getString("STATS_BOOST")),
+                Race.byId(record.getPositiveInt("RACE_ID")),
+                record.getString("RACE_NAME"),
+                record.unserialize("RACE_STATS", characteristicsTransformer),
+                record.getInt("START_DISCERNMENT"),
+                record.getPositiveInt("START_PODS"),
+                record.getPositiveInt("START_LIFE"),
+                record.getNonNegativeInt("PER_LEVEL_LIFE"),
+                record.unserialize("STATS_BOOST", boostStatsDataTransformer),
                 new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
+                    record.getNonNegativeInt("MAP_ID"),
+                    record.getNonNegativeInt("CELL_ID")
                 ),
                 new Position(
-                    rs.getInt("ASTRUB_MAP_ID"),
-                    rs.getInt("ASTRUB_CELL_ID")
+                    record.getNonNegativeInt("ASTRUB_MAP_ID"),
+                    record.getNonNegativeInt("ASTRUB_CELL_ID")
                 ),
-                Arrays.stream(StringUtils.split(rs.getString("RACE_SPELLS"), "|"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
+                record.getIntArray("RACE_SPELLS", '|')
             );
         }
 

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.entity;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.List;
 
@@ -50,12 +51,12 @@ public interface Item {
     /**
      * The item quantity
      */
-    public int quantity();
+    public @NonNegative int quantity();
 
     /**
      * Change the quantity
      *
      * @param quantity New quantity. Must be positive
      */
-    public void setQuantity(int quantity);
+    public void setQuantity(@NonNegative int quantity);
 }

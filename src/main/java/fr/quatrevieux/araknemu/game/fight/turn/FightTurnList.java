@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,10 +39,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class FightTurnList {
     private final Fight fight;
 
-    private List<Fighter> fighters;
+    private @MonotonicNonNull List<Fighter> fighters;
+    private @Nullable Fighter current;
+    private @Nullable FightTurn turn;
     private int index;
-    private Fighter current;
-    private FightTurn turn;
     private final AtomicBoolean active = new AtomicBoolean(false);
 
     public FightTurnList(Fight fight) {
@@ -67,6 +70,10 @@ public final class FightTurnList {
      * Get all fighters ordered by their turn order
      */
     public List<Fighter> fighters() {
+        if (fighters == null) {
+            throw new IllegalStateException("FightTurnList must be initialised");
+        }
+
         return fighters;
     }
 
@@ -76,6 +83,10 @@ public final class FightTurnList {
      * @param fighter Fighter to remove
      */
     public void remove(Fighter fighter) {
+        if (fighters == null) {
+            throw new IllegalStateException("FightTurnList must be initialised");
+        }
+
         final int index = fighters.indexOf(fighter);
 
         if (index == -1) {
@@ -118,7 +129,7 @@ public final class FightTurnList {
     /**
      * Get the current turn fighter
      */
-    public Fighter currentFighter() {
+    public @Nullable Fighter currentFighter() {
         return current;
     }
 
@@ -155,6 +166,10 @@ public final class FightTurnList {
      * @todo test start with return false
      */
     void next() {
+        // next is called internally by turn system, and fighters if used only with active turn system
+        // so fighters is always non-null
+        final List<Fighter> fighters = NullnessUtil.castNonNull(this.fighters);
+
         turn = null;
         fight.dispatch(new NextTurnInitiated());
 

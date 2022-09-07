@@ -20,11 +20,14 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Handle fight effects
@@ -38,23 +41,65 @@ public final class EffectsHandler {
 
     /**
      * Apply a cast to the fight
+     *
+     * First, this method will call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCast(Buff, CastScope)} to caster
+     * Then call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCastTarget(Buff, CastScope)} to all targets
+     *
+     * After that, all effects will be applied by calling :
+     * - {@link EffectHandler#handle(CastScope, CastScope.EffectScope)} if duration is 0
+     * - {@link EffectHandler#buff(CastScope, CastScope.EffectScope)} if the effect has a duration
      */
     public void apply(CastScope cast) {
-        for (PassiveFighter target : cast.targets()) {
-            target.buffs().onCastTarget(cast);
-        }
+        cast.caster().buffs().onCast(cast);
+
+        applyCastTarget(cast);
 
         for (CastScope.EffectScope effect : cast.effects()) {
+            final EffectHandler handler = handlers.get(effect.effect().effect());
             // @todo Warning if handler is not found
-            if (handlers.containsKey(effect.effect().effect())) {
-                final EffectHandler handler = handlers.get(effect.effect().effect());
-
+            if (handler != null) {
                 if (effect.effect().duration() == 0) {
                     handler.handle(cast, effect);
                 } else {
                     handler.buff(cast, effect);
                 }
             }
+        }
+    }
+
+    /**
+     * Call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastTarget(CastScope)}
+     * on each target.
+     *
+     * If a target is changed (by calling {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)}),
+     * new targets will also be called
+     */
+    private void applyCastTarget(CastScope cast) {
+        Set<PassiveFighter> visitedTargets = Collections.emptySet();
+
+        for (;;) {
+            final Set<PassiveFighter> currentTargets = cast.targets();
+
+            boolean hasChanged = false;
+
+            for (PassiveFighter target : currentTargets) {
+                // Ignore already called targets
+                if (!visitedTargets.contains(target)) {
+                    if (!target.buffs().onCastTarget(cast)) {
+                        // The hook notify a target change
+                        hasChanged = true;
+                    }
+                }
+            }
+
+            // There is no new targets, we can stop here
+            if (!hasChanged) {
+                return;
+            }
+
+            // cast#targets() always contains all resolved targets, including removed ones
+            // so simple change visitedTargets by this value is enough to keep track of all already called fighters
+            visitedTargets = currentTargets;
         }
     }
 }

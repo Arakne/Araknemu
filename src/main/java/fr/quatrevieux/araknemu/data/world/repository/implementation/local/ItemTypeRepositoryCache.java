@@ -41,11 +41,7 @@ public final class ItemTypeRepositoryCache implements ItemTypeRepository {
 
     @Override
     public ItemType get(int id) {
-        if (!cacheById.containsKey(id)) {
-            cacheById.put(id, repository.get(id));
-        }
-
-        return cacheById.get(id);
+        return cacheById.computeIfAbsent(id, repository::get);
     }
 
     @Override

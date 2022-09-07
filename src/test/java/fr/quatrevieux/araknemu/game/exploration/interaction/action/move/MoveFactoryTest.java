@@ -28,6 +28,8 @@ import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MoveFactoryTest extends GameBaseCase {
@@ -56,6 +58,19 @@ class MoveFactoryTest extends GameBaseCase {
         assertEquals(explorationPlayer().map().get(99), move.path().get(1).cell());
         assertEquals(explorationPlayer().map().get(98), move.path().get(2).cell());
         assertEquals(explorationPlayer().map().get(69), move.path().get(3).cell());
+    }
+
+    @Test
+    void createNotOnMap() throws SQLException {
+        explorationPlayer().leave();
+
+        assertThrows(IllegalArgumentException.class, () -> factory.create(explorationPlayer(), ActionType.MOVE, new String[] {"ebIgbf"}));
+    }
+
+    @Test
+    void createMissingPath() throws Exception {
+        explorationPlayer().move(explorationPlayer().map().get(100), Direction.SOUTH_EAST);
+        assertThrows(IllegalArgumentException.class, () -> factory.create(explorationPlayer(), ActionType.MOVE, new String[] {}));
     }
 
     @Test

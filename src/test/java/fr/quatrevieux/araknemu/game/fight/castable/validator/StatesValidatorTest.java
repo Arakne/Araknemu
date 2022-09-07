@@ -33,7 +33,9 @@ import org.mockito.Mockito;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StatesValidatorTest extends FightBaseCase {
     private Fight fight;
@@ -63,6 +65,7 @@ class StatesValidatorTest extends FightBaseCase {
         Mockito.when(constraints.requiredStates()).thenReturn(new int[0]);
         Mockito.when(constraints.forbiddenStates()).thenReturn(new int[0]);
 
+        assertTrue(validator.check(turn, spell, fight.map().get(186)));
         assertNull(validator.validate(turn, spell, fight.map().get(186)));
     }
 
@@ -77,6 +80,7 @@ class StatesValidatorTest extends FightBaseCase {
 
         fighter.states().push(2);
 
+        assertFalse(validator.check(turn, spell, fight.map().get(186)));
         assertEquals(
             Error.cantCastBadState().toString(),
             validator.validate(turn, spell, fight.map().get(186)).toString()
@@ -95,6 +99,7 @@ class StatesValidatorTest extends FightBaseCase {
         fighter.states().push(1);
         fighter.states().push(2);
 
+        assertFalse(validator.check(turn, spell, fight.map().get(186)));
         assertEquals(
             Error.cantCastBadState().toString(),
             validator.validate(turn, spell, fight.map().get(186)).toString()
@@ -113,6 +118,7 @@ class StatesValidatorTest extends FightBaseCase {
         fighter.states().push(1);
         fighter.states().push(2);
 
+        assertTrue(validator.check(turn, spell, fight.map().get(186)));
         assertNull(validator.validate(turn, spell, fight.map().get(186)));
     }
 }

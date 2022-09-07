@@ -65,6 +65,7 @@ class LineOfSightValidatorTest extends FightBaseCase {
         Mockito.when(constraints.lineOfSight()).thenReturn(true);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
 
+        assertFalse(validator.check(turn, spell, fight.map().get(170)));
         assertEquals(
             Error.cantCastSightBlocked().toString(),
             validator.validate(turn, spell, fight.map().get(170)).toString()
@@ -80,6 +81,7 @@ class LineOfSightValidatorTest extends FightBaseCase {
         Mockito.when(constraints.lineOfSight()).thenReturn(true);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
 
+        assertTrue(validator.check(turn, spell, fight.map().get(125)));
         assertNull(validator.validate(turn, spell, fight.map().get(125)));
     }
 
@@ -92,6 +94,7 @@ class LineOfSightValidatorTest extends FightBaseCase {
         Mockito.when(constraints.lineOfSight()).thenReturn(false);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
 
+        assertTrue(validator.check(turn, spell, fight.map().get(170)));
         assertNull(validator.validate(turn, spell, fight.map().get(170)));
     }
 }

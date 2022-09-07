@@ -83,7 +83,7 @@ class MoveMonstersTest extends GameBaseCase {
 
     @Test
     void moveSingleGroup() throws SQLException {
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, -1, 3));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
         explorationPlayer().changeMap(map, 123);
@@ -101,7 +101,7 @@ class MoveMonstersTest extends GameBaseCase {
 
     @Test
     void fixedGroupShouldNotMove() throws SQLException {
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, 123), 3));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, 123, 3));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
         explorationPlayer().changeMap(map, 123);
@@ -117,7 +117,7 @@ class MoveMonstersTest extends GameBaseCase {
 
     @Test
     void moveOnlyOneGroupPerMap() throws SQLException {
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 2));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, -1, 2));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
         explorationPlayer().changeMap(map, 123);
@@ -137,7 +137,7 @@ class MoveMonstersTest extends GameBaseCase {
     void moveChance() throws SQLException {
         task = new MoveMonsters(container.get(MonsterEnvironmentService.class), Duration.ofSeconds(10), 25, 5);
 
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, -1, 3));
         container.get(ExplorationMapService.class).load(10340);
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
@@ -163,7 +163,7 @@ class MoveMonstersTest extends GameBaseCase {
     void moveDistance() throws SQLException {
         task = new MoveMonsters(container.get(MonsterEnvironmentService.class), Duration.ofSeconds(10), 100, 20);
 
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, -1, 3));
         container.get(ExplorationMapService.class).load(10340);
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
@@ -189,7 +189,7 @@ class MoveMonstersTest extends GameBaseCase {
     void moveWithoutFreeCellShouldNotMove() throws SQLException {
         task = new MoveMonsters(container.get(MonsterEnvironmentService.class), Duration.ofSeconds(10), 100, 5);
 
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, -1, 3));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
@@ -212,8 +212,8 @@ class MoveMonstersTest extends GameBaseCase {
         }
 
         @Override
-        public void apply(Operation operation) {
-
+        public <R> R apply(Operation<R> operation) {
+            return null;
         }
 
         @Override

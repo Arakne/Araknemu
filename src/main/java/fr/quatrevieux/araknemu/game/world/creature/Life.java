@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.world.creature;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+
 /**
  * Store life points of a creature
  */
@@ -26,12 +28,12 @@ public interface Life {
     /**
      * Get the maximum creature life
      */
-    public int max();
+    public @NonNegative int max();
 
     /**
      * Get the current creature life point
      */
-    public int current();
+    public @NonNegative int current();
 
     /**
      * Check if the creature is full life

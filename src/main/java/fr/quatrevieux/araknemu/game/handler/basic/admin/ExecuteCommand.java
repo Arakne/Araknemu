@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Execute an admin command
@@ -37,7 +38,7 @@ public final class ExecuteCommand implements PacketHandler<GameSession, AdminCom
 
     @Override
     public void handle(GameSession session, AdminCommand packet) throws Exception {
-        final AdminUser user = service.user(session.player());
+        final AdminUser user = service.user(NullnessUtil.castNonNull(session.player()));
 
         try {
             user.execute(packet.command());

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Set the kamas on the current exchange
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 public final class SetExchangeKamas implements PacketHandler<GameSession, KamasMovement> {
     @Override
     public void handle(GameSession session, KamasMovement packet) {
-        session.exploration().interactions().get(ExchangeDialog.class).kamas(packet.quantity());
+        NullnessUtil.castNonNull(session.exploration()).interactions().get(ExchangeDialog.class).kamas(packet.quantity());
     }
 
     @Override

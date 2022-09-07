@@ -20,14 +20,16 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpellsHelperTest extends AiBaseCase {
     @Test
@@ -88,48 +90,14 @@ class SpellsHelperTest extends AiBaseCase {
     }
 
     @Test
-    void simulate() {
-        configureFight(fb -> fb
-            .addSelf(b -> b.cell(123))
-            .addEnemy(b -> b.cell(125))
-        );
-
-        assertTrue(helper().simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 3 && simulation.target().id() == 125));
-        assertTrue(helper().simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 6 && simulation.target().id() == 123));
-
-        // Out of range
-        assertFalse(helper().simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 3 && simulation.target().id() == 22));
-        assertFalse(helper().simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 6 && simulation.target().id() == 121));
-
-        // Not enough AP
-        setAP(3);
-        assertFalse(helper().simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 3));
-    }
-
-    @Test
-    void createAction() {
-        configureFight(fb -> fb
-            .addSelf(b -> b.cell(123))
-            .addEnemy(b -> b.cell(125))
-        );
-
-        CastSimulation simulation = helper().simulate(container.get(Simulator.class)).filter(s -> s.spell().id() == 3 && s.target().id() == 125).findFirst().get();
-        Action action = helper().createAction(simulation);
-
-        assertInstanceOf(Cast.class, action);
-        assertEquals(3, Cast.class.cast(action).spell().id());
-        assertEquals(125, Cast.class.cast(action).target().id());
-    }
-
-    @Test
     void caster() {
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))
             .addEnemy(b -> b.cell(125))
         );
 
-        assertNotNull(helper().caster());
-        assertSame(helper().caster(), helper().caster());
+        assertNotNull(helper().caster(new SpellConstraintsValidator()));
+        assertNotSame(helper().caster(new SpellConstraintsValidator()), helper().caster(new SpellConstraintsValidator()));
     }
 
     private SpellsHelper helper() {

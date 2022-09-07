@@ -27,7 +27,9 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +37,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WeaponFactoryTest extends GameBaseCase {
     private WeaponFactory factory;
@@ -46,8 +52,10 @@ class WeaponFactoryTest extends GameBaseCase {
         super.setUp();
 
         factory = new WeaponFactory(
-            container.get(EffectMappers.class),
-            container.get(SpellEffectService.class)
+            container.get(SpellEffectService.class),
+            container.get(EffectToWeaponMapping.class),
+            container.get(EffectToCharacteristicMapping.class),
+            container.get(EffectToSpecialMapping.class)
         );
     }
 
@@ -150,6 +158,32 @@ class WeaponFactoryTest extends GameBaseCase {
 
         assertCount(1, weapon.specials());
         assertEquals(Effect.NULL1, weapon.specials().get(0).effect());
+    }
+
+    @Test
+    void createMissingArea() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, null);
+        assertThrows(IllegalArgumentException.class, () -> factory.create(
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
+                ),
+                20, "CS>4", 0, "4;1;1;50;30;5;0", 200
+            ), type, null, false
+        ));
+    }
+
+    @Test
+    void createMissingInfo() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
+                ),
+                20, "CS>4", 0, null, 200
+            ), type, null, false
+        ));
     }
 
     @Test

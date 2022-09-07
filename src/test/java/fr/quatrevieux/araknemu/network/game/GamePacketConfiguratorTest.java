@@ -69,7 +69,7 @@ class GamePacketConfiguratorTest extends GameBaseCase {
 
     @Test
     void messageReceivedSuccess() throws Exception {
-        Account account = new Account(1);
+        Account account = new Account(1, "", "", "");
         dataSet.push(account);
         dataSet.push(new ConnectionLog(account.id(), Instant.now(), "127.0.0.1"));
 

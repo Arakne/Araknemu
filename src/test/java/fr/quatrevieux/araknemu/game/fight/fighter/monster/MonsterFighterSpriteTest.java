@@ -46,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MonsterFighterSpriteTest extends FightBaseCase {
     private MonsterFighterSprite sprite;
+    private MonsterFighter fighter;
 
     @Override
     @BeforeEach
@@ -74,11 +75,11 @@ class MonsterFighterSpriteTest extends FightBaseCase {
                 container.get(ExplorationMapService.class).load(10340).get(123),
                 new Position(0, 0)
             ),
-            Collections.singletonList(123),
+            Collections.singletonList(loadFightMap(10340).get(123)),
             1
         );
 
-        MonsterFighter fighter = (MonsterFighter) team.fighters().stream().findFirst().get();
+        fighter = (MonsterFighter) team.fighters().stream().findFirst().get();
         sprite = new MonsterFighterSprite(fighter, service.load(31).all().get(2));
 
         Fight fight = createFight();
@@ -91,11 +92,24 @@ class MonsterFighterSpriteTest extends FightBaseCase {
     }
 
     @Test
+    void generateDead() {
+        fighter.life().kill(fighter);
+        assertEquals("-1;1;0;-1;31;-2;1563^100;3;-1;-1;-1;0,0,0,0;0;4;2;3;7;7;-7;-7;7;5;1", sprite.toString());
+    }
+
+    @Test
+    void generateHidden() {
+        fighter.setHidden(fighter, true);
+        assertEquals("-1;1;0;-1;31;-2;1563^100;3;-1;-1;-1;0,0,0,0;20;4;2;3;7;7;-7;-7;7;5;1", sprite.toString());
+    }
+
+    @Test
     void values() {
         assertEquals(-1, sprite.id());
         assertEquals(123, sprite.cell());
         assertEquals(Direction.SOUTH_EAST, sprite.orientation());
         assertEquals(Sprite.Type.MONSTER, sprite.type());
         assertEquals("31", sprite.name());
+        assertEquals(1563, sprite.gfxId());
     }
 }

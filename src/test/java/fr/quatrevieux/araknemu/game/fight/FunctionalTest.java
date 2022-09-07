@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -183,7 +184,6 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.clear();
 
         Move move = new Move(
-            fighter1.turn(),
             fighter1,
             new Path<>(
                 new Decoder<>(fight.map()),
@@ -221,6 +221,16 @@ public class FunctionalTest extends GameBaseCase {
                     public boolean success() {
                         return true;
                     }
+
+                    @Override
+                    public boolean secret() {
+                        return false;
+                    }
+
+                    @Override
+                    public void apply(FightTurn turn) {
+
+                    }
                 }
             )
         );
@@ -234,7 +244,6 @@ public class FunctionalTest extends GameBaseCase {
         fighter1.turn().stop();
 
         move = new Move(
-            fighter2.turn(),
             fighter2,
             new Path<>(
                 new Decoder<>(fight.map()),
@@ -261,6 +270,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertLast(
             new FightAction(
                 new CastSuccess(
+                    new Cast(null, null, null),
                     player.fighter(),
                     player.fighter().spells().get(3),
                     other.fighter().cell(),
@@ -285,6 +295,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertLast(
             new FightAction(
                 new CastSuccess(
+                    new Cast(null, null, null),
                     other.fighter(),
                     other.fighter().spells().get(3),
                     player.fighter().cell(),
@@ -313,15 +324,14 @@ public class FunctionalTest extends GameBaseCase {
         // Close combat
         other.fighter().turn().perform(
             new CloseCombat(
-                other.fighter().turn(),
                 other.fighter(),
                 player.fighter().cell(),
                 new WeaponConstraintsValidator(),
                 new CriticalityStrategy() {
-                    public int hitRate(int base) { return 0; }
-                    public int failureRate(int base) { return 0; }
-                    public boolean hit(int baseRate) { return false; }
-                    public boolean failed(int baseRate) { return false; }
+                    public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                    public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                    public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                    public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
                 }
             )
         );
@@ -411,7 +421,6 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target
@@ -422,7 +431,6 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
@@ -430,10 +438,10 @@ public class FunctionalTest extends GameBaseCase {
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         ));
     }
@@ -442,16 +450,15 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
             new SpellConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return true; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         ));
     }
@@ -460,16 +467,15 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
             new SpellConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return true; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return true; }
             }
         ));
     }

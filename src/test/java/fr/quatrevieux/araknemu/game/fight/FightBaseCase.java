@@ -24,13 +24,13 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
+import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
@@ -38,11 +38,19 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
-import fr.quatrevieux.araknemu.game.fight.state.*;
+import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
+import fr.quatrevieux.araknemu.game.fight.state.FinishState;
+import fr.quatrevieux.araknemu.game.fight.state.InitialiseState;
+import fr.quatrevieux.araknemu.game.fight.state.NullState;
+import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
@@ -65,12 +73,12 @@ import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -79,7 +87,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -101,7 +108,7 @@ public class FightBaseCase extends GameBaseCase {
 
         player = gamePlayer(true);
         other  = makeOtherPlayer();
-        executor = Executors.newSingleThreadScheduledExecutor();
+        executor = ExecutorFactory.createSingleThread();
     }
 
     @Override
@@ -113,15 +120,14 @@ public class FightBaseCase extends GameBaseCase {
     }
 
     public Fight createFight(boolean init) throws Exception {
+        FightMap map;
         Fight fight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
-            container.get(FightService.class).map(
-                container.get(ExplorationMapService.class).load(10340)
-            ),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                createTeam0(),
-                createTeam1()
+                createTeam0(map),
+                createTeam1(map)
             )),
             new StatesFlow(
                 new NullState(),
@@ -131,7 +137,8 @@ public class FightBaseCase extends GameBaseCase {
                 new FinishState()
             ),
             container.get(Logger.class),
-            executor
+            executor,
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         fight.register(new StatesModule(fight));
@@ -144,15 +151,14 @@ public class FightBaseCase extends GameBaseCase {
     }
 
     public Fight createPvmFight() throws Exception {
+        FightMap map;
         Fight fight = new Fight(
             1,
             container.get(PvmType.class),
-            container.get(FightService.class).map(
-                container.get(ExplorationMapService.class).load(10340)
-            ),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                createTeam0(),
-                createMonsterTeam()
+                createTeam0(map),
+                createMonsterTeam(map)
             )),
             new StatesFlow(
                 new NullState(),
@@ -162,7 +168,8 @@ public class FightBaseCase extends GameBaseCase {
                 new FinishState()
             ),
             container.get(Logger.class),
-            executor
+            executor,
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         fight.register(new StatesModule(fight));
@@ -175,23 +182,23 @@ public class FightBaseCase extends GameBaseCase {
         return createFight(true);
     }
 
-    public FightTeam createTeam0() throws ContainerException {
+    public FightTeam createTeam0(FightMap map) throws ContainerException {
         return new SimpleTeam(
             makePlayerFighter(player),
-            Arrays.asList(122, 123, 124),
+            Arrays.asList(map.get(122), map.get(123), map.get(124)),
             0
         );
     }
 
-    public FightTeam createTeam1() throws ContainerException {
+    public FightTeam createTeam1(FightMap map) throws ContainerException {
         return new SimpleTeam(
             makePlayerFighter(other),
-            Arrays.asList(125, 126, 127),
+            Arrays.asList(map.get(125), map.get(126), map.get(127)),
             0
         );
     }
 
-    public FightTeam createMonsterTeam() throws ContainerException, SQLException {
+    public FightTeam createMonsterTeam(FightMap map) throws ContainerException, SQLException {
         MonsterService service = container.get(MonsterService.class);
 
         dataSet
@@ -217,7 +224,7 @@ public class FightBaseCase extends GameBaseCase {
                 container.get(ExplorationMapService.class).load(10340).get(123),
                 new Position(0, 0)
             ),
-            Arrays.asList(125, 126, 127),
+            Arrays.asList(map.get(125), map.get(126), map.get(127)),
             1
         );
     }
@@ -248,7 +255,7 @@ public class FightBaseCase extends GameBaseCase {
     }
 
     public CastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
-        return new CastScope(castable, caster, target).withEffects(Collections.singletonList(effect));
+        return CastScope.simple(castable, caster, target, Collections.singletonList(effect));
     }
 
     public CastScope makeCastScopeForEffect(int effectId) {
@@ -277,11 +284,17 @@ public class FightBaseCase extends GameBaseCase {
         return new FightBuilder();
     }
 
+    public FightMap loadFightMap(int mapId) {
+        return container.get(FightService.class).map(
+            container.get(ExplorationMapService.class).load(mapId)
+        );
+    }
+
     private static int lastFighterId = 10;
 
     public class FightBuilder {
         private int id = 1;
-        private int mapId = 10340;
+        private FightMap map;
         private FightType type = new ChallengeType(configuration.fight());
         private StatesFlow states = new StatesFlow(
             new NullState(),
@@ -294,7 +307,13 @@ public class FightBaseCase extends GameBaseCase {
         private List<FighterBuilder> fighterBuilders = new ArrayList<>();
 
         public FightBuilder addSimpleTeam(PlayerFighter leader, List<Integer> places) {
-            teams.add(new SimpleTeam(leader, places, teams.size()));
+            teams.add(new SimpleTeam(leader, places.stream().map(map()::get).collect(Collectors.toList()), teams.size()));
+
+            return this;
+        }
+
+        public FightBuilder map(int mapId) {
+            map = loadFightMap(mapId);
 
             return this;
         }
@@ -346,16 +365,16 @@ public class FightBaseCase extends GameBaseCase {
             Fight fight = new Fight(
                 id,
                 type,
-                container.get(FightService.class).map(
-                    container.get(ExplorationMapService.class).load(mapId)
-                ),
+                map(),
                 teams,
                 states,
                 container.get(Logger.class),
-                executor
+                executor,
+                container.get(FightActionsFactoryRegistry.class)
             );
 
             fight.register(new StatesModule(fight));
+            fight.register(new CommonEffectsModule(fight));
             fight.dispatcher().add(new Listener<FightStarted>() {
                 @Override
                 public void on(FightStarted event) {
@@ -373,6 +392,14 @@ public class FightBaseCase extends GameBaseCase {
             }
 
             return fight;
+        }
+
+        private FightMap map() {
+            if (map != null) {
+                return map;
+            }
+
+            return map = loadFightMap(10340);
         }
 
         public class FighterBuilder {

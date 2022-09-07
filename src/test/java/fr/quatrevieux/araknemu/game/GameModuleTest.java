@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
@@ -42,7 +43,6 @@ import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.account.bank.BankService;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
-import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
@@ -74,10 +74,19 @@ import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -126,7 +135,10 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(NameCheckerGenerator.class, container.get(NameGenerator.class));
         assertInstanceOf(AreaService.class, container.get(AreaService.class));
         assertInstanceOf(ItemService.class, container.get(ItemService.class));
-        assertInstanceOf(EffectMappers.class, container.get(EffectMappers.class));
+        assertInstanceOf(EffectToSpecialMapping.class, container.get(EffectToSpecialMapping.class));
+        assertInstanceOf(EffectToWeaponMapping.class, container.get(EffectToWeaponMapping.class));
+        assertInstanceOf(EffectToCharacteristicMapping.class, container.get(EffectToCharacteristicMapping.class));
+        assertInstanceOf(EffectToUseMapping.class, container.get(EffectToUseMapping.class));
         assertInstanceOf(DefaultItemFactory.class, container.get(ItemFactory.class));
         assertInstanceOf(InventoryService.class, container.get(InventoryService.class));
         assertInstanceOf(SpellService.class, container.get(SpellService.class));
@@ -164,6 +176,12 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(Simulator.class, container.get(Simulator.class));
         assertInstanceOf(SavingService.class, container.get(SavingService.class));
         assertInstanceOf(DefaultSpectatorFactory.class, container.get(SpectatorFactory.class));
+        assertInstanceOf(MoveFactory.class, container.get(MoveFactory.class));
+        assertInstanceOf(CastFactory.class, container.get(CastFactory.class));
+        assertInstanceOf(CloseCombatFactory.class, container.get(CloseCombatFactory.class));
+        assertInstanceOf(BaseCriticalityStrategy.class, container.get(CriticalityStrategy.class));
+        assertInstanceOf(FightActionsFactoryRegistry.class, container.get(FightActionsFactoryRegistry.class));
+        assertInstanceOf(FightService.FightFactory.class, container.get(FightService.FightFactory.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

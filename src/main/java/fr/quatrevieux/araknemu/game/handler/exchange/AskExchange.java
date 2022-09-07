@@ -23,9 +23,11 @@ import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequestError;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle the exchange request
@@ -39,12 +41,19 @@ public final class AskExchange implements PacketHandler<GameSession, ExchangeReq
 
     @Override
     public void handle(GameSession session, ExchangeRequest packet) throws ErrorPacket {
-        final ExplorationPlayer player = session.exploration();
+        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
+        final ExplorationMap map = player.map();
+
+        if (map == null) {
+            throw new ErrorPacket(new ExchangeRequestError(ExchangeRequestError.Error.CANT_EXCHANGE));
+        }
 
         try {
-            if (packet.id().isPresent()) {
-                player.interactions().start(factory.create(packet.type(), player, player.map().creature(packet.id().get())));
-            }
+            // @todo check creature type ?
+            packet.id()
+                .map(map::creature)
+                .ifPresent(target -> player.interactions().start(factory.create(packet.type(), player, target)))
+            ;
         } catch (RuntimeException e) {
             throw new ErrorPacket(new ExchangeRequestError(ExchangeRequestError.Error.CANT_EXCHANGE));
         }

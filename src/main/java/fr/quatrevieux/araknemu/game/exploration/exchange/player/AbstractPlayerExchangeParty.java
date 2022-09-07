@@ -98,7 +98,13 @@ public abstract class AbstractPlayerExchangeParty implements ExchangeParty {
             processor.assertNotAccepted();
             processor.resetAccept();
 
-            storage.setItem(entry, Math.min(storage.quantity(entry) + quantity, entry.quantity()));
+            final int newQuantity = storage.quantity(entry) + quantity;
+
+            if (newQuantity <= 0) {
+                storage.setItem(entry, 0);
+            } else {
+                storage.setItem(entry, Math.min(newQuantity, entry.quantity()));
+            }
         }
     }
 

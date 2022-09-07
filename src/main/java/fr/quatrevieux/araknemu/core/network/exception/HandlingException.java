@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.network.exception;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Base exception which occurs during a normal handling of a packet
  * The sub-class exceptions are usually related to an action
@@ -31,15 +33,15 @@ public class HandlingException extends RuntimeException {
         super(message);
     }
 
-    public HandlingException(String message, Throwable cause) {
+    public HandlingException(String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 
-    public HandlingException(Throwable cause) {
+    public HandlingException(@Nullable Throwable cause) {
         super(cause);
     }
 
-    public HandlingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public HandlingException(String message, @Nullable Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

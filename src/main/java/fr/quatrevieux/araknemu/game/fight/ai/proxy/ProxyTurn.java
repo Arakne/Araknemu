@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.TurnPoints;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 /**
  * Proxy class for override turn
@@ -33,14 +32,14 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
  * Note: this object is immutable
  */
 public final class ProxyTurn implements Turn {
-    private final AI ai;
+    private final AI<?> ai;
     private final ActiveFighter fighter;
 
     /**
      * @param ai The real AI instance (i.e. not the proxy one, because it will cause a cyclic reference)
      * @param fighter The overridden fighter instance
      */
-    public ProxyTurn(AI ai, ActiveFighter fighter) {
+    public ProxyTurn(AI<?> ai, ActiveFighter fighter) {
         this.ai = ai;
         this.fighter = fighter;
     }
@@ -63,11 +62,6 @@ public final class ProxyTurn implements Turn {
     @Override
     public void later(Runnable nextAction) {
         throw new UnsupportedOperationException("This is a proxy turn");
-    }
-
-    @Override
-    public ActionsFactory actions() {
-        return ai.turn().actions();
     }
 
     @Override

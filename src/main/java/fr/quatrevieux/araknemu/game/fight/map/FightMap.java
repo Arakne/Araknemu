@@ -22,8 +22,15 @@ package fr.quatrevieux.araknemu.game.fight.map;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.LengthOf;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.SameLen;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,17 +39,18 @@ import java.util.List;
  */
 public final class FightMap implements BattlefieldMap {
     private final MapTemplate template;
-    private final List<FightCell> cells;
+    private final FightCell @SameLen("this") [] cells;
 
+    @SuppressWarnings("argument") // Do not result SameLen from template.cells()
     public FightMap(MapTemplate template) {
         this.template = template;
-        this.cells = makeCells(template.cells());
+        this.cells = makeCells(this, template.cells());
     }
 
     /**
      * Get the map id
      */
-    public int id() {
+    public @NonNegative int id() {
         return template.id();
     }
 
@@ -52,30 +60,45 @@ public final class FightMap implements BattlefieldMap {
      * @param cellId The cell id
      */
     @Override
-    public FightCell get(int cellId) {
-        return cells.get(cellId);
+    public FightCell get(@NonNegative @IndexFor("this") int cellId) {
+        return cells[cellId];
     }
 
     /**
      * Get start places for a team
      */
-    public List<Integer> startPlaces(int team) {
-        return template.fightPlaces()[team];
+    @SuppressWarnings("assignment") // fightPlaces bounds are not checked
+    public List<FightCell> startPlaces(@NonNegative int team) {
+        final @IndexFor("this") int[][] places = template.fightPlaces();
+
+        if (team >= places.length) {
+            return Collections.emptyList();
+        }
+
+        final List<FightCell> startCells = new ArrayList<>(places.length);
+
+        for (int cellId : places[team]) {
+            startCells.add(cells[cellId]);
+        }
+
+        return startCells;
     }
 
+    @Pure
     @Override
     public Dimensions dimensions() {
         return template.dimensions();
     }
 
+    @Pure
     @Override
-    public int size() {
-        return cells.size();
+    public @LengthOf("this") int size() {
+        return cells.length;
     }
 
     @Override
     public Iterator<FightCell> iterator() {
-        return cells.iterator();
+        return Arrays.stream(cells).iterator();
     }
 
     /**
@@ -85,20 +108,18 @@ public final class FightMap implements BattlefieldMap {
         for (FightCell cell : cells) {
             cell.fighter().ifPresent(fighter -> cell.removeFighter());
         }
-
-        cells.clear();
     }
 
-    private List<FightCell> makeCells(CellData[] template) {
-        final List<FightCell> cells = new ArrayList<>(template.length);
+    private static FightCell @SameLen("#1") [] makeCells(FightMap map, CellData @SameLen("#1") [] template) {
+        final FightCell[] cells = new FightCell[template.length];
 
         for (int i = 0; i < template.length; ++i) {
             final CellData cell = template[i];
 
             if (!cell.active() || !cell.movement().walkable()) {
-                cells.add(new UnwalkableFightCell(this, template[i], i));
+                cells[i] = new UnwalkableFightCell(map, template[i], i);
             } else {
-                cells.add(new WalkableFightCell(this, template[i], i));
+                cells[i] = new WalkableFightCell(map, template[i], i);
             }
         }
 

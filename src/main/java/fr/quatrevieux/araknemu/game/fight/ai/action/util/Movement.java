@@ -26,8 +26,12 @@ import fr.arakne.utils.maps.path.PathException;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +49,11 @@ import java.util.function.ToDoubleFunction;
  * - Try to find the path
  * - If a path is found, and can be performed by the current number of MPs, return the move action
  */
-public final class Movement implements ActionGenerator {
+public final class Movement<F extends ActiveFighter> implements ActionGenerator<F> {
     private final ToDoubleFunction<CoordinateCell<FightCell>> scoreFunction;
     private final Predicate<ScoredCell> filter;
 
-    private Pathfinder<FightCell> pathfinder;
+    private @MonotonicNonNull Pathfinder<FightCell> pathfinder;
 
     /**
      * Creates the Movement action generator
@@ -63,12 +67,13 @@ public final class Movement implements ActionGenerator {
     }
 
     @Override
-    public void initialize(AI ai) {
+    public void initialize(AI<F> ai) {
         this.pathfinder = new Decoder<>(ai.map()).pathfinder();
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+        final Pathfinder<FightCell> pathfinder = NullnessUtil.castNonNull(this.pathfinder);
         final int movementPoints = ai.turn().points().movementPoints();
         final List<ScoredCell> selectedCells = selectCells(ai, movementPoints);
 
@@ -98,7 +103,7 @@ public final class Movement implements ActionGenerator {
                 continue;
             }
 
-            return Optional.of(ai.turn().actions().move().create(path));
+            return Optional.of(actions.move().create(ai.fighter(), path));
         }
 
         return Optional.empty();
@@ -107,7 +112,7 @@ public final class Movement implements ActionGenerator {
     /**
      * Select all reachable cells for movement
      */
-    private List<ScoredCell> selectCells(AI ai, int movementPoints) {
+    private List<ScoredCell> selectCells(AI<F> ai, int movementPoints) {
         final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
         final List<ScoredCell> selectedCells = new ArrayList<>();
 

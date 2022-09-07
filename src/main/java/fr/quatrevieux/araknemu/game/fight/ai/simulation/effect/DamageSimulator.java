@@ -26,7 +26,11 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Simulate simple damage effect
@@ -42,31 +46,38 @@ public final class DamageSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        // @todo apply caster and target buff
-        final Interval value = new EffectValue(effect.effect())
-            .percent(simulation.caster().characteristics().get(element.boost()))
-            .percent(simulation.caster().characteristics().get(Characteristic.PERCENT_DAMAGE))
-            .fixed(simulation.caster().characteristics().get(Characteristic.FIXED_DAMAGE))
-            .interval()
-        ;
+        final ActiveFighter caster = simulation.caster();
+        final int boost = caster.characteristics().get(element.boost());
+        final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);
+        final int fixed = caster.characteristics().get(Characteristic.FIXED_DAMAGE);
 
         for (PassiveFighter target : effect.targets()) {
-            final Interval damage = value.map(base -> computeDamage(base, target));
+            final SpellEffect spellEffect = effect.effect();
+            final Interval value = EffectValue.create(spellEffect, simulation.caster(), target)
+                .percent(boost)
+                .percent(percent)
+                .fixed(fixed)
+                .interval()
+            ;
 
-            if (effect.effect().duration() < 1) {
+            final Interval damage = value.map(base -> computeDamage(base, target));
+            final int duration = spellEffect.duration();
+
+            if (duration == 0) {
                 simulation.addDamage(damage, target);
             } else {
-                simulation.addPoison(damage, effect.effect().duration(), target);
+                // Limit duration to 10
+                simulation.addPoison(damage, duration < 1 || duration > 10 ? 10 : duration, target);
             }
         }
     }
 
-    private int computeDamage(int value, PassiveFighter target) {
+    private @NonNegative int computeDamage(@NonNegative int value, PassiveFighter target) {
         final Damage damage = new Damage(value, element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;
 
-        return damage.value();
+        return Asserter.castNonNegative(damage.value());
     }
 }

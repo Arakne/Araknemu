@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.info;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -82,7 +82,7 @@ public final class Information extends AbstractInformationMessage {
      * @param characteristic The boosted characteristic
      * @param value The boost value
      */
-    public static Information characteristicBoosted(Characteristic characteristic, int value) {
+    public static @Nullable Information characteristicBoosted(Characteristic characteristic, int value) {
         switch (characteristic) {
             case WISDOM:
                 return new Information(9, value);
@@ -150,5 +150,47 @@ public final class Information extends AbstractInformationMessage {
      */
     public static Information spectatorHasJoinFight(String spectatorName) {
         return new Information(36, spectatorName);
+    }
+
+    /**
+     * The fight team request help
+     */
+    public static Information helpRequested() {
+        return new Information(103);
+    }
+
+    /**
+     * The help requested has been stopped
+     */
+    public static Information helpRequestStopped() {
+        return new Information(104);
+    }
+
+    /**
+     * The fight team has been locked
+     */
+    public static Information joinTeamLocked() {
+        return new Information(95);
+    }
+
+    /**
+     * The fight team has released join of new fighters
+     */
+    public static Information joinTeamReleased() {
+        return new Information(96);
+    }
+
+    /**
+     * Spectators has been blocked on the fight
+     */
+    public static Information spectatorsBlocked() {
+        return new Information(40);
+    }
+
+    /**
+     * Spectators has been allowed on the fight
+     */
+    public static Information spectatorsAllowed() {
+        return new Information(39);
     }
 }

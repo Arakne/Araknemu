@@ -20,20 +20,20 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.DummyGenerator;
-import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SpellCasterTest extends FightBaseCase {
+class SpellCasterTest extends AiBaseCase {
     private Fight fight;
     private SpellCaster caster;
     private PlayerFighter fighter;
@@ -51,7 +51,28 @@ class SpellCasterTest extends FightBaseCase {
         fight.turnList().start();
         ai.start(fight.turnList().current().get());
 
-        caster = new SpellCaster(ai);
+        caster = new SpellCaster(ai, ai.helper(), new SpellConstraintsValidator());
+    }
+
+    @Test
+    void simulate() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(123))
+            .addEnemy(b -> b.cell(125))
+        );
+
+        caster = new SpellCaster(ai, ai.helper(), new SpellConstraintsValidator());
+
+        assertTrue(caster.simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 3 && simulation.target().id() == 125));
+        assertTrue(caster.simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 6 && simulation.target().id() == 123));
+
+        // Out of range
+        assertFalse(caster.simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 3 && simulation.target().id() == 22));
+        assertFalse(caster.simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 6 && simulation.target().id() == 121));
+
+        // Not enough AP
+        setAP(3);
+        assertFalse(caster.simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 3));
     }
 
     @Test
@@ -59,17 +80,7 @@ class SpellCasterTest extends FightBaseCase {
         Spell spell = fighter.spells().get(3);
 
         assertFalse(caster.validate(spell, fight.map().get(5)));
+        assertFalse(caster.validate(spell, fight.map().get(30)));
         assertTrue(caster.validate(spell, fight.map().get(210)));
-    }
-
-    @Test
-    void create() {
-        Spell spell = fighter.spells().get(3);
-
-        Cast cast = (Cast) caster.create(spell, fight.map().get(210));
-
-        assertSame(spell, cast.spell());
-        assertSame(fight.map().get(210), cast.target());
-        assertSame(fighter, cast.caster());
     }
 }

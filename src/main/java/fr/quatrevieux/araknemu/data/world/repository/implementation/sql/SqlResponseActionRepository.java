@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
@@ -107,6 +108,7 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
     }
 
     @Override
+    @SuppressWarnings("array.access.unsafe.high.constant") // checker do not handle switch case
     public Map<Integer, List<ResponseAction>> byQuestion(Question question) {
         switch (question.responseIds().length) {
             case 0:
@@ -135,13 +137,13 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
         }
     }
 
-    private class Loader implements RepositoryUtils.Loader<ResponseAction> {
+    private static class Loader implements RepositoryUtils.Loader<ResponseAction> {
         @Override
-        public ResponseAction create(ResultSet rs) throws SQLException {
+        public ResponseAction create(Record record) throws SQLException {
             return new ResponseAction(
-                rs.getInt("RESPONSE_ID"),
-                rs.getString("ACTION"),
-                rs.getString("ARGUMENTS")
+                record.getInt("RESPONSE_ID"),
+                record.getString("ACTION"),
+                record.getString("ARGUMENTS")
             );
         }
 

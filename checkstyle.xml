@@ -242,6 +242,12 @@
         <property name="files" value="network"/>
     </module>
 
+    <!-- Ignore line number of GameModule - TODO must be refactored -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="FileLength"/>
+        <property name="files" value="GameModule"/>
+    </module>
+
     <!-- Ignore modified control variable on CLI argument parsing -->
     <module name="SuppressionSingleFilter">
         <property name="checks" value="ModifiedControlVariableCheck"/>
@@ -264,5 +270,15 @@
     <module name="SuppressionSingleFilter">
         <property name="checks" value="ParameterNumberCheck" />
         <property name="files" value="data.*entity" />
+    </module>
+
+    <!-- Ignore fight classes -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MethodCountCheck" />
+        <property name="files" value="game.fight.Fight" />
+    </module>
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="ParameterNumberCheck" />
+        <property name="files" value="game.fight.FightService" />
     </module>
 </module>

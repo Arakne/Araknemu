@@ -21,16 +21,15 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -109,20 +108,20 @@ final class SqlNpcRepository implements NpcRepository {
         );
     }
 
-    private class Loader implements RepositoryUtils.Loader<Npc> {
+    private static class Loader implements RepositoryUtils.Loader<Npc> {
+        private final Direction[] directions = Direction.values();
+
         @Override
-        public Npc create(ResultSet rs) throws SQLException {
+        public Npc create(Record record) throws SQLException {
             return new Npc(
-                rs.getInt("NPC_ID"),
-                rs.getInt("NPC_TEMPLATE_ID"),
+                record.getInt("NPC_ID"),
+                record.getInt("NPC_TEMPLATE_ID"),
                 new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
+                    record.getNonNegativeInt("MAP_ID"),
+                    record.getNonNegativeInt("CELL_ID")
                 ),
-                Direction.values()[rs.getInt("ORIENTATION")],
-                Arrays.stream(StringUtils.split(rs.getString("QUESTIONS"), ';'))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
+                record.getArrayValue("ORIENTATION", directions),
+                record.getIntArray("QUESTIONS", ';')
             );
         }
 

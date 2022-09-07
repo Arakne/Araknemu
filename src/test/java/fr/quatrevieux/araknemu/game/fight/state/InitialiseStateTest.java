@@ -24,8 +24,11 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,20 +50,22 @@ class InitialiseStateTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
+        FightMap map;
         fight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
-                new SimpleTeam(new PlayerFighter(gamePlayer()), Arrays.asList(123), 0),
-                new SimpleTeam(new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
+                new SimpleTeam(new PlayerFighter(gamePlayer()), Arrays.asList(map.get(123)), 0),
+                new SimpleTeam(new PlayerFighter(makeOtherPlayer()), Arrays.asList(map.get(321)), 1)
             ),
             new StatesFlow(
                 new NullState(),
                 nextState = new NullState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
     }
 

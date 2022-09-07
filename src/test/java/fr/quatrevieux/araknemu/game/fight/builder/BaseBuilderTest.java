@@ -28,15 +28,18 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BaseBuilderTest extends GameBaseCase {
     private BaseBuilder builder;
@@ -50,7 +53,7 @@ class BaseBuilderTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         type = Mockito.mock(FightType.class);
-        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type, container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
+        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type);
     }
 
     @Test
@@ -73,15 +76,15 @@ class BaseBuilderTest extends GameBaseCase {
     }
 
     @Test
-    void buildEmpty() {
+    void buildWithoutTeam() {
         builder.map(container.get(ExplorationMapService.class).load(10340));
 
-        Fight fight = builder.build(1);
+        assertThrows(IllegalStateException.class, () -> builder.build(1));
+    }
 
-        assertSame(type, fight.type());
-        assertCount(0, fight.teams());
-        assertCount(0, fight.fighters(false));
-        assertEquals(1, fight.id());
+    @Test
+    void buildWithoutMap() {
+        assertThrows(IllegalStateException.class, () -> builder.build(1));
     }
 
     @Test
@@ -98,6 +101,11 @@ class BaseBuilderTest extends GameBaseCase {
         for (int i = 0; i < 100; ++i) {
             Fight fight = builder.build(1);
 
+            assertSame(type, fight.type());
+            assertCount(2, fight.teams());
+            assertCount(2, fight.fighters(false));
+            assertEquals(1, fight.id());
+
             Fighter firstFighter = new ArrayList<>(fight.team(0).fighters()).get(0);
 
             if (firstFighter.id() == gamePlayer().id()) {
@@ -111,7 +119,7 @@ class BaseBuilderTest extends GameBaseCase {
 
     @Test
     void buildWithoutRandomizeTeam() throws Exception {
-        builder = new BaseBuilder(container.get(FightService.class), null, type, container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
+        builder = new BaseBuilder(container.get(FightService.class), null, type);
 
         PlayerFighter fighter = new PlayerFighter(gamePlayer());
         PlayerFighter other = new PlayerFighter(makeOtherPlayer());
@@ -122,6 +130,11 @@ class BaseBuilderTest extends GameBaseCase {
 
         for (int i = 0; i < 100; ++i) {
             Fight fight = builder.build(1);
+
+            assertSame(type, fight.type());
+            assertCount(2, fight.teams());
+            assertCount(2, fight.fighters(false));
+            assertEquals(1, fight.id());
 
             Fighter firstFighter = new ArrayList<>(fight.team(0).fighters()).get(0);
 

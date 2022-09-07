@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.entity.account;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.EnumSet;
 import java.util.Objects;
@@ -28,6 +29,7 @@ import java.util.Set;
 /**
  * AuthenticationAccount data
  */
+@SuppressWarnings("argument") // @todo remove when PK system is changed
 public final class Account {
     private final int id;
 
@@ -112,7 +114,7 @@ public final class Account {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

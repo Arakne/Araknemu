@@ -44,7 +44,7 @@ public final class AddItems implements DropRewardAction {
                 final PlayerInventory inventory = fighter.player().inventory();
 
                 reward.items().forEach((itemId, quantity) -> {
-                    for (; quantity > 0; --quantity) {
+                    for (int q = 0; q < quantity; ++q) {
                         inventory.add(service.create(itemId));
                     }
                 });

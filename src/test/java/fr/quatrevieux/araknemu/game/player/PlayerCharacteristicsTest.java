@@ -21,27 +21,35 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.player.characteristic.ComputedCharacteristics;
+import fr.quatrevieux.araknemu.game.player.characteristic.MutableComputedCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.player.characteristic.BaseCharacteristics;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BeltSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PlayerCharacteristicsTest extends GameBaseCase {
     private PlayerCharacteristics characteristics;
@@ -64,10 +72,10 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
     @Test
     void defaults() {
-        assertInstanceOf(BaseCharacteristics.class, characteristics.base());
+        assertInstanceOf(MutableComputedCharacteristics.class, characteristics.base());
         assertEquals(new DefaultCharacteristics(), characteristics.boost());
         assertEquals(new DefaultCharacteristics(), characteristics.feats());
-        assertEquals(new DefaultCharacteristics(), characteristics.stuff());
+        assertEquals(new ComputedCharacteristics<>(new DefaultCharacteristics()), characteristics.stuff());
     }
 
     @Test
@@ -182,7 +190,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         AtomicReference<CharacteristicsChanged> ref = new AtomicReference<>();
         dispatcher.add(CharacteristicsChanged.class, ref::set);
 
-        assertThrows(IllegalArgumentException.class, () -> characteristics.boostCharacteristic(Characteristic.STRENGTH));
+        assertThrows(IllegalStateException.class, () -> characteristics.boostCharacteristic(Characteristic.STRENGTH));
 
         assertNull(ref.get());
         assertEquals(50, characteristics.base().get(Characteristic.STRENGTH));
@@ -234,5 +242,48 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
         characteristics.base().add(Characteristic.STRENGTH, 100);
         assertEquals(1850, characteristics.pods());
+    }
+
+    @Test
+    void pointsResistance() throws SQLException {
+        assertEquals(0, characteristics.get(Characteristic.RESISTANCE_ACTION_POINT));
+        assertEquals(0, characteristics.get(Characteristic.RESISTANCE_MOVEMENT_POINT));
+
+        gamePlayer().entity().stats().set(Characteristic.WISDOM, 50);
+
+        assertEquals(12, characteristics.get(Characteristic.RESISTANCE_ACTION_POINT));
+        assertEquals(12, characteristics.get(Characteristic.RESISTANCE_MOVEMENT_POINT));
+
+        assertEquals(12, characteristics.base().get(Characteristic.RESISTANCE_ACTION_POINT));
+        assertEquals(12, characteristics.base().get(Characteristic.RESISTANCE_MOVEMENT_POINT));
+    }
+
+    @Test
+    void stuffStatsWithPointResistance() throws SQLException, ContainerException, InventoryException {
+        gamePlayer().entity().stats().set(Characteristic.WISDOM, 12);
+
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+            .pushItemTemplate(new ItemTemplate(10001, 1, "test point resistance", 1, Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_WISDOM, 40, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_DODGE_AP, 10, 0, 0, "")
+                ), 0, "", 0, "", 0
+            ))
+        ;
+
+        gamePlayer().inventory().add(container.get(ItemService.class).create(10001, true), 1, 0);
+
+        AtomicReference<CharacteristicsChanged> ref = new AtomicReference<>();
+        dispatcher.add(CharacteristicsChanged.class, ref::set);
+
+        characteristics.rebuildStuffStats();
+
+        assertNotNull(ref.get());
+        assertEquals(20, characteristics.stuff().get(Characteristic.RESISTANCE_ACTION_POINT));
+        assertEquals(10, characteristics.stuff().get(Characteristic.RESISTANCE_MOVEMENT_POINT));
+
+        assertEquals(23, characteristics.get(Characteristic.RESISTANCE_ACTION_POINT));
+        assertEquals(13, characteristics.get(Characteristic.RESISTANCE_MOVEMENT_POINT));
     }
 }

@@ -33,11 +33,13 @@ public final class ActionFactoryRegistry implements CellActionFactory {
 
     @Override
     public CellAction create(MapTrigger trigger) {
-        if (!factories.containsKey(trigger.action())) {
+        final CellActionFactory factory = factories.get(trigger.action());
+
+        if (factory == null) {
             throw new NoSuchElementException("Cannot found cell action " + trigger.action());
         }
 
-        return factories.get(trigger.action()).create(trigger);
+        return factory.create(trigger);
     }
 
     /**

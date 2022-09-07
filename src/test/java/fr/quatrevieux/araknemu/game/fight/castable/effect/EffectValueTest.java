@@ -21,13 +21,26 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class EffectValueTest extends TestCase {
+class EffectValueTest extends FightBaseCase {
     @Test
     void defaultsWithRandomEffect() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
@@ -54,6 +67,21 @@ class EffectValueTest extends TestCase {
 
         assertBetween(5, 10, value.value());
         assertEquals(new Interval(5, 10), value.interval());
+    }
+
+    @Test
+    void roll() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(5);
+        Mockito.when(effect.max()).thenReturn(10);
+
+        EffectValue value = new EffectValue(effect);
+        value.roll();
+
+        assertBetween(5, 10, value.value());
+        assertEquals(value.value(), value.value());
+        assertEquals(Interval.of(value.value()), value.interval());
     }
 
     @Test
@@ -223,5 +251,107 @@ class EffectValueTest extends TestCase {
 
         assertEquals(36, value.value());
         assertEquals(new Interval(36, 36), value.interval());
+    }
+
+    @Test
+    void createShouldCallBuffs() throws Exception {
+        Fight fight = createFight(true);
+
+        Fighter caster = player.fighter();
+        Fighter target = other.fighter();
+
+        BuffHook casterHook = Mockito.mock(BuffHook.class);
+        BuffHook targetHook = Mockito.mock(BuffHook.class);
+
+        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+
+        caster.buffs().add(casterBuff);
+        target.buffs().add(targetBuff);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(5);
+
+        EffectValue ev = EffectValue.create(effect, caster, target);
+
+        assertEquals(5, ev.value());
+
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(casterBuff, ev);
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, ev, caster);
+    }
+
+    @Test
+    void forEachTargetsShouldCallBuffs() throws Exception {
+        Fight fight = createFight(true);
+
+        Fighter caster = player.fighter();
+        Fighter target = other.fighter();
+
+        BuffHook casterHook = Mockito.mock(BuffHook.class);
+        BuffHook targetHook = Mockito.mock(BuffHook.class);
+
+        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+
+        caster.buffs().add(casterBuff);
+        target.buffs().add(targetBuff);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(5);
+
+        List<EffectValue> values = new ArrayList<>();
+        List<PassiveFighter> fighters = new ArrayList<>();
+
+        EffectValue.forEachTargets(effect, caster, Arrays.asList(caster, target), ((fighter, value) -> {
+            values.add(value);
+            fighters.add(fighter);
+        }));
+
+        assertIterableEquals(Arrays.asList(caster, target), fighters);
+        assertCount(2, values);
+        assertNotSame(values.get(0), values.get(1));
+        assertEquals(5, values.get(0).value());
+        assertEquals(5, values.get(1).value());
+
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(Mockito.eq(casterBuff), Mockito.any());
+
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueTarget(casterBuff, values.get(0), caster);
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, values.get(1), caster);
+    }
+
+    @Test
+    void forEachTargetsWithMaximizeOnOneTarget() throws Exception {
+        Fight fight = createFight(true);
+
+        Fighter caster = player.fighter();
+        Fighter target = other.fighter();
+
+        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+            @Override
+            public void onEffectValueTarget(Buff buff, EffectValue value, PassiveFighter caster) {
+                value.maximize();
+            }
+        });
+        target.buffs().add(targetBuff);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(0);
+        Mockito.when(effect.max()).thenReturn(10000);
+
+        List<EffectValue> values = new ArrayList<>();
+        List<PassiveFighter> fighters = new ArrayList<>();
+
+        EffectValue.forEachTargets(effect, caster, Arrays.asList(caster, target), ((fighter, value) -> {
+            values.add(value);
+            fighters.add(fighter);
+        }));
+
+        assertIterableEquals(Arrays.asList(caster, target), fighters);
+        assertCount(2, values);
+        assertBetween(0, 9999, values.get(0).value()); // Exclude 10 000
+        assertEquals(10000, values.get(1).value());
     }
 }

@@ -44,7 +44,19 @@ import java.util.List;
  * Note: each winners can only have one occurrence of an item, per monster
  */
 public final class PvmItemDropProvider implements DropRewardProvider {
+    private final double rate;
     private final RandomUtil random = new RandomUtil();
+
+    public PvmItemDropProvider() {
+        this(1.0);
+    }
+
+    /**
+     * @param rate Drop chance multiplier. Should be a positive value.
+     */
+    public PvmItemDropProvider(double rate) {
+        this.rate = rate;
+    }
 
     @Override
     public DropRewardProvider.Scope initialize(EndFightResults results) {
@@ -80,7 +92,7 @@ public final class PvmItemDropProvider implements DropRewardProvider {
 
                 iterator.remove();
 
-                if (random.decimal(100) > drop.rate()) {
+                if (random.decimal(100) > drop.rate() * rate) {
                     continue;
                 }
 

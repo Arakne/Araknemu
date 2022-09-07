@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * The simulation result of a cast
@@ -49,6 +50,8 @@ public final class CastSimulation {
     private double killedAllies;
     private double killedEnemies;
     private double suicide;
+
+    private double actionPointsModifier = 0;
 
     public CastSimulation(Spell spell, ActiveFighter caster, FightCell target) {
         this.spell = spell;
@@ -118,6 +121,20 @@ public final class CastSimulation {
     }
 
     /**
+     * Heal a target using a buff
+     *
+     * @param value The heal value
+     * @param target The target fighter
+     */
+    public void addHealBuff(final Interval value, final @Positive int duration, final PassiveFighter target) {
+        addHeal(value, target);
+
+        if (duration > 1) {
+            addBoost(value.average() * POISON_RATE * (duration - 1), target);
+        }
+    }
+
+    /**
      * Add a damage on the target
      *
      * @param value The damage value
@@ -147,7 +164,7 @@ public final class CastSimulation {
      * @param duration The poison duration in turns
      * @param target The target fighter
      */
-    public void addPoison(final Interval value, final int duration, final PassiveFighter target) {
+    public void addPoison(final Interval value, final @Positive int duration, final PassiveFighter target) {
         apply(new EffectValueComputer() {
             @Override
             public double lifeChange() {
@@ -157,6 +174,16 @@ public final class CastSimulation {
                 ) * POISON_RATE;
             }
         }, target);
+    }
+
+    /**
+     * Action point alternation for the current fighter
+     * A positive value means that the current spell will add action points on the current turn of the fighter
+     *
+     * This value will be removed from spell action point cost for compute actual action point cost.
+     */
+    public void alterActionPoints(double value) {
+        actionPointsModifier += value;
     }
 
     /**
@@ -242,6 +269,18 @@ public final class CastSimulation {
     }
 
     /**
+     * Get the actual action points cost of the current action
+     * Actions points change on the current fighter will be taken in account
+     *
+     * ex: if the spell cost 4 AP, but give 1 AP, the cost will be 3 AP
+     *
+     * The minimal value is bounded to 0.1
+     */
+    public double actionPointsCost() {
+        return Math.max(spell.apCost() - actionPointsModifier, 0.1);
+    }
+
+    /**
      * Merge the simulation result into the current simulation
      *
      * All results will be added considering the percent,
@@ -262,6 +301,8 @@ public final class CastSimulation {
         killedAllies += simulation.killedAllies * percent / 100d;
         killedEnemies += simulation.killedEnemies * percent / 100d;
         suicide += simulation.suicide * percent / 100d;
+
+        actionPointsModifier += simulation.actionPointsModifier * percent / 100d;
     }
 
     /**

@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.game.item.inventory;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -56,7 +59,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @return The related entry
      */
-    public default E add(Item item, int quantity) throws InventoryException {
+    public default E add(Item item, @Positive int quantity) throws InventoryException {
         return add(item, quantity, ItemEntry.DEFAULT_POSITION);
     }
 
@@ -69,7 +72,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @return The related entry
      */
-    public E add(Item item, int quantity, int position) throws InventoryException;
+    public E add(Item item, @Positive int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) throws InventoryException;
 
     /**
      * Delete an entry from the storage

@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.type.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ResourceFactoryTest extends GameBaseCase {
     private ResourceFactory factory;
@@ -44,7 +46,7 @@ class ResourceFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new ResourceFactory(container.get(EffectMappers.class));
+        factory = new ResourceFactory(container.get(EffectToSpecialMapping.class));
     }
 
     @Test

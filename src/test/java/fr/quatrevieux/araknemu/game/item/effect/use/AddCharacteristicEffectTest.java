@@ -87,6 +87,6 @@ class AddCharacteristicEffectTest extends GameBaseCase {
     @Test
     void check() {
         assertTrue(effect.check(new UseEffect(null, Effect.ADD_CHARACT_WISDOM, new int[] {2, 0, 0}), player));
-        assertFalse(effect.checkTarget(new UseEffect(null, Effect.ADD_CHARACT_WISDOM, new int[] {2, 0, 0}), player, null, 0));
+        assertFalse(effect.checkTarget(new UseEffect(null, Effect.ADD_CHARACT_WISDOM, new int[] {2, 0, 0}), player, null, null));
     }
 }

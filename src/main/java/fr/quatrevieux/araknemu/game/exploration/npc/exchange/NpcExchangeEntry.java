@@ -23,6 +23,13 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -36,13 +43,13 @@ import java.util.Map;
  */
 public final class NpcExchangeEntry {
     /** Null instance for an exchange entry */
-    public static final NpcExchangeEntry NULL_ENTRY = new NpcExchangeEntry(null, new NpcExchange(-1, -1, 0, null, 0, null), Collections.emptyMap());
+    public static final NpcExchangeEntry NULL_ENTRY = new NpcExchangeEntry(null, new NpcExchange(-1, -1, 0, Collections.emptyMap(), 0, Collections.emptyMap()), Collections.emptyMap());
 
-    private final ItemService itemService;
+    private final @Nullable ItemService itemService;
     private final NpcExchange entity;
-    private final Map<ItemTemplate, Integer> templatesAndQuantity;
+    private final Map<ItemTemplate, @Positive Integer> templatesAndQuantity;
 
-    public NpcExchangeEntry(ItemService itemService, NpcExchange entity, Map<ItemTemplate, Integer> templatesAndQuantity) {
+    public NpcExchangeEntry(@Nullable ItemService itemService, NpcExchange entity, Map<ItemTemplate, @Positive Integer> templatesAndQuantity) {
         this.itemService = itemService;
         this.entity = entity;
         this.templatesAndQuantity = templatesAndQuantity;
@@ -56,6 +63,8 @@ public final class NpcExchangeEntry {
      *
      * @return true if match
      */
+    @Pure
+    @EnsuresNonNullIf(expression = "itemService", result = true)
     public boolean match(Map<Integer, Integer> items, long kamas) {
         return valid() && entity.requiredKamas() == kamas && entity.requiredItems().equals(items);
     }
@@ -63,14 +72,17 @@ public final class NpcExchangeEntry {
     /**
      * Get the exchanged item templates associated with quantity
      */
-    public Collection<Map.Entry<ItemTemplate, Integer>> items() {
+    @Pure
+    @SuppressWarnings("return") // Cast from Set to Collection trigger an error
+    public Collection<Map.Entry<ItemTemplate, @Positive Integer>> items() {
         return templatesAndQuantity.entrySet();
     }
 
     /**
      * Get the exchanged kamas
      */
-    public long kamas() {
+    @Pure
+    public @NonNegative long kamas() {
         return entity.exchangedKamas();
     }
 
@@ -79,10 +91,11 @@ public final class NpcExchangeEntry {
      *
      * @return The items associated with the generated quantity
      */
-    public Map<Item, Integer> generate() {
-        final Map<Item, Integer> items = new HashMap<>();
+    @RequiresNonNull("itemService")
+    public Map<Item, @Positive Integer> generate() {
+        final Map<Item, @Positive Integer> items = new HashMap<>();
 
-        templatesAndQuantity.forEach((template, quantity) -> items.putAll(itemService.createBulk(template, quantity)));
+        templatesAndQuantity.forEach((template, quantity) -> items.putAll(NullnessUtil.castNonNull(itemService).createBulk(template, quantity)));
 
         return items;
     }
@@ -90,6 +103,8 @@ public final class NpcExchangeEntry {
     /**
      * Check if the entry is valid
      */
+    @Pure
+    @EnsuresNonNullIf(expression = "itemService", result = true)
     public boolean valid() {
         return itemService != null;
     }

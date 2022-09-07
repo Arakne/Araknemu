@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.event;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
@@ -27,10 +26,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
  */
 public final class FighterLifeChanged {
     private final PassiveFighter fighter;
-    private final ActiveFighter caster;
+    private final PassiveFighter caster;
     private final int value;
 
-    public FighterLifeChanged(PassiveFighter fighter, ActiveFighter caster, int value) {
+    public FighterLifeChanged(PassiveFighter fighter, PassiveFighter caster, int value) {
         this.fighter = fighter;
         this.caster = caster;
         this.value = value;
@@ -40,10 +39,14 @@ public final class FighterLifeChanged {
         return fighter;
     }
 
-    public ActiveFighter caster() {
+    public PassiveFighter caster() {
         return caster;
     }
 
+    /**
+     * Life change value
+     * Negative for loosing life, positive for heal
+     */
     public int value() {
         return value;
     }

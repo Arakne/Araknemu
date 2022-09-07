@@ -59,6 +59,7 @@ class ApCostValidatorTest extends FightBaseCase {
 
         Mockito.when(spell.apCost()).thenReturn(10);
 
+        assertFalse(validator.check(turn, spell, fight.map().get(123)));
         assertEquals(
             Error.cantCastNotEnoughActionPoints(6, 10).toString(),
             validator.validate(turn, spell, fight.map().get(123)).toString()
@@ -71,6 +72,7 @@ class ApCostValidatorTest extends FightBaseCase {
 
         Mockito.when(spell.apCost()).thenReturn(5);
 
+        assertTrue(validator.check(turn, spell, fight.map().get(123)));
         assertNull(validator.validate(turn, spell, fight.map().get(123)));
     }
 }

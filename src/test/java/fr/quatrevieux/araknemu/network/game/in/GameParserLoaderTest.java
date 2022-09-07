@@ -41,6 +41,9 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 import fr.quatrevieux.araknemu.network.game.in.exchange.store.BuyRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.*;
+import fr.quatrevieux.araknemu.network.game.in.fight.option.BlockSpectatorRequest;
+import fr.quatrevieux.araknemu.network.game.in.fight.option.LockTeamRequest;
+import fr.quatrevieux.araknemu.network.game.in.fight.option.NeedHelpRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
@@ -91,7 +94,7 @@ class GameParserLoaderTest {
         assertContainsInstance(QuickPing.Parser.class, parsers);
         assertContainsInstance(ListFightsRequest.Parser.class, parsers);
         assertContainsInstance(AskFightDetails.Parser.class, parsers);
-        assertContainsInstance(LeaveFightRequest.Parser.class, parsers);
+        assertContainsInstance(KickOrLeaveRequestParser.class, parsers);
         assertContainsInstance(SetOrientationRequest.Parser.class, parsers);
         assertContainsInstance(CreateDialogRequest.Parser.class, parsers);
         assertContainsInstance(LeaveDialogRequest.Parser.class, parsers);
@@ -106,6 +109,10 @@ class GameParserLoaderTest {
         assertContainsInstance(SellRequest.Parser.class, parsers);
         assertContainsInstance(AdminMove.Parser.class, parsers);
         assertContainsInstance(UseSmiley.Parser.class, parsers);
+        assertContainsInstance(BlockSpectatorRequest.Parser.class, parsers);
+        assertContainsInstance(LockTeamRequest.Parser.class, parsers);
+        assertContainsInstance(NeedHelpRequest.Parser.class, parsers);
+        assertContainsInstance(ShowCellRequest.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

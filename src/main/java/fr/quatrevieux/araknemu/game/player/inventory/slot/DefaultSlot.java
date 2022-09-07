@@ -25,6 +25,10 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntVal;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Optional;
 
@@ -36,12 +40,14 @@ import java.util.Optional;
 public final class DefaultSlot implements InventorySlot {
     private final StackableItemStorage<InventoryEntry> storage;
 
+    @SuppressWarnings("method.invocation") // id() is static
     public DefaultSlot(ItemStorage<InventoryEntry> storage) {
         this.storage = new StackableItemStorage<>(storage, id());
     }
 
     @Override
-    public int id() {
+    @Pure
+    public @IntVal(ItemEntry.DEFAULT_POSITION) int id() {
         return ItemEntry.DEFAULT_POSITION;
     }
 
@@ -60,7 +66,11 @@ public final class DefaultSlot implements InventorySlot {
         return storage.find(entry.item())
             .map(last -> {
                 storage.delete(entry);
-                last.add(entry.quantity());
+
+                // Quantity = 0 should not occur
+                if (entry.quantity() > 0) {
+                    last.add(entry.quantity());
+                }
 
                 return last;
             })
@@ -75,12 +85,12 @@ public final class DefaultSlot implements InventorySlot {
     }
 
     @Override
-    public InventoryEntry set(Item item, int quantity) throws InventoryException {
+    public InventoryEntry set(Item item, @Positive int quantity) throws InventoryException {
         return storage.add(item, quantity, id());
     }
 
     @Override
-    public void uncheckedSet(InventoryEntry entry) {
+    public void uncheckedSet(@Nullable InventoryEntry entry) {
         // Do not store a single item : do nothing
     }
 }

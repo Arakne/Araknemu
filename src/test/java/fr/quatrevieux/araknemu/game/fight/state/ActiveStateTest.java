@@ -29,7 +29,9 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
@@ -42,6 +44,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -70,13 +73,14 @@ class ActiveStateTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
+        FightMap map;
         fight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
-                new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(123, 222), 0),
-                new SimpleTeam(other = new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(other = new PlayerFighter(makeOtherPlayer()), Arrays.asList(map.get(321)), 1)
             ),
             new StatesFlow(
                 new NullState(),
@@ -84,7 +88,8 @@ class ActiveStateTest extends GameBaseCase {
                 state = new ActiveState()
             ),
             container.get(Logger.class),
-            executor = Executors.newSingleThreadScheduledExecutor()
+            executor = ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         fight.nextState();
@@ -97,6 +102,13 @@ class ActiveStateTest extends GameBaseCase {
         executor.shutdownNow();
 
         super.tearDown();
+    }
+
+    @Test
+    void notStarted() {
+        assertThrows(IllegalStateException.class, state::listeners);
+        assertThrows(IllegalStateException.class, () -> state.leave(fighter));
+        state.terminate();
     }
 
     @RepeatedIfExceptionsTest
@@ -118,6 +130,9 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(CheckFightTerminated.class));
         assertTrue(fight.dispatcher().has(SendTurnList.class));
         assertTrue(fight.dispatcher().has(RefreshBuffs.class));
+        assertTrue(fight.dispatcher().has(SendFighterMaxLifeChanged.class));
+        assertTrue(fight.dispatcher().has(SendFighterVisible.class));
+        assertTrue(fight.dispatcher().has(SendFighterHidden.class));
 
         Thread.sleep(210); // Wait for start turn
 
@@ -150,6 +165,9 @@ class ActiveStateTest extends GameBaseCase {
         assertFalse(fight.dispatcher().has(CheckFightTerminated.class));
         assertFalse(fight.dispatcher().has(SendTurnList.class));
         assertFalse(fight.dispatcher().has(RefreshBuffs.class));
+        assertFalse(fight.dispatcher().has(SendFighterMaxLifeChanged.class));
+        assertFalse(fight.dispatcher().has(SendFighterVisible.class));
+        assertFalse(fight.dispatcher().has(SendFighterHidden.class));
 
         assertFalse(fight.turnList().current().isPresent());
         assertFalse(fight.active());

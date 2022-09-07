@@ -31,7 +31,7 @@ public final class CircleArea implements SpellEffectArea {
     private final CircularArea area;
 
     public CircleArea(EffectArea area) {
-        this.area = new CircularArea(area, distance -> distance <= size());
+        this.area = new CircularArea(area, distance -> distance <= area.size());
     }
 
     @Override

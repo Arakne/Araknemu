@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
@@ -39,7 +40,9 @@ public final class EnsureInactiveFight<P extends Packet> implements PacketHandle
 
     @Override
     public void handle(GameSession session, P packet) throws Exception {
-        if (session.fighter() != null && session.fighter().fight() != null && session.fighter().fight().active()) {
+        final PlayerFighter fighter = session.fighter();
+
+        if (fighter != null && fighter.fight() != null && fighter.fight().active()) {
             throw new ErrorPacket(Error.cantDoDuringFight());
         }
 

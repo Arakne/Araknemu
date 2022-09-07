@@ -35,6 +35,12 @@ class ColorsTransformerTest {
     }
 
     @Test
+    void withNull() {
+        assertNull(transformer.unserialize(null));
+        assertNull(transformer.serialize(null));
+    }
+
+    @Test
     void serialize() {
         assertEquals("7b,1c8,315", transformer.serialize(new Colors(123, 456, 789)));
     }

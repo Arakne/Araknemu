@@ -20,12 +20,14 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchangeRepository;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,9 +41,9 @@ import java.util.Map;
 final class SqlNpcExchangeRepository implements NpcExchangeRepository {
     private final QueryExecutor executor;
     private final RepositoryUtils<NpcExchange> utils;
-    private final Transformer<Map<Integer, Integer>> itemsTransformer;
+    private final Transformer<Map<Integer, @Positive Integer>> itemsTransformer;
 
-    public SqlNpcExchangeRepository(QueryExecutor executor, Transformer<Map<Integer, Integer>> itemsTransformer) {
+    public SqlNpcExchangeRepository(QueryExecutor executor, Transformer<Map<Integer, @Positive Integer>> itemsTransformer) {
         this.executor = executor;
         this.itemsTransformer = itemsTransformer;
 
@@ -105,14 +107,14 @@ final class SqlNpcExchangeRepository implements NpcExchangeRepository {
 
     private class Loader implements RepositoryUtils.Loader<NpcExchange> {
         @Override
-        public NpcExchange create(ResultSet rs) throws SQLException {
+        public NpcExchange create(Record record) throws SQLException {
             return new NpcExchange(
-                rs.getInt("NPC_EXCHANGE_ID"),
-                rs.getInt("NPC_TEMPLATE_ID"),
-                rs.getLong("REQUIRED_KAMAS"),
-                itemsTransformer.unserialize(rs.getString("REQUIRED_ITEMS")),
-                rs.getLong("EXCHANGED_KAMAS"),
-                itemsTransformer.unserialize(rs.getString("EXCHANGED_ITEMS"))
+                record.getInt("NPC_EXCHANGE_ID"),
+                record.getInt("NPC_TEMPLATE_ID"),
+                record.getNonNegativeLong("REQUIRED_KAMAS"),
+                record.unserialize("REQUIRED_ITEMS", itemsTransformer),
+                record.getNonNegativeLong("EXCHANGED_KAMAS"),
+                record.unserialize("EXCHANGED_ITEMS", itemsTransformer)
             );
         }
 

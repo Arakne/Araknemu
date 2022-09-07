@@ -28,6 +28,12 @@ import fr.quatrevieux.araknemu.network.game.out.dialog.DialogCreated;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogCreationError;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogLeaved;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogQuestion;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.common.returnsreceiver.qual.This;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -40,14 +46,9 @@ public final class NpcDialog implements Interaction {
     private final GameNpc npc;
 
     /**
-     * Store the current question
+     * Store the current dialog
      */
-    private NpcQuestion question;
-
-    /**
-     * Store available responses
-     */
-    private Collection<Response> responses;
+    private @MonotonicNonNull Current current;
 
     public NpcDialog(ExplorationPlayer player, GameNpc npc) {
         this.player = player;
@@ -55,7 +56,8 @@ public final class NpcDialog implements Interaction {
     }
 
     @Override
-    public Interaction start() {
+    @SuppressWarnings("methodref.return") // orElseGet(null) is not supported
+    public @Nullable Interaction start() {
         return npc.question(player)
             .map(this::success)
             .orElseGet(this::error)
@@ -72,10 +74,9 @@ public final class NpcDialog implements Interaction {
      * Start next dialog question
      */
     public void next(NpcQuestion question) {
-        this.question = question;
-        this.responses = question.responses(player);
+        this.current = new Current(question, question.responses(player));
 
-        player.send(new DialogQuestion(question, responses, player));
+        player.send(new DialogQuestion(question, current.responses, player));
     }
 
     /**
@@ -83,8 +84,11 @@ public final class NpcDialog implements Interaction {
      *
      * @throws IllegalArgumentException When invalid question id is given
      */
-    public NpcDialog forQuestion(int id) {
-        if (question.id() != id) {
+    @Pure
+    @EnsuresNonNull({"current", "this.forQuestion(#1).current"})
+    @SuppressWarnings("contracts.postcondition") // checker is so dumb...
+    public @This NpcDialog forQuestion(int id) {
+        if (current == null || current.question.id() != id) {
             throw new IllegalArgumentException("Invalid question id");
         }
 
@@ -98,8 +102,9 @@ public final class NpcDialog implements Interaction {
      *
      * @throws NoSuchElementException When response is not available
      */
+    @RequiresNonNull("current")
     public void answer(int id) {
-        for (Response response : responses) {
+        for (Response response : current.responses) {
             if (response.id() == id) {
                 response.apply(player);
                 return;
@@ -122,9 +127,22 @@ public final class NpcDialog implements Interaction {
     /**
      * Cannot start the dialog
      */
-    private Interaction error() {
+    private @Nullable Interaction error() {
         player.send(new DialogCreationError());
 
         return null;
+    }
+
+    /**
+     * Store the current dialog choices (question + responses)
+     */
+    private static final class Current {
+        private final NpcQuestion question;
+        private final Collection<Response> responses;
+
+        public Current(NpcQuestion question, Collection<Response> responses) {
+            this.question = question;
+            this.responses = responses;
+        }
     }
 }

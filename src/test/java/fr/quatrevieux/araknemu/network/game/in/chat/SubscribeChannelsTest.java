@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game.in.chat;
 
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import org.junit.jupiter.api.Test;
 
@@ -61,5 +62,12 @@ class SubscribeChannelsTest {
             ChannelType.GROUP,
             ChannelType.PRIVATE
         ), sub.channels());
+    }
+
+    @Test
+    void parseInvalid() {
+        SubscribeChannels.Parser parser = new SubscribeChannels.Parser();
+
+        assertThrows(ParsePacketException.class, () -> parser.parse(""));
     }
 }

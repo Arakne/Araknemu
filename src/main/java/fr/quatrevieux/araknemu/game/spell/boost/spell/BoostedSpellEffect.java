@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Apply spell modifiers on effect
@@ -42,12 +44,20 @@ public final class BoostedSpellEffect implements SpellEffect {
     }
 
     @Override
-    public int min() {
+    public @NonNegative int min() {
+        if (isBoostableDamageEffect()) {
+            return Math.max(effect.min() + modifiers.baseDamage(), 0);
+        }
+
         return effect.min();
     }
 
     @Override
-    public int max() {
+    public @NonNegative int max() {
+        if (isBoostableDamageEffect()) {
+            return Math.max(effect.max() + modifiers.baseDamage(), 0);
+        }
+
         return effect.max();
     }
 
@@ -70,12 +80,12 @@ public final class BoostedSpellEffect implements SpellEffect {
     }
 
     @Override
-    public int duration() {
+    public @GTENegativeOne int duration() {
         return effect.duration();
     }
 
     @Override
-    public int probability() {
+    public @NonNegative int probability() {
         return effect.probability();
     }
 

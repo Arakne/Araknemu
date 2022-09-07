@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreationError;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Create the game session
@@ -42,7 +43,7 @@ public final class CreateGame implements PacketHandler<GameSession, CreateGameRe
 
     @Override
     public void handle(GameSession session, CreateGameRequest packet) throws Exception {
-        final GamePlayer player = session.player();
+        final GamePlayer player = NullnessUtil.castNonNull(session.player());
 
         if (packet.type() != CreateGameRequest.Type.EXPLORATION) {
             throw new ErrorPacket(new GameCreationError());

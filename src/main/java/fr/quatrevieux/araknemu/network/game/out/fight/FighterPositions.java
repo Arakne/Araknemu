@@ -19,9 +19,10 @@
 
 package fr.quatrevieux.araknemu.network.game.out.fight;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
@@ -30,9 +31,13 @@ import java.util.stream.Collectors;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L193
  */
 public final class FighterPositions {
-    private final Collection<Fighter> fighters;
+    private final Collection<? extends PassiveFighter> fighters;
 
-    public FighterPositions(Collection<Fighter> fighters) {
+    public FighterPositions(PassiveFighter fighter) {
+        this(Collections.singleton(fighter));
+    }
+
+    public FighterPositions(Collection<? extends PassiveFighter> fighters) {
         this.fighters = fighters;
     }
 

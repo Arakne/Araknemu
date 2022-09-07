@@ -40,6 +40,7 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
@@ -128,6 +129,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersR
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
@@ -138,13 +140,20 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterActionPointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddItems;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddKamas;
@@ -160,11 +169,20 @@ import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnEnemyValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.handler.loader.AdminLoader;
@@ -177,7 +195,6 @@ import fr.quatrevieux.araknemu.game.handler.loader.LoggedLoader;
 import fr.quatrevieux.araknemu.game.handler.loader.PlayingLoader;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
@@ -289,7 +306,7 @@ public final class GameModule implements ContainerModule {
 
         configurator.factory(
             GameConfiguration.class,
-            container -> app.configuration().module(GameConfiguration.class)
+            container -> app.configuration().module(GameConfiguration.MODULE)
         );
 
         configurator.factory(
@@ -543,7 +560,8 @@ public final class GameModule implements ContainerModule {
                 container.get(ItemFactory.class),
                 container.get(ItemSetRepository.class),
                 container.get(ItemTypeRepository.class),
-                container.get(EffectMappers.class)
+                container.get(EffectToCharacteristicMapping.class),
+                container.get(EffectToSpecialMapping.class)
             )
         );
 
@@ -586,30 +604,76 @@ public final class GameModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class,
+            container -> new fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory(new FightPathValidator[] {
+                new TackleValidator(),
+                new StopOnEnemyValidator(),
+            })
+        );
+
+        configurator.persist(
+            CastFactory.class,
+            container -> new CastFactory(
+                new SpellConstraintsValidator(),
+                container.get(CriticalityStrategy.class)
+            )
+        );
+
+        configurator.persist(
+            CloseCombatFactory.class,
+            container -> new CloseCombatFactory(
+                new WeaponConstraintsValidator(),
+                container.get(CriticalityStrategy.class)
+            )
+        );
+
+        configurator.persist(
+            FightActionsFactoryRegistry.class,
+            container -> new FightActionsFactoryRegistry(
+                container.get(fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class),
+                container.get(CastFactory.class),
+                container.get(CloseCombatFactory.class)
+            )
+        );
+
+        configurator.persist(
+            FightService.FightFactory.class,
+            container -> (id, type, map, teams, statesFlow, executor) -> new Fight(
+                id,
+                type,
+                map,
+                teams,
+                statesFlow,
+                container.get(Logger.class), // @todo fight logger
+                executor,
+                container.get(FightActionsFactoryRegistry.class)
+            )
+        );
+
+        configurator.persist(
             FightService.class,
             container -> new FightService(
-                container.get(MapTemplateRepository.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
                     new ChallengeBuilderFactory(
                         container.get(FighterFactory.class),
-                        container.get(ChallengeType.class),
-                        container.get(Logger.class) // @todo fight logger
+                        container.get(ChallengeType.class)
                     ),
                     new PvmBuilderFactory(
                         container.get(FighterFactory.class),
-                        container.get(PvmType.class),
-                        container.get(Logger.class) // @todo fight logger
+                        container.get(PvmType.class)
                     )
                 ),
                 Arrays.asList(
                     CommonEffectsModule::new,
+                    fight -> new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)),
                     StatesModule::new,
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class)),
                     fight -> new MonsterInvocationModule(container.get(MonsterService.class), fight)
                 ),
+                container.get(FightService.FightFactory.class),
                 container.get(GameConfiguration.class).fight()
             )
         );
@@ -758,37 +822,39 @@ public final class GameModule implements ContainerModule {
 
         configurator.persist(SpectatorFactory.class, container -> new DefaultSpectatorFactory());
 
-        configurator.persist(
-            EffectMappers.class,
-            container -> new EffectMappers(
-                new EffectToSpecialMapping(),
-                new EffectToWeaponMapping(),
-                new EffectToCharacteristicMapping(),
-                new EffectToUseMapping(
-                    container.get(SpellService.class)
-                )
-            )
-        );
+        configurator.persist(EffectToSpecialMapping.class, container -> new EffectToSpecialMapping());
+        configurator.persist(EffectToWeaponMapping.class, container -> new EffectToWeaponMapping());
+        configurator.persist(EffectToCharacteristicMapping.class, container -> new EffectToCharacteristicMapping());
+        configurator.persist(EffectToUseMapping.class, container -> new EffectToUseMapping(
+            container.get(SpellService.class)
+        ));
 
         configurator.persist(
             ItemFactory.class,
             container -> new DefaultItemFactory(
-                new ResourceFactory(container.get(EffectMappers.class)),
-                new UsableFactory(container.get(EffectMappers.class)),
-                new WeaponFactory(
-                    container.get(EffectMappers.class),
-                    container.get(SpellEffectService.class)
+                new ResourceFactory(container.get(EffectToSpecialMapping.class)),
+                new UsableFactory(
+                    container.get(EffectToUseMapping.class),
+                    container.get(EffectToSpecialMapping.class)
                 ),
-                new WearableFactory(SuperType.AMULET, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.RING, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.BELT, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.BOOT, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.SHIELD, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.HELMET, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.MANTLE, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.DOFUS, container.get(EffectMappers.class))
+                new WeaponFactory(
+                    container.get(SpellEffectService.class),
+                    container.get(EffectToWeaponMapping.class),
+                    container.get(EffectToCharacteristicMapping.class),
+                    container.get(EffectToSpecialMapping.class)
+                ),
+                new WearableFactory(SuperType.AMULET, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.RING, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.BELT, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.BOOT, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.SHIELD, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.HELMET, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.MANTLE, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.DOFUS, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class))
             )
         );
+
+        configurator.persist(CriticalityStrategy.class, container -> new BaseCriticalityStrategy());
 
         configurator.persist(
             MonsterGroupFactory.class,
@@ -808,7 +874,12 @@ public final class GameModule implements ContainerModule {
                     // to ensure that level up (which trigger restore life) is performed after life synchronisation
                     Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
-                    Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider(), new PvmEndFightActionProvider())
+                    Arrays.asList(
+                        new PvmXpProvider(container.get(GameConfiguration.class).fight().xpRate()),
+                        new PvmKamasProvider(),
+                        new PvmItemDropProvider(container.get(GameConfiguration.class).fight().dropRate()),
+                        new PvmEndFightActionProvider()
+                    )
                 ),
                 container.get(GameConfiguration.class).fight()
             )
@@ -828,7 +899,7 @@ public final class GameModule implements ContainerModule {
 
         // @todo Move to "FightModule"
         configurator.persist(Simulator.class, container -> {
-            final Simulator simulator = new Simulator();
+            final Simulator simulator = new Simulator(container.get(CriticalityStrategy.class));
 
             simulator.register(91, new StealLifeSimulator(Element.WATER));
             simulator.register(92, new StealLifeSimulator(Element.EARTH));
@@ -843,14 +914,16 @@ public final class GameModule implements ContainerModule {
             simulator.register(100, new DamageSimulator(Element.NEUTRAL));
 
             // AP
-            simulator.register(111, new AlterCharacteristicSimulator(200));
-            simulator.register(120, new AlterCharacteristicSimulator(200));
-            simulator.register(168, new AlterCharacteristicSimulator(-200));
+            simulator.register(111, new AlterActionPointsSimulator(200));
+            simulator.register(120, new AlterActionPointsSimulator(200));
+            simulator.register(168, new AlterActionPointsSimulator(-200));
+            simulator.register(101, new RemovePointsSimulator(Characteristic.ACTION_POINT, Characteristic.RESISTANCE_ACTION_POINT, 200));
 
             // MP
             simulator.register(78,  new AlterCharacteristicSimulator(200));
             simulator.register(128, new AlterCharacteristicSimulator(200));
             simulator.register(169, new AlterCharacteristicSimulator(-200));
+            simulator.register(127, new RemovePointsSimulator(Characteristic.MOVEMENT_POINT, Characteristic.RESISTANCE_MOVEMENT_POINT, 200));
 
             // Characteristics boost
             simulator.register(112, new AlterCharacteristicSimulator(10)); // damage
@@ -865,6 +938,11 @@ public final class GameModule implements ContainerModule {
             simulator.register(138, new AlterCharacteristicSimulator(2)); // percent damage
             simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
             simulator.register(182, new AlterCharacteristicSimulator(10)); // summoned creature
+            simulator.register(606, new AlterCharacteristicSimulator()); // Wisdom not dispellable
+            simulator.register(607, new AlterCharacteristicSimulator()); // Strength not dispellable
+            simulator.register(608, new AlterCharacteristicSimulator()); // Luck not dispellable
+            simulator.register(609, new AlterCharacteristicSimulator()); // Agility not dispellable
+            simulator.register(611, new AlterCharacteristicSimulator()); // Intelligence not dispellable
 
             // Characteristics malus
             simulator.register(116, new AlterCharacteristicSimulator(-5)); // sight malus
@@ -880,6 +958,15 @@ public final class GameModule implements ContainerModule {
 
             simulator.register(105, new ArmorSimulator());
             simulator.register(265, new ArmorSimulator());
+
+            // Heal
+            simulator.register(108, new HealSimulator());
+
+            // Misc
+            simulator.register(950, new SetStateSimulator()
+                .state(50, -500) // Altruiste
+            );
+            simulator.register(150, new PunishmentSimulator());
 
             return simulator;
         });

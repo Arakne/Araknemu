@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Leave the current exchange or request
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
 public final class LeaveExchange implements PacketHandler<GameSession, LeaveExchangeRequest> {
     @Override
     public void handle(GameSession session, LeaveExchangeRequest packet) {
-        session.exploration().interactions().get(ExchangeInteraction.class).leave();
+        NullnessUtil.castNonNull(session.exploration()).interactions().get(ExchangeInteraction.class).leave();
     }
 
     @Override

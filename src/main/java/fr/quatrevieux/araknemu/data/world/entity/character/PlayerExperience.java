@@ -19,23 +19,26 @@
 
 package fr.quatrevieux.araknemu.data.world.entity.character;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+
 /**
  * Player level and experience
  */
 public final class PlayerExperience {
-    private final int level;
-    private final long experience;
+    private final @Positive int level;
+    private final @NonNegative long experience;
 
-    public PlayerExperience(int level, long experience) {
+    public PlayerExperience(@Positive int level, @NonNegative long experience) {
         this.level = level;
         this.experience = experience;
     }
 
-    public int level() {
+    public @Positive int level() {
         return level;
     }
 
-    public long experience() {
+    public @NonNegative long experience() {
         return experience;
     }
 }

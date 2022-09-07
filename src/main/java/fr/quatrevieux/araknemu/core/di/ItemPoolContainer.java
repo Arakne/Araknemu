@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.di.item.CachedItem;
 import fr.quatrevieux.araknemu.core.di.item.ContainerItem;
 import fr.quatrevieux.araknemu.core.di.item.FactoryItem;
 import fr.quatrevieux.araknemu.core.di.item.ValueItem;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +35,14 @@ public final class ItemPoolContainer implements Container {
     private final Map<Class, ContainerItem> items = new HashMap<>();
 
     @Override
-    public <T> T get(Class<T> type) throws ContainerException {
-        if (!items.containsKey(type)) {
+    public <@NonNull T> T get(Class<T> type) throws ContainerException {
+        final ContainerItem<@NonNull T> item = (ContainerItem<@NonNull T>) items.get(type);
+
+        if (item == null) {
             throw new ItemNotFoundException(type);
         }
 
-        return (T) items.get(type).value(this);
+        return item.value(this);
     }
 
     @Override
@@ -78,21 +81,21 @@ public final class ItemPoolContainer implements Container {
         }
 
         @Override
-        public <T> Configurator set(Class<T> type, T object) {
+        public <@NonNull T> Configurator set(Class<T> type, @NonNull T object) {
             ItemPoolContainer.this.set(new ValueItem<>(type, object));
 
             return this;
         }
 
         @Override
-        public <T> Configurator factory(Class<T> type, FactoryItem.Factory<T> factory) {
+        public <@NonNull T> Configurator factory(Class<T> type, FactoryItem.Factory<T> factory) {
             ItemPoolContainer.this.set(new FactoryItem<>(type, factory));
 
             return this;
         }
 
         @Override
-        public <T> Configurator persist(Class<T> type, FactoryItem.Factory<T> factory) {
+        public <@NonNull T> Configurator persist(Class<T> type, FactoryItem.Factory<T> factory) {
             ItemPoolContainer.this.set(new CachedItem<>(
                 new FactoryItem<>(type, factory)
             ));

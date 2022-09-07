@@ -88,7 +88,7 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void addAndGet() {
-        Player player = repository.add(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
+        Player player = repository.add(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics()));
 
         Player get = repository.get(player);
 
@@ -104,7 +104,7 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void has() {
-        Player player = new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null);
+        Player player = new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics());
 
         assertFalse(repository.has(player));
 
@@ -137,9 +137,10 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void nameExists() {
-        assertFalse(repository.nameExists(new Player(-1, 5, 1, "name", null, null, null, 1, null)));
+        assertFalse(repository.nameExists(1, "name"));
         repository.add(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
-        assertTrue(repository.nameExists(new Player(-1, 5, 1, "name", null, null, null, 1, null)));
+        assertTrue(repository.nameExists(1, "name"));
+        assertFalse(repository.nameExists(2, "name"));
     }
 
     @Test
@@ -167,14 +168,14 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void getForGameBadServer() {
-        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null)).id();
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics())).id();
 
         assertThrows(EntityNotFoundException.class, () -> repository.getForGame(Player.forGame(id, 5, 2)));
     }
 
     @Test
     void getForGameSuccess() {
-        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null)).id();
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics())).id();
 
         Player player = repository.getForGame(Player.forGame(id, 5, 1));
 

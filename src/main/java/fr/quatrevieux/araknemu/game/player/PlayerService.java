@@ -45,6 +45,8 @@ import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -89,6 +91,7 @@ public final class PlayerService implements EventsSubscriber, Sender {
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found player on server
      * @throws RepositoryException For any other repository errors
      */
+    @RequiresNonNull("#1.account()")
     public GamePlayer load(GameSession session, int id) throws RepositoryException {
         if (onlinePlayers.containsKey(id)) {
             throw new IllegalStateException("The player is already loaded");
@@ -103,7 +106,7 @@ public final class PlayerService implements EventsSubscriber, Sender {
         );
 
         final GamePlayer gamePlayer = new GamePlayer(
-            session.account(),
+            NullnessUtil.castNonNull(session.account()),
             player,
             playerRaceService.get(player.race()),
             session,
@@ -179,13 +182,13 @@ public final class PlayerService implements EventsSubscriber, Sender {
      * @throws NoSuchElementException When the player is not online (or do not exists)
      */
     public GamePlayer get(String name) {
-        name = name.toLowerCase();
+        final GamePlayer player = playersByName.get(name.toLowerCase());
 
-        if (!isOnline(name)) {
+        if (player == null) {
             throw new NoSuchElementException("The player " + name + " cannot be found");
         }
 
-        return playersByName.get(name);
+        return player;
     }
 
     /**

@@ -69,5 +69,6 @@ class DefaultFighterFactoryTest extends GameBaseCase {
         assertTrue(fighter.dispatcher().has(LeaveOnDisconnect.class));
         assertTrue(fighter.dispatcher().has(ApplyLeaveReward.class));
         assertTrue(fighter.dispatcher().has(SendStats.class));
+        assertTrue(fighter.dispatcher().has(SendSpellBoosted.class));
     }
 }

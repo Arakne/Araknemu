@@ -19,26 +19,27 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PlayerFighterSpriteTest extends GameBaseCase {
+class PlayerFighterSpriteTest extends FightBaseCase {
     private PlayerFighterSprite sprite;
+    private PlayerFighter fighter;
 
     @Override
     @BeforeEach
@@ -51,7 +52,7 @@ class PlayerFighterSpriteTest extends GameBaseCase {
             container.get(ExplorationMapService.class).load(10340)
         );
 
-        PlayerFighter fighter = new PlayerFighter(gamePlayer(true));
+        fighter = new PlayerFighter(gamePlayer(true));
         sprite = new PlayerFighterSprite(fighter, gamePlayer().spriteInfo());
 
         fighter.setTeam(new SimpleTeam(fighter, new ArrayList<>(), 0));
@@ -67,11 +68,45 @@ class PlayerFighterSpriteTest extends GameBaseCase {
     }
 
     @Test
+    void generateWithPointsResistance() {
+        fighter.player().properties().characteristics().base().set(Characteristic.WISDOM, 100);
+
+        assertEquals(
+            "222;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;25;25;0;;",
+            sprite.toString()
+        );
+    }
+
+    @Test
+    void generateDead() throws Exception {
+        Fight fight = createFight(false);
+        fighter.joinFight(fight, fight.map().get(222));
+        fighter.init();
+        fighter.life().kill(fighter);
+
+        assertEquals(
+            "-1;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;0;6;3;0;0;0;0;0;0;0;0;;",
+            sprite.toString()
+        );
+    }
+
+    @Test
+    void generateHidden() {
+        fighter.setHidden(fighter, true);
+
+        assertEquals(
+            "-1;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;0;0;0;;",
+            sprite.toString()
+        );
+    }
+
+    @Test
     void getters() throws SQLException, ContainerException {
         assertEquals(gamePlayer().id(), sprite.id());
         assertEquals(222, sprite.cell());
         assertEquals(Sprite.Type.PLAYER, sprite.type());
         assertEquals("Bob", sprite.name());
         assertEquals(Direction.SOUTH_EAST, sprite.orientation());
+        assertEquals(10, sprite.gfxId());
     }
 }

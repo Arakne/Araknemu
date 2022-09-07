@@ -265,10 +265,12 @@ public enum Effect {
      * @see Effect#id()
      */
     public static Effect byId(int id) {
-        if (!effects.containsKey(id)) {
+        final Effect effect = effects.get(id);
+
+        if (effect == null) {
             throw new NoSuchElementException("Effect " + id + " is not supported");
         }
 
-        return effects.get(id);
+        return effect;
     }
 }

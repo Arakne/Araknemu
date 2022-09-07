@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -50,12 +52,13 @@ class StatesFlowTest extends GameBaseCase {
             1,
             new ChallengeType(configuration.fight()),
             new FightMap(
-                new MapTemplate(0, "", new Dimensions(0, 0), "", new CellData[0], new List[0], null, 0, false)
+                new MapTemplate(0, "", new Dimensions(0, 0), "", new CellData[0], new int[0][], null, 0, false)
             ),
             new ArrayList<>(),
             new StatesFlow(),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         flow.next(fight);

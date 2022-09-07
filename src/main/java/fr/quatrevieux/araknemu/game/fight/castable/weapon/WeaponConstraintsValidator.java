@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Validate weapon cast constraints
@@ -52,7 +53,12 @@ public final class WeaponConstraintsValidator implements CastConstraintValidator
     }
 
     @Override
-    public Error validate(Turn turn, CastableWeapon weapon, FightCell target) {
+    public boolean check(Turn turn, CastableWeapon castable, FightCell target) {
+        return validator.check(turn, castable, target);
+    }
+
+    @Override
+    public @Nullable Error validate(Turn turn, CastableWeapon weapon, FightCell target) {
         return validator.validate(turn, weapon, target);
     }
 }

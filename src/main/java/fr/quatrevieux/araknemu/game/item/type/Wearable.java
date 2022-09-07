@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * Class for simple equipments
  */
 public final class Wearable extends AbstractEquipment {
-    public Wearable(ItemTemplate template, ItemType type, GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
+    public Wearable(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
         super(template, type, set, characteristics, specials);
     }
 }

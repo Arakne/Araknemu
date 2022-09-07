@@ -62,7 +62,7 @@ class LifeRegenerationTest extends GameBaseCase {
 
     @Test
     void onStopExploration() throws Exception{
-        player.dispatch(new StopExploration(session));
+        player.dispatch(new StopExploration(session, explorationPlayer()));
         requestStack.assertLast(new StopLifeTimer());
 
         Field privateLongField = player.properties().life().getClass().getDeclaredField("lifeRegenerationStart");

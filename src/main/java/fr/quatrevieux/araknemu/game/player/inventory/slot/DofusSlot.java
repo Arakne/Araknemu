@@ -24,14 +24,15 @@ import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import org.checkerframework.common.value.qual.IntRange;
 
 /**
  * Slot for dofus
  */
 public final class DofusSlot extends AbstractWearableSlot {
-    public static final int[] SLOT_IDS = new int[] {9, 10, 11, 12, 13, 14};
+    public static final @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int[] SLOT_IDS = new int[] {9, 10, 11, 12, 13, 14};
 
-    public DofusSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, int id) {
+    public DofusSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int id) {
         super(dispatcher, storage, owner, id, SuperType.DOFUS);
     }
 }

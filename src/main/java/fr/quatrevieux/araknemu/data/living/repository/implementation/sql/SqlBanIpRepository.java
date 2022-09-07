@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.BanIp;
@@ -145,14 +146,14 @@ final class SqlBanIpRepository implements BanIpRepository {
 
     private class Loader implements RepositoryUtils.Loader<BanIp> {
         @Override
-        public BanIp create(ResultSet rs) throws SQLException {
+        public BanIp create(Record record) throws SQLException {
             return new BanIp(
-                rs.getInt("BANIP_ID"),
-                ipAddressTransformer.unserialize(rs.getString("IP_ADDRESS")),
-                instantTransformer.unserialize(rs.getString("UPDATED_AT")),
-                instantTransformer.unserialize(rs.getString("EXPIRES_AT")),
-                rs.getString("CAUSE"),
-                rs.getInt("BANISHER_ID")
+                record.getInt("BANIP_ID"),
+                record.unserialize("IP_ADDRESS", ipAddressTransformer),
+                record.unserialize("UPDATED_AT", instantTransformer),
+                record.nullableUnserialize("EXPIRES_AT", instantTransformer),
+                record.getString("CAUSE"),
+                record.getInt("BANISHER_ID")
             );
         }
 

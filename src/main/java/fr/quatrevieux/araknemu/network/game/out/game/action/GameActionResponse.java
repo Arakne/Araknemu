@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.game.action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Response for a game action
@@ -61,6 +62,7 @@ public final class GameActionResponse {
         return packet.toString();
     }
 
+    @SuppressWarnings("assignment") // arguments length not resolved from switch
     private static Object[] makeArguments(int spriteId, Object[] arguments) {
         switch (arguments.length) {
             case 0:
@@ -70,7 +72,7 @@ public final class GameActionResponse {
                 return new Object[] {spriteId, arguments[0]};
         }
 
-        final Object[] newArguments = new Object[arguments.length + 1];
+        final Object @MinLen(2) [] newArguments = new Object[arguments.length + 1];
 
         newArguments[0] = spriteId;
         System.arraycopy(arguments, 0, newArguments, 1, arguments.length);

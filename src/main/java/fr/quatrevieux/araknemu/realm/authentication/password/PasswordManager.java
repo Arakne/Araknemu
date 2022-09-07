@@ -19,6 +19,11 @@
 
 package fr.quatrevieux.araknemu.realm.authentication.password;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +33,15 @@ import java.util.function.Consumer;
  * Handle password hash algorithms
  */
 public final class PasswordManager {
-    private final List<String> availableAlgorithms;
+    private final List<@KeyFor("algorithms") String> availableAlgorithms;
     private final Map<String, HashAlgorithm> algorithms = new HashMap<>();
 
     public PasswordManager(List<String> availableAlgorithms, HashAlgorithm... algorithms) {
-        this.availableAlgorithms = availableAlgorithms;
-
         for (HashAlgorithm algorithm : algorithms) {
             register(algorithm);
         }
+
+        this.availableAlgorithms = checkAlgorithms(this.algorithms, availableAlgorithms);
     }
 
     /**
@@ -81,7 +86,19 @@ public final class PasswordManager {
     /**
      * Register a new algorithm
      */
-    public void register(HashAlgorithm algorithm) {
+    @RequiresNonNull("algorithms")
+    public void register(@UnknownInitialization PasswordManager this, HashAlgorithm algorithm) {
         algorithms.put(algorithm.name(), algorithm);
+    }
+
+    private static List<@KeyFor("#1") String> checkAlgorithms(Map<String, HashAlgorithm> algorithms, List<String> availableAlgorithms) {
+        if (!algorithms.keySet().containsAll(availableAlgorithms)) {
+            final List<String> invalidAlgorithms = new ArrayList<>(availableAlgorithms);
+            invalidAlgorithms.removeAll(algorithms.keySet());
+
+            throw new IllegalArgumentException("Hash algorithms " + invalidAlgorithms + " are not registered");
+        }
+
+        return (List<@KeyFor("algorithms") String>) availableAlgorithms;
     }
 }

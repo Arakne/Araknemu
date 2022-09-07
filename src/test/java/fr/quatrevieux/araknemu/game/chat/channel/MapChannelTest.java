@@ -92,6 +92,17 @@ class MapChannelTest extends GameBaseCase {
     }
 
     @Test
+    void notOnMapShouldIgnore() throws SQLException, ContainerException {
+        ExplorationPlayer player = explorationPlayer();
+        player.leave();
+        requestStack.clear();
+
+        channel.send(gamePlayer(), new Message(ChannelType.MESSAGES, null, "hello", ""));
+
+        requestStack.assertEmpty();
+    }
+
+    @Test
     void sendItem() throws SQLException, ContainerException {
         channel.send(
             gamePlayer(),

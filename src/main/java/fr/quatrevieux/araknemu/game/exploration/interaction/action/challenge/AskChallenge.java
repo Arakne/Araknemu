@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitationHandler;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 
@@ -44,15 +45,21 @@ public final class AskChallenge implements Action {
 
     @Override
     public void start(ActionQueue queue) {
-        player.map().creature(target).apply(new Operation() {
-            @Override
-            public void onExplorationPlayer(ExplorationPlayer challenger) {
-                player
-                    .interactions()
-                    .start(new ChallengeInvitationHandler(fightService.handler(ChallengeBuilder.class)).invitation(player, challenger))
-                ;
-            }
-        });
+        final ExplorationMap map = player.map();
+
+        if (map != null) {
+            map.creature(target).apply(new Operation<Void>() {
+                @Override
+                public Void onExplorationPlayer(ExplorationPlayer challenger) {
+                    player
+                        .interactions()
+                        .start(new ChallengeInvitationHandler(fightService.handler(ChallengeBuilder.class)).invitation(player, challenger))
+                    ;
+
+                    return null;
+                }
+            });
+        }
     }
 
     @Override

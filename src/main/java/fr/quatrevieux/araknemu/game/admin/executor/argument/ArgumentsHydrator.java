@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Factory for Command argument object
@@ -38,7 +39,7 @@ public interface ArgumentsHydrator {
      *
      * @return The filled command arguments
      */
-    public <A> A hydrate(Command<A> command, A commandArguments, CommandParser.Arguments parsedArguments) throws Exception;
+    public <@Nullable A> A hydrate(Command<A> command, @Nullable A commandArguments, CommandParser.Arguments parsedArguments) throws Exception;
 
     /**
      * Fill the command help object with the arguments system
@@ -57,5 +58,5 @@ public interface ArgumentsHydrator {
      * Check if the argument object is supported
      * May check the command type or the arguments type
      */
-    public <A> boolean supports(Command<A> command, A commandArguments);
+    public <A> boolean supports(Command<A> command, @Nullable A commandArguments);
 }

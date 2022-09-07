@@ -47,9 +47,15 @@ public final class AlterCharacteristicSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+        int duration = effect.effect().duration();
+
+        if (duration == -1 || duration > 10) {
+            duration = 10;
+        }
+
         final double value = (effect.effect().max() < effect.effect().min() ? effect.effect().min() : (double) (effect.effect().min() + effect.effect().max()) / 2)
             * multiplier
-            * Math.max(effect.effect().duration(), 1)
+            * Math.max(duration, 1)
         ;
 
         for (PassiveFighter target : effect.targets()) {

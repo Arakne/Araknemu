@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -61,6 +62,7 @@ class MonsterFighterCharacteristicsTest extends FightBaseCase {
         ;
 
         MonsterService service = container.get(MonsterService.class);
+        FightMap map = loadFightMap(10340);
 
         MonsterGroupTeam team = new MonsterGroupTeam(
             new MonsterGroup(
@@ -77,7 +79,7 @@ class MonsterFighterCharacteristicsTest extends FightBaseCase {
                 container.get(ExplorationMapService.class).load(10340).get(123),
                 new Position(0, 0)
             ),
-            Collections.singletonList(123),
+            Collections.singletonList(map.get(123)),
             1
         );
 
@@ -122,5 +124,13 @@ class MonsterFighterCharacteristicsTest extends FightBaseCase {
 
         assertEquals(Characteristic.STRENGTH, ref.get().characteristic());
         assertEquals(-10, ref.get().value());
+    }
+
+    @Test
+    void initial() {
+        assertEquals(90, characteristics.initial().get(Characteristic.STRENGTH));
+
+        characteristics.alter(Characteristic.STRENGTH, 10);
+        assertEquals(90, characteristics.initial().get(Characteristic.STRENGTH));
     }
 }

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Use an object before start the fight
@@ -32,16 +33,16 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 public final class UseObjectBeforeStart implements PacketHandler<GameSession, ObjectUseRequest> {
     @Override
     public void handle(GameSession session, ObjectUseRequest packet) {
-        final InventoryEntry entry = session.player().inventory().get(packet.objectId());
+        final InventoryEntry entry = NullnessUtil.castNonNull(session.player()).inventory().get(packet.objectId());
         final UsableItem item = UsableItem.class.cast(entry.item());
 
-        if (!item.checkFighter(session.fighter())) {
+        if (!item.checkFighter(NullnessUtil.castNonNull(session.fighter()))) {
             session.send(new Noop());
             return;
         }
 
         try {
-            item.applyToFighter(session.fighter());
+            item.applyToFighter(NullnessUtil.castNonNull(session.fighter()));
         } finally {
             entry.remove(1);
         }

@@ -52,7 +52,6 @@ class EnsureFightingTest extends FightBaseCase {
         Packet packet = new AskCharacterList(false);
 
         handler.handle(session, packet);
-        Thread.sleep(5);
 
         Mockito.verify(inner).handle(session, packet);
     }
@@ -69,7 +68,6 @@ class EnsureFightingTest extends FightBaseCase {
         Mockito.doThrow(new ErrorPacket("my packet")).when(inner).handle(session, packet);
 
         handler.handle(session, packet);
-        Thread.sleep(10);
 
         requestStack.assertLast("my packet");
     }

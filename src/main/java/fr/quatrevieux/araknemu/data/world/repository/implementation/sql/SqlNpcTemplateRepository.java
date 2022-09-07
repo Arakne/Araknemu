@@ -22,15 +22,14 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -106,35 +105,36 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
     }
 
     private class Loader implements RepositoryUtils.Loader<NpcTemplate> {
-        @Override
-        public NpcTemplate create(ResultSet rs) throws SQLException {
-            final String store = rs.getString("STORE_ITEMS");
+        private final Gender[] genders = Gender.values();
 
+        @Override
+        public NpcTemplate create(Record record) throws SQLException {
             return new NpcTemplate(
-                rs.getInt("NPC_TEMPLATE_ID"),
-                rs.getInt("GFXID"),
-                rs.getInt("SCALE_X"),
-                rs.getInt("SCALE_Y"),
-                Gender.values()[rs.getInt("SEX")],
-                new Colors(
-                    rs.getInt("COLOR1"),
-                    rs.getInt("COLOR2"),
-                    rs.getInt("COLOR3")
-                ),
-                rs.getString("ACCESSORIES"),
-                rs.getInt("EXTRA_CLIP"),
-                rs.getInt("CUSTOM_ARTWORK"),
-                store == null
-                    ? null
-                    : Arrays.stream(StringUtils.split(store, ","))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
+                record.getInt("NPC_TEMPLATE_ID"),
+                record.getInt("GFXID"),
+                record.getInt("SCALE_X"),
+                record.getInt("SCALE_Y"),
+                record.getArrayValue("SEX", genders),
+                createColors(record),
+                record.getString("ACCESSORIES"),
+                record.getInt("EXTRA_CLIP"),
+                record.getInt("CUSTOM_ARTWORK"),
+                record.getNullableIntArray("STORE_ITEMS", ',')
             );
         }
 
         @Override
         public NpcTemplate fillKeys(NpcTemplate entity, ResultSet keys) {
             throw new RepositoryException("Read-only entity");
+        }
+
+        @SuppressWarnings("argument") // Ignore invalid colors error
+        private Colors createColors(Record record) throws SQLException {
+            return new Colors(
+                record.getInt("COLOR1"),
+                record.getInt("COLOR2"),
+                record.getInt("COLOR3")
+            );
         }
     }
 }

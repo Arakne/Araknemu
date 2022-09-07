@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Enum for all fight actions
@@ -63,8 +64,16 @@ public enum ActionType {
 
     /**
      * Get an action by id
+     *
+     * @throws NoSuchElementException If the action type do not exist
      */
     public static ActionType byId(int id) {
-        return actionsById.get(id);
+        final ActionType type = actionsById.get(id);
+
+        if (type != null) {
+            return type;
+        }
+
+        throw new NoSuchElementException("ActionType " + id + " do not exist");
     }
 }

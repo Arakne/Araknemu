@@ -39,7 +39,7 @@ class SQLiteDriverTest {
     void newConnectionInMemory() throws SQLException, IOException {
         SQLiteDriver driver = new SQLiteDriver(
             new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
                 .connection("realm")
         );
 
@@ -69,7 +69,7 @@ class SQLiteDriverTest {
     void sharedConnection() throws SQLException, IOException {
         SQLiteDriver driver = new SQLiteDriver(
             new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
                 .connection("realm")
         );
 
@@ -104,7 +104,7 @@ class SQLiteDriverTest {
     void notSharedConnection() throws SQLException, IOException {
         SQLiteDriver driver = new SQLiteDriver(
             new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
                 .connection("no_shared")
         );
 
@@ -133,7 +133,7 @@ class SQLiteDriverTest {
     void newConnectionInFile() throws SQLException, IOException {
         SQLiteDriver driver = new SQLiteDriver(
             new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
                 .connection("test_sqlite")
         );
 

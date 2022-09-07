@@ -47,9 +47,12 @@ class ProxyActiveFighterTest extends AiBaseCase {
         assertSame(ai.fighter().buffs(), fighter.buffs());
         assertSame(ai.fighter().states(), fighter.states());
         assertSame(ai.fighter().team(), fighter.team());
+        assertSame(ai.fighter().sprite(), fighter.sprite());
+        assertSame(ai.fighter().orientation(), fighter.orientation());
 
         assertEquals(ai.fighter().id(), fighter.id());
         assertEquals(ai.fighter().dead(), fighter.dead());
+        assertEquals(ai.fighter().hidden(), fighter.hidden());
     }
 
     @Test
@@ -123,5 +126,18 @@ class ProxyActiveFighterTest extends AiBaseCase {
         ProxyActiveFighter fighter = new ProxyActiveFighter(ai.fighter());
 
         assertThrows(UnsupportedOperationException.class, () -> fighter.move(ai.map().get(123)));
+    }
+
+    @Test
+    void setHiddenIsNotAllowed() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152))
+            .addEnemy(builder -> builder.cell(167))
+            .addAlly(builder -> builder.cell(166))
+        );
+
+        ProxyActiveFighter fighter = new ProxyActiveFighter(ai.fighter());
+
+        assertThrows(UnsupportedOperationException.class, () -> fighter.setHidden(fighter, true));
     }
 }

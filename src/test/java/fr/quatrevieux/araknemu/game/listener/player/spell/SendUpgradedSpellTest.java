@@ -54,6 +54,7 @@ class SendUpgradedSpellTest extends FightBaseCase {
     @Test
     void onSpellUpgraded() throws ContainerException, SQLException {
         SpellBookEntry entry = new SpellBookEntry(
+            null,
             new PlayerSpell(1, 202, false, 3, 3),
             container.get(SpellService.class).get(202)
         );
@@ -74,6 +75,7 @@ class SendUpgradedSpellTest extends FightBaseCase {
         fighter.life().alter(fighter, -100);
 
         SpellBookEntry entry = new SpellBookEntry(
+            null,
             new PlayerSpell(1, 202, false, 3, 3),
             container.get(SpellService.class).get(202)
         );

@@ -63,6 +63,11 @@ public final class MonsterGroupSprite implements Sprite {
     }
 
     @Override
+    public int gfxId() {
+        return group.monsters().get(0).gfxId();
+    }
+
+    @Override
     public String name() {
         return group.monsters().stream()
             .map(monster -> Integer.toString(monster.id()))

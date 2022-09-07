@@ -24,13 +24,10 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.Executors;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class PvmBuilderFactoryTest  extends GameBaseCase {
     private PvmBuilderFactory factory;
@@ -40,11 +37,11 @@ class PvmBuilderFactoryTest  extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new PvmBuilderFactory(container.get(FighterFactory.class), container.get(PvmType.class), container.get(Logger.class));
+        factory = new PvmBuilderFactory(container.get(FighterFactory.class), container.get(PvmType.class));
     }
 
     @Test
     void create() throws ContainerException {
-        assertNotNull(factory.create(container.get(FightService.class), Executors.newSingleThreadScheduledExecutor()));
+        assertNotNull(factory.create(container.get(FightService.class)));
     }
 }

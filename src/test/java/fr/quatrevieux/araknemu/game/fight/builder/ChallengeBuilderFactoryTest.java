@@ -24,13 +24,10 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.Executors;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ChallengeBuilderFactoryTest extends GameBaseCase {
     private ChallengeBuilderFactory factory;
@@ -40,11 +37,11 @@ class ChallengeBuilderFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(ChallengeType.class), container.get(Logger.class));
+        factory = new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(ChallengeType.class));
     }
 
     @Test
     void create() throws ContainerException {
-        assertNotNull(factory.create(container.get(FightService.class), Executors.newSingleThreadScheduledExecutor()));
+        assertNotNull(factory.create(container.get(FightService.class)));
     }
 }

@@ -23,8 +23,15 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.DummyGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -33,6 +40,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.lang.reflect.Field;
@@ -52,7 +60,8 @@ public class AiBaseCase extends FightBaseCase {
     protected Fighter fighter;
     protected Fight fight;
 
-    protected ActionGenerator action;
+    protected AbstractAiBuilderFactory actionFactory;
+    protected ActionGenerator<Fighter> action;
     protected FighterAI ai;
 
     protected FightTurn turn;
@@ -82,6 +91,12 @@ public class AiBaseCase extends FightBaseCase {
         ai = new FighterAI(fighter, fight, new DummyGenerator());
         ai.start(turn = fight.turnList().current().get());
 
+        if (action == null && actionFactory != null) {
+            GeneratorBuilder<Fighter> aiBuilder = new GeneratorBuilder<>();
+            actionFactory.configure(aiBuilder, fighter);
+            action = aiBuilder.build();
+        }
+
         if (action != null) {
             action.initialize(ai);
         }
@@ -89,7 +104,7 @@ public class AiBaseCase extends FightBaseCase {
 
     public Optional<Action> generateAction() {
         lastAction = null;
-        final Optional<Action> generated = action.generate(ai);
+        final Optional<Action> generated = action.generate(ai, fight.actions());
 
         generated.ifPresent(a -> lastAction = a);
 
@@ -227,10 +242,24 @@ public class AiBaseCase extends FightBaseCase {
      * @param spellId The spell id
      */
     public void removeSpell(int spellId) throws NoSuchFieldException, IllegalAccessException {
-        SpellBook spells = (SpellBook) fighter.spells();
+        SpellBook spells = ((PlayerFighter) fighter).player().properties().spells();
         Field field = spells.getClass().getDeclaredField("entries");
         field.setAccessible(true);
 
         ((Map) field.get(spells)).remove(spellId);
+    }
+
+    public double computeScore(int spellId, int targetCell) {
+        return computeScore(spellId, 5, targetCell);
+    }
+
+    public double computeScore(int spellId, int spellLevel, int targetCell) {
+        CastSimulation simulation = container.get(Simulator.class).simulate(
+            container.get(SpellService.class).get(spellId).level(spellLevel),
+            fighter,
+            fight.map().get(targetCell)
+        );
+
+        return CastSpell.SimulationSelector.class.cast(action).score(simulation);
     }
 }

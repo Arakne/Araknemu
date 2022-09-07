@@ -58,9 +58,20 @@ public interface SpellModifiers {
 
     /**
      * Get the damage boost
+     * This boost works like {@link fr.quatrevieux.araknemu.data.constant.Characteristic#FIXED_DAMAGE} : it is added
+     * to the final result of the effect, after applying element and percent damage bonus.
      */
     public default int damage() {
         return value(SpellsBoosts.Modifier.DAMAGE);
+    }
+
+    /**
+     * Get the base damage boost
+     * Unlike {@link SpellModifiers#damage()} this boost is added to min and max effect parameters,
+     * so this boost is modified by element characteristic and percent damage
+     */
+    public default int baseDamage() {
+        return value(SpellsBoosts.Modifier.BASE_DAMAGE);
     }
 
     /**

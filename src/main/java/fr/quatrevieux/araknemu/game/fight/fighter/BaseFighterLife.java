@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Handle life points for fighters
@@ -28,27 +30,27 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
 public final class BaseFighterLife implements FighterLife {
     private final Fighter fighter;
 
-    private int max;
-    private int current;
+    private @NonNegative int max;
+    private @NonNegative int current;
     private boolean dead = false;
 
-    public BaseFighterLife(Fighter fighter, int life, int max) {
+    public BaseFighterLife(Fighter fighter, @NonNegative int life, @NonNegative int max) {
         this.max = max;
         this.current = life;
         this.fighter = fighter;
     }
 
-    public BaseFighterLife(Fighter fighter, int life) {
+    public BaseFighterLife(Fighter fighter, @NonNegative int life) {
         this(fighter, life, life);
     }
 
     @Override
-    public int current() {
+    public @NonNegative int current() {
         return current;
     }
 
     @Override
-    public int max() {
+    public @NonNegative int max() {
         return max;
     }
 
@@ -58,7 +60,8 @@ public final class BaseFighterLife implements FighterLife {
     }
 
     @Override
-    public int alter(ActiveFighter caster, int value) {
+    @SuppressWarnings("compound.assignment") // bound of value is not resolved
+    public int alter(PassiveFighter caster, int value) {
         if (dead) {
             return 0;
         }
@@ -76,9 +79,28 @@ public final class BaseFighterLife implements FighterLife {
         if (current == 0) {
             dead = true;
             fighter.fight().dispatch(new FighterDie(fighter, caster));
+        } else {
+            fighter.buffs().onLifeAltered(value);
         }
 
         return value;
+    }
+
+    @Override
+    public void alterMax(PassiveFighter caster, int value) {
+        if (dead) {
+            return;
+        }
+
+        current = Math.max(0, current + value);
+        max = Math.max(0, max + value);
+
+        if (current == 0) {
+            dead = true;
+            fighter.fight().dispatch(new FighterDie(fighter, caster));
+        } else {
+            fighter.fight().dispatch(new FighterMaxLifeChanged(fighter, caster));
+        }
     }
 
     @Override

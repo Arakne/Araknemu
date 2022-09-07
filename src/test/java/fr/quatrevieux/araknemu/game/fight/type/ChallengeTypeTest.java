@@ -28,6 +28,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeTypeTest extends GameBaseCase {
@@ -39,7 +40,7 @@ class ChallengeTypeTest extends GameBaseCase {
         assertFalse(type.hasPlacementTimeLimit());
         assertTrue(type.canCancel());
         assertEquals(Duration.ofSeconds(30), type.turnDuration());
-        assertNull(type.placementDuration());
+        assertThrows(UnsupportedOperationException.class, type::placementDuration);
         assertInstanceOf(ChallengeRewardsGenerator.class, type.rewards());
 
         setConfigValue("fight.turnDuration", "45s");

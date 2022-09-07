@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface ItemFactory {
      * @param template The item template
      * @param maximize Maximize stats ?
      */
-    public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize);
+    public Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, boolean maximize);
 
     /**
      * Retrieve an item
@@ -46,7 +47,7 @@ public interface ItemFactory {
      * @param template The item template
      * @param effects The item effects
      */
-    public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects);
+    public Item retrieve(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects);
 
     /**
      * Get the supported item super type

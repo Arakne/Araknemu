@@ -73,21 +73,21 @@ class InventoryServiceTest extends GameBaseCase {
     }
 
     @Test
-    void loadEmptyInventory() {
-        PlayerInventory inventory = service.load(new Player(5));
+    void loadEmptyInventory() throws SQLException {
+        PlayerInventory inventory = service.load(new Player(5)).attach(gamePlayer());
 
         assertFalse(inventory.iterator().hasNext());
     }
 
     @Test
-    void loadInventory() throws ItemNotFoundException {
+    void loadInventory() throws ItemNotFoundException, SQLException {
         Player player = new Player(5);
 
         repository.add(new PlayerItem(5, 3, 39, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "")), 1, 0));
         repository.add(new PlayerItem(5, 8, 40, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 1, 1));
         repository.add(new PlayerItem(5, 32, 284, new ArrayList<>(), 10, -1));
 
-        PlayerInventory inventory = service.load(player);
+        PlayerInventory inventory = service.load(player).attach(gamePlayer());
 
         assertEquals(39, inventory.get(3).templateId());
         assertEquals(40, inventory.get(8).templateId());

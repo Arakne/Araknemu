@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
@@ -49,7 +50,17 @@ public final class FightActionsFactories implements ExplorationActionRegistry.Se
     }
 
     private Action join(ExplorationPlayer player, ActionType action, String[] arguments) {
-        final Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Missing fight id");
+        }
+
+        final ExplorationMap map = player.map();
+
+        if (map == null) {
+            throw new IllegalArgumentException("Player is not on map");
+        }
+
+        final Fight fight = fightService.getFromMap(map.id(), Integer.parseInt(arguments[0]));
 
         if (arguments.length == 1) {
             return joinAsSpectator(player, fight);

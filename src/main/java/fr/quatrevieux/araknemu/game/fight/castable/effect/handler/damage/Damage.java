@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
  * Formula :
  * (value * percent / 100 - fixed - reduce) * multiply
  */
-public final class Damage {
+public final class Damage implements MultipliableDamage {
     private final int value;
     private final Element element;
 
@@ -35,6 +35,7 @@ public final class Damage {
     private int fixed = 0;
     private int percent = 100;
     private int reduce = 0;
+    private int returned = 0;
 
     public Damage(int value, Element element) {
         this.value = value;
@@ -48,9 +49,7 @@ public final class Damage {
         return element;
     }
 
-    /**
-     * Compute the value
-     */
+    @Override
     public int value() {
         final int base = (value * percent / 100 - fixed - reduce);
 
@@ -67,9 +66,9 @@ public final class Damage {
     public Damage percent(int percent) {
         if (percent > this.percent) {
             this.percent = 0;
+        } else {
+            this.percent -= percent;
         }
-
-        this.percent -= percent;
 
         return this;
     }
@@ -83,11 +82,9 @@ public final class Damage {
         return this;
     }
 
-    /**
-     * Multiply suffered damage
-     */
+    @Override
     public Damage multiply(int factor) {
-        this.multiply = factor;
+        this.multiply *= factor;
 
         return this;
     }
@@ -102,9 +99,25 @@ public final class Damage {
     }
 
     /**
+     * Add reflected damage
+     */
+    public Damage reflect(int value) {
+        this.returned += value;
+
+        return this;
+    }
+
+    /**
      * Get the damage reduction value from armor buff effects
      */
     public int reducedDamage() {
         return reduce;
+    }
+
+    /**
+     * How much damage has been reflected by the target ?
+     */
+    public int reflectedDamage() {
+        return returned;
     }
 }

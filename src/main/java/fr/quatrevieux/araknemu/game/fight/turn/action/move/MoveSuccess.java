@@ -23,7 +23,10 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Successful move result
@@ -53,6 +56,11 @@ public final class MoveSuccess implements MoveResult {
     }
 
     @Override
+    public boolean secret() {
+        return performer.hidden();
+    }
+
+    @Override
     public int lostActionPoints() {
         return 0;
     }
@@ -78,12 +86,19 @@ public final class MoveSuccess implements MoveResult {
     }
 
     @Override
-    public int lostMovementPoints() {
-        return path.size() - 1; // The path contains the current fighter's cell
+    public @NonNegative int lostMovementPoints() {
+        return Asserter.castNonNegative(path.size() - 1); // The path contains the current fighter's cell
     }
 
     @Override
     public Path<FightCell> path() {
         return path;
+    }
+
+    @Override
+    public void apply(FightTurn turn) {
+        turn.points().useMovementPoints(lostMovementPoints());
+        performer.move(path.target());
+        performer.setOrientation(path.last().direction());
     }
 }

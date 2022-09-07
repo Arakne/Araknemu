@@ -22,9 +22,8 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.data.value.Geolocation;
-import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.event.GameStopped;
@@ -37,22 +36,31 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
+import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
+import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.Executors;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FightServiceTest extends FightBaseCase {
     private FightService service;
@@ -66,14 +74,14 @@ class FightServiceTest extends FightBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         service = new FightService(
-            container.get(MapTemplateRepository.class),
             dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
-                new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(ChallengeType.class), container.get(Logger.class))
+                new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(ChallengeType.class))
             ),
             Arrays.asList(
                 RaulebaqueModule::new
             ),
+            container.get(FightService.FightFactory.class),
             container.get(GameConfiguration.class).fight()
         );
     }
@@ -86,6 +94,12 @@ class FightServiceTest extends FightBaseCase {
     @Test
     void handler() {
         assertNotNull(service.handler(ChallengeBuilder.class));
+        assertThrows(NoSuchElementException.class, () -> service.handler(new fr.quatrevieux.araknemu.game.fight.builder.FightBuilder() {
+            @Override
+            public Fight build(int fightId) {
+                return null;
+            }
+        }.getClass()));
     }
 
     @Test
@@ -148,6 +162,8 @@ class FightServiceTest extends FightBaseCase {
     void remove() throws Exception {
         Fight fight = createFight(false);
 
+        service.remove(fight); // No-op (not yet on map)
+
         service.created(fight);
         service.remove(fight);
 
@@ -206,14 +222,29 @@ class FightServiceTest extends FightBaseCase {
     }
 
     @Test
-    void modules() throws ContainerException {
-        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
+    void modules() throws Exception {
+        PlayerFighter fighter1 = makePlayerFighter(gamePlayer());
+        PlayerFighter fighter2 = makePlayerFighter(other);
+
+        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()));
         builder.map(container.get(ExplorationMapService.class).load(10340));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter1, startPlaces, number));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter2, startPlaces, number));
         Fight fight = builder.build(1);
 
         Collection<FightModule> modules = service.modules(fight);
 
         assertCount(1, modules);
         assertContainsType(RaulebaqueModule.class, modules);
+    }
+
+    @Test
+    void create() {
+        Fight fight = service.create(1, new ChallengeType(configuration.fight()), loadFightMap(10340), Collections.emptyList(), new StatesFlow());
+
+        assertEquals(1, fight.id());
+        assertInstanceOf(ChallengeType.class, fight.type());
+        assertEquals(10340, fight.map().id());
+        assertEquals(container.get(FightActionsFactoryRegistry.class), fight.actions());
     }
 }

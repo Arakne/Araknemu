@@ -3,10 +3,11 @@ build:
         analysis:
           dependencies:
             override:
-              - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -B -V
+              - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
         tests:
             environment:
-                java: 'java-8-oracle'
+                sdkman:
+                  - 'java@11-open'
                 timezone: Europe/Paris
 
             services:
@@ -14,14 +15,18 @@ build:
 
             dependencies:
               override:
-                - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -B -V
+                - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
+
+            project_setup:
+              override:
+                - mvn clean compile -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
 
             tests:
                 override:
                     - command: mysql -u root -e "create database araknemu"
                     - command: mysql -u root -e "create user araknemu"
                     - command: mysql -u root -e "grant all privileges on araknemu.* to araknemu"
-                    - command: mvn test
+                    - command: mvn -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' test
                       coverage:
                         file: 'target/site/jacoco/jacoco.xml'
                         format: 'jacoco'

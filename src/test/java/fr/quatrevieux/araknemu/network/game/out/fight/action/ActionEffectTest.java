@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -229,5 +230,138 @@ class ActionEffectTest {
         Mockito.when(fighter2.id()).thenReturn(460);
         
         assertEquals("GA;132;456;460", ActionEffect.dispelBuffs(fighter, fighter2).toString());
+    }
+
+    @Test
+    void slide() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Fighter fighter2 = Mockito.mock(Fighter.class);
+        FightCell cell = Mockito.mock(FightCell.class);
+
+        Mockito.when(fighter.id()).thenReturn(456);
+        Mockito.when(fighter2.id()).thenReturn(460);
+        Mockito.when(cell.id()).thenReturn(123);
+
+        assertEquals("GA;5;456;460,123", ActionEffect.slide(fighter, fighter2, cell).toString());
+    }
+
+    @Test
+    void reflectedDamage() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;107;456;456,15", ActionEffect.reflectedDamage(fighter, 15).toString());
+    }
+
+    @Test
+    void dodgeActionPointLost() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;308;456;123,2", ActionEffect.dodgeActionPointLost(caster, target, 2).toString());
+    }
+
+    @Test
+    void dodgeMovementPointLost() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;309;456;123,2", ActionEffect.dodgeMovementPointLost(caster, target, 2).toString());
+    }
+
+    @Test
+    void changeAppearance() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Sprite sprite = Mockito.mock(Sprite.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+        Mockito.when(target.sprite()).thenReturn(sprite);
+        Mockito.when(sprite.gfxId()).thenReturn(10);
+
+        assertEquals("GA;149;456;123,10,147,5", ActionEffect.changeAppearance(caster, target, 147, 5).toString());
+    }
+
+    @Test
+    void resetAppearance() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Sprite sprite = Mockito.mock(Sprite.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+        Mockito.when(target.sprite()).thenReturn(sprite);
+        Mockito.when(sprite.gfxId()).thenReturn(10);
+
+        assertEquals("GA;149;456;123,10,10,0", ActionEffect.resetAppearance(caster, target).toString());
+    }
+
+    @Test
+    void launchVisualEffect() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Spell spell = Mockito.mock(Spell.class);
+        FightCell cell = Mockito.mock(FightCell.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(spell.spriteId()).thenReturn(12);
+        Mockito.when(spell.spriteArgs()).thenReturn("11,0,1");
+        Mockito.when(spell.level()).thenReturn(3);
+        Mockito.when(cell.id()).thenReturn(325);
+
+        assertEquals("GA;208;456;325,12,11,0,1,3", ActionEffect.launchVisualEffect(caster, cell, spell).toString());
+    }
+
+    @Test
+    void boostSight() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;117;456;123,5,3", ActionEffect.boostSight(caster, target, 5, 3).toString());
+    }
+
+    @Test
+    void decreaseSight() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;116;456;123,5,3", ActionEffect.decreaseSight(caster, target, 5, 3).toString());
+    }
+
+    @Test
+    void fighterHidden() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;150;456;123,1", ActionEffect.fighterHidden(caster, target).toString());
+    }
+
+    @Test
+    void fighterVisible() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;150;456;123,0", ActionEffect.fighterVisible(caster, target).toString());
     }
 }

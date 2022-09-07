@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.entity.monster;
 
 import fr.arakne.utils.value.Interval;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Store Pvm fight reward for each monsters
@@ -29,9 +30,9 @@ import fr.arakne.utils.value.Interval;
 public final class MonsterRewardData {
     private final int id;
     private final Interval kamas;
-    private final long[] experiences;
+    private final @NonNegative long[] experiences;
 
-    public MonsterRewardData(int id, Interval kamas, long[] experiences) {
+    public MonsterRewardData(int id, Interval kamas, @NonNegative long[] experiences) {
         this.id = id;
         this.kamas = kamas;
         this.experiences = experiences;
@@ -56,7 +57,7 @@ public final class MonsterRewardData {
     /**
      * Reward experience per grade
      */
-    public long[] experiences() {
+    public @NonNegative long[] experiences() {
         return experiences;
     }
 }

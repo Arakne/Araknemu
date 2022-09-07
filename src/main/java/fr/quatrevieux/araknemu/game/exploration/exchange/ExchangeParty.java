@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.exchange;
 
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Party of an exchange
@@ -41,7 +42,7 @@ public interface ExchangeParty extends Exchange, Sender {
      *
      * @return The creature, or null if there is no other party on the exchange
      */
-    public Creature target();
+    public @Nullable Creature target();
 
     /**
      * Leave / cancel the exchange (will remove the interaction)

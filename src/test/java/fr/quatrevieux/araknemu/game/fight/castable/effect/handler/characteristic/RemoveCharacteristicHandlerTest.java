@@ -121,7 +121,7 @@ class RemoveCharacteristicHandlerTest extends FightBaseCase {
 
         handler.onBuffStarted(buff);
 
-        requestStack.assertLast(ActionEffect.buff(buff, -50));
+        requestStack.assertLast(ActionEffect.buff(buff, 50));
         assertEquals(-50, target.characteristics().get(Characteristic.LUCK));
 
         handler.onBuffTerminated(buff);

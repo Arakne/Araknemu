@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game.in.game;
 
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,5 +30,12 @@ class CreateGameRequestTest {
         CreateGameRequest.Parser parser = new CreateGameRequest.Parser();
 
         assertEquals(CreateGameRequest.Type.EXPLORATION, parser.parse("1").type());
+    }
+
+    @Test
+    void parseInvalidType() {
+        CreateGameRequest.Parser parser = new CreateGameRequest.Parser();
+
+        assertThrows(ParsePacketException.class, () -> parser.parse("9"));
     }
 }

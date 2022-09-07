@@ -101,6 +101,7 @@ public final class Info extends AbstractCommand<Void> {
         return formatted.toString();
     }
 
+    @SuppressWarnings("array.access.unsafe.high.range") // Ignore out of range for units (I don't think that TB of RAM will be reached)
     private static String formatBytes(long bytes) {
         final long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
 

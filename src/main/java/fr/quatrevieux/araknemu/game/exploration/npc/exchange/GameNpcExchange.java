@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +60,7 @@ public final class GameNpcExchange implements ExchangeProvider.Factory {
      *
      * @return The first matching entry, or null entry if not found
      */
-    public NpcExchangeEntry find(Map<ItemEntry, Integer> exchangedItems, long exchangedKamas) {
+    public NpcExchangeEntry find(Map<ItemEntry, @Positive Integer> exchangedItems, @NonNegative long exchangedKamas) {
         final Map<Integer, Integer> exchangedItemTemplatesWithQuantity = new HashMap<>();
 
         exchangedItems.forEach((itemEntry, quantity) -> exchangedItemTemplatesWithQuantity.put(

@@ -90,6 +90,8 @@ class DispelDeadFighterBuffTest extends FightBaseCase {
 
     @Test
     void functional() {
+        fight.dispatcher().add(listener);
+
         Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
         Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), player.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
         Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
@@ -98,7 +100,7 @@ class DispelDeadFighterBuffTest extends FightBaseCase {
         player.fighter().buffs().add(buff2);
         player.fighter().buffs().add(buff3);
 
-        player.fighter().life().kill(other.fighter());
+        other.fighter().life().kill(player.fighter());
 
         assertIterableEquals(Collections.singletonList(buff2), player.fighter().buffs());
     }

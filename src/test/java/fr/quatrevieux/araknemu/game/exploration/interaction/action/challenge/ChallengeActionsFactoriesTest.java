@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ChallengeActionsFactoriesTest extends FightBaseCase {
     private ExplorationActionRegistry factory;
@@ -84,5 +85,16 @@ class ChallengeActionsFactoriesTest extends FightBaseCase {
         assertSame(explorationPlayer(), action.performer());
         assertSame(ActionType.REFUSE_CHALLENGE, action.type());
         assertArrayEquals(new Object[] {other.id()}, action.arguments());
+    }
+
+    @Test
+    void missingTarget() throws Exception {
+        ExplorationPlayer other = new ExplorationPlayer(this.other);
+
+        explorationPlayer().map().add(other);
+
+        assertThrows(IllegalArgumentException.class, () -> factory.create(explorationPlayer(), ActionType.CHALLENGE, new String[] {}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(explorationPlayer(), ActionType.REFUSE_CHALLENGE, new String[] {}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(explorationPlayer(), ActionType.ACCEPT_CHALLENGE, new String[] {}));
     }
 }

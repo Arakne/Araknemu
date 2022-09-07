@@ -30,9 +30,11 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -89,9 +91,21 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
     @Test
     void badMap() throws SQLException, ContainerException {
         explorationPlayer().changeMap(container.get(ExplorationMapService.class).load(10540), 123);
-        assertFalse(explorationPlayer().player().isSpectator());
 
         action.start(new ActionQueue());
+        assertFalse(explorationPlayer().player().isSpectator());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "p")
+        );
+    }
+
+    @Test
+    void notOnMap() throws SQLException, ContainerException {
+        explorationPlayer().leave();
+
+        action.start(new ActionQueue());
+        assertFalse(explorationPlayer().player().isSpectator());
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "p")
@@ -105,7 +119,6 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
         requestStack.clear();
 
         action.start(new ActionQueue());
-        Thread.sleep(100);
 
         assertTrue(gamePlayer().isSpectator());
         assertFalse(gamePlayer().isExploring());
@@ -118,8 +131,22 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
             new BeginFight(),
             new FighterTurnOrder(fight.turnList()),
+            new TurnMiddle(fight.fighters()),
             new StartTurn(fight.turnList().current().get())
         );
+    }
+
+    @Test
+    void spectatorsNotAllowed() throws InterruptedException, SQLException {
+        fight.nextState();
+        fight.turnList().start();
+        ConfigurableTeamOptions.class.cast(fight.team(0).options()).toggleAllowSpectators();
+        requestStack.clear();
+
+        action.start(new ActionQueue());
+
+        assertFalse(explorationPlayer().player().isSpectator());
+        requestStack.assertLast(Error.cantJoinFightAsSpectator());
     }
 
     public static class MyBlockingAction implements BlockingAction {

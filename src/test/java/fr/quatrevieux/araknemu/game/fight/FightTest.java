@@ -38,9 +38,11 @@ import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -82,8 +84,8 @@ class FightTest extends GameBaseCase {
             new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             teams = new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(123), 0),
-                new SimpleTeam(fighter2 = new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
+                new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(map.get(123)), 0),
+                new SimpleTeam(fighter2 = new PlayerFighter(makeOtherPlayer()), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -93,7 +95,8 @@ class FightTest extends GameBaseCase {
                 new FinishState()
             ),
             logger = Mockito.mock(Logger.class),
-            executor = Executors.newSingleThreadScheduledExecutor()
+            executor = ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
     }
 
@@ -118,6 +121,7 @@ class FightTest extends GameBaseCase {
         assertFalse(fight.active());
         assertTrue(fight.alive());
         assertInstanceOf(Spectators.class, fight.spectators());
+        assertSame(container.get(FightActionsFactoryRegistry.class), fight.actions());
     }
 
     @Test
@@ -184,6 +188,7 @@ class FightTest extends GameBaseCase {
 
     @RepeatedIfExceptionsTest
     void execute() throws InterruptedException {
+        ExecutorFactory.disableDirectExecution();
         AtomicBoolean ab = new AtomicBoolean(false);
 
         fight.execute(() -> {
@@ -207,8 +212,6 @@ class FightTest extends GameBaseCase {
         RuntimeException raisedException = new RuntimeException("my error");
 
         fight.execute(() -> { throw raisedException; });
-
-        Thread.sleep(10);
 
         Mockito.verify(logger).error("Error on fight executor : my error", raisedException);
     }
@@ -249,7 +252,6 @@ class FightTest extends GameBaseCase {
         fight.destroy();
 
         assertCount(0, fight.teams());
-        assertEquals(0, fight.map().size());
         assertFalse(fight.alive());
     }
 

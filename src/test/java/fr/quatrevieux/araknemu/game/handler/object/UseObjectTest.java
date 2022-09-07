@@ -94,6 +94,24 @@ class UseObjectTest extends GameBaseCase {
     }
 
     @Test
+    void handleForTargetNotOnMapShouldDoNothing() throws Exception {
+        InventoryEntry entry = explorationPlayer().inventory().add(container.get(ItemService.class).create(468));
+
+        GamePlayer other = makeOtherPlayer();
+        ExplorationPlayer otherPlayer = new ExplorationPlayer(other);
+        otherPlayer.changeMap(explorationPlayer().map(), 123);
+        other.properties().life().set(10);
+        explorationPlayer().leave();
+        requestStack.clear();
+
+        handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), -1, true));
+
+        requestStack.assertAll(new Noop());
+        assertEquals(10, other.properties().life().current());
+        assertEquals(1, entry.quantity());
+    }
+
+    @Test
     void handleForTargetPlayer() throws Exception {
         InventoryEntry entry = explorationPlayer().inventory().add(container.get(ItemService.class).create(468));
 
@@ -103,7 +121,7 @@ class UseObjectTest extends GameBaseCase {
         other.properties().life().set(10);
         requestStack.clear();
 
-        handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), 0, true));
+        handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), -1, true));
 
         requestStack.assertAll(
             new DestroyItem(entry),
@@ -126,6 +144,17 @@ class UseObjectTest extends GameBaseCase {
             new InventoryWeight(gamePlayer())
         );
         assertEquals(99, entry.quantity());
+    }
+
+    @Test
+    void handleForTargetInvalidCellShouldDoNothing() throws Exception {
+        InventoryEntry entry = explorationPlayer().inventory().add(container.get(ItemService.class).create(2240), 100);
+        requestStack.clear();
+
+        handler.handle(session, new ObjectUseRequest(entry.id(), 0, 1000, true));
+
+        requestStack.assertAll(new Noop());
+        assertEquals(100, entry.quantity());
     }
 
     @Test

@@ -19,12 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 import java.util.List;
 
@@ -32,12 +36,14 @@ import java.util.List;
  * Result for successfully spell cast
  */
 public final class CastSuccess implements ActionResult {
+    private final Cast action;
     private final Fighter caster;
     private final Spell spell;
     private final FightCell target;
     private final boolean critical;
 
-    public CastSuccess(Fighter caster, Spell spell, FightCell target, boolean critical) {
+    public CastSuccess(Cast action, Fighter caster, Spell spell, FightCell target, boolean critical) {
+        this.action = action;
         this.caster = caster;
         this.spell = spell;
         this.target = target;
@@ -64,6 +70,11 @@ public final class CastSuccess implements ActionResult {
         return true;
     }
 
+    @Override
+    public boolean secret() {
+        return false;
+    }
+
     /**
      * Is a critical hit ?
      */
@@ -76,5 +87,17 @@ public final class CastSuccess implements ActionResult {
      */
     public List<SpellEffect> effects() {
         return critical ? spell.criticalEffects() : spell.effects();
+    }
+
+    @Override
+    public void apply(FightTurn turn) {
+        if (critical) {
+            caster.fight().send(ActionEffect.criticalHitSpell(caster, spell));
+        }
+
+        turn.points().useActionPoints(spell.apCost());
+        turn.fight().effects().apply(CastScope.probable(spell, caster, target, effects()));
+
+        turn.fight().dispatch(new SpellCasted(action));
     }
 }

@@ -34,10 +34,7 @@ class SupportTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        GeneratorBuilder builder = new GeneratorBuilder();
-        new Support(container.get(Simulator.class)).configure(builder);
-        action = builder.build();
-
+        actionFactory = new Support(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
     }
 
@@ -58,6 +55,18 @@ class SupportTest extends AiBaseCase {
     }
 
     @Test
+    void shouldMoveForPerformBestBoost() {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(298).spell(126))
+            .addAlly(fb -> fb.cell(341))
+            .addEnemy(fb -> fb.cell(165))
+        );
+
+        generateAndPerformMove();
+        assertEquals(313, fighter.cell().id());
+    }
+
+    @Test
     void shouldAttackIfCantBoost() throws NoSuchFieldException, IllegalAccessException {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(210))
@@ -68,6 +77,34 @@ class SupportTest extends AiBaseCase {
         removeSpell(6);
 
         assertCast(3, 165);
+    }
+
+    @Test
+    void shouldHealIfCantBoost() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(210).spell(130))
+            .addAlly(fb -> fb.cell(198).currentLife(50).maxLife(100))
+            .addEnemy(fb -> fb.cell(165))
+        );
+
+        removeSpell(6);
+
+        assertCast(130, 168);
+        assertInCastEffectArea(198);
+    }
+
+    @Test
+    void shouldDebuffIfCantHeal() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(298).spell(81))
+            .addAlly(fb -> fb.cell(198))
+            .addEnemy(fb -> fb.cell(256))
+        );
+
+        removeSpell(6);
+        removeSpell(3);
+
+        assertCast(81, 256);
     }
 
     @Test

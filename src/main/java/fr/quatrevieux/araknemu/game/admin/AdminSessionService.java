@@ -45,11 +45,13 @@ public final class AdminSessionService {
      * @param player The admin player
      */
     public AdminUser user(GamePlayer player) throws AdminException {
-        if (!usersById.containsKey(player.id())) {
-            usersById.put(player.id(), createAdminUserSession(player));
+        AdminUser user = usersById.get(player.id());
+
+        if (user == null) {
+            usersById.put(player.id(), user = createAdminUserSession(player));
         }
 
-        return usersById.get(player.id());
+        return user;
     }
 
     private AdminUser createAdminUserSession(GamePlayer player) throws AdminException {

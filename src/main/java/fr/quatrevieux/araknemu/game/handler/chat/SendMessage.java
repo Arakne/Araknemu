@@ -23,10 +23,12 @@ import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.chat.SendMessageError;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Send a message
@@ -40,12 +42,14 @@ public final class SendMessage implements PacketHandler<GameSession, Message> {
 
     @Override
     public void handle(GameSession session, Message packet) throws Exception {
-        if (!session.player().restrictions().canChat()) {
+        final GamePlayer player = NullnessUtil.castNonNull(session.player());
+
+        if (!player.restrictions().canChat()) {
             throw new ErrorPacket(Error.cantDoOnCurrentState());
         }
 
         try {
-            service.send(session.player(), packet);
+            service.send(player, packet);
         } catch (ChatException e) {
             switch (e.error()) {
                 case UNAUTHORIZED:

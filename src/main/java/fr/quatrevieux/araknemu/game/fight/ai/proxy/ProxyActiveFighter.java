@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import java.util.Optional;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
@@ -30,6 +31,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Proxy class for override properties of the active fighter (i.e. the fighter handled by the AI)
@@ -38,14 +42,14 @@ import fr.quatrevieux.araknemu.game.spell.SpellList;
  */
 public final class ProxyActiveFighter implements ActiveFighter {
     private final ActiveFighter fighter;
-    private final FightCell position;
+    private final @Nullable FightCell position;
 
     public ProxyActiveFighter(ActiveFighter fighter) {
         this.fighter = fighter;
         this.position = null;
     }
 
-    private ProxyActiveFighter(ActiveFighter fighter, FightCell position) {
+    private ProxyActiveFighter(ActiveFighter fighter, @Nullable FightCell position) {
         this.fighter = fighter;
         this.position = position;
     }
@@ -56,12 +60,12 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public Object attachment(Object key) {
+    public @Nullable Object attachment(Object key) {
         return fighter.attachment(key);
     }
 
     @Override
-    public <T> T attachment(Class<T> type) {
+    public <T> @Nullable T attachment(Class<T> type) {
         return fighter.attachment(type);
     }
 
@@ -80,13 +84,28 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public void move(FightCell cell) {
+    public Sprite sprite() {
+        return fighter.sprite();
+    }
+
+    @Override
+    public Direction orientation() {
+        return fighter.orientation();
+    }
+
+    @Override
+    public void move(@Nullable FightCell cell) {
         throw new UnsupportedOperationException("This is a proxy fighter");
     }
 
     @Override
     public FighterLife life() {
         return fighter.life();
+    }
+
+    @Override
+    public @Positive int level() {
+        return fighter.level();
     }
 
     @Override
@@ -115,7 +134,17 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean hidden() {
+        return fighter.hidden();
+    }
+
+    @Override
+    public void setHidden(PassiveFighter caster, boolean hidden) {
+        throw new UnsupportedOperationException("Cannot modify a proxy fighter");
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

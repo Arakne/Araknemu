@@ -37,39 +37,42 @@ public final class SimpleSpellsBoosts implements SpellsBoosts {
 
     @Override
     public int boost(int spellId, Modifier modifier, int value) {
-        if (
-            !spellsModifiers.containsKey(spellId)
-            || !spellsModifiers.get(spellId).containsKey(modifier)
-        ) {
+        final Map<Modifier, Integer> modifiers = spellsModifiers.get(spellId);
+
+        if (modifiers == null || !modifiers.containsKey(modifier)) {
             return set(spellId, modifier, value);
         }
 
-        final Map<Modifier, Integer> modifiers = spellsModifiers.get(spellId);
         final int newValue = modifiers.get(modifier) + value;
 
-        modifiers.put(modifier, newValue);
+        if (newValue == 0) {
+            modifiers.remove(modifier);
+        } else {
+            modifiers.put(modifier, newValue);
+        }
 
         return newValue;
     }
 
     @Override
     public int set(int spellId, Modifier modifier, int value) {
-        if (!spellsModifiers.containsKey(spellId)) {
-            spellsModifiers.put(spellId, new EnumMap<>(Modifier.class));
-        }
-
-        spellsModifiers.get(spellId).put(modifier, value);
+        spellsModifiers
+            .computeIfAbsent(spellId, sid -> new EnumMap<>(Modifier.class))
+            .put(modifier, value)
+        ;
 
         return value;
     }
 
     @Override
     public void unset(int spellId, Modifier modifier) {
-        if (!spellsModifiers.containsKey(spellId)) {
+        final Map<Modifier, Integer> modifiers = spellsModifiers.get(spellId);
+
+        if (modifiers == null) {
             return;
         }
 
-        spellsModifiers.get(spellId).remove(modifier);
+        modifiers.remove(modifier);
     }
 
     @Override
@@ -82,11 +85,13 @@ public final class SimpleSpellsBoosts implements SpellsBoosts {
 
     @Override
     public Spell get(Spell spell) {
-        if (!spellsModifiers.containsKey(spell.id())) {
+        final Map<Modifier, Integer> modifiers = spellsModifiers.get(spell.id());
+
+        if (modifiers == null || modifiers.isEmpty()) {
             return spell;
         }
 
-        return new BoostedSpell(spell, modifiers(spell.id()));
+        return new BoostedSpell(spell, new MapSpellModifiers(spell.id(), modifiers));
     }
 
     @Override

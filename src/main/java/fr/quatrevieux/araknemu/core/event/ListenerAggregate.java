@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.event;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.function.Consumer;
 
 /**
@@ -52,7 +54,7 @@ public interface ListenerAggregate extends Dispatcher {
      *
      * @param listenerClass The listener class
      */
-    public <E extends Listener> E get(Class<E> listenerClass);
+    public <E extends Listener> @Nullable E get(Class<E> listenerClass);
 
     /**
      * Register a listener using {@link SimpleListener}

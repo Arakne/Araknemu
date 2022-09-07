@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.network.parser;
 
+import org.checkerframework.common.value.qual.MinLen;
+
 /**
  * Parser for one packet
  */
@@ -30,5 +32,17 @@ public interface SinglePacketParser<P extends Packet> extends PacketParser {
      * Get the packet identification code
      * This code is the 2 or 3 first chars of the incoming packet
      */
-    public String code();
+    public @MinLen(2) String code();
+
+    /**
+     * Create the tokenizer for the current packet
+     *
+     * @param input The packet data to parse
+     * @param delimiter The parts delimiter
+     *
+     * @return The tokenizer instance
+     */
+    public default PacketTokenizer tokenize(String input, char delimiter) {
+        return new PacketTokenizer(code(), input, delimiter);
+    }
 }

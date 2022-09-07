@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -60,7 +61,7 @@ public final class GamePlayerRace {
     /**
      * Get the race life per level
      */
-    public int life(int level) {
+    public @Positive int life(@Positive int level) {
         return entity.startLife() + (level - 1) * entity.perLevelLife();
     }
 
@@ -81,7 +82,7 @@ public final class GamePlayerRace {
     /**
      * Get the race start stats
      */
-    public Characteristics baseStats(int level) {
+    public Characteristics baseStats(@Positive int level) {
         for (Map.Entry<Integer, Characteristics> entry  : entity.baseStats().entrySet()) {
             if (entry.getKey() <= level) {
                 return entry.getValue();
@@ -101,7 +102,7 @@ public final class GamePlayerRace {
     /**
      * Get start pods
      */
-    public int startPods() {
+    public @Positive int startPods() {
         return entity.startPods();
     }
 

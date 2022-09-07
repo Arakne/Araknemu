@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.monster;
 
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -40,7 +41,7 @@ public final class MonsterSpellList implements SpellList {
 
     @Override
     public Spell get(int spellId) {
-        return spells.get(spellId);
+        return NullnessUtil.castNonNull(spells.get(spellId));
     }
 
     @Override

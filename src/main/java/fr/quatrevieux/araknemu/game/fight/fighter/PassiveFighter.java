@@ -24,11 +24,14 @@ import java.util.Optional;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
+import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Fighter type which can be a target of spells or other actions
  */
-public interface PassiveFighter {
+public interface PassiveFighter extends Creature<FightCell> {
     /**
      * Get the fighter id
      */
@@ -42,7 +45,12 @@ public interface PassiveFighter {
     /**
      * Go to the given cell
      */
-    public void move(FightCell cell);
+    public void move(@Nullable FightCell cell);
+
+    /**
+     * Get the fighter level
+     */
+    public @Positive int level();
 
     /**
      * Get the fighter life
@@ -68,6 +76,27 @@ public interface PassiveFighter {
      * Get the fighter team
      */
     public Team<? extends PassiveFighter> team();
+
+    /**
+     * Check the hidden state of the fighter
+     * If true, cell must not be sent to other fighters, movement actions must be hidden
+     * and AI should ignore fighter position
+     */
+    public boolean hidden();
+
+    /**
+     * Change the hidden state of the fighter
+     * An event will be dispatched to the fight if effective
+     *
+     * Note: this method will do nothing if the fighter is already on the requested state
+     *
+     * @param caster Effect caster
+     * @param hidden New hidden state
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden Trigger when the fighter is actually hidden
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible Trigger when the fighter is actually visible
+     */
+    public void setHidden(PassiveFighter caster, boolean hidden);
 
     /**
      * Check if the player is dead

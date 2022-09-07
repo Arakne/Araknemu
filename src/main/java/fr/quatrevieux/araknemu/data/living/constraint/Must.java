@@ -19,21 +19,25 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Aggregation constraint, the entity MUST satisfy all constraints
  *
  * @param <T> The entity type
  * @param <E> The error type
  */
-public final class Must<T, E> implements EntityConstraint<T, E> {
+public final class Must<T, @NonNull E> implements EntityConstraint<T, E> {
     private final EntityConstraint<T, E>[] constraints;
-    private E error;
+    private @Nullable E error;
 
     public Must(EntityConstraint<T, E>[] constraints) {
         this.constraints = constraints;
     }
 
     @Override
+    @SuppressWarnings("contracts.conditional.postcondition")
     public boolean check(T entity) {
         for (EntityConstraint<T, E> constraint : constraints) {
             if (!constraint.check(entity)) {
@@ -47,7 +51,7 @@ public final class Must<T, E> implements EntityConstraint<T, E> {
     }
 
     @Override
-    public E error() {
+    public @Nullable E error() {
         return error;
     }
 }

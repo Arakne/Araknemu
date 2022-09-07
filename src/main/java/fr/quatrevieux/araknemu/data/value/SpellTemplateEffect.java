@@ -19,19 +19,22 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.NonNegative;
+
 /**
  * Effect for {@link fr.quatrevieux.araknemu.data.world.entity.SpellTemplate}
  */
 public final class SpellTemplateEffect {
     private final int effect;
-    private final int min;
-    private final int max;
+    private final @NonNegative int min;
+    private final @NonNegative int max;
     private final int special;
-    private final int duration;
-    private final int probability;
+    private final @GTENegativeOne int duration;
+    private final @NonNegative int probability;
     private final String text;
 
-    public SpellTemplateEffect(int effect, int min, int max, int special, int duration, int probability, String text) {
+    public SpellTemplateEffect(int effect, @NonNegative int min, @NonNegative int max, int special, @GTENegativeOne int duration, @NonNegative int probability, String text) {
         this.effect = effect;
         this.min = min;
         this.max = max;
@@ -51,7 +54,7 @@ public final class SpellTemplateEffect {
     /**
      * Get the minimal jet value, or the first argument
      */
-    public int min() {
+    public @NonNegative int min() {
         return min;
     }
 
@@ -60,13 +63,15 @@ public final class SpellTemplateEffect {
      *
      * If the value is zero, the effect value is constant (min)
      */
-    public int max() {
+    public @NonNegative int max() {
         return max;
     }
 
     /**
      * Get the special effect value
      * Used by invocation and boost spells
+     *
+     * Unlike min and max, this value can be negative
      */
     public int special() {
         return special;
@@ -75,8 +80,9 @@ public final class SpellTemplateEffect {
     /**
      * Get the effect duration
      * If this value is zero, the effect will be applied immediately
+     * If the value is -1, the duration will be considered as infinite
      */
-    public int duration() {
+    public @GTENegativeOne int duration() {
         return duration;
     }
 
@@ -85,7 +91,7 @@ public final class SpellTemplateEffect {
      * If this value is zero, the effect will always be applied
      * For not null probability, only one effect will be choose across all "conditional" effects
      */
-    public int probability() {
+    public @NonNegative int probability() {
         return probability;
     }
 

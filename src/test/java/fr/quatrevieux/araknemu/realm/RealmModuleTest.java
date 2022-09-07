@@ -67,7 +67,7 @@ class RealmModuleTest {
         Araknemu app = new Araknemu(
             configuration,
             new DefaultDatabaseHandler(
-                configuration.module(DatabaseConfiguration.class),
+                configuration.module(DatabaseConfiguration.MODULE),
                 LogManager.getLogger()
             )
         );

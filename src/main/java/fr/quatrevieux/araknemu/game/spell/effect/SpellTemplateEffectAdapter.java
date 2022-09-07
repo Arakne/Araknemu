@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.spell.effect;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Adapt {@link SpellTemplateEffect}
@@ -43,12 +45,12 @@ public final class SpellTemplateEffectAdapter implements SpellEffect {
     }
 
     @Override
-    public int min() {
+    public @NonNegative int min() {
         return effect.min();
     }
 
     @Override
-    public int max() {
+    public @NonNegative int max() {
         return effect.max();
     }
 
@@ -58,12 +60,12 @@ public final class SpellTemplateEffectAdapter implements SpellEffect {
     }
 
     @Override
-    public int duration() {
+    public @GTENegativeOne int duration() {
         return effect.duration();
     }
 
     @Override
-    public int probability() {
+    public @NonNegative int probability() {
         return effect.probability();
     }
 

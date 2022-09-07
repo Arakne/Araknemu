@@ -32,7 +32,9 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlacementCellsGeneratorTest extends GameBaseCase {
     private FightMap map;
@@ -48,7 +50,7 @@ class PlacementCellsGeneratorTest extends GameBaseCase {
 
     @Test
     void nextSimple() {
-        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Arrays.asList(123, 124, 125));
+        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Arrays.asList(map.get(123), map.get(124), map.get(125)));
 
         assertEquals(123, generator.next().id());
         assertEquals(124, generator.next().id());
@@ -57,7 +59,7 @@ class PlacementCellsGeneratorTest extends GameBaseCase {
 
     @Test
     void nextWithNonFreeCells() {
-        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Arrays.asList(123, 124, 125));
+        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Arrays.asList(map.get(123), map.get(124), map.get(125)));
 
         map.get(123).set(Mockito.mock(Fighter.class));
 
@@ -77,7 +79,7 @@ class PlacementCellsGeneratorTest extends GameBaseCase {
 
     @Test
     void nextWithAllAvailableCellsNotFree() {
-        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Arrays.asList(123, 124, 125));
+        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Arrays.asList(map.get(123), map.get(124), map.get(125)));
 
         map.get(123).set(Mockito.mock(Fighter.class));
         map.get(124).set(Mockito.mock(Fighter.class));

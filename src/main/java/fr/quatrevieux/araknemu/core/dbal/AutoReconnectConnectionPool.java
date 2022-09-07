@@ -86,6 +86,8 @@ public final class AutoReconnectConnectionPool implements ConnectionPool {
      * Check if the exception is caused by a closed connection
      */
     private boolean causedByConnectionClosed(SQLException exception) {
-        return exception instanceof SQLRecoverableException || exception.getMessage().toLowerCase().contains("connection closed");
+        return exception instanceof SQLRecoverableException
+            || (exception.getMessage() != null && exception.getMessage().toLowerCase().contains("connection closed"))
+        ;
     }
 }

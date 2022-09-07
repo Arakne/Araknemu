@@ -23,13 +23,23 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Validate the target cell
  */
 public final class TargetCellValidator implements CastConstraintValidator {
     @Override
-    public Error validate(Turn turn, Castable castable, FightCell target) {
+    public boolean check(Turn turn, Castable castable, FightCell target) {
+        if (!target.walkableIgnoreFighter()) {
+            return false;
+        }
+
+        return !castable.constraints().freeCell() || !target.fighter().isPresent();
+    }
+
+    @Override
+    public @Nullable Error validate(Turn turn, Castable castable, FightCell target) {
         if (!target.walkableIgnoreFighter()) {
             return Error.cantCastCellNotAvailable();
         }

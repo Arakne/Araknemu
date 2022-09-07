@@ -19,8 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.world.creature.accessory;
 
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.common.value.qual.IntRange;
+
 import java.util.Arrays;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,16 +45,16 @@ public enum AccessoryType {
 
     private static final int[] SLOT_IDS = Arrays.stream(values()).mapToInt(AccessoryType::slot).toArray();
 
-    private final int slot;
+    private final @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int slot;
 
-    AccessoryType(int slot) {
+    AccessoryType(@IntRange(from = 0, to = InventorySlots.SLOT_MAX) int slot) {
         this.slot = slot;
     }
 
     /**
      * Get the related inventory slot
      */
-    public int slot() {
+    public @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int slot() {
         return slot;
     }
 
@@ -60,7 +64,13 @@ public enum AccessoryType {
      * @return The accessory type or null if no accessory is related to the slot
      */
     public static AccessoryType bySlot(int slot) {
-        return typesBySlot.get(slot);
+        final AccessoryType type = typesBySlot.get(slot);
+
+        if (type != null) {
+            return type;
+        }
+
+        throw new NoSuchElementException("Invalid slot " + slot + " for accessory");
     }
 
     /**

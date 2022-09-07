@@ -137,6 +137,17 @@ class PlayerExchangeRequestTest extends GameBaseCase {
     }
 
     @Test
+    void startNotOnMap() {
+        player.leave();
+        player.interactions().start(request);
+
+        assertFalse(player.interactions().busy());
+        assertFalse(other.interactions().busy());
+
+        requestStack.assertLast(new ExchangeRequestError(ExchangeRequestError.Error.CANT_EXCHANGE));
+    }
+
+    @Test
     void startOverweight() {
         player.properties().characteristics().base().set(Characteristic.STRENGTH, -10000000);
         player.interactions().start(request);

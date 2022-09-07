@@ -65,6 +65,7 @@ class LineLaunchValidatorTest extends FightBaseCase {
         Mockito.when(constraints.lineLaunch()).thenReturn(true);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
 
+        assertFalse(validator.check(turn, spell, fight.map().get(186)));
         assertEquals(
             Error.cantCastLineLaunch().toString(),
             validator.validate(turn, spell, fight.map().get(186)).toString()
@@ -79,6 +80,7 @@ class LineLaunchValidatorTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.lineLaunch()).thenReturn(false);
 
+        assertTrue(validator.check(turn, spell, fight.map().get(186)));
         assertNull(validator.validate(turn, spell, fight.map().get(186)));
     }
 
@@ -91,6 +93,7 @@ class LineLaunchValidatorTest extends FightBaseCase {
         Mockito.when(constraints.lineLaunch()).thenReturn(true);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 1));
 
+        assertTrue(validator.check(turn, spell, fight.map().get(200)));
         assertNull(validator.validate(turn, spell, fight.map().get(200)));
     }
 
@@ -103,6 +106,7 @@ class LineLaunchValidatorTest extends FightBaseCase {
         Mockito.when(constraints.lineLaunch()).thenReturn(true);
         Mockito.when(constraints.range()).thenReturn(new Interval(0, 10));
 
+        assertTrue(validator.check(turn, spell, fight.map().get(185)));
         assertNull(validator.validate(turn, spell, fight.map().get(185)));
     }
 
@@ -115,6 +119,7 @@ class LineLaunchValidatorTest extends FightBaseCase {
         Mockito.when(constraints.lineLaunch()).thenReturn(true);
         Mockito.when(constraints.range()).thenReturn(new Interval(0, 10));
 
+        assertTrue(validator.check(turn, spell, fight.map().get(227)));
         assertNull(validator.validate(turn, spell, fight.map().get(227)));
     }
 }

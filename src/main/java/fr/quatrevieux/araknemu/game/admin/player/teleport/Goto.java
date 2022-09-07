@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.kohsuke.args4j.Argument;
@@ -106,8 +107,10 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
      * Parse the target from the command arguments
      */
     private Target parseTarget(List<String> arguments) throws AdminException {
+        final ExplorationMap currentMap = player.isExploring() ? player.exploration().map() : null;
+
         final Target target = new Target(
-            player.isExploring() ? player.exploration().map() : mapService.load(player.position().map()),
+            currentMap != null ? currentMap : mapService.load(player.position().map()),
             player.position().cell()
         );
 
@@ -193,6 +196,7 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
         return new Arguments();
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Option(name = "--force", usage = "Force the teleporation even if the player is busy or in fight.")
         private boolean force = false;

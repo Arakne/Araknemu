@@ -22,6 +22,10 @@ package fr.quatrevieux.araknemu.game.item.inventory;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.List;
 
@@ -42,7 +46,7 @@ public interface ItemEntry {
      *
      * @see ItemEntry#isDefaultPosition() To check if the entry is on default position
      */
-    public int position();
+    public @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position();
 
     /**
      * Check if the entry is on the default position
@@ -61,7 +65,7 @@ public interface ItemEntry {
     /**
      * Get the item quantity
      */
-    public int quantity();
+    public @NonNegative int quantity();
 
     /**
      * Add the quantity to the entry
@@ -70,7 +74,7 @@ public interface ItemEntry {
      *
      * @throws InventoryException When invalid quantity given
      */
-    public void add(int quantity);
+    public void add(@Positive int quantity);
 
     /**
      * Remove the quantity to the entry
@@ -79,7 +83,7 @@ public interface ItemEntry {
      *
      * @throws InventoryException When invalid quantity given
      */
-    public void remove(int quantity) throws InventoryException;
+    public void remove(@Positive int quantity) throws InventoryException;
 
     /**
      * Export the item effects

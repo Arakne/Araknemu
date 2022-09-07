@@ -28,11 +28,11 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
@@ -40,10 +40,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,6 +100,17 @@ class JoinFightTest extends FightBaseCase {
         );
     }
 
+    @Test
+    void notOnMap() throws SQLException, ContainerException {
+        explorationPlayer().leave();
+
+        action.start(new ActionQueue());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "p")
+        );
+    }
+
     @RepeatedIfExceptionsTest
     void fullTeam() throws SQLException, ContainerException, JoinFightException, InterruptedException {
         for (int i = 10; fight.team(0).fighters().size() < fight.team(0).startPlaces().size(); ++i) {
@@ -109,7 +118,6 @@ class JoinFightTest extends FightBaseCase {
         }
 
         action.start(new ActionQueue());
-        Thread.sleep(100);
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "t")
@@ -119,20 +127,30 @@ class JoinFightTest extends FightBaseCase {
     @RepeatedIfExceptionsTest
     void success() throws InterruptedException {
         action.start(new ActionQueue());
-        Thread.sleep(100);
 
         assertTrue(player.isFighting());
         assertFalse(player.isExploring());
         assertSame(fight, player.fighter().fight());
-        assertContains(player.fighter().cell().id(), fight.team(0).startPlaces());
+        assertContains(player.fighter().cell(), fight.team(0).startPlaces());
         assertContains(player.fighter(), fight.team(0).fighters());
 
         requestStack.assertAll(
             new StopLifeTimer(),
             new fr.quatrevieux.araknemu.network.game.out.fight.JoinFight(fight),
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
-            new FightStartPositions(new List[] { fight.team(0).startPlaces(), fight.team(1).startPlaces() }, 0),
+            new FightStartPositions(new FightCell[][] { fight.team(0).startPlaces().toArray(new FightCell[0]), fight.team(1).startPlaces().toArray(new FightCell[0]) }, 0),
             new AddSprites(Collections.singleton(player.fighter().sprite()))
+        );
+    }
+
+    @RepeatedIfExceptionsTest
+    void locked() throws InterruptedException {
+        ConfigurableTeamOptions.class.cast(fight.team(0).options()).toggleAllowJoinTeam();
+
+        action.start(new ActionQueue());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "f")
         );
     }
 

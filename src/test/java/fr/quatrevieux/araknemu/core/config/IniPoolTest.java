@@ -19,12 +19,15 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,5 +51,25 @@ class IniPoolTest {
     void get() {
         assertEquals("456", pool.get("server.port"));
         assertEquals("1.29.1", pool.get("client.version"));
+    }
+
+    @Test
+    void getAll() {
+        assertEquals(Arrays.asList("foo", "bar", "baz"), pool.getAll("multivalues"));
+        assertEquals(Collections.emptyList(), pool.getAll("not_found"));
+    }
+
+    @Test
+    void iterator() {
+        assertIterableEquals(
+            Arrays.asList(
+                Pair.of("server.port", "456"),
+                Pair.of("client.version", "1.29.1"),
+                Pair.of("multivalues", "foo"),
+                Pair.of("multivalues", "bar"),
+                Pair.of("multivalues", "baz")
+            ),
+            pool
+        );
     }
 }

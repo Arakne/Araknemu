@@ -32,6 +32,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -50,8 +52,9 @@ public final class GameNpc implements ExplorationCreature {
 
     private final Sprite sprite;
 
-    private ExplorationMapCell cell;
+    private @MonotonicNonNull ExplorationMapCell cell;
 
+    @SuppressWarnings({"assignment", "argument"})
     public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions, Collection<ExchangeProvider.Factory> exchangeFactories) {
         this.entity = entity;
         this.template = template;
@@ -73,6 +76,10 @@ public final class GameNpc implements ExplorationCreature {
 
     @Override
     public ExplorationMapCell cell() {
+        if (cell == null) {
+            throw new IllegalStateException("The NPC has not join a map");
+        }
+
         return cell;
     }
 
@@ -82,8 +89,8 @@ public final class GameNpc implements ExplorationCreature {
     }
 
     @Override
-    public void apply(Operation operation) {
-        operation.onNpc(this);
+    public <R> @Nullable R apply(Operation<R> operation) {
+        return operation.onNpc(this);
     }
 
     /**
@@ -91,6 +98,7 @@ public final class GameNpc implements ExplorationCreature {
      *
      * The cell will be set, and the npc will be added to the map
      */
+    @SuppressWarnings("argument") // Ignore invalid cell
     public void join(ExplorationMap map) {
         cell = map.get(entity.position().cell());
         map.add(this);

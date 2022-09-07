@@ -19,11 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class MoveNearEnemyTest extends AiBaseCase {
     @Override
@@ -32,6 +36,11 @@ class MoveNearEnemyTest extends AiBaseCase {
         super.setUp();
 
         action = new MoveNearEnemy();
+    }
+
+    @Test
+    void generateNotInitialized() {
+        assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(ActionsFactory.class)).isPresent());
     }
 
     @Test
@@ -46,6 +55,49 @@ class MoveNearEnemyTest extends AiBaseCase {
 
         assertEquals(109, fighter.cell().id());
         assertEquals(0, turn.points().movementPoints());
+    }
+
+    @Test
+    void withAllyOnPathShouldBeCircumvented() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(151))
+            .addAlly(builder -> builder.cell(166))
+            .addEnemy(builder -> builder.cell(181))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(195, fighter.cell().id());
+        assertEquals(0, turn.points().movementPoints());
+    }
+
+    @Test
+    void whenAllyBlockAccess() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(211))
+            .addAlly(builder -> builder.cell(284))
+            .addEnemy(builder -> builder.cell(341))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(256, fighter.cell().id());
+        assertEquals(0, turn.points().movementPoints());
+    }
+
+    // See: https://github.com/Arakne/Araknemu/issues/94
+    @Test
+    void notAccessibleCellShouldTruncateToNearestCell() {
+        configureFight(fb -> fb
+            .map(10342)
+            .addSelf(builder -> builder.cell(155))
+            .addEnemy(builder -> builder.cell(69))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(126, fighter.cell().id());
+        assertEquals(1, turn.points().movementPoints());
     }
 
     @Test

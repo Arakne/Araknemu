@@ -76,6 +76,33 @@ class AnnotationHydratorTest {
         assertFalse(hydrator.supports(command, null));
     }
 
+    @Test
+    void hydrateWithNull() {
+        Command<Object> command = new Command<Object>() {
+            @Override
+            public String name() {
+                return "foo";
+            }
+
+            @Override
+            public CommandHelp help() {
+                return null;
+            }
+
+            @Override
+            public void execute(AdminPerformer performer, Object arguments) throws AdminException {
+
+            }
+
+            @Override
+            public Set<Permission> permissions() {
+                return null;
+            }
+        };
+
+        assertThrows(IllegalArgumentException.class, () -> hydrator.hydrate(command, null, new CommandParser.Arguments("", "", "", Arrays.asList("foo", "bar"), null)));
+    }
+
     static class Arguments {
         @Argument(required = true, metaVar = "FOO", usage = "My foo")
         public String foo;

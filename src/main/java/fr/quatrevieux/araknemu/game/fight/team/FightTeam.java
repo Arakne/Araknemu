@@ -20,9 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -33,7 +36,7 @@ public interface FightTeam extends Sender, Team<Fighter> {
     /**
      * Get the team leader (the fight initiator)
      */
-    public Fighter leader();
+    public @Nullable Fighter leader();
 
     /**
      * Get the team id (must be unique over the map)
@@ -63,7 +66,7 @@ public interface FightTeam extends Sender, Team<Fighter> {
     /**
      * Get start places
      */
-    public List<Integer> startPlaces();
+    public List<FightCell> startPlaces();
 
     /**
      * Send packet to all players
@@ -75,6 +78,11 @@ public interface FightTeam extends Sender, Team<Fighter> {
      * Check if there is at least one alive fighter in the team
      */
     public boolean alive();
+
+    /**
+     * Get the options of the current team
+     */
+    public TeamOptions options();
 
     /**
      * Add a new fighter to the team
@@ -92,4 +100,10 @@ public interface FightTeam extends Sender, Team<Fighter> {
      * @param fighter Fighter to remove
      */
     public void kick(Fighter fighter);
+
+    /**
+     * Define the related fight instance
+     * Note: this method is internal and should only be called by {@link Fight}
+     */
+    public void setFight(Fight fight);
 }

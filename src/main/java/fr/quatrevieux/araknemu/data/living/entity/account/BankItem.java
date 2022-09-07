@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.entity.account;
 
 import fr.quatrevieux.araknemu.data.living.entity.Item;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.List;
 
@@ -33,9 +34,9 @@ public final class BankItem implements Item {
     private final int entryId;
     private final int itemTemplateId;
     private final List<ItemTemplateEffectEntry> effects;
-    private int quantity;
+    private @NonNegative int quantity;
 
-    public BankItem(int accountId, int serverId, int entryId, int itemTemplateId, List<ItemTemplateEffectEntry> effects, int quantity) {
+    public BankItem(int accountId, int serverId, int entryId, int itemTemplateId, List<ItemTemplateEffectEntry> effects, @NonNegative int quantity) {
         this.accountId = accountId;
         this.serverId = serverId;
         this.entryId = entryId;
@@ -80,12 +81,12 @@ public final class BankItem implements Item {
     }
 
     @Override
-    public int quantity() {
+    public @NonNegative int quantity() {
         return quantity;
     }
 
     @Override
-    public void setQuantity(int quantity) {
+    public void setQuantity(@NonNegative int quantity) {
         this.quantity = quantity;
     }
 }

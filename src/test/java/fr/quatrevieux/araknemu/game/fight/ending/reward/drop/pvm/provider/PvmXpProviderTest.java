@@ -97,6 +97,20 @@ class PvmXpProviderTest extends FightBaseCase {
     }
 
     @Test
+    void rate() {
+        EndFightResults results = new EndFightResults(
+            fight,
+            Collections.singletonList(player.fighter()),
+            monsterFighters
+        );
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        new PvmXpProvider(2.5).initialize(results).provide(reward);
+
+        assertEquals(604, reward.xp());
+    }
+
+    @Test
     void withMultipleWinners() {
         assertEquals(20, xpForMultipleWinners(2));
         assertEquals(21, xpForMultipleWinners(3));

@@ -116,6 +116,24 @@ class AlterCharacteristicSimulatorTest extends FightBaseCase {
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(20, simulation.selfBoost());
+
+        Mockito.when(effect.duration()).thenReturn(5);
+        simulation = new CastSimulation(spell, fighter, fighter.cell());
+        scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, scope.effects().get(0));
+        assertEquals(50, simulation.selfBoost());
+
+        Mockito.when(effect.duration()).thenReturn(20);
+        simulation = new CastSimulation(spell, fighter, fighter.cell());
+        scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, scope.effects().get(0));
+        assertEquals(100, simulation.selfBoost());
+
+        Mockito.when(effect.duration()).thenReturn(-1);
+        simulation = new CastSimulation(spell, fighter, fighter.cell());
+        scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, scope.effects().get(0));
+        assertEquals(100, simulation.selfBoost());
     }
 
     @Test

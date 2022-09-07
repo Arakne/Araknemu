@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.network.game.out.fight;
 
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 import java.util.stream.Collectors;
 
@@ -38,9 +39,13 @@ public final class FightEnd {
 
     @Override
     public String toString() {
+        // See: https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L1419
+        // this id is used to wait for animation termination
+        final Fighter lastFighter = rewardsSheet.results().fight().turnList().currentFighter();
+
         return "GE" +
             rewardsSheet.results().fight().duration() + "|" +
-            rewardsSheet.results().fight().turnList().currentFighter().id() + "|" +
+            (lastFighter == null ? 0 : lastFighter.id()) + "|" +
             rewardsSheet.type().ordinal() + "|" +
             rewardsSheet.rewards().stream().map(DropReward::render).collect(Collectors.joining("|"))
         ;

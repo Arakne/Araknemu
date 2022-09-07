@@ -21,6 +21,9 @@ package fr.quatrevieux.araknemu.data.living.entity.player;
 
 import fr.quatrevieux.araknemu.data.living.entity.Item;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.List;
 
@@ -32,10 +35,10 @@ public final class PlayerItem implements Item {
     private final int entryId;
     private final int itemTemplateId;
     private final List<ItemTemplateEffectEntry> effects;
-    private int quantity;
-    private int position;
+    private @NonNegative int quantity;
+    private @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position;
 
-    public PlayerItem(int playerId, int entryId, int itemTemplateId, List<ItemTemplateEffectEntry> effects, int quantity, int position) {
+    public PlayerItem(int playerId, int entryId, int itemTemplateId, List<ItemTemplateEffectEntry> effects, @NonNegative int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) {
         this.playerId = playerId;
         this.entryId = entryId;
         this.itemTemplateId = itemTemplateId;
@@ -64,20 +67,20 @@ public final class PlayerItem implements Item {
     }
 
     @Override
-    public int quantity() {
+    public @NonNegative int quantity() {
         return quantity;
     }
 
-    public int position() {
+    public @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position() {
         return position;
     }
 
     @Override
-    public void setQuantity(int quantity) {
+    public void setQuantity(@NonNegative int quantity) {
         this.quantity = quantity;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(@IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) {
         this.position = position;
     }
 }

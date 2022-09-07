@@ -25,9 +25,12 @@ import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
@@ -97,8 +100,10 @@ public final class Online extends AbstractCommand<Online.Arguments> {
      * Get the player geolocation
      */
     private Geolocation geolocation(GamePlayer player) {
-        if (player.isExploring() && player.exploration().map() != null) {
-            return player.exploration().map().geolocation();
+        final ExplorationMap map = player.isExploring() ? player.exploration().map() : null;
+
+        if (map != null) {
+            return map.geolocation();
         }
 
         return mapService.load(player.position().map()).geolocation();
@@ -157,14 +162,14 @@ public final class Online extends AbstractCommand<Online.Arguments> {
         private int skip = 0;
 
         @Argument(metaVar = "SEARCH", usage = "Optional. Filter the online player name. Return only players containing the search term into the name.")
-        private String search = null;
+        private @MonotonicNonNull String search = null;
 
         /**
          * Apply the options on the stream
          */
         public Stream<GamePlayer> apply(Stream<GamePlayer> stream) {
             if (search != null) {
-                stream = stream.filter(player -> player.name().toLowerCase().contains(search));
+                stream = stream.filter(player -> player.name().toLowerCase().contains(NullnessUtil.castNonNull(search)));
             }
 
             return stream.skip(skip).limit(limit);

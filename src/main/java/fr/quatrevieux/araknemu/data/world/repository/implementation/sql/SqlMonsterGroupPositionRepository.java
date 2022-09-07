@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
 
@@ -73,8 +73,8 @@ final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRep
         return utils.findOne(
             "SELECT * FROM MONSTER_GROUP_POSITION WHERE MAP_ID = ? AND CELL_ID = ?",
             stmt -> {
-                stmt.setInt(1, entity.position().map());
-                stmt.setInt(2, entity.position().cell());
+                stmt.setInt(1, entity.map());
+                stmt.setInt(2, entity.cell());
             }
         );
     }
@@ -84,8 +84,8 @@ final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRep
         return utils.aggregate(
             "SELECT COUNT(*) FROM MONSTER_GROUP_POSITION WHERE MAP_ID = ? AND CELL_ID = ?",
             stmt -> {
-                stmt.setInt(1, entity.position().map());
-                stmt.setInt(2, entity.position().cell());
+                stmt.setInt(1, entity.map());
+                stmt.setInt(2, entity.cell());
             }
         ) > 0;
     }
@@ -105,13 +105,11 @@ final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRep
 
     private class Loader implements RepositoryUtils.Loader<MonsterGroupPosition> {
         @Override
-        public MonsterGroupPosition create(ResultSet rs) throws SQLException {
+        public MonsterGroupPosition create(Record record) throws SQLException {
             return new MonsterGroupPosition(
-                new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
-                ),
-                rs.getInt("MONSTER_GROUP_ID")
+                record.getNonNegativeInt("MAP_ID"),
+                record.getGTENegativeOneInt("CELL_ID"),
+                record.getInt("MONSTER_GROUP_ID")
             );
         }
 

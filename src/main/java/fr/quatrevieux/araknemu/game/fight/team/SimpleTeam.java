@@ -20,12 +20,15 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,10 +41,13 @@ import java.util.List;
 public final class SimpleTeam implements FightTeam {
     private final PlayerFighter leader;
     private final List<Fighter> fighters;
-    private final List<Integer> startPlaces;
+    private final List<FightCell> startPlaces;
     private final int number;
 
-    public SimpleTeam(PlayerFighter leader, List<Integer> startPlaces, int number) {
+    private @MonotonicNonNull ConfigurableTeamOptions options;
+
+    @SuppressWarnings({"argument", "assignment"})
+    public SimpleTeam(PlayerFighter leader, List<FightCell> startPlaces, int number) {
         this.leader = leader;
         this.fighters = new ArrayList<>();
         this.fighters.add(leader);
@@ -82,7 +88,7 @@ public final class SimpleTeam implements FightTeam {
     }
 
     @Override
-    public List<Integer> startPlaces() {
+    public List<FightCell> startPlaces() {
         return startPlaces;
     }
 
@@ -109,7 +115,21 @@ public final class SimpleTeam implements FightTeam {
     }
 
     @Override
+    public ConfigurableTeamOptions options() {
+        if (options == null) {
+            throw new IllegalStateException("FightTeam#setFight() must be called before use the FightTeam instance");
+        }
+
+        return options;
+    }
+
+    @Override
     public void join(Fighter fighter) throws JoinFightException {
+        // @todo ne pas faire pour une invocation
+        if (options != null && !options.allowJoinTeam()) {
+            throw new JoinFightException(JoinFightError.TEAM_CLOSED);
+        }
+
         fighter.apply(new FighterOperation() {
             @Override
             public void onPlayer(PlayerFighter fighter) {
@@ -140,5 +160,10 @@ public final class SimpleTeam implements FightTeam {
     @Override
     public void kick(Fighter fighter) {
         fighters.remove(fighter);
+    }
+
+    @Override
+    public void setFight(Fight fight) {
+        options = new ConfigurableTeamOptions(this, fight);
     }
 }

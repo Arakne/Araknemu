@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +57,7 @@ public final class BoostedSpell implements Spell {
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return spell.level();
     }
 
@@ -78,17 +80,17 @@ public final class BoostedSpell implements Spell {
     }
 
     @Override
-    public int apCost() {
-        return spell.apCost() - modifiers.apCost();
+    public @NonNegative int apCost() {
+        return Math.max(spell.apCost() - modifiers.apCost(), 0);
     }
 
     @Override
-    public int criticalHit() {
-        return spell.criticalHit() - modifiers.criticalHit();
+    public @NonNegative int criticalHit() {
+        return Math.max(spell.criticalHit() - modifiers.criticalHit(), 0);
     }
 
     @Override
-    public int criticalFailure() {
+    public @NonNegative int criticalFailure() {
         return spell.criticalFailure();
     }
 

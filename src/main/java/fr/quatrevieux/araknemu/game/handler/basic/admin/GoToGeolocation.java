@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Go to the requested geolocation
@@ -41,12 +42,18 @@ public final class GoToGeolocation implements PacketHandler<GameSession, AdminMo
 
     @Override
     public void handle(GameSession session, AdminMove packet) {
-        if (!session.account().isMaster()) {
+        if (!NullnessUtil.castNonNull(session.account()).isMaster()) {
             throw new ErrorPacket(new Noop());
         }
 
-        final ExplorationPlayer player = session.exploration();
-        final ExplorationMap target = service.find(packet.geolocation(), GeolocationService.GeolocationContext.fromMap(player.map()));
+        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
+        final ExplorationMap map = player.map();
+        final ExplorationMap target = service.find(
+            packet.geolocation(),
+            map != null
+                ? GeolocationService.GeolocationContext.fromMap(map)
+                : new GeolocationService.GeolocationContext()
+        );
 
         if (player.position().cell() < target.size() && target.get(player.position().cell()).walkable()) {
             player.interactions().push(new ChangeMap(player, target, player.position().cell()));

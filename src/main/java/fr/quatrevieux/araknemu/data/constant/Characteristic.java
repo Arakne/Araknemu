@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.constant;
 
+import java.util.NoSuchElementException;
+
 /**
  * List of characteristics
  */
@@ -67,16 +69,28 @@ public enum Characteristic {
     RESISTANCE_PERCENT_PVP_FIRE;
 
     /**
+     * Keep in cache
+     */
+    private static final Characteristic[] VALUES = values();
+    private static final int ID_OFFSET = 8;
+
+    /**
      * Get the characteristic race
      */
     public int id() {
-        return ordinal() + 8;
+        return ordinal() + ID_OFFSET;
     }
 
     /**
      * Get characteristic by its race
      */
     public static Characteristic fromId(int id) {
-        return values()[id - 8];
+        id -= ID_OFFSET;
+
+        if (id < 0 || id >= VALUES.length) {
+            throw new NoSuchElementException("Invalid characteristic ID");
+        }
+
+        return VALUES[id];
     }
 }

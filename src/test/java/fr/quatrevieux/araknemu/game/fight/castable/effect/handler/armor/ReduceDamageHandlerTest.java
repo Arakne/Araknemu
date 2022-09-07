@@ -107,7 +107,7 @@ class ReduceDamageHandlerTest extends FightBaseCase {
     }
 
     @Test
-    void onDamageWillReduce() {
+    void onDirectDamageWillReduce() {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(returnEffect.min()).thenReturn(7);
@@ -116,14 +116,14 @@ class ReduceDamageHandlerTest extends FightBaseCase {
 
         Damage damage = new Damage(20, Element.NEUTRAL);
 
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
 
         assertEquals(14, damage.reducedDamage());
         assertEquals(6, damage.value());
     }
 
     @Test
-    void onDamageWithNegativeStatsWillNotReduce() {
+    void onDirectDamageWithNegativeStatsWillNotReduce() {
         caster.characteristics().alter(Characteristic.STRENGTH, -1000);
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
@@ -134,14 +134,14 @@ class ReduceDamageHandlerTest extends FightBaseCase {
 
         Damage damage = new Damage(20, Element.NEUTRAL);
 
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
 
         assertEquals(0, damage.reducedDamage());
         assertEquals(20, damage.value());
     }
 
     @Test
-    void onDamageWillUseDamageElementCharacteristicAndIntelligence() {
+    void onDirectDamageWillUseDamageElementCharacteristicAndIntelligence() {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(returnEffect.min()).thenReturn(10);
@@ -149,26 +149,26 @@ class ReduceDamageHandlerTest extends FightBaseCase {
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
         assertEquals(10, damage.reducedDamage());
 
         target.characteristics().alter(Characteristic.STRENGTH, 100);
         damage = new Damage(20, Element.NEUTRAL);
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
         assertEquals(15, damage.reducedDamage());
 
         target.characteristics().alter(Characteristic.INTELLIGENCE, 100);
         damage = new Damage(20, Element.NEUTRAL);
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
         assertEquals(20, damage.reducedDamage());
 
         damage = new Damage(20, Element.AIR);
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
         assertEquals(15, damage.reducedDamage());
     }
 
     @Test
-    void onDamageWillIgnoreUnsupportedElement() {
+    void onDirectDamageWillIgnoreUnsupportedElement() {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(returnEffect.min()).thenReturn(10);
@@ -177,11 +177,25 @@ class ReduceDamageHandlerTest extends FightBaseCase {
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
         assertEquals(0, damage.reducedDamage());
 
         damage = new Damage(20, Element.AIR);
-        handler.onDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
         assertEquals(10, damage.reducedDamage());
+    }
+
+    @Test
+    void onIndirectDamageShouldBeIgnored() {
+        SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(returnEffect.min()).thenReturn(10);
+        Mockito.when(returnEffect.special()).thenReturn(8);
+
+        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+
+        Damage damage = new Damage(20, Element.AIR);
+        handler.onIndirectDamage(buff, caster, damage);
+        assertEquals(0, damage.reducedDamage());
     }
 }

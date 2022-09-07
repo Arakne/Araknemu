@@ -42,7 +42,7 @@ class SimpleConnectionPoolTest {
     void setUp() throws IOException {
         driver = new SQLiteDriver(
             new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
                 .connection("realm")
         );
     }

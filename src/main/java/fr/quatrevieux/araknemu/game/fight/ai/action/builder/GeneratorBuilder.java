@@ -23,14 +23,18 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToBoost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +62,8 @@ import java.util.function.Predicate;
  * ;
  * }</pre>
  */
-public class GeneratorBuilder {
-    private final List<ActionGenerator> generators = new ArrayList<>();
+public class GeneratorBuilder<F extends ActiveFighter> {
+    private final List<ActionGenerator<F>> generators = new ArrayList<>();
 
     /**
      * Append a new action generator at the end of the pipeline
@@ -78,7 +82,7 @@ public class GeneratorBuilder {
      *
      * @return The builder instance
      */
-    public final GeneratorBuilder add(ActionGenerator generator) {
+    public final GeneratorBuilder<F> add(ActionGenerator<F> generator) {
         generators.add(generator);
 
         return this;
@@ -103,8 +107,8 @@ public class GeneratorBuilder {
      * @see ConditionalBuilder
      * @see fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator
      */
-    public final GeneratorBuilder when(Predicate<AI> condition, Consumer<ConditionalBuilder> configurator) {
-        final ConditionalBuilder builder = new ConditionalBuilder(condition);
+    public final GeneratorBuilder<F> when(Predicate<AI<F>> condition, Consumer<ConditionalBuilder<F>> configurator) {
+        final ConditionalBuilder<F> builder = new ConditionalBuilder<>(condition);
 
         configurator.accept(builder);
 
@@ -128,7 +132,7 @@ public class GeneratorBuilder {
      * @see GeneratorBuilder#moveToAttack(Simulator) For only perform the move action, without attack
      * @see GeneratorBuilder#attack(Simulator) For only perform the attack, without move
      */
-    public final GeneratorBuilder attackFromBestCell(Simulator simulator) {
+    public final GeneratorBuilder<F> attackFromBestCell(Simulator simulator) {
         return moveToAttack(simulator).attack(simulator);
     }
 
@@ -148,7 +152,7 @@ public class GeneratorBuilder {
      * @see GeneratorBuilder#attackFromBestCell(Simulator) For perform move and attack
      * @see MoveToAttack#bestTarget(Simulator) The used action generator
      */
-    public final GeneratorBuilder moveToAttack(Simulator simulator) {
+    public final GeneratorBuilder<F> moveToAttack(Simulator simulator) {
         return add(MoveToAttack.bestTarget(simulator));
     }
 
@@ -170,7 +174,7 @@ public class GeneratorBuilder {
      * @see GeneratorBuilder#attackFromBestCell(Simulator) Same action (move and attack), but configured to maximize damage
      * @see GeneratorBuilder#attack(Simulator) For only perform the attack, without move
      */
-    public final GeneratorBuilder attackFromNearestCell(Simulator simulator) {
+    public final GeneratorBuilder<F> attackFromNearestCell(Simulator simulator) {
         return attack(simulator).add(MoveToAttack.nearest(simulator));
     }
 
@@ -185,8 +189,8 @@ public class GeneratorBuilder {
      * @see GeneratorBuilder#attackFromBestCell(Simulator) For perform move and attack action
      * @see GeneratorBuilder#attackFromNearestCell(Simulator) For perform move and attack action
      */
-    public final GeneratorBuilder attack(Simulator simulator) {
-        return add(new Attack(simulator));
+    public final GeneratorBuilder<F> attack(Simulator simulator) {
+        return add(new Attack<>(simulator));
     }
 
     /**
@@ -201,7 +205,7 @@ public class GeneratorBuilder {
      * @see Boost#self(Simulator) The used action generator
      * @see GeneratorBuilder#boostAllies(Simulator) To boost allies in priority
      */
-    public final GeneratorBuilder boostSelf(Simulator simulator) {
+    public final GeneratorBuilder<F> boostSelf(Simulator simulator) {
         return add(Boost.self(simulator));
     }
 
@@ -215,8 +219,50 @@ public class GeneratorBuilder {
      * @see Boost#allies(Simulator) The used action generator
      * @see GeneratorBuilder#boostSelf(Simulator) To boost oneself in priority
      */
-    public final GeneratorBuilder boostAllies(Simulator simulator) {
+    public final GeneratorBuilder<F> boostAllies(Simulator simulator) {
         return add(Boost.allies(simulator));
+    }
+
+    /**
+     * Try to move to the best cell for cast a boost spell
+     *
+     * To ensure that the move will be performed, add the boost action after this one.
+     * The action will not be performed if there is a tackle chance and if an boost is possible from the current cell
+     *
+     * @param simulator Simulator used by AI
+     *
+     * @return The builder instance
+     *
+     * @see MoveToBoost The used action generator
+     */
+    public final GeneratorBuilder<F> moveToBoost(Simulator simulator) {
+        return add(new MoveToBoost<>(simulator)).boostAllies(simulator);
+    }
+
+    /**
+     * Try to heal allies or self
+     *
+     * @param simulator Simulator used by AI
+     *
+     * @return The builder instance
+     *
+     * @see Heal The used action generator
+     */
+    public final GeneratorBuilder<F> heal(Simulator simulator) {
+        return add(new Heal<>(simulator));
+    }
+
+    /**
+     * Try to debuff (i.e. apply negative buff) enemies
+     *
+     * @param simulator Simulator used by AI
+     *
+     * @return The builder instance
+     *
+     * @see Debuff The used action generator
+     */
+    public final GeneratorBuilder<F> debuff(Simulator simulator) {
+        return add(new Debuff<>(simulator));
     }
 
     /**
@@ -228,8 +274,8 @@ public class GeneratorBuilder {
      * @see AI#enemy() The selected enemy
      * @see GeneratorBuilder#moveOrTeleportNearEnemy() The move using MP or teleport spell
      */
-    public final GeneratorBuilder moveNearEnemy() {
-        return add(new MoveNearEnemy());
+    public final GeneratorBuilder<F> moveNearEnemy() {
+        return add(new MoveNearEnemy<>());
     }
 
     /**
@@ -241,8 +287,8 @@ public class GeneratorBuilder {
      * @see AI#enemy() The selected enemy
      * @see GeneratorBuilder#moveOrTeleportNearEnemy() The move using MP or teleport spell
      */
-    public final GeneratorBuilder teleportNearEnemy() {
-        return add(new TeleportNearEnemy());
+    public final GeneratorBuilder<F> teleportNearEnemy() {
+        return add(new TeleportNearEnemy<>());
     }
 
     /**
@@ -256,7 +302,7 @@ public class GeneratorBuilder {
      * @see GeneratorBuilder#moveNearEnemy()
      * @see GeneratorBuilder#moveFarEnemies()
      */
-    public final GeneratorBuilder moveOrTeleportNearEnemy() {
+    public final GeneratorBuilder<F> moveOrTeleportNearEnemy() {
         return moveNearEnemy().teleportNearEnemy();
     }
 
@@ -269,8 +315,8 @@ public class GeneratorBuilder {
      *
      * @see MoveFarEnemies The used action generator
      */
-    public final GeneratorBuilder moveFarEnemies() {
-        return add(new MoveFarEnemies());
+    public final GeneratorBuilder<F> moveFarEnemies() {
+        return add(new MoveFarEnemies<>());
     }
 
     /**
@@ -282,8 +328,8 @@ public class GeneratorBuilder {
      *
      * @see MoveNearAllies The used action generator
      */
-    public final GeneratorBuilder moveNearAllies() {
-        return add(new MoveNearAllies());
+    public final GeneratorBuilder<F> moveNearAllies() {
+        return add(new MoveNearAllies<>());
     }
 
     /**
@@ -293,15 +339,16 @@ public class GeneratorBuilder {
      * If there is only one action generator, it will be returned
      * Else, create a {@link GeneratorAggregate}
      */
-    public final ActionGenerator build() {
+    @SuppressWarnings("unchecked")
+    public final ActionGenerator<F> build() {
         if (generators.isEmpty()) {
-            return NullGenerator.INSTANCE;
+            return NullGenerator.get();
         }
 
         if (generators.size() == 1) {
             return generators.get(0);
         }
 
-        return new GeneratorAggregate(generators.toArray(new ActionGenerator[0]));
+        return new GeneratorAggregate<>(generators.toArray(new ActionGenerator[0]));
     }
 }

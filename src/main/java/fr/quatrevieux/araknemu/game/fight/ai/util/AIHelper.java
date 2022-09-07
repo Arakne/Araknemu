@@ -35,10 +35,11 @@ public final class AIHelper {
     private final FightersHelper enemies;
     private final FightersHelper allies;
 
-    public AIHelper(AI ai) {
+    public AIHelper(AI<?> ai) {
         this(new ProxyAI(ai));
     }
 
+    @SuppressWarnings({"assignment", "argument"})
     public AIHelper(ProxyAI ai) {
         this.ai = ai;
 

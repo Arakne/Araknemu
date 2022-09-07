@@ -21,16 +21,16 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -112,23 +112,21 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
 
     private class Loader implements RepositoryUtils.Loader<SpellTemplate> {
         @Override
-        public SpellTemplate create(ResultSet rs) throws SQLException {
+        public SpellTemplate create(Record record) throws SQLException {
             return new SpellTemplate(
-                rs.getInt("SPELL_ID"),
-                rs.getString("SPELL_NAME"),
-                rs.getInt("SPELL_SPRITE"),
-                rs.getString("SPELL_SPRITE_ARG"),
-                new SpellTemplate.Level[]{
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_1")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_2")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_3")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_4")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_5")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_6")),
+                record.getInt("SPELL_ID"),
+                record.getString("SPELL_NAME"),
+                record.getInt("SPELL_SPRITE"),
+                record.getString("SPELL_SPRITE_ARG"),
+                new SpellTemplate.@Nullable Level[]{
+                    record.nullableUnserialize("SPELL_LVL_1", levelTransformer),
+                    record.nullableUnserialize("SPELL_LVL_2", levelTransformer),
+                    record.nullableUnserialize("SPELL_LVL_3", levelTransformer),
+                    record.nullableUnserialize("SPELL_LVL_4", levelTransformer),
+                    record.nullableUnserialize("SPELL_LVL_5", levelTransformer),
+                    record.nullableUnserialize("SPELL_LVL_6", levelTransformer),
                 },
-                Arrays.stream(StringUtils.split(rs.getString("SPELL_TARGET"), ";"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
+                record.getIntArray("SPELL_TARGET", ';')
             );
         }
 

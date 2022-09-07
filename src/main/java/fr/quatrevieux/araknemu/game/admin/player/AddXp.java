@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import org.checkerframework.checker.index.qual.Positive;
 import org.kohsuke.args4j.Argument;
 
 /**
@@ -66,6 +67,6 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
             metaVar = "QUANTITY",
             usage = "The experience quantity to add. Must be an unsigned number."
         )
-        private long quantity;
+        private @Positive long quantity;
     }
 }

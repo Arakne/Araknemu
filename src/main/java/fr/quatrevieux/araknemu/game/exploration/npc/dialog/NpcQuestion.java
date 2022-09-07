@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.exploration.npc.dialog;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
+import org.checkerframework.common.value.qual.MinLen;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +65,7 @@ public final class NpcQuestion {
      * @return List of parameters. Must be stringifiable
      */
     public Object[] parameters(ExplorationPlayer player) {
-        return Arrays.stream(entity.parameters())
+        return Arrays.<@MinLen(1) String>stream(entity.parameters())
             .map(parameter -> parametersResolver.resolve(parameter, player))
             .toArray()
         ;

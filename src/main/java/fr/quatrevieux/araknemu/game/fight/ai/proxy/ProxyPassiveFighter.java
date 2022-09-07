@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import java.util.Optional;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
@@ -29,6 +30,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Proxy class for override properties of other fighters
@@ -54,12 +58,23 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
+    @SuppressWarnings("argument") // cell id always valid
     public FightCell cell() {
         return ai.map().get(fighter.cell().id());
     }
 
     @Override
-    public void move(FightCell cell) {
+    public Sprite sprite() {
+        return fighter.sprite();
+    }
+
+    @Override
+    public Direction orientation() {
+        return fighter.orientation();
+    }
+
+    @Override
+    public void move(@Nullable FightCell cell) {
         throw new UnsupportedOperationException("This is a proxy fighter");
     }
 
@@ -79,6 +94,11 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
+    public @Positive int level() {
+        return fighter.level();
+    }
+
+    @Override
     public FighterCharacteristics characteristics() {
         return fighter.characteristics();
     }
@@ -94,7 +114,17 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean hidden() {
+        return fighter.hidden();
+    }
+
+    @Override
+    public void setHidden(PassiveFighter caster, boolean hidden) {
+        throw new UnsupportedOperationException("Cannot modify a proxy fighter");
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

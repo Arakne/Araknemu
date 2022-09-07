@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +37,8 @@ import java.util.stream.Stream;
  *
  * Note: this object is immutable : any change will result to a creation of a new instance
  */
-public final class ProxyAI implements AI {
-    private final AI ai;
+public final class ProxyAI implements AI<ActiveFighter> {
+    private final AI<?> ai;
 
     private ProxyBattlefield map;
     private ProxyActiveFighter fighter;
@@ -45,7 +46,7 @@ public final class ProxyAI implements AI {
 
     private final Map<PassiveFighter, PassiveFighter> fighters = new HashMap<>();
 
-    public ProxyAI(AI ai) {
+    public ProxyAI(AI<?> ai) {
         this.ai = ai;
         this.fighter = new ProxyActiveFighter(ai.fighter());
         this.map = new ProxyBattlefield(ai.map());
@@ -98,7 +99,7 @@ public final class ProxyAI implements AI {
      *
      * @see fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper#withPosition(FightCell)
      */
-    public ProxyAI withPosition(int cellId) {
+    public ProxyAI withPosition(@NonNegative int cellId) {
         final ProxyAI newAi = new ProxyAI(this);
 
         newAi.map = newAi.map.modify(modifier -> {

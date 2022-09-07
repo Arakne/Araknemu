@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,37 +35,31 @@ import java.util.Collection;
  * All inventory slots
  */
 public final class InventorySlots {
+    public static final int SLOT_MAX = 57;
+
     private final Dispatcher dispatcher;
     private final ItemStorage<InventoryEntry> storage;
 
     private final InventorySlot defaultSlot;
-    private final InventorySlot[] slots = new InventorySlot[58];
+    private final InventorySlot[] slots = new InventorySlot[SLOT_MAX + 1];
 
-    public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
+    public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner) {
         this.dispatcher  = dispatcher;
         this.storage     = storage;
         this.defaultSlot = new DefaultSlot(storage);
-    }
 
-    /**
-     * Init all slots the the owner
-     *
-     * @param owner The inventory owner
-     */
-    public void init(GamePlayer owner) {
-        initSlots(owner);
-        fillSlots();
+        init(owner);
     }
 
     /**
      * Get an inventory slot
      */
-    public InventorySlot get(int id) throws InventoryException {
+    public InventorySlot get(@IntRange(from = -1, to = InventorySlots.SLOT_MAX) int id) throws InventoryException {
         if (id == ItemEntry.DEFAULT_POSITION) {
             return defaultSlot;
         }
 
-        if (id < -1 || id >= slots.length) {
+        if (id >= slots.length) {
             throw new InventoryException("Invalid slot");
         }
 
@@ -84,8 +79,19 @@ public final class InventorySlots {
         return equipments;
     }
 
+    @SuppressWarnings("array.access.unsafe.low") // Adding default slot (i.e. id = -1) is forbidden
     private void add(InventorySlot slot) {
         slots[slot.id()] = slot;
+    }
+
+    /**
+     * Init all slots of the owner
+     *
+     * @param owner The inventory owner
+     */
+    private void init(GamePlayer owner) {
+        initSlots(owner);
+        fillSlots();
     }
 
     private void initSlots(GamePlayer owner) {
@@ -99,15 +105,25 @@ public final class InventorySlots {
         add(new MantleSlot(dispatcher, storage, owner));
         add(new NullSlot(8)); // pet
 
+        initDofusSlots(owner);
+        initNullSlots();
+        initUsableSlots();
+    }
+
+    private void initDofusSlots(GamePlayer owner) {
         for (int id : DofusSlot.SLOT_IDS) {
             add(new DofusSlot(dispatcher, storage, owner, id));
         }
+    }
 
-        for (int i = 15; i < UsableSlot.SLOT_ID_START; ++i) {
+    private void initNullSlots() {
+        for (@IntRange(from = 15, to = UsableSlot.SLOT_ID_START) int i = 15; i < UsableSlot.SLOT_ID_START; ++i) {
             add(new NullSlot(i)); // Add null slot for all unhandled slots
         }
+    }
 
-        for (int i = UsableSlot.SLOT_ID_START; i <= UsableSlot.SLOT_ID_END; ++i) {
+    private void initUsableSlots() {
+        for (@IntRange(from = UsableSlot.SLOT_ID_START, to = UsableSlot.SLOT_ID_END + 1) int i = UsableSlot.SLOT_ID_START; i <= UsableSlot.SLOT_ID_END; ++i) {
             add(new UsableSlot(storage, i));
         }
     }

@@ -26,34 +26,49 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultConfigurationTest {
-    static public class FooModule implements ConfigurationModule {
-        public Pool pool;
+    static public class Foo {
+        public static final ConfigurationModule<Foo> MODULE = new ConfigurationModule<Foo>() {
+            @Override
+            public Foo create(Pool pool) {
+                return new Foo(pool);
+            }
 
-        @Override
-        public void setPool(Pool pool) {
+            @Override
+            public String name() {
+                return "foo";
+            }
+        };
+
+        public final Pool pool;
+
+        public Foo(Pool pool) {
             this.pool = pool;
         }
 
-        @Override
-        public String name() {
-            return "foo";
-        }
     }
 
-    static public class EmptyModule implements ConfigurationModule {
-        public Pool pool;
+    static public class Empty {
+        public static final ConfigurationModule<Empty> MODULE = new ConfigurationModule<Empty>() {
+            @Override
+            public Empty create(Pool pool) {
+                return new Empty(pool);
+            }
 
-        @Override
-        public void setPool(Pool pool) {
+            @Override
+            public String name() {
+                return "empty";
+            }
+        };
+
+        public final Pool pool;
+
+        public Empty(Pool pool) {
             this.pool = pool;
-        }
-
-        @Override
-        public String name() {
-            return "empty";
         }
     }
 
@@ -70,7 +85,7 @@ class DefaultConfigurationTest {
 
     @Test
     void moduleOnFirstCall() {
-        FooModule module = configuration.module(FooModule.class);
+        Foo module = configuration.module(Foo.MODULE);
 
         assertTrue(module.pool instanceof IniPool);
         assertEquals("baz", module.pool.get("bar"));
@@ -78,12 +93,12 @@ class DefaultConfigurationTest {
 
     @Test
     void moduleSameInstance() {
-        assertSame(configuration.module(FooModule.class), configuration.module(FooModule.class));
+        assertSame(configuration.module(Foo.MODULE), configuration.module(Foo.MODULE));
     }
 
     @Test
     void moduleNotFound() {
-        EmptyModule module = configuration.module(EmptyModule.class);
+        Empty module = configuration.module(Empty.MODULE);
 
         assertTrue(module.pool instanceof EmptyPool);
     }

@@ -28,6 +28,13 @@ import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Collection;
 import java.util.Map;
@@ -63,6 +70,7 @@ public final class NpcStore implements ExchangeProvider.Factory {
     /**
      * Get all available item templates
      */
+    @Pure
     public Collection<ItemTemplate> available() {
         return itemTemplates.values();
     }
@@ -74,47 +82,71 @@ public final class NpcStore implements ExchangeProvider.Factory {
      *
      * @return true if available
      */
+    @Pure
+    @EnsuresNonNullIf(expression = "itemTemplates.get(#1)", result = true)
+    @EnsuresKeyForIf(expression = "#1", map = "itemTemplates", result = true)
+    @SuppressWarnings("contracts.conditional.postcondition") // checker can't infer from containsKey()...
     public boolean has(int id) {
         return itemTemplates.containsKey(id);
     }
 
     /**
-     * Try to generate the items
-     *
-     * Note: Each items are regenerated, so items may have different stats and quantity
-     *
-     * @param id The item template id
-     * @param quantity The asked quantity
-     *
-     * @return Map of generated item, associated with quantity
-     */
-    public Map<Item, Integer> get(int id, int quantity) {
-        return itemService.createBulk(itemTemplates.get(id), quantity);
-    }
-
-    /**
-     * Get the price for generate given items
+     * Create a sell for the NPC store
+     * Items are generated lazily, when calling {@link Sell#items()}
      *
      * @param id The item template id
      * @param quantity The asked quantity
-     *
-     * @return The price
      */
-    public long price(int id, int quantity) {
-        return itemTemplates.get(id).price() * quantity;
+    @Pure
+    @RequiresNonNull("itemTemplates.get(#1)")
+    public Sell buy(@KeyFor("itemTemplates") int id, @Positive int quantity) {
+        return new Sell(itemTemplates.get(id), quantity);
     }
 
     /**
-     * Get the price for sell the item to the NPC
+     * Get the price for sale the item to the NPC
      *
      * @param item Item to sell
      * @param quantity Quantity to sell
      *
      * @return The cost in kamas
      */
-    public long sellPrice(Item item, int quantity) {
+    @Pure
+    public @NonNegative long sellPrice(Item item, @Positive int quantity) {
         final long basePrice = (long) (configuration.npcSellPriceMultiplier() * item.template().price());
 
-        return basePrice * quantity;
+        return Math.max(basePrice * quantity, 0);
+    }
+
+    public final class Sell {
+        private final ItemTemplate template;
+        private final @Positive int quantity;
+
+        @Pure
+        public Sell(ItemTemplate template, @Positive int quantity) {
+            this.template = template;
+            this.quantity = quantity;
+        }
+
+        /**
+         * Get the price for generate given items
+         *
+         * @return The price
+         */
+        @Pure
+        public @NonNegative int price() {
+            return template.price() * quantity;
+        }
+
+        /**
+         * Try to generate items
+         *
+         * Note: Each item are regenerated, so items may have different stats and quantity
+         *
+         * @return Map of generated item, associated with quantity
+         */
+        public Map<Item, @Positive Integer> items() {
+            return itemService.createBulk(template, quantity);
+        }
     }
 }

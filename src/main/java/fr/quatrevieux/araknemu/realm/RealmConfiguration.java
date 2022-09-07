@@ -31,17 +31,23 @@ import java.time.Duration;
 /**
  * Configuration for realm
  */
-public final class RealmConfiguration implements ConfigurationModule {
-    private PoolUtils pool;
+public final class RealmConfiguration {
+    public static final ConfigurationModule<RealmConfiguration> MODULE = new ConfigurationModule<RealmConfiguration>() {
+        @Override
+        public RealmConfiguration create(Pool pool) {
+            return new RealmConfiguration(pool);
+        }
 
-    @Override
-    public void setPool(Pool pool) {
+        @Override
+        public String name() {
+            return "realm";
+        }
+    };
+
+    private final PoolUtils pool;
+
+    public RealmConfiguration(Pool pool) {
         this.pool = new PoolUtils(pool);
-    }
-
-    @Override
-    public String name() {
-        return "realm";
     }
 
     /**

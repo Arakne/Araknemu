@@ -21,8 +21,11 @@ package fr.quatrevieux.araknemu.game.listener.fight.turn.action;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
+import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 
@@ -38,11 +41,27 @@ public final class SendFightAction implements Listener<FightActionStarted> {
 
     @Override
     public void on(FightActionStarted event) {
-        if (event.result().success() && event.action().performer() instanceof Sender) {
-            Sender.class.cast(event.action().performer()).send(new StartFightAction(event.action()));
+        final ActiveFighter performer = event.action().performer();
+        final Sender sender = performer instanceof Sender ? (Sender) performer : null;
+        final ActionResult result = event.result();
+
+        if (result.success() && sender != null) {
+            sender.send(new StartFightAction(event.action()));
         }
 
-        fight.send(new FightAction(event.result()));
+        if (!result.secret()) {
+            // Refresh caster position if hidden
+            if (performer.hidden()) {
+                fight.send(new FighterPositions(performer));
+            }
+
+            fight.send(new FightAction(result));
+            return;
+        }
+
+        if (sender != null) {
+            sender.send(new FightAction(result));
+        }
     }
 
     @Override

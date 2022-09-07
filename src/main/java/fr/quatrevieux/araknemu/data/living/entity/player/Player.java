@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -34,6 +36,7 @@ import java.util.Set;
 /**
  * Entity class for player
  */
+@SuppressWarnings({"argument"}) // @todo refactor repository PK system
 public final class Player implements WalletEntity {
     private final int id;
     private final int accountId;
@@ -42,18 +45,18 @@ public final class Player implements WalletEntity {
     private Race race;
     private Gender gender;
     private Colors colors;
-    private int level;
+    private @Positive int level;
     private MutableCharacteristics stats;
     private Position position;
     private Set<ChannelType> channels;
-    private int boostPoints;
-    private int spellPoints;
-    private int life;
-    private long experience;
+    private @NonNegative int boostPoints;
+    private @NonNegative int spellPoints;
+    private @NonNegative int life;
+    private @NonNegative long experience;
     private Position savedPosition;
-    private long kamas;
+    private @NonNegative long kamas;
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, int boostPoints, int spellPoints, int life, long experience, Position savedPosition, long kamas) {
+    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, @Positive int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, @NonNegative int boostPoints, @NonNegative int spellPoints, @NonNegative int life, @NonNegative long experience, Position savedPosition, @NonNegative long kamas) {
         this.id = id;
         this.accountId = accountId;
         this.serverId = serverId;
@@ -73,8 +76,8 @@ public final class Player implements WalletEntity {
         this.kamas = kamas;
     }
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, int level, MutableCharacteristics characteristics) {
-        this(id, accountId, serverId, name, race, gender, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, -1, 0, new Position(0, 0), 0);
+    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, @Positive int level, MutableCharacteristics characteristics) {
+        this(id, accountId, serverId, name, race, gender, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(0, 0), 0);
     }
 
     public Player(int id) {
@@ -109,11 +112,11 @@ public final class Player implements WalletEntity {
         return colors;
     }
 
-    public int level() {
+    public @Positive int level() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(@Positive int level) {
         this.level = level;
     }
 
@@ -137,35 +140,35 @@ public final class Player implements WalletEntity {
         this.channels = channels;
     }
 
-    public int boostPoints() {
+    public @NonNegative int boostPoints() {
         return boostPoints;
     }
 
-    public void setBoostPoints(int boostPoints) {
+    public void setBoostPoints(@NonNegative int boostPoints) {
         this.boostPoints = boostPoints;
     }
 
-    public int spellPoints() {
+    public @NonNegative int spellPoints() {
         return spellPoints;
     }
 
-    public void setSpellPoints(int spellPoints) {
+    public void setSpellPoints(@NonNegative int spellPoints) {
         this.spellPoints = spellPoints;
     }
 
-    public int life() {
+    public @NonNegative int life() {
         return life;
     }
 
-    public void setLife(int life) {
+    public void setLife(@NonNegative int life) {
         this.life = life;
     }
 
-    public long experience() {
+    public @NonNegative long experience() {
         return experience;
     }
 
-    public void setExperience(long experience) {
+    public void setExperience(@NonNegative long experience) {
         this.experience = experience;
     }
 
@@ -178,12 +181,12 @@ public final class Player implements WalletEntity {
     }
 
     @Override
-    public long kamas() {
+    public @NonNegative long kamas() {
         return kamas;
     }
 
     @Override
-    public void setKamas(long kamas) {
+    public void setKamas(@NonNegative long kamas) {
         this.kamas = kamas;
     }
 
@@ -228,6 +231,6 @@ public final class Player implements WalletEntity {
      * @see fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository#getForGame(Player)
      */
     public static Player forGame(int playerId, int accountId, int serverId) {
-        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0, -1, 0, null, 0);
+        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0, Integer.MAX_VALUE, 0, null, 0);
     }
 }

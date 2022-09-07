@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.order;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
@@ -27,22 +28,28 @@ import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.TeamOptions;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AlternateTeamFighterOrderTest extends TestCase {
     private AlternateTeamFighterOrder strategy = new AlternateTeamFighterOrder();
@@ -85,7 +92,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public List<Integer> startPlaces() {
+        public List<FightCell> startPlaces() {
             return null;
         }
 
@@ -99,6 +106,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
         @Override
         public boolean alive() { return true; }
+
+        @Override
+        public TeamOptions options() {
+            return null;
+        }
+
+        @Override
+        public void setFight(Fight fight) {
+
+        }
 
         @Override
         public void join(Fighter fighter) throws JoinFightException {
@@ -165,6 +182,14 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
+        public boolean isPlaying() {
+            return false;
+        }
+
+        @Override
+        public void perform(Consumer<FightTurn> action) {}
+
+        @Override
         public boolean dead() {
             return false;
         }
@@ -177,6 +202,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
         @Override
         public boolean isOnFight() {
             return true;
+        }
+
+        @Override
+        public boolean hidden() {
+            return false;
+        }
+
+        @Override
+        public void setHidden(PassiveFighter caster, boolean hidden) {
+
         }
 
         @Override
@@ -201,11 +236,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
                 public void alter(Characteristic characteristic, int value) {
 
                 }
+
+                @Override
+                public Characteristics initial() {
+                    return null;
+                }
             };
         }
 
         @Override
-        public SpellList spells() {
+        public FighterSpellList spells() {
             return null;
         }
 

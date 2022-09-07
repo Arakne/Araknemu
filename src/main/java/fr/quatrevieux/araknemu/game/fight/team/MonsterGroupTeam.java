@@ -20,12 +20,15 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,20 +44,23 @@ import java.util.List;
 public final class MonsterGroupTeam implements FightTeam {
     private final MonsterGroup monsterGroup;
     private final int number;
-    private final List<Integer> startPlaces;
+    private final List<FightCell> startPlaces;
 
     private final List<Fighter> fighters;
+    private final TeamOptions options;
 
-    public MonsterGroupTeam(MonsterGroup monsterGroup, List<Integer> startPlaces, int number) {
+    @SuppressWarnings({"assignment", "argument"})
+    public MonsterGroupTeam(MonsterGroup monsterGroup, List<FightCell> startPlaces, int number) {
         this.monsterGroup = monsterGroup;
         this.number = number;
         this.startPlaces = startPlaces;
 
-        this.fighters = makeFighters();
+        this.fighters = makeFighters(this, monsterGroup.monsters());
+        this.options = new DefaultTeamOptions(this);
     }
 
     @Override
-    public Fighter leader() {
+    public @Nullable Fighter leader() {
         return null;
     }
 
@@ -84,7 +90,7 @@ public final class MonsterGroupTeam implements FightTeam {
     }
 
     @Override
-    public List<Integer> startPlaces() {
+    public List<FightCell> startPlaces() {
         return startPlaces;
     }
 
@@ -101,6 +107,11 @@ public final class MonsterGroupTeam implements FightTeam {
     @Override
     public boolean alive() {
         return fighters.stream().anyMatch(fighter -> !fighter.dead());
+    }
+
+    @Override
+    public TeamOptions options() {
+        return options;
     }
 
     @Override
@@ -121,6 +132,11 @@ public final class MonsterGroupTeam implements FightTeam {
         fighters.remove(fighter);
     }
 
+    @Override
+    public void setFight(Fight fight) {
+        // No-op
+    }
+
     /**
      * Get the monster group related to this team
      */
@@ -132,13 +148,13 @@ public final class MonsterGroupTeam implements FightTeam {
      * Creates fighters from monsters of the group
      * Ids of monsters are negative integer sequence (starting at -1 for the first monster)
      */
-    private List<Fighter> makeFighters() {
-        final List<Fighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
+    private static List<Fighter> makeFighters(MonsterGroupTeam team, List<Monster> monsters) {
+        final List<Fighter> fighters = new ArrayList<>(monsters.size());
 
         int id = 0;
 
-        for (Monster monster : monsterGroup.monsters()) {
-            fighters.add(new MonsterFighter(--id, monster, this));
+        for (Monster monster : monsters) {
+            fighters.add(new MonsterFighter(--id, monster, team));
         }
 
         return fighters;

@@ -142,15 +142,6 @@ class NpcStoreExchangeTest extends GameBaseCase {
     }
 
     @Test
-    void sellInvalidQuantity() {
-        ItemEntry entry = player.inventory().add(container.get(ItemService.class).create(39), 3);
-
-        assertThrows(InventoryException.class, () -> exchange.sell(entry.id(), -5));
-        assertEquals(15225, player.inventory().kamas());
-        assertEquals(3, entry.quantity());
-    }
-
-    @Test
     void sellSuccess() {
         ItemEntry entry = player.inventory().add(container.get(ItemService.class).create(39), 3);
 

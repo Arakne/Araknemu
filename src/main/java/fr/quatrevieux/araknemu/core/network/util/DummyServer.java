@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -67,7 +68,7 @@ public final class DummyServer<S extends Session> implements Server<S> {
     /**
      * Create a new session
      */
-    public S createSession(String ipAddress) {
+    public S createSession(@Nullable String ipAddress) {
         final DummyChannel channel = new DummyChannel(ipAddress);
 
         channel.setId(++lastId);

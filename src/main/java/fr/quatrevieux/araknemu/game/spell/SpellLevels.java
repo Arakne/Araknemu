@@ -20,6 +20,8 @@
 package fr.quatrevieux.araknemu.game.spell;
 
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.NoSuchElementException;
 
@@ -52,20 +54,20 @@ public final class SpellLevels {
     /**
      * Get spell at level
      */
-    public Spell level(int level) {
-        --level;
+    public Spell level(@Positive int level) {
+        final int index = level - 1;
 
-        if (level < 0 || level >= levels.length) {
-            throw new NoSuchElementException("Invalid level " + (level + 1) + " for spell " + entity.id());
+        if (index >= levels.length) {
+            throw new NoSuchElementException("Invalid level " + level + " for spell " + entity.id());
         }
 
-        return levels[level];
+        return levels[index];
     }
 
     /**
      * Get the maximum spell level
      */
-    public int max() {
+    public @NonNegative int max() {
         return levels.length;
     }
 }

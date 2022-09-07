@@ -20,8 +20,10 @@
 package fr.quatrevieux.araknemu.game.item.effect.use;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Effect handler for an use effect
@@ -38,12 +40,14 @@ public interface UseEffectHandler {
     /**
      * Apply the item effect to a target player or cell
      *
+     * {@link UseEffectHandler#checkTarget(UseEffect, ExplorationPlayer, ExplorationPlayer, ExplorationMapCell)} must be called before
+     *
      * @param effect The effect to apply
      * @param caster The effect caster
      * @param target The effect target (can be null)
-     * @param cell The target cell
+     * @param cell The target cell. null if no cell is targeted
      */
-    public default void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {}
+    public default void applyToTarget(UseEffect effect, ExplorationPlayer caster, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {}
 
     /**
      * Check if the effect can be used
@@ -61,17 +65,17 @@ public interface UseEffectHandler {
      * @param effect The effect to apply
      * @param caster The caster
      * @param target The effect target (can be null)
-     * @param cell The target cell
+     * @param cell The target cell. null if no cell is targeted
      *
      * @return True if the effect can be applied or false
      */
-    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell);
+    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell);
 
     /**
      * Check if the effect can be used by a fighter during placement
      *
      * @param effect The effect to apply
-     * @param fighter The fighter The fighter to check
+     * @param fighter The fighter to check
      *
      * @return True if the effect can be applied or false
      */

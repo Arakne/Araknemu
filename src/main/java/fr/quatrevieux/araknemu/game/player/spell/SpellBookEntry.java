@@ -24,17 +24,19 @@ import fr.quatrevieux.araknemu.game.player.spell.event.SpellMoved;
 import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
+import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Entry for the spell book
  */
 public final class SpellBookEntry {
+    private final SpellBook spellBook;
     private final PlayerSpell entity;
     private final SpellLevels spell;
 
-    private SpellBook spellBook;
-
-    public SpellBookEntry(PlayerSpell entity, SpellLevels spell) {
+    public SpellBookEntry(SpellBook spellBook, PlayerSpell entity, SpellLevels spell) {
+        this.spellBook = spellBook;
         this.entity = entity;
         this.spell = spell;
     }
@@ -42,6 +44,7 @@ public final class SpellBookEntry {
     /**
      * Get the spell
      */
+    @Pure
     public Spell spell() {
         return spell.level(entity.level());
     }
@@ -49,13 +52,15 @@ public final class SpellBookEntry {
     /**
      * Get the spell position
      */
-    public int position() {
+    @Pure
+    public @IntRange(from = 1, to = 63) int position() {
         return entity.position();
     }
 
     /**
      * This entry is a class spell ?
      */
+    @Pure
     public boolean classSpell() {
         return entity.classSpell();
     }
@@ -65,7 +70,7 @@ public final class SpellBookEntry {
      *
      * @param position The target position
      */
-    public void move(int position) {
+    public void move(@IntRange(from = 1, to = 63) int position) {
         if (position < 1) {
             throw new IllegalArgumentException("Bad position");
         }
@@ -103,22 +108,8 @@ public final class SpellBookEntry {
      *
      * /!\ Internal method for listeners
      */
+    @Pure
     public PlayerSpell entity() {
         return entity;
-    }
-
-    /**
-     * Attach the spell book to the entry
-     *
-     * @param spellBook SpellBook to attach
-     */
-    SpellBookEntry attach(SpellBook spellBook) {
-        if (this.spellBook != null) {
-            throw new IllegalStateException("SpellBook is already set");
-        }
-
-        this.spellBook = spellBook;
-
-        return this;
     }
 }

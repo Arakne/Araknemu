@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.common.account.banishment;
 
 import fr.quatrevieux.araknemu.common.account.LivingAccount;
 import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -33,13 +34,13 @@ import java.util.Optional;
 public final class BanEntry<A extends LivingAccount> {
     private final A account;
     private final Banishment entity;
-    private final A banisher;
+    private final @Nullable A banisher;
 
     public BanEntry(A account, Banishment entity) {
         this(account, entity, null);
     }
 
-    public BanEntry(A account, Banishment entity, A banisher) {
+    public BanEntry(A account, Banishment entity, @Nullable A banisher) {
         this.account = account;
         this.entity = entity;
         this.banisher = banisher;

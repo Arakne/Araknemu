@@ -23,6 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MapCellsTransformerTest {
     private MapCellsTransformer transformer;
@@ -30,6 +32,16 @@ class MapCellsTransformerTest {
     @BeforeEach
     void setUp() {
         transformer = new MapCellsTransformer();
+    }
+
+    @Test
+    void unserializeNull() {
+        assertNull(transformer.unserialize(null));
+    }
+
+    @Test
+    void serialize() {
+        assertThrows(UnsupportedOperationException.class, () -> transformer.serialize(null));
     }
 
     @Test
