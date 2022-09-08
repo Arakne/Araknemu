@@ -55,14 +55,14 @@ class PlayerExperienceServiceTest extends GameBaseCase {
 
         dataSet.pushExperience();
 
-        service.preload(container.get(Logger.class));
+        service.init(container.get(Logger.class));
     }
 
     @Test
     void preload() {
         Logger logger = Mockito.mock(Logger.class);
 
-        service.preload(logger);
+        service.init(logger);
 
         Mockito.verify(logger).info("Loading player experience...");
         Mockito.verify(logger).info("{} player levels loaded", 200);

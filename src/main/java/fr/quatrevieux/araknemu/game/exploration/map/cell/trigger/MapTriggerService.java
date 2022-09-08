@@ -72,6 +72,11 @@ public final class MapTriggerService implements PreloadableService, EventsSubscr
     }
 
     @Override
+    public String name() {
+        return "map.trigger";
+    }
+
+    @Override
     public Listener[] listeners() {
         return new Listener[] {
             new Listener<MapLoaded>() {

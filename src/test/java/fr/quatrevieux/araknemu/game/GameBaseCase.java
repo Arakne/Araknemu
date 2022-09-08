@@ -331,7 +331,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .pushExperience()
         ;
 
-        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
+        container.get(PlayerExperienceService.class).init(container.get(Logger.class));
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
@@ -404,7 +404,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .use(PlayerSpell.class)
         ;
 
-        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
+        container.get(PlayerExperienceService.class).init(container.get(Logger.class));
 
         Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0));
         GameSession session = server.createSession();
@@ -479,7 +479,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .use(PlayerSpell.class)
         ;
 
-        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
+        container.get(PlayerExperienceService.class).init(container.get(Logger.class));
 
         Player player = dataSet.pushPlayer(dataSet.createPlayer(id));
 

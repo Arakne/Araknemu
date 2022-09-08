@@ -21,10 +21,10 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.common.account.banishment.AbstractBanIpSynchronizer;
 import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
+import fr.quatrevieux.araknemu.core.InitializableService;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.network.session.Session;
-import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.event.AuthStopped;
 import org.apache.logging.log4j.Logger;
@@ -36,13 +36,13 @@ import java.util.function.Supplier;
 /**
  * Synchronize ban ip table for authentication service
  */
-public final class AuthBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, PreloadableService {
+public final class AuthBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, InitializableService {
     public AuthBanIpSynchronizer(BanIpService<AuthenticationAccount> service, Supplier<Collection<? extends Session>> sessionsSupplier, Logger logger, Duration refreshDelay) {
         super(service, sessionsSupplier, logger, refreshDelay);
     }
 
     @Override
-    public void preload(Logger logger) {
+    public void init(Logger logger) {
         startPulling();
     }
 

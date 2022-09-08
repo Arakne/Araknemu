@@ -69,6 +69,11 @@ public final class ItemService implements PreloadableService {
         loadItems(logger);
     }
 
+    @Override
+    public String name() {
+        return "item";
+    }
+
     /**
      * Create a new item
      *

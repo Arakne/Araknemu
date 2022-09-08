@@ -67,6 +67,11 @@ public final class MonsterRewardService implements PreloadableService {
         logger.info("{} monsters rewards loaded", rewards.size());
     }
 
+    @Override
+    public String name() {
+        return "monster.reward";
+    }
+
     /**
      * Get the rewards for the given monster grade
      *

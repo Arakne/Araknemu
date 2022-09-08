@@ -80,7 +80,7 @@ class SavingServiceTest extends GameBaseCase {
 
         player.setPosition(new Position(123, 45));
 
-        service.preload(Mockito.mock(Logger.class));
+        service.init(Mockito.mock(Logger.class));
 
         Thread.sleep(100);
 

@@ -65,6 +65,11 @@ public final class NpcService implements EventsSubscriber, PreloadableService {
     }
 
     @Override
+    public String name() {
+        return "npc";
+    }
+
+    @Override
     public Listener[] listeners() {
         return new Listener[] {
             new Listener<MapLoaded>() {

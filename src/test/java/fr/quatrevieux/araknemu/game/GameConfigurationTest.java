@@ -49,6 +49,15 @@ class GameConfigurationTest extends GameBaseCase {
     }
 
     @Test
+    void preload() {
+        assertTrue(configuration.preload("bar"));
+        assertTrue(configuration.preload("bar.baz"));
+        assertFalse(configuration.preload("foo"));
+        assertFalse(configuration.preload("foo.bar"));
+        assertFalse(configuration.preload("foo.bar.baz"));
+    }
+
+    @Test
     void chat() {
         assertEquals(30, configuration.chat().floodTime());
         assertEquals("*#%!pi$:?", configuration.chat().defaultChannels());

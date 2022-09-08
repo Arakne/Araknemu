@@ -97,6 +97,11 @@ public final class AreaService implements PreloadableService, EventsSubscriber {
     }
 
     @Override
+    public String name() {
+        return "map.area";
+    }
+
+    @Override
     public Listener[] listeners() {
         return new Listener[] {
             new Listener<PlayerLoaded>() {

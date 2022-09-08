@@ -72,6 +72,11 @@ public final class NpcExchangeService implements PreloadableService, EventsSubsc
     }
 
     @Override
+    public String name() {
+        return "npc.exchange";
+    }
+
+    @Override
     public Listener[] listeners() {
         return new Listener[] {
             new Listener<GameStarted>() {
