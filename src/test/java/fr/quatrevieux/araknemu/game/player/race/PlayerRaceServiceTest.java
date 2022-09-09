@@ -67,4 +67,9 @@ class PlayerRaceServiceTest extends GameBaseCase {
         Mockito.verify(logger).info("Loading races...");
         Mockito.verify(logger).info("{} races loaded", 12);
     }
+
+    @Test
+    void name() {
+        assertEquals("player.race", service.name());
+    }
 }

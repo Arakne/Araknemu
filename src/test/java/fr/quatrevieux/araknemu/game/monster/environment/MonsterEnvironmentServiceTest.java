@@ -250,4 +250,9 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         assertTrue(service.groups().skip(1).findFirst().get().fixed());
         assertTrue(service.groups().skip(2).findFirst().get().fixed());
     }
+
+    @Test
+    void name() {
+        assertEquals("monster.environment", service.name());
+    }
 }

@@ -86,4 +86,10 @@ class SavingServiceTest extends GameBaseCase {
 
         assertEquals(new Position(123, 45), dataSet.refresh(new Player(player.id())).position());
     }
+
+    @Test
+    void name() {
+        SavingService service = container.get(SavingService.class);
+        assertEquals("saving", service.name());
+    }
 }

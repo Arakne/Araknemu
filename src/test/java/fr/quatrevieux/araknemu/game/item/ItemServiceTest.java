@@ -220,4 +220,9 @@ class ItemServiceTest extends GameBaseCase {
         assertEquals(Effect.ADD_DAMAGE, set.bonus(7).characteristics().get(5).effect());
         assertEquals(5, set.bonus(7).characteristics().get(5).value());
     }
+
+    @Test
+    void name() {
+        assertEquals("item", service.name());
+    }
 }

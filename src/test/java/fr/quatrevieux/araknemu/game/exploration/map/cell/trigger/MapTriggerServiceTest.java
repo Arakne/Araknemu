@@ -116,4 +116,9 @@ class MapTriggerServiceTest extends GameBaseCase {
         assertCount(2, actions);
         assertContainsOnly(Teleport.class, actions);
     }
+
+    @Test
+    void name() {
+        assertEquals("map.trigger", service.name());
+    }
 }

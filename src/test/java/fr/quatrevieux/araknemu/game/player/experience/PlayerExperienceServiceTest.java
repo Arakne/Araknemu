@@ -128,4 +128,9 @@ class PlayerExperienceServiceTest extends GameBaseCase {
         assertEquals(30, player.boostPoints());
         assertEquals(7, player.spellPoints());
     }
+
+    @Test
+    void name() {
+        assertEquals("player.experience", service.name());
+    }
 }

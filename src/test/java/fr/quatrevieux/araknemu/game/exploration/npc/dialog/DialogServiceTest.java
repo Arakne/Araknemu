@@ -153,4 +153,9 @@ class DialogServiceTest extends GameBaseCase {
             service.forNpc(dataSet.refresh(new Npc(457, 0, null, null, null)))
         );
     }
+
+    @Test
+    void name() {
+        assertEquals("npc.dialog", service.name());
+    }
 }

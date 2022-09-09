@@ -176,4 +176,9 @@ class ExplorationMapServiceTest extends FightBaseCase {
         Mockito.verify(logger).info("Loading maps...");
         Mockito.verify(logger).info(Mockito.eq("{} maps successfully loaded in {}ms"), Mockito.eq(4), Mockito.any());
     }
+
+    @Test
+    void name() {
+        assertEquals("map", service.name());
+    }
 }

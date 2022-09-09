@@ -124,4 +124,9 @@ class MonsterServiceTest extends GameBaseCase {
         Mockito.verify(logger).info("Loading monsters...");
         Mockito.verify(logger).info("{} monsters loaded", 3);
     }
+
+    @Test
+    void name() {
+        assertEquals("monster", service.name());
+    }
 }
