@@ -70,7 +70,7 @@ class PlayerDataTest  extends GameBaseCase {
             .use(PlayerSpell.class)
         ;
 
-        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
+        container.get(PlayerExperienceService.class).init(container.get(Logger.class));
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 

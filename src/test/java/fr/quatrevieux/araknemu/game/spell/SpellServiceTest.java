@@ -68,4 +68,9 @@ class SpellServiceTest extends GameBaseCase {
         Mockito.verify(logger).info("Loading spells...");
         Mockito.verify(logger).info("{} spells loaded", 5);
     }
+
+    @Test
+    void name() {
+        assertEquals("spell", service.name());
+    }
 }

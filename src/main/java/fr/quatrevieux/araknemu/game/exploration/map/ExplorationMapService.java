@@ -98,6 +98,11 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
     }
 
     @Override
+    public String name() {
+        return "map";
+    }
+
+    @Override
     public Listener[] listeners() {
         return new Listener[] {
             new Listener<ExplorationPlayerCreated>() {

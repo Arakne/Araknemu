@@ -233,6 +233,16 @@ game.dbname = araknemu
 ; > Default: true
 ;autosave.enabled = true
 
+; Preload
+; -------
+; > Does preload is enabled for the given service
+; > By default this value is true
+; > In case of submodule (i.e. preload.service.submodule), the preload will be checked on each part.
+; > So if "preload.service" is false, "preload.service.submodule" will be considered as false
+;preload.map = false
+;preload.monster = false
+;preload.npc = false
+
 [admin]
 ; Section for configure admin commands
 

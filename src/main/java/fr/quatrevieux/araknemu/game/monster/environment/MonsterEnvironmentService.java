@@ -112,6 +112,11 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
     }
 
     @Override
+    public String name() {
+        return "monster.environment";
+    }
+
+    @Override
     public Listener[] listeners() {
         return new Listener[] {
             new Listener<MapLoaded>() {

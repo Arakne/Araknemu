@@ -14,30 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game;
 
-import fr.quatrevieux.araknemu.core.InitializableService;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-/**
- * Interface for service which can be preloaded on boot
- */
-public interface PreloadableService extends InitializableService {
-    @Override
-    public default void init(Logger logger) {}
+import static org.junit.jupiter.api.Assertions.*;
 
-    /**
-     * Preload the service
-     * This method is only called if preload is enabled for the current service
-     */
-    public default void preload(Logger logger) {}
+class PreloadableServiceTest {
+    @Test
+    void defaultMethods() {
+        PreloadableService s = new PreloadableService() {
+            @Override
+            public String name() {
+                return "foo";
+            }
+        };
 
-    /**
-     * Get the service name
-     * This name is used for enable or not the preloading
-     */
-    public String name();
+        Logger logger = Mockito.mock(Logger.class);
+
+        s.init(logger);
+        s.preload(logger);
+
+        Mockito.verifyNoInteractions(logger);
+    }
 }

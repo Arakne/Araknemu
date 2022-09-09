@@ -80,10 +80,16 @@ class SavingServiceTest extends GameBaseCase {
 
         player.setPosition(new Position(123, 45));
 
-        service.preload(Mockito.mock(Logger.class));
+        service.init(Mockito.mock(Logger.class));
 
         Thread.sleep(100);
 
         assertEquals(new Position(123, 45), dataSet.refresh(new Player(player.id())).position());
+    }
+
+    @Test
+    void name() {
+        SavingService service = container.get(SavingService.class);
+        assertEquals("saving", service.name());
     }
 }

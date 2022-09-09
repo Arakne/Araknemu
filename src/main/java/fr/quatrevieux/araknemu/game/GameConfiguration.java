@@ -129,6 +129,31 @@ public final class GameConfiguration {
     }
 
     /**
+     * Does preload is enabled for the given service
+     * By default this value is true
+     *
+     * In case of submodule (i.e. preload.service.submodule), the preload will be checked on each part.
+     * So if "preload.service" is false, "preload.service.submodule" will be considered as false
+     *
+     * @param service The service name
+     *
+     * @return true if preload is enabled
+     *
+     * @see PreloadableService#name() For the name of the server
+     */
+    public boolean preload(String service) {
+        final String key = "preload." + service;
+
+        for (int pos = key.indexOf('.'); pos != -1; pos = key.indexOf('.', pos + 1)) {
+            if (!pool.bool(key.substring(0, pos), true)) {
+                return false;
+            }
+        }
+
+        return pool.bool(key, true);
+    }
+
+    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {

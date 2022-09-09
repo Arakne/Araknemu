@@ -52,13 +52,18 @@ public final class PlayerExperienceService implements PreloadableService, Events
     }
 
     @Override
-    public void preload(Logger logger) {
+    public void init(Logger logger) {
         logger.info("Loading player experience...");
 
         levels.clear();
         levels.addAll(repository.all());
 
         logger.info("{} player levels loaded", levels.size());
+    }
+
+    @Override
+    public String name() {
+        return "player.experience";
     }
 
     @Override

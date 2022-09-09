@@ -14,30 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game;
+package fr.quatrevieux.araknemu.core;
 
-import fr.quatrevieux.araknemu.core.InitializableService;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Interface for service which can be preloaded on boot
+ * Service which should be initialized on boot
  */
-public interface PreloadableService extends InitializableService {
-    @Override
-    public default void init(Logger logger) {}
-
+public interface InitializableService {
     /**
-     * Preload the service
-     * This method is only called if preload is enabled for the current service
+     * Initialize the service
+     * This method is always called before preload
      */
-    public default void preload(Logger logger) {}
-
-    /**
-     * Get the service name
-     * This name is used for enable or not the preloading
-     */
-    public String name();
+    public void init(Logger logger);
 }

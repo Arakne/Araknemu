@@ -90,4 +90,9 @@ class NpcExchangeServiceTest extends GameBaseCase {
 
         assertTrue(service.load(container.get(NpcTemplateRepository.class).get(878)).isPresent());
     }
+
+    @Test
+    void name() {
+        assertEquals("npc.exchange", service.name());
+    }
 }

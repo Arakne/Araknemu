@@ -56,6 +56,11 @@ public final class PlayerRaceService implements PreloadableService {
         logger.info("{} races loaded", races.size());
     }
 
+    @Override
+    public String name() {
+        return "player.race";
+    }
+
     /**
      * Get a player race data
      */

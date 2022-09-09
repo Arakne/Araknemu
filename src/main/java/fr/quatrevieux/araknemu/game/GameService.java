@@ -72,7 +72,11 @@ public final class GameService implements Service, EventsSubscriber {
         subscribe();
 
         for (PreloadableService service : preloadables) {
-            service.preload(logger);
+            service.init(logger);
+
+            if (configuration.preload(service.name())) {
+                service.preload(logger);
+            }
         }
 
         try {

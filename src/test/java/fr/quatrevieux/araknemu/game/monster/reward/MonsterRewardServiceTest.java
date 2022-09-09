@@ -78,4 +78,9 @@ class MonsterRewardServiceTest extends GameBaseCase {
         assertEquals(0, reward.experience());
         assertCount(0, reward.items());
     }
+
+    @Test
+    void name() {
+        assertEquals("monster.reward", service.name());
+    }
 }

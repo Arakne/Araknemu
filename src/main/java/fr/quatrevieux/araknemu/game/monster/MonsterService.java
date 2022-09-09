@@ -64,6 +64,11 @@ public final class MonsterService implements PreloadableService {
         logger.info("{} monsters loaded", monsters.size());
     }
 
+    @Override
+    public String name() {
+        return "monster";
+    }
+
     /**
      * Load monster grades
      *

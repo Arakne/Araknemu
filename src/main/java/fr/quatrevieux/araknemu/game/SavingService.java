@@ -53,12 +53,17 @@ public final class SavingService implements EventsSubscriber, PreloadableService
     }
 
     @Override
-    public void preload(Logger logger) {
+    public void init(Logger logger) {
         if (!configuration.autosaveEnabled()) {
             return;
         }
 
         scheduleNextSave();
+    }
+
+    @Override
+    public String name() {
+        return "saving";
     }
 
     @Override
