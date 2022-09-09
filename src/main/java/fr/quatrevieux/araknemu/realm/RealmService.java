@@ -20,11 +20,11 @@
 package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.core.BootException;
+import fr.quatrevieux.araknemu.core.InitializableService;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.Server;
-import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.event.AuthStopped;
 import org.apache.logging.log4j.Logger;
@@ -38,11 +38,11 @@ public final class RealmService implements Service {
     private final RealmConfiguration configuration;
     private final Server<RealmSession> server;
     private final Logger logger;
-    private final Collection<PreloadableService> preloadables;
+    private final Collection<InitializableService> preloadables;
     private final ListenerAggregate dispatcher;
     private final Collection<EventsSubscriber> subscribers;
 
-    public RealmService(RealmConfiguration configuration, Server<RealmSession> server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
+    public RealmService(RealmConfiguration configuration, Server<RealmSession> server, Logger logger, ListenerAggregate dispatcher, Collection<InitializableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;
         this.server = server;
         this.logger = logger;
@@ -59,8 +59,8 @@ public final class RealmService implements Service {
             dispatcher.register(subscriber);
         }
 
-        for (PreloadableService service : preloadables) {
-            service.preload(logger);
+        for (InitializableService service : preloadables) {
+            service.init(logger);
         }
 
         try {

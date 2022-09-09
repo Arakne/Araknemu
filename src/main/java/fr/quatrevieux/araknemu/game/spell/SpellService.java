@@ -57,6 +57,11 @@ public final class SpellService implements PreloadableService {
         logger.info("{} spells loaded", spells.size());
     }
 
+    @Override
+    public String name() {
+        return "spell";
+    }
+
     /**
      * Get a spell
      *

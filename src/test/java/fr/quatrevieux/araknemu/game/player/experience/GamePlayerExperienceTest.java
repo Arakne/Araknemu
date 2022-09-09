@@ -49,7 +49,7 @@ class GamePlayerExperienceTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushExperience();
-        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
+        container.get(PlayerExperienceService.class).init(container.get(Logger.class));
 
         player = new Player(1);
         player.setLevel(7);

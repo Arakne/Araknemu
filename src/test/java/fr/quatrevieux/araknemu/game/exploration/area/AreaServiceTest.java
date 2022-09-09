@@ -84,4 +84,9 @@ class AreaServiceTest extends GameBaseCase {
 
         assertTrue(gamePlayer().dispatcher().has(InitializeAreas.class));
     }
+
+    @Test
+    void name() {
+        assertEquals("map.area", service.name());
+    }
 }

@@ -166,4 +166,9 @@ class NpcServiceTest extends GameBaseCase {
 
         assertInstanceOf(GameNpcExchange.class, npc.exchangeFactory(ExchangeType.NPC_EXCHANGE));
     }
+
+    @Test
+    void name() {
+        assertEquals("npc", service.name());
+    }
 }

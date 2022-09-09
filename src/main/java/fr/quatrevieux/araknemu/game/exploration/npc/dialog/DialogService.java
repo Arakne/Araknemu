@@ -77,6 +77,11 @@ public final class DialogService implements PreloadableService {
         logger.info("{} questions loaded", questions.size());
     }
 
+    @Override
+    public String name() {
+        return "npc.dialog";
+    }
+
     /**
      * Get list of questions for a given NPC
      */

@@ -41,8 +41,13 @@ public final class GameBanIpSynchronizer extends AbstractBanIpSynchronizer imple
     }
 
     @Override
-    public void preload(Logger logger) {
+    public void init(Logger logger) {
         startPulling();
+    }
+
+    @Override
+    public String name() {
+        return "banip";
     }
 
     @Override
