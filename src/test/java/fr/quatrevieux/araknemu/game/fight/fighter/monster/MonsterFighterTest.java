@@ -112,7 +112,8 @@ class MonsterFighterTest extends FightBaseCase {
         assertTrue(fighter.ready());
         assertEquals(4, fighter.level());
         assertInstanceOf(Monster.class, fighter.monster());
-        assertFalse(fighter.invoker().isPresent());
+        assertNull(fighter.invoker());
+        assertFalse(fighter.invoked());
 
         assertEquals(new Interval(50, 70), fighter.reward().kamas());
         assertEquals(12, fighter.reward().experience());

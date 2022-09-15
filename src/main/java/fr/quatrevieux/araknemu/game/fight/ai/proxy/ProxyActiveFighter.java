@@ -19,8 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
-import java.util.Optional;
-
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
@@ -179,7 +177,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public Optional<PassiveFighter> invoker() {
+    public @Nullable PassiveFighter invoker() {
         return fighter.invoker();
     }
 }

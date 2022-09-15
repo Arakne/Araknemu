@@ -63,7 +63,7 @@ public final class MonsterInvocationModule implements FightModule {
                     // Remove all invocations of the fighter
                     // Make a copy to ensure that no concurrent modification occur
                     final List<Fighter> invocations = fight.fighters().stream()
-                        .filter(fighter -> fighter.invoker().isPresent() && fighter.invoker().get().equals(event.fighter()))
+                        .filter(fighter -> event.fighter().equals(fighter.invoker()))
                         .collect(Collectors.toList())
                     ;
 
@@ -73,7 +73,7 @@ public final class MonsterInvocationModule implements FightModule {
                     }
 
                     // If the creature is an invocation, delete from turn list
-                    if (event.fighter().invoker().isPresent()) {
+                    if (event.fighter().invoked()) {
                         fight.turnList().remove((Fighter) event.fighter());
                     }
                 }

@@ -94,7 +94,8 @@ class InvocationFighterTest extends FightBaseCase {
         assertEquals(1, fighter.level());
         assertInstanceOf(Monster.class, fighter.monster());
         assertEquals(36, fighter.monster().id());
-        assertSame(player.fighter(), fighter.invoker().get());
+        assertSame(player.fighter(), fighter.invoker());
+        assertTrue(fighter.invoked());
     }
 
     @Test

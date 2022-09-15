@@ -93,7 +93,7 @@ public final class SpellEffectTarget implements EffectTarget {
     }
 
     private boolean checkInvocation(PassiveFighter target) {
-        final boolean isInvocation = target.invoker().isPresent();
+        final boolean isInvocation = target.invoked();
 
         if (check(ONLY_INVOC) && !isInvocation) {
             return false;

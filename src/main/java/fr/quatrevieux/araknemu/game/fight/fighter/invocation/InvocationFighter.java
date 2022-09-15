@@ -34,8 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.Positive;
-
-import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Fighter for invoked monster
@@ -117,8 +116,8 @@ public final class InvocationFighter extends AbstractFighter {
     }
 
     @Override
-    public Optional<PassiveFighter> invoker() {
-        return Optional.of(invoker);
+    public @NonNull PassiveFighter invoker() {
+        return invoker;
     }
 
     /**

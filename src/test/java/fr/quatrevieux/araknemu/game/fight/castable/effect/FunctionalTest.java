@@ -1169,7 +1169,7 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(fight.fighters().contains(invocation));
         assertEquals(1, fight.turnList().fighters().indexOf(invocation));
         assertSame(fighter1.team(), invocation.team());
-        assertSame(fighter1, invocation.invoker().get());
+        assertSame(fighter1, invocation.invoker());
         assertEquals(36, InvocationFighter.class.cast(invocation).monster().id());
         assertSame(fight.map().get(199), invocation.cell());
 

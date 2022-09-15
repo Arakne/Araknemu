@@ -87,7 +87,8 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void invoker() {
-        assertFalse(fighter.invoker().isPresent());
+        assertNull(fighter.invoker());
+        assertFalse(fighter.invoked());
     }
 
     @Test

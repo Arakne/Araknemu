@@ -302,8 +302,8 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public Optional<PassiveFighter> invoker() {
-            return Optional.empty();
+        public PassiveFighter invoker() {
+            return null;
         }
 
     }

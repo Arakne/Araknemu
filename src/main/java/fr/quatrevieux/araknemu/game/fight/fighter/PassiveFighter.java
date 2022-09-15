@@ -19,8 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
-import java.util.Optional;
-
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
@@ -107,8 +105,15 @@ public interface PassiveFighter extends Creature<FightCell> {
 
     /**
      * Get the invoker fighter
-     *
-     * @todo nullable not optional
+     * This value is null if the fighter is not an invocation
      */
-    public Optional<PassiveFighter> invoker();
+    public @Nullable PassiveFighter invoker();
+
+    /**
+     * Does the current fighter is an invocation ?
+     * This is equivalent with {@code fighter.invoker() != null}
+     */
+    public default boolean invoked() {
+        return invoker() != null;
+    }
 }
