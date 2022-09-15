@@ -671,7 +671,7 @@ public final class GameModule implements ContainerModule {
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class)),
-                    fight -> new MonsterInvocationModule(container.get(MonsterService.class), fight)
+                    fight -> new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight)
                 ),
                 container.get(FightService.FightFactory.class),
                 container.get(GameConfiguration.class).fight()
