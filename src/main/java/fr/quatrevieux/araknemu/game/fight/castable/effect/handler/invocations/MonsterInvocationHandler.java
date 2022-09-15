@@ -19,50 +19,60 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
-import java.util.Collections;
-
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope.EffectScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
+import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
-import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 
-final public class MonsterInvocationHandler implements EffectHandler {
-    final private MonsterService monsterService;
-    final private Fight fight;
+/**
+ * Handle monster invocation
+ *
+ * A new fighter will be created and added to fight and timeline (turn list)
+ *
+ * Effect parameters :
+ * - #1 (min) : monster id
+ * - #2 (max) : grade number
+ *
+ * @see InvocationFighter Invoked fighter
+ */
+public final class MonsterInvocationHandler implements EffectHandler {
+     private final MonsterService monsterService;
+     private final FighterFactory fighterFactory;
+     private final Fight fight;
 
-    public MonsterInvocationHandler(MonsterService monsterService, Fight fight) {
+    public MonsterInvocationHandler(MonsterService monsterService, FighterFactory fighterFactory, Fight fight) {
         this.monsterService = monsterService;
+        this.fighterFactory = fighterFactory;
         this.fight = fight;
     }
 
     @Override
     public void buff(CastScope cast, EffectScope effect) {
-        addMonsterToFight(cast, effect); // sadida lvl 100 puppet hit here
+        handle(cast, effect);
     }
 
     @Override
     public void handle(CastScope cast, EffectScope effect) {
-        addMonsterToFight(cast, effect); // normal invocations
-    }
-
-    private void addMonsterToFight(CastScope cast, EffectScope effect) {
-        final Fighter invocation = fight.addInvocation((id) -> new InvocationFighter(
-            new MonsterFighter(
-                id,
-                monsterService.load(effect.effect().min()).get(effect.effect().max()),
-                fight.turnList().currentFighter().team()
-            ),
+        final Fighter invocation = fighterFactory.generate(id -> new InvocationFighter(
+            id,
+            monsterService.load(effect.effect().min()).get(effect.effect().max()),
+            (FightTeam) cast.caster().team(),
             cast.caster()
-        ), cast.target());
+        ));
 
-        fight.send(new ActionEffect(181, cast.caster(), (new AddSprites(Collections.singleton(invocation.sprite()))).toString()));
-        fight.send(new ActionEffect(999, cast.caster(), (new FighterTurnOrder(fight.turnList())).toString()));
+        invocation.joinFight(fight, cast.target());
+        fight.turnList().add(invocation);
+
+        invocation.init();
+
+        fight.send(ActionEffect.addInvocation(cast.caster(), invocation));
+        fight.send(ActionEffect.packet(cast.caster(), new FighterTurnOrder(fight.turnList())));
     }
 }

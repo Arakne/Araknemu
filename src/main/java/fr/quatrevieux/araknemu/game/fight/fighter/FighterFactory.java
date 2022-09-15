@@ -20,6 +20,9 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
+import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 /**
@@ -34,4 +37,23 @@ public interface FighterFactory {
      * @return The PlayerFighter
      */
     public PlayerFighter create(GamePlayer player);
+
+    /**
+     * Create a monster fighter
+     * An unique ID will be generated for the fighter
+     */
+    public Fighter create(Monster monster, FightTeam team);
+
+    /**
+     * Generate a fighter with a unique ID
+     * The generated ID will be a negative integer
+     */
+    public Fighter generate(FighterGenerator generator);
+
+    public static interface FighterGenerator {
+        /**
+         * Create a fighter with a generated ID
+         */
+        public Fighter create(int id);
+    }
 }

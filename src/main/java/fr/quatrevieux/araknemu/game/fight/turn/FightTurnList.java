@@ -51,6 +51,8 @@ public final class FightTurnList {
 
     /**
      * Initialise the fighters order
+     *
+     * @todo remove: initialize in constructor
      */
     public void init(FighterOrderStrategy orderStrategy) {
         if (fighters != null) {
@@ -81,6 +83,8 @@ public final class FightTurnList {
      * Remove a fighter from turn list
      *
      * @param fighter Fighter to remove
+     *
+     * @see TurnListChanged Event triggered after the list is updated
      */
     public void remove(Fighter fighter) {
         if (fighters == null) {
@@ -109,13 +113,19 @@ public final class FightTurnList {
         fight.dispatch(new TurnListChanged(this));
     }
 
+    /**
+     * Add a fighter after the current one
+     *
+     * @param fighter Fighter to add
+     *
+     * @see TurnListChanged Event triggered after the list is updated
+     */
     public void add(Fighter fighter) {
-        if(!active.get()) {
-            return;
+        if (fighters == null) {
+            throw new IllegalStateException("FightTurnList must be initialised");
         }
 
         fighters.add(index + 1, fighter);
-
         fight.dispatch(new TurnListChanged(this));
     }
 
@@ -158,6 +168,13 @@ public final class FightTurnList {
             turn.stop();
             turn = null;
         }
+    }
+
+    /**
+     * @todo remove when init is done on constructor
+     */
+    public boolean isInitialized() {
+        return fighters != null;
     }
 
     /**

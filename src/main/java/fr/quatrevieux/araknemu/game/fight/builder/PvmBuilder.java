@@ -73,7 +73,7 @@ public final class PvmBuilder implements FightBuilder {
             startPlaces,
             number
         ));
-        builder.addTeam((number, startPlaces) -> new MonsterGroupTeam(group, startPlaces, number));
+        builder.addTeam((number, startPlaces) -> new MonsterGroupTeam(group, startPlaces, number, fighterFactory));
 
         return builder.build(fightId);
     }

@@ -29,8 +29,6 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighterFactory;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
@@ -57,6 +55,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Handle fight
@@ -96,7 +95,7 @@ public final class Fight implements Dispatcher, Sender {
         this.spectators = new Spectators(this);
         this.actions = actions;
 
-        teams.forEach(team -> team.setFight(this));
+        teams.forEach(team -> team.setFight(this)); // @todo team factory ?
     }
 
     /**
@@ -135,9 +134,12 @@ public final class Fight implements Dispatcher, Sender {
      * Get all fighters on the fight
      */
     public List<Fighter> fighters() {
-        return teams
-            .stream()
-            .flatMap(fightTeam -> fightTeam.fighters().stream())
+        final Stream<Fighter> fighterStream = turnList.isInitialized()
+            ? turnList.fighters().stream()
+            : teams.stream().flatMap(fightTeam -> fightTeam.fighters().stream())
+        ;
+
+        return fighterStream
             .filter(Fighter::isOnFight)
             .collect(Collectors.toList())
         ;
@@ -151,6 +153,10 @@ public final class Fight implements Dispatcher, Sender {
     public List<Fighter> fighters(boolean onlyInitialized) {
         if (onlyInitialized) {
             return fighters();
+        }
+
+        if (turnList.isInitialized()) {
+            return turnList.fighters();
         }
 
         return teams
@@ -252,10 +258,17 @@ public final class Fight implements Dispatcher, Sender {
      * @see Fight#dispatch(Object) To dispatch on the Fight's listeners
      */
     public void dispatchToAll(Object event) {
-        for (FightTeam team : teams) {
-            for (Fighter fighter : team.fighters()) {
-                if (fighter.isOnFight()) {
-                    fighter.dispatch(event);
+        if (turnList.isInitialized()) {
+            turnList.fighters().stream()
+                .filter(Fighter::isOnFight)
+                .forEach(fighter -> fighter.dispatch(event))
+            ;
+        } else {
+            for (FightTeam team : teams) {
+                for (Fighter fighter : team.fighters()) {
+                    if (fighter.isOnFight()) {
+                        fighter.dispatch(event);
+                    }
                 }
             }
         }
@@ -427,17 +440,5 @@ public final class Fight implements Dispatcher, Sender {
                 executorLock.unlock();
             }
         }
-    }
-
-    public Fighter addInvocation(InvocationFighterFactory factory, FightCell cell) {
-        final Fighter invocation = factory.create(fighters().stream().mapToInt(Fighter::id).min().getAsInt() - 1);
-
-        invocation.joinFight(this, cell);
-        turnList.currentFighter().team().join(invocation);
-        turnList.add(invocation);
-
-        invocation.init();
-
-        return invocation;
     }
 }

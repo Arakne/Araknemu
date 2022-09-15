@@ -86,6 +86,11 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
+    void invoker() {
+        assertFalse(fighter.invoker().isPresent());
+    }
+
+    @Test
     void sprite() {
         assertInstanceOf(PlayerFighterSprite.class, fighter.sprite());
     }

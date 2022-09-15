@@ -105,5 +105,10 @@ public interface PassiveFighter extends Creature<FightCell> {
         return life().dead();
     }
 
+    /**
+     * Get the invoker fighter
+     *
+     * @todo nullable not optional
+     */
     public Optional<PassiveFighter> invoker();
 }

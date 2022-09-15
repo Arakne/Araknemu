@@ -183,7 +183,7 @@ class AIHelperTest extends AiBaseCase {
         );
 
         assertEquals(2, ai.helper().allies().count());
-        assertArrayEquals(new int [] {135, 150}, ai.helper().allies().cells().mapToInt(MapCell::id).toArray());
+        assertArrayEquals(new int [] {135, 150}, ai.helper().allies().cells().mapToInt(MapCell::id).sorted().toArray());
     }
 
     @Test

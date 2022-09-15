@@ -77,7 +77,7 @@ class ProxyBattlefieldTest extends AiBaseCase {
         assertTrue(modified.get(152).walkable());
         assertFalse(modified.get(152).sightBlocking());
 
-        assertSame(ai.fighters().collect(Collectors.toList()).get(1), modified.get(166).fighter().get());
+        assertSame(ai.fighters().collect(Collectors.toList()).get(2), modified.get(166).fighter().get());
         assertTrue(modified.get(166).walkableIgnoreFighter());
         assertFalse(modified.get(166).walkable());
         assertTrue(modified.get(166).sightBlocking());

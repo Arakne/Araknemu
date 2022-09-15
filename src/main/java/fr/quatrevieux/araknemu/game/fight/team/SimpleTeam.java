@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -99,14 +99,7 @@ public final class SimpleTeam implements FightTeam {
 
     @Override
     public void send(Object packet) {
-        fighters.forEach(fighter -> {
-            fighter.apply(new FighterOperation(){
-                @Override
-                public void onPlayer(PlayerFighter player) {
-                    player.send(packet);
-                }
-            });
-        });
+        fighters.forEach(fighter -> fighter.apply(new SendPacket(packet)));
     }
 
     @Override
@@ -125,7 +118,6 @@ public final class SimpleTeam implements FightTeam {
 
     @Override
     public void join(Fighter fighter) throws JoinFightException {
-        // @todo ne pas faire pour une invocation
         if (options != null && !options.allowJoinTeam()) {
             throw new JoinFightException(JoinFightError.TEAM_CLOSED);
         }
@@ -144,15 +136,6 @@ public final class SimpleTeam implements FightTeam {
             @Override
             public void onGenericFighter(Fighter fighter) {
                 throw new JoinFightException(JoinFightError.TEAM_CLOSED);
-            }
-
-            @Override
-            public void onInvocation(InvocationFighter fighter) {
-                if (!fighter.invoker().isPresent()) {
-                    throw new JoinFightException(JoinFightError.TEAM_CLOSED);
-                }
-
-                fighters.add(fighter);
             }
         });
     }

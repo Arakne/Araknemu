@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
@@ -32,10 +33,10 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L520
  */
 public final class MonsterFighterSprite implements Sprite {
-    private final MonsterFighter fighter;
+    private final Fighter fighter;
     private final Monster monster;
 
-    public MonsterFighterSprite(MonsterFighter fighter, Monster monster) {
+    public MonsterFighterSprite(Fighter fighter, Monster monster) {
         this.fighter = fighter;
         this.monster = monster;
     }

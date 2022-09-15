@@ -21,10 +21,14 @@ package fr.quatrevieux.araknemu.game.spell.effect.target;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -102,6 +106,34 @@ class SpellEffectTargetTest extends FightBaseCase {
         assertFalse(et.test(caster, caster));
         assertFalse(et.test(caster, enemy));
         assertTrue(et.test(caster, teammate));
+    }
+
+    @Test
+    void invocation() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        SpellEffectTarget et = new SpellEffectTarget(SpellEffectTarget.NOT_INVOC);
+
+        InvocationFighter invoc = new InvocationFighter(
+            -5, container.get(MonsterService.class).load(36).get(1),
+            caster.team(),
+            caster
+        );
+
+        assertFalse(et.test(caster, invoc));
+        assertTrue(et.test(caster, caster));
+        assertTrue(et.test(caster, enemy));
+        assertTrue(et.test(caster, teammate));
+
+        et = new SpellEffectTarget(SpellEffectTarget.ONLY_INVOC);
+
+        assertTrue(et.test(caster, invoc));
+        assertFalse(et.test(caster, caster));
+        assertFalse(et.test(caster, enemy));
+        assertFalse(et.test(caster, teammate));
     }
 
     @Test

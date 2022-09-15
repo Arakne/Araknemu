@@ -29,6 +29,8 @@ import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
@@ -41,6 +43,7 @@ import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
@@ -132,6 +135,10 @@ class FightTest extends GameBaseCase {
         new PlacementState().start(fight);
 
         assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(true));
+
+        fight.turnList().init(new AlternateTeamFighterOrder());
+        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
+        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
     }
 
     @Test
@@ -400,5 +407,36 @@ class FightTest extends GameBaseCase {
         fight.dispatchToAll(new Foo());
 
         assertEquals(3, ai.get());
+    }
+
+    @Test
+    void dispatchToAllWithInitializedTurnList() throws SQLException {
+        dataSet
+            .pushMonsterSpellsInvocations()
+            .pushMonsterTemplateInvocations()
+        ;
+
+        class Foo {}
+        AtomicInteger ai = new AtomicInteger();
+
+        Spectator spectator = new Spectator(makeSimpleGamePlayer(10), fight);
+        spectator.join();
+
+        new PlacementState().start(fight); // Init cell to ensure that Fighter#isOnFight() is true
+        fight.turnList().init(new AlternateTeamFighterOrder());
+
+        InvocationFighter invoc = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);
+        fight.turnList().add(invoc);
+        invoc.joinFight(fight, fight.map().get(122));
+        invoc.init();
+
+        fighter1.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+        fighter2.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+        invoc.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+        spectator.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+
+        fight.dispatchToAll(new Foo());
+
+        assertEquals(4, ai.get());
     }
 }

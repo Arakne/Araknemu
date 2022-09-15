@@ -23,24 +23,35 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.MonsterInvocationHandler;
-import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 
-public class MonsterInvocationModule implements FightModule {
-    final private MonsterService monsterService;
-    final private Fight fight;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public MonsterInvocationModule(MonsterService monsterService, Fight fight) {
+/**
+ * Module for enable invocation effects
+ *
+ * @see MonsterInvocationHandler
+ */
+public final class MonsterInvocationModule implements FightModule {
+    private final MonsterService monsterService;
+    private final FighterFactory fighterFactory;
+    private final Fight fight;
+
+    public MonsterInvocationModule(MonsterService monsterService, FighterFactory fighterFactory, Fight fight) {
         this.monsterService = monsterService;
+        this.fighterFactory = fighterFactory;
         this.fight = fight;
     }
 
     @Override
     public void effects(EffectsHandler handler) {
         // moving creatures
-        handler.register(181, new MonsterInvocationHandler(monsterService, fight));
+        handler.register(181, new MonsterInvocationHandler(monsterService, fighterFactory, fight));
     }
 
     @Override
@@ -49,33 +60,27 @@ public class MonsterInvocationModule implements FightModule {
             new Listener<FighterDie>() {
                 @Override
                 public void on(FighterDie event) {
-                    fight.fighters().forEach(fighter -> {
-                        if (fighter.invoker().isPresent() && fighter.invoker().get().equals(event.fighter())) {
-                            fighter.life().kill((ActiveFighter) event.fighter());
-                            fight.turnList().remove(fighter);
-                        }
-                    });
+                    // Remove all invocations of the fighter
+                    // Make a copy to ensure that no concurrent modification occur
+                    final List<Fighter> invocations = fight.fighters().stream()
+                        .filter(fighter -> fighter.invoker().isPresent() && fighter.invoker().get().equals(event.fighter()))
+                        .collect(Collectors.toList())
+                    ;
+
+                    if (!invocations.isEmpty()) {
+                        // Kill all invocations asynchronously
+                        fight.execute(() -> invocations.forEach(fighter -> fighter.life().kill((ActiveFighter) event.caster())));
+                    }
+
+                    // If the creature is an invocation, delete from turn list
+                    if (event.fighter().invoker().isPresent()) {
+                        fight.turnList().remove((Fighter) event.fighter());
+                    }
                 }
 
                 @Override
                 public Class<FighterDie> event() {
                     return FighterDie.class;
-                }
-            },
-
-            new Listener<FightStopped>() {
-                @Override
-                public void on(FightStopped event) {
-                    event.fight().fighters().forEach(fighter -> {
-                        if (fighter.invoker().isPresent()) {
-                            fighter.team().kick(fighter);
-                        }
-                    });
-                }
-
-                @Override
-                public Class<FightStopped> event() {
-                    return FightStopped.class;
                 }
             },
         };

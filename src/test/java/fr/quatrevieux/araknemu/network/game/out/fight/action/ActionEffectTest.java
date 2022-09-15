@@ -19,18 +19,23 @@
 
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ActionEffectTest {
+class ActionEffectTest extends FightBaseCase {
     @Test
     void usedMovementPoints() {
         Fighter fighter = Mockito.mock(Fighter.class);
@@ -363,5 +368,27 @@ class ActionEffectTest {
         Mockito.when(target.id()).thenReturn(123);
 
         assertEquals("GA;150;456;123,0", ActionEffect.fighterVisible(caster, target).toString());
+    }
+
+    @Test
+    void addInvocation() throws Exception {
+        dataSet
+            .pushMonsterTemplates()
+            .pushMonsterSpells()
+        ;
+
+        Fight fight = createFight();
+        InvocationFighter fighter = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(2), fight.team(0), fight.fighters().get(0));
+        fighter.joinFight(fight, fight.map().get(118));
+
+        assertEquals("GA;181;1;+118;1;0;-5;36;-2;1566^100;2;-1;-1;-1;0,0,0,0;60;5;3;30;0;-10;7;-45;16;16;0", ActionEffect.addInvocation(fight.fighters().get(0), fighter).toString());
+    }
+
+    @Test
+    void packet() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        assertEquals("GA;999;456;BN", ActionEffect.packet(caster, new Noop()).toString());
     }
 }
