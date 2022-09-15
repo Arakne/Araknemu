@@ -51,6 +51,7 @@ public final class InvocationFighter extends AbstractFighter {
     private final FighterSpellList spells;
     private final PassiveFighter invoker;
 
+    @SuppressWarnings({"assignment", "argument"})
     public InvocationFighter(int id, Monster monster, FightTeam team, PassiveFighter invoker) {
         this.id = id;
         this.monster = monster;
