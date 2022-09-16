@@ -186,6 +186,17 @@ public final class Error extends AbstractInformationMessage {
     }
 
     /**
+     * Cannot cast the invocation spell : maximum summoned created number is reached
+     *
+     * @param max Actual maximum summoned creatures
+     *
+     * @see fr.quatrevieux.araknemu.data.constant.Characteristic#MAX_SUMMONED_CREATURES Characteristic value to pass as parameter
+     */
+    public static Error cantCastMaxSummonedCreaturesReached(int max) {
+        return new Error(203, max);
+    }
+
+    /**
      * Create and cache a simple Error with a code
      *
      * @param code The error code

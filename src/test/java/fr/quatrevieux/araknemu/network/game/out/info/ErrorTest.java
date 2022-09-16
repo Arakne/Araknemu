@@ -134,4 +134,9 @@ class ErrorTest {
     void cantJoinFightAsSpectator() {
         assertEquals("Im157;", Error.cantJoinFightAsSpectator().toString());
     }
+
+    @Test
+    void cantCastMaxSummonedCreaturesReached() {
+        assertEquals("Im1203;5", Error.cantCastMaxSummonedCreaturesReached(5).toString());
+    }
 }

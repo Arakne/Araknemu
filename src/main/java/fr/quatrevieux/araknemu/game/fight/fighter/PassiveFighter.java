@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
@@ -74,6 +75,12 @@ public interface PassiveFighter extends Creature<FightCell> {
      * Get the fighter team
      */
     public Team<? extends PassiveFighter> team();
+
+    /**
+     * Get the related fight
+     * @todo interface
+     */
+    public Fight fight();
 
     /**
      * Check the hidden state of the fighter

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
@@ -124,6 +125,11 @@ public final class ProxyActiveFighter implements ActiveFighter {
     @Override
     public Team<? extends PassiveFighter> team() {
         return fighter.team();
+    }
+
+    @Override
+    public Fight fight() {
+        return fighter.fight();
     }
 
     @Override
