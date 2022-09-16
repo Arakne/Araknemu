@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
@@ -107,6 +108,11 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
+    public Fight fight() {
+        return fighter.fight();
+    }
+
+    @Override
     public boolean dead() {
         return fighter.dead();
     }
@@ -139,5 +145,10 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     @Override
     public int hashCode() {
         return fighter.hashCode();
+    }
+
+    @Override
+    public @Nullable PassiveFighter invoker() {
+        return fighter.invoker();
     }
 }

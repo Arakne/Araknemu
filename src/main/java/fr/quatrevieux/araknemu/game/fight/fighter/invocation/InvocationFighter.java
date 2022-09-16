@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.fighter.monster;
+package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
@@ -28,37 +28,66 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
-import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.Positive;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * Fighter for a monster
+ * Fighter for invoked monster
+ * Its characteristics are modified by the invoker level
  */
-public final class MonsterFighter extends AbstractFighter {
+public final class InvocationFighter extends AbstractFighter {
     private final int id;
     private final Monster monster;
     private final FightTeam team;
-
     private final BaseFighterLife life;
-    private final MonsterFighterCharacteristics characteristics;
+    private final FighterCharacteristics characteristics;
     private final MonsterFighterSprite sprite;
     private final FighterSpellList spells;
+    private final PassiveFighter invoker;
 
     @SuppressWarnings({"assignment", "argument"})
-    public MonsterFighter(int id, Monster monster, FightTeam team) {
+    public InvocationFighter(int id, Monster monster, FightTeam team, PassiveFighter invoker) {
         this.id = id;
         this.monster = monster;
         this.team = team;
+        this.invoker = invoker;
 
-        this.life = new BaseFighterLife(this, monster.life());
-        this.characteristics = new MonsterFighterCharacteristics(monster, this);
+        this.life = new BaseFighterLife(this, Math.round(monster.life() * InvocationFighterCharacteristics.modifier(invoker)));
+        this.characteristics = new InvocationFighterCharacteristics(monster, this, invoker);
         this.sprite = new MonsterFighterSprite(this, monster);
         this.spells = new BaseFighterSpellList(monster.spells());
+    }
+
+    @Override
+    public <O extends FighterOperation> O apply(O operation) {
+        operation.onInvocation(this);
+
+        return operation;
+    }
+
+    @Override
+    public @Positive int level() {
+        return monster.level();
+    }
+
+    @Override
+    public boolean ready() {
+        return true;
+    }
+
+    @Override
+    public FightTeam team() {
+        return team;
+    }
+
+    @Override
+    public CastableWeapon weapon() {
+        throw new FightException("The fighter do not have any weapon");
     }
 
     @Override
@@ -72,8 +101,8 @@ public final class MonsterFighter extends AbstractFighter {
     }
 
     @Override
-    public FighterLife life() {
-        return life;
+    public FighterSpellList spells() {
+        return spells;
     }
 
     @Override
@@ -82,55 +111,19 @@ public final class MonsterFighter extends AbstractFighter {
     }
 
     @Override
-    public FighterSpellList spells() {
-        return spells;
+    public FighterLife life() {
+        return life;
     }
 
     @Override
-    public CastableWeapon weapon() {
-        throw new FightException("The fighter do not have any weapon");
-    }
-
-    @Override
-    public @Positive int level() {
-        return monster.level();
-    }
-
-    @Override
-    public FightTeam team() {
-        return team;
-    }
-
-    @Override
-    public boolean ready() {
-        return true;
-    }
-
-    @Override
-    public <O extends FighterOperation> O apply(O operation) {
-        operation.onMonster(this);
-
-        return operation;
+    public @NonNull PassiveFighter invoker() {
+        return invoker;
     }
 
     /**
-     * Get the end fight rewards
-     *
-     * @see Monster#reward()
-     */
-    public MonsterReward reward() {
-        return monster.reward();
-    }
-
-    /**
-     * Get the monster data for the fighter
+     * Get the invoked monster
      */
     public Monster monster() {
         return monster;
-    }
-
-    @Override
-    public @Nullable PassiveFighter invoker() {
-        return null;
     }
 }

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -49,20 +50,29 @@ public final class MonsterAiFactory implements AiFactory<Fighter> {
 
         @Override
         public void onMonster(MonsterFighter fighter) {
-            final AiFactory<Fighter> factory = factories.get(fighter.monster().ai());
+            resolve(fighter, fighter.monster().ai());
+        }
+
+        @Override
+        public void onInvocation(InvocationFighter fighter) {
+            resolve(fighter, fighter.monster().ai());
+        }
+
+        public Optional<AI<Fighter>> get() {
+            return Optional.ofNullable(ai);
+        }
+
+        private void resolve(Fighter fighter, String type) {
+            final AiFactory<Fighter> factory = factories.get(type);
 
             if (factory == null) {
-                throw new IllegalArgumentException("Unsupported AI type " + fighter.monster().ai());
+                throw new IllegalArgumentException("Unsupported AI type " + type);
             }
 
             factory
                 .create(fighter)
                 .ifPresent(ai -> this.ai = ai)
             ;
-        }
-
-        public Optional<AI<Fighter>> get() {
-            return Optional.ofNullable(ai);
         }
     }
 }

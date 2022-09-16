@@ -225,7 +225,8 @@ public class FightBaseCase extends GameBaseCase {
                 new Position(0, 0)
             ),
             Arrays.asList(map.get(125), map.get(126), map.get(127)),
-            1
+            1,
+            container.get(FighterFactory.class)
         );
     }
 

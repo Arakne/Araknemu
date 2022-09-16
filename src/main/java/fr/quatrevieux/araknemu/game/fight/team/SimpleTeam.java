@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -39,7 +40,7 @@ import java.util.List;
  */
 public final class SimpleTeam implements FightTeam {
     private final PlayerFighter leader;
-    private final List<PlayerFighter> fighters;
+    private final List<Fighter> fighters;
     private final List<FightCell> startPlaces;
     private final int number;
 
@@ -98,7 +99,7 @@ public final class SimpleTeam implements FightTeam {
 
     @Override
     public void send(Object packet) {
-        fighters.forEach(fighter -> fighter.send(packet));
+        fighters.forEach(fighter -> fighter.apply(new SendPacket(packet)));
     }
 
     @Override

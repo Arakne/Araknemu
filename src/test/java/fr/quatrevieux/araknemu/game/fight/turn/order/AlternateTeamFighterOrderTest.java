@@ -46,6 +46,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -299,6 +300,12 @@ class AlternateTeamFighterOrderTest extends TestCase {
         public <O extends FighterOperation> O apply(O operation) {
             return operation;
         }
+
+        @Override
+        public PassiveFighter invoker() {
+            return null;
+        }
+
     }
 
     @Test

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
@@ -76,6 +77,12 @@ public interface PassiveFighter extends Creature<FightCell> {
     public Team<? extends PassiveFighter> team();
 
     /**
+     * Get the related fight
+     * @todo interface
+     */
+    public Fight fight();
+
+    /**
      * Check the hidden state of the fighter
      * If true, cell must not be sent to other fighters, movement actions must be hidden
      * and AI should ignore fighter position
@@ -101,5 +108,19 @@ public interface PassiveFighter extends Creature<FightCell> {
      */
     public default boolean dead() {
         return life().dead();
+    }
+
+    /**
+     * Get the invoker fighter
+     * This value is null if the fighter is not an invocation
+     */
+    public @Nullable PassiveFighter invoker();
+
+    /**
+     * Does the current fighter is an invocation ?
+     * This is equivalent with {@code fighter.invoker() != null}
+     */
+    public default boolean invoked() {
+        return invoker() != null;
     }
 }

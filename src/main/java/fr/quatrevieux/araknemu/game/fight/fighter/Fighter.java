@@ -102,9 +102,7 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
         attach(value.getClass(), value);
     }
 
-    /**
-     * Get the fight
-     */
+    @Override
     public Fight fight();
 
     @Override

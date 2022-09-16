@@ -86,6 +86,12 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
+    void invoker() {
+        assertNull(fighter.invoker());
+        assertFalse(fighter.invoked());
+    }
+
+    @Test
     void sprite() {
         assertInstanceOf(PlayerFighterSprite.class, fighter.sprite());
     }

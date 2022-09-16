@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.spell;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ConstraintsAggregateValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.InvocationCountValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.LineLaunchValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.LineOfSightValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.RangeValidator;
@@ -50,6 +51,7 @@ public final class SpellConstraintsValidator implements CastConstraintValidator<
             new RangeValidator(),
             new SpellLaunchValidator(),
             new LineOfSightValidator(),
+            new InvocationCountValidator(), // @todo instantiate from injection module instead with effect ids
         });
     }
 

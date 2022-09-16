@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.spell.effect.target;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.team.Team;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
@@ -51,23 +52,10 @@ public final class SpellEffectTarget implements EffectTarget {
 
     @Override
     public boolean test(ActiveFighter caster, PassiveFighter fighter) {
-        if (check(NOT_TEAM) && caster.team().equals(fighter.team())) {
-            return false;
-        }
-
-        if (check(NOT_SELF) && caster.equals(fighter)) {
-            return false;
-        }
-
-        if (check(NOT_ENEMY) && !caster.team().equals(fighter.team())) {
-            return false;
-        }
-
-        if (check(ONLY_INVOC)) {
-            return false;
-        }
-
-        return true;
+        return checkSelf(caster, fighter)
+            && checkTeam(caster.team(), fighter.team())
+            && checkInvocation(fighter)
+        ;
     }
 
     private boolean check(int flag) {
@@ -90,5 +78,35 @@ public final class SpellEffectTarget implements EffectTarget {
     @Override
     public int hashCode() {
         return Objects.hash(flags);
+    }
+
+    private boolean checkTeam(Team<?> casterTeam, Team<?> targetTeam) {
+        if (check(NOT_TEAM) && casterTeam.equals(targetTeam)) {
+            return false;
+        }
+
+        if (check(NOT_ENEMY) && !casterTeam.equals(targetTeam)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkInvocation(PassiveFighter target) {
+        final boolean isInvocation = target.invoked();
+
+        if (check(ONLY_INVOC) && !isInvocation) {
+            return false;
+        }
+
+        if (check(NOT_INVOC) && isInvocation) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkSelf(ActiveFighter caster, PassiveFighter target) {
+        return !check(NOT_SELF) || !caster.equals(target);
     }
 }

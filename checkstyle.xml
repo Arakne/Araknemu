@@ -275,7 +275,7 @@
     <!-- Ignore fight classes -->
     <module name="SuppressionSingleFilter">
         <property name="checks" value="MethodCountCheck" />
-        <property name="files" value="game.fight.Fight" />
+        <property name="files" value="(game.fight.Fight|out.fight.action.ActionEffect)" />
     </module>
     <module name="SuppressionSingleFilter">
         <property name="checks" value="ParameterNumberCheck" />

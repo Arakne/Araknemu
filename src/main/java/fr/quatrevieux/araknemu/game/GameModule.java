@@ -224,6 +224,7 @@ import fr.quatrevieux.araknemu.network.game.GamePacketConfigurator;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
+import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -669,7 +670,8 @@ public final class GameModule implements ContainerModule {
                     StatesModule::new,
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
-                    fight -> new AiModule(container.get(AiFactory.class))
+                    fight -> new AiModule(container.get(AiFactory.class)),
+                    fight -> new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight)
                 ),
                 container.get(FightService.FightFactory.class),
                 container.get(GameConfiguration.class).fight()

@@ -14,39 +14,30 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.fighter.monster;
+package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
-import fr.arakne.utils.value.Interval;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
-import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
+import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
-import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
-import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
-import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
-import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
-import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -54,16 +45,22 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MonsterFighterTest extends FightBaseCase {
-    private MonsterFighter fighter;
-    private MonsterGroupTeam team;
+class InvocationFighterTest extends FightBaseCase {
+    private InvocationFighter fighter;
+    private FightTeam team;
+    private Fight fight;
 
     @Override
     @BeforeEach
@@ -72,51 +69,33 @@ class MonsterFighterTest extends FightBaseCase {
 
         dataSet
             .pushMonsterTemplates()
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
             .pushMonsterSpells()
         ;
 
+        fight = createFight();
+        team = fight.team(0);
+
         MonsterService service = container.get(MonsterService.class);
-
-        team = new MonsterGroupTeam(
-            new MonsterGroup(
-                new LivingMonsterGroupPosition(
-                    container.get(MonsterGroupFactory.class),
-                    container.get(MonsterEnvironmentService.class),
-                    container.get(FightService.class),
-                    new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0), false),
-                    new RandomCellSelector(), false
-                ),
-                5,
-                Collections.singletonList(service.load(31).all().get(2)),
-                Direction.WEST,
-                container.get(ExplorationMapService.class).load(10340).get(123),
-                new Position(0, 0)
-            ),
-            Collections.singletonList(loadFightMap(10340).get(123)),
-            1,
-            container.get(FighterFactory.class)
-        );
-
-        fighter = (MonsterFighter) team.fighters().stream().findFirst().get();
+        fighter = new InvocationFighter(-5, service.load(36).get(1), team, player.fighter());
     }
 
     @Test
     void values() {
         assertSame(team, fighter.team());
-        assertEquals(-1, fighter.id());
+        assertEquals(-5, fighter.id());
         assertEquals(Direction.SOUTH_EAST, fighter.orientation());
         assertFalse(fighter.dead());
         assertThrows(FightException.class, fighter::weapon);
         assertInstanceOf(BuffList.class, fighter.buffs());
         assertInstanceOf(States.class, fighter.states());
         assertTrue(fighter.ready());
-        assertEquals(4, fighter.level());
+        assertEquals(1, fighter.level());
         assertInstanceOf(Monster.class, fighter.monster());
-        assertNull(fighter.invoker());
-        assertFalse(fighter.invoked());
-
-        assertEquals(new Interval(50, 70), fighter.reward().kamas());
-        assertEquals(12, fighter.reward().experience());
+        assertEquals(36, fighter.monster().id());
+        assertSame(player.fighter(), fighter.invoker());
+        assertTrue(fighter.invoked());
     }
 
     @Test
@@ -207,7 +186,7 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.joinFight(fight, fight.map().get(123));
 
         assertInstanceOf(MonsterFighterSprite.class, fighter.sprite());
-        assertEquals("123;1;0;-1;31;-2;1563^100;3;-1;-1;-1;0,0,0,0;20;4;2;3;7;7;-7;-7;7;5;1", fighter.sprite().toString());
+        assertEquals("123;1;0;-5;36;-2;1566^100;1;-1;-1;-1;0,0,0,0;45;5;3;25;0;-12;6;-50;15;15;0", fighter.sprite().toString());
     }
 
     @Test
@@ -246,7 +225,7 @@ class MonsterFighterTest extends FightBaseCase {
 
     @Test
     void spells() {
-        assertIterableEquals(fighter.spells(), container.get(MonsterService.class).load(31).all().get(2).spells());
+        assertIterableEquals(fighter.spells(), container.get(MonsterService.class).load(36).all().get(0).spells());
     }
 
     @Test
@@ -293,7 +272,7 @@ class MonsterFighterTest extends FightBaseCase {
         FighterOperation operation = Mockito.mock(FighterOperation.class);
 
         assertSame(operation, fighter.apply(operation));
-        Mockito.verify(operation).onMonster(fighter);
+        Mockito.verify(operation).onInvocation(fighter);
     }
 
     @Test

@@ -86,7 +86,8 @@ class BaseFighterLifeTest extends FightBaseCase {
                 new Position(0, 0)
             ),
             Collections.singletonList(loadFightMap(10340).get(123)),
-            1
+            1,
+            container.get(FighterFactory.class)
         );
 
         fighter = (MonsterFighter) team.fighters().stream().findFirst().get();

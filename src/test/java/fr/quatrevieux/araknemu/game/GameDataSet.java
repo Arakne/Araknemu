@@ -525,6 +525,7 @@ public class GameDataSet extends TestingDataSet {
                 "(64, 'Repérage', 0, '10,1,1', '202,,,,0,0;117,1,,,2,0,0d0+1|202,,,,0,0;117,2,,,2,0,0d0+2|2|0|1|30|100|false|true|false|true|0|0|0|7|CgPaCgPa||18;19;3;1;41|17|false', '202,,,,0,0;117,1,,,2,0,0d0+1|202,,,,0,0;117,2,,,2,0,0d0+2|2|0|2|30|100|false|true|false|true|0|0|0|6|CgPaCgPa||18;19;3;1;41|17|false', '202,,,,0,0;117,1,,,2,0,0d0+1|202,,,,0,0;117,2,,,2,0,0d0+2|2|0|3|30|100|false|true|false|true|0|0|0|5|CgPaCgPa||18;19;3;1;41|17|false', '202,,,,0,0;117,1,,,2,0,0d0+1|202,,,,0,0;117,2,,,2,0,0d0+2|2|0|4|30|100|false|true|false|true|0|0|0|4|CgPaCgPa||18;19;3;1;41|17|false', '202,,,,0,0;117,1,,,2,0,0d0+1|202,,,,0,0;117,2,,,2,0,0d0+2|2|0|5|30|100|false|true|false|true|0|0|0|3|CgPaCgPa||18;19;3;1;41|17|false', '202,,,,0,0;117,1,,,2,0,0d0+1|202,,,,0,0;117,2,,,2,0,0d0+2|2|0|6|30|100|false|true|false|true|0|0|0|2|CiPaCiPa||18;19;3;1;41|117|false', '3;32')",
                 "(130, 'Mot Revitalisant', 703, '11,1,1', '108,1,5,,0,0,1d5+0|108,6,,,0,0,0d0+6|3|0|4|50|100|false|true|false|true|0|3|0|0|CcCc||50;18;19;3;1;41|21|false', '108,1,6,,0,0,1d6+0|108,7,,,0,0,0d0+7|3|0|4|50|100|false|true|false|true|0|3|0|0|CcCc||50;18;19;3;1;41|21|false', '108,1,7,,0,0,1d7+0|108,8,,,0,0,0d0+8|3|0|4|50|100|false|true|false|true|0|3|0|0|CdCd||50;18;19;3;1;41|21|false', '108,1,8,,0,0,1d8+0|108,9,,,0,0,0d0+9|3|0|4|50|100|false|true|false|true|0|3|0|0|CdCd||50;18;19;3;1;41|21|false', '108,1,9,,0,0,1d9+0|108,10,,,0,0,0d0+10|2|0|4|50|100|false|true|false|true|0|3|0|0|CdCd||50;18;19;3;1;41|21|false', '108,7,11,,0,0,1d5+6|108,12,,,0,0,0d0+12|2|0|4|50|100|false|true|false|true|0|3|0|0|CdCd||50;18;19;3;1;41|121|false', '')",
                 "(102, 'Pile ou Face', 601, '31,1,1', '97,4,11,,0,0,1d8+3;108,1,7,,0,0,1d7+0;108,6,10,,0,0,1d5+5|97,4,12,,0,0,1d9+3;108,1,3,,0,0,1d3+0;108,11,15,,0,0,1d5+10|3|0|5|50|100|false|true|false|true|0|0|0|0|PaPaPaPaPaPa||18;19;3;1;41|1|false', '97,4,12,,0,0,1d9+3;108,2,9,,0,0,1d8+1;108,6,12,,0,0,1d7+5|97,4,13,,0,0,1d10+3;108,1,4,,0,0,1d4+0;108,13,17,,0,0,1d5+12|3|0|5|50|100|false|true|false|true|0|0|0|0|PaPaPaPaPaPa||18;19;3;1;41|1|false', '97,4,13,,0,0,1d10+3;108,2,9,,0,0,1d8+1;108,6,14,,0,0,1d9+5|97,4,14,,0,0,1d11+3;108,1,4,,0,0,1d4+0;108,15,19,,0,0,1d5+14|3|0|6|50|100|false|true|false|true|0|0|0|0|PaPaPaPaPaPa||18;19;3;1;41|1|false', '97,4,14,,0,0,1d11+3;108,3,10,,0,0,1d8+2;108,6,16,,0,0,1d11+5|97,4,15,,0,0,1d12+3;108,1,5,,0,0,1d5+0;108,17,21,,0,0,1d5+16|3|0|6|50|100|false|true|false|true|0|0|0|0|PaPaPaPaPaPa||18;19;3;1;41|1|false', '97,4,15,,0,0,1d12+3;108,4,11,,0,0,1d8+3;108,6,18,,0,0,1d13+5|97,4,17,,0,0,1d14+3;108,1,5,,0,0,1d5+0;108,19,23,,0,0,1d5+18|3|0|7|50|100|false|true|false|true|0|0|0|0|PaPaPaPaPaPa||18;19;3;1;41|1|false', '97,6,19,,0,0,1d14+5;108,5,12,,0,0,1d8+4;108,8,22,,0,0,1d15+7|97,9,24,,0,0,1d16+8;108,1,5,,0,0,1d5+0;108,23,27,,0,0,1d5+22|3|0|7|50|100|false|true|false|true|0|0|0|0|PaPaPaPaPaPa||18;19;3;1;41|101|false', '0;1;4')",
+                "(35, 'Invocation de Bouftou', 1100, '11,1,1', '181,36,1,,0,0||6|1|1|0|0|true|true|true|false|0|0|0|5|Pa||18;19;3;1;41|9|false', '181,36,2,,0,0||6|1|1|0|0|true|true|true|false|0|0|0|5|Pa||18;19;3;1;41|9|true', '181,36,3,,0,0||6|1|1|0|0|true|true|true|false|0|0|0|5|Pa||18;19;3;1;41|9|true', '181,36,4,,0,0||6|1|1|0|0|true|true|true|false|0|0|0|4|Pa||18;19;3;1;41|9|true', '181,36,5,,0,0||6|1|1|0|0|true|true|true|false|0|0|0|3|Pa||18;19;3;1;41|9|true', '181,36,6,,0,0||4|1|1|0|0|true|true|true|false|0|0|0|2|Pa||18;19;3;1;41|109|false', '')",
             }, ",") + ";"
         );
 
@@ -909,6 +910,40 @@ public class GameDataSet extends TestingDataSet {
         );
 
         pushRewardItems();
+
+        return this;
+    }
+
+    public GameDataSet pushMonsterTemplateInvocations() throws SQLException, ContainerException {
+        if (repository(MonsterTemplate.class).has(new MonsterTemplate(36, null, 0, null, null, null))) {
+            return this;
+        }
+
+        connection.query(
+            "INSERT OR IGNORE INTO `MONSTER_TEMPLATE` (`MONSTER_ID`, `MONSTER_NAME`, `GFXID`, `COLORS`, `AI`, `CHARACTERISTICS`, `LIFE_POINTS`, `INITIATIVES`, `SPELLS`) VALUES " +
+                "(36, 'Bouftou', 1566, '-1,-1,-1', 'AGGRESSIVE', '1@v:p;1f:-c;17:6;1b:-1i;s:f;t:f;a:2g;c:1s;f:2g;d:2g;e:26;8:5;9:3;|2@v:u;1f:-a;17:7;1b:-1d;s:g;t:g;a:2l;c:21;f:2l;d:2l;e:2b;8:5;9:3;|3@v:13;1f:-9;17:8;1b:-18;s:h;t:h;a:2q;c:26;f:2q;d:2q;e:2b;8:5;9:3;|4@v:18;1f:-8;17:9;1b:-13;s:i;t:i;a:2v;c:2l;f:2v;d:2v;e:2b;8:5;9:3;|5@v:1d;1f:-7;17:a;1b:-u;s:k;t:k;a:34;c:2q;f:34;d:34;e:2g;8:5;9:4;|6@v:1i;1f:-6;17:c;1b:-p;s:p;t:p;a:4m;c:4m;f:4m;d:7q;e:7q;8:6;9:4;', '30|40|50|60|70|140', '12|15|20|21|23|25', '2000@1;202@1;1709@1|2000@2;202@2;1709@2|2000@3;202@3;1709@3|2000@4;202@4;1709@4|2000@5;202@5;1709@5|2000@6;1709@6')"
+        );
+
+        use(MonsterRewardData.class, MonsterRewardItem.class);
+
+        connection.query(
+            "INSERT INTO `MONSTER_REWARD` (`MONSTER_ID`, `MIN_KAMAS`, `MAX_KAMAS`, `EXPERIENCES`) VALUES " +
+                "(36, 0, 0, '5|7|9|12|14|16')"
+        );
+
+        return this;
+    }
+
+    public GameDataSet pushMonsterSpellsInvocations() throws SQLException, ContainerException {
+        if (repository(SpellTemplate.class).has(new SpellTemplate(1709, null, 0, null, null, null))) {
+            return this;
+        }
+
+        connection.query(
+            "INSERT OR IGNORE INTO `SPELL` (`SPELL_ID`, `SPELL_NAME`, `SPELL_SPRITE`, `SPELL_SPRITE_ARG`, `SPELL_LVL_1`, `SPELL_LVL_2`, `SPELL_LVL_3`, `SPELL_LVL_4`, `SPELL_LVL_5`, `SPELL_LVL_6`, `SPELL_TARGET`) VALUES\n" +
+                "(1709, 'Contusion', 0, '0,1,1', '100,5,7,,0,0,1d3+4;950,,,7,1,0|100,10,,,0,0,0d0+10;950,,,7,1,0|4|1|1|50|100|false|true|false|false|0|0|0|3|PaPaPaPa||18;19;3;1;41|0|false', '100,7,9,,0,0,1d3+6;950,,,7,1,0|100,12,,,0,0,0d0+12;950,,,7,1,0|4|1|1|50|100|false|true|false|false|0|0|0|3|PaPaPaPa||18;19;3;1;41|0|false', '100,9,11,,0,0,1d3+8;950,,,7,1,0|100,14,,,0,0,0d0+14;950,,,7,1,0|4|1|1|50|100|false|true|false|false|0|0|0|3|PaPaPaPa||18;19;3;1;41|0|false', '100,11,13,,0,0,1d3+10;950,,,7,1,0|100,16,,,0,0,0d0+16;950,,,7,1,0|4|1|1|50|100|false|true|false|false|0|0|0|3|PaPaPaPa||18;19;3;1;41|0|false', '100,12,14,,0,0,1d3+11;950,,,7,1,0|100,17,,,0,0,0d0+17;950,,,7,1,0|4|1|1|50|100|false|true|false|false|0|0|0|3|PaPaPaPa||18;19;3;1;41|0|false', '100,13,15,,0,0,1d3+12;950,,,7,1,0|100,18,,,0,0,0d0+18;950,,,7,1,0|4|1|1|50|100|false|true|false|false|0|0|0|3|PaPaPaPa||18;19;3;1;41|0|false', '')," +
+                "(2000, 'Morsure du Bouftou', 0, '0,1,1', '100,4,7,,0,0,1d4+3|100,10,,,0,0,0d0+10|4|1|1|50|100|false|true|false|false|0|3|0|0|PaPa||18;19;3;1;41|0|false', '100,6,9,,0,0,1d4+5|100,12,,,0,0,0d0+12|4|1|1|50|100|false|true|false|false|0|3|0|0|PaPa||18;19;3;1;41|0|false', '100,8,11,,0,0,1d4+7|100,14,,,0,0,0d0+14|4|1|1|50|100|false|true|false|false|0|3|0|0|PaPa||18;19;3;1;41|0|false', '100,10,13,,0,0,1d4+9|100,16,,,0,0,0d0+16|4|1|1|50|100|false|true|false|false|0|3|0|0|PaPa||18;19;3;1;41|0|false', '100,11,14,,0,0,1d4+10|100,17,,,0,0,0d0+17|4|1|1|50|100|false|true|false|false|0|3|0|0|PaPa||18;19;3;1;41|0|false', '100,12,15,,0,0,1d4+11|100,18,,,0,0,0d0+18|4|1|1|50|100|false|true|false|false|0|3|0|0|PaPa||18;19;3;1;41|0|false', '')"
+        );
 
         return this;
     }

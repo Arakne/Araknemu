@@ -23,20 +23,27 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.PlayerFighterCreated;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.monster.Monster;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DefaultFighterFactoryTest extends GameBaseCase {
+class DefaultFighterFactoryTest extends FightBaseCase {
     private DefaultFighterFactory factory;
     private ListenerAggregate dispatcher;
 
@@ -70,5 +77,56 @@ class DefaultFighterFactoryTest extends GameBaseCase {
         assertTrue(fighter.dispatcher().has(ApplyLeaveReward.class));
         assertTrue(fighter.dispatcher().has(SendStats.class));
         assertTrue(fighter.dispatcher().has(SendSpellBoosted.class));
+    }
+
+    @Test
+    void generate() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+
+        assertSame(fighter, factory.generate(id -> {
+            assertEquals(-1, id);
+            return fighter;
+        }));
+        assertSame(fighter, factory.generate(id -> {
+            assertEquals(-2, id);
+            return fighter;
+        }));
+    }
+
+    @Test
+    void createMonsterFighter() throws Exception {
+        dataSet.pushMonsterTemplates();
+        dataSet.pushMonsterSpells();
+
+        Fight fight = createFight();
+        Monster monster = container.get(MonsterService.class).load(36).get(1);
+
+        Fighter fighter = factory.create(monster, fight.team(1));
+
+        assertInstanceOf(MonsterFighter.class, fighter);
+        assertEquals(-1, fighter.id());
+        assertSame(fight.team(1), fighter.team());
+        assertSame(monster, ((MonsterFighter) fighter).monster());
+
+        assertEquals(-2, factory.create(monster, fight.team(1)).id());
+        assertEquals(-3, factory.create(monster, fight.team(1)).id());
+    }
+
+    @Test
+    void generatedIdOverflow() throws Exception {
+        dataSet.pushMonsterTemplates();
+        dataSet.pushMonsterSpells();
+
+        Fight fight = createFight();
+        Monster monster = container.get(MonsterService.class).load(36).get(1);
+
+        factory = new DefaultFighterFactory(new DefaultListenerAggregate(), -3);
+
+        assertEquals(-1, factory.create(monster, fight.team(1)).id());
+        assertEquals(-2, factory.create(monster, fight.team(1)).id());
+        assertEquals(-3, factory.create(monster, fight.team(1)).id());
+        assertEquals(-1, factory.create(monster, fight.team(1)).id());
+        assertEquals(-2, factory.create(monster, fight.team(1)).id());
+        assertEquals(-3, factory.create(monster, fight.team(1)).id());
     }
 }

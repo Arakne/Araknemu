@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -76,7 +77,8 @@ class MonsterFighterSpriteTest extends FightBaseCase {
                 new Position(0, 0)
             ),
             Collections.singletonList(loadFightMap(10340).get(123)),
-            1
+            1,
+            container.get(FighterFactory.class)
         );
 
         fighter = (MonsterFighter) team.fighters().stream().findFirst().get();

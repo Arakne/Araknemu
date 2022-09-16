@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
@@ -40,6 +41,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Fighter for a player
@@ -193,5 +195,9 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
     public void setReady(boolean ready) {
         this.ready = ready;
         fight().dispatch(new FighterReadyStateChanged(this));
+    }
+
+    public @Nullable PassiveFighter invoker() {
+        return null;
     }
 }

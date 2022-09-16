@@ -207,7 +207,7 @@ class GivePercentLifeHandlerTest extends FightBaseCase {
 
         requestStack.assertAll(
             ActionEffect.alterLifePoints(caster, caster, -25),
-            ActionEffect.alterLifePoints(caster, fight.fighters().get(1), 25),
+            ActionEffect.alterLifePoints(caster, fight.fighters().get(3), 25),
             ActionEffect.alterLifePoints(caster, fight.fighters().get(2), 25)
         );
     }

@@ -342,4 +342,24 @@ public final class ActionEffect {
     public static ActionEffect fighterVisible(PassiveFighter caster, PassiveFighter target) {
         return new ActionEffect(150, caster, target.id(), 0);
     }
+
+    /**
+     * Add an invoked creature to the fight
+     *
+     * @param caster Invoker
+     * @param invocation Invocation to add
+     */
+    public static ActionEffect addInvocation(PassiveFighter caster, PassiveFighter invocation) {
+        return new ActionEffect(181, caster, "+" + invocation.sprite());
+    }
+
+    /**
+     * Send a custom packet, but queued on the caster sequencer
+     *
+     * @param caster Effect caster
+     * @param packet Packet to send
+     */
+    public static ActionEffect packet(PassiveFighter caster, Object packet) {
+        return new ActionEffect(999, caster, packet);
+    }
 }

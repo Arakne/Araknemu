@@ -61,7 +61,7 @@ class ProxyAITest extends AiBaseCase {
         assertSame(proxy.fighter(), fighters.get(0));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(1));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(2));
-        assertSame(proxy.enemy().get(), fighters.get(2));
+        assertSame(proxy.enemy().get(), fighters.get(1));
 
         assertSame(proxy.fighter().cell(), ai.fighter().cell());
         assertSame(ai.map().get(fighters.get(1).cell().id()), fighters.get(1).cell());
@@ -101,7 +101,7 @@ class ProxyAITest extends AiBaseCase {
         assertSame(proxy.fighter(), fighters.get(0));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(1));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(2));
-        assertSame(proxy.enemy().get(), fighters.get(2));
+        assertSame(proxy.enemy().get(), fighters.get(1));
 
         assertNotSame(proxy.fighter().cell(), ai.fighter().cell());
         assertNotSame(ai.map().get(fighters.get(1).cell().id()), fighters.get(1).cell());
@@ -110,11 +110,11 @@ class ProxyAITest extends AiBaseCase {
         assertEquals(123, proxy.fighter().cell().id());
         assertSame(proxy.map().get(123), proxy.fighter().cell());
         assertSame(proxy.fighter(), proxy.fighter().cell().fighter().get());
-        assertEquals(166, fighters.get(1).cell().id());
-        assertSame(proxy.map().get(166), fighters.get(1).cell());
+        assertEquals(167, fighters.get(1).cell().id());
+        assertSame(proxy.map().get(167), fighters.get(1).cell());
         assertSame(fighters.get(1), fighters.get(1).cell().fighter().get());
-        assertEquals(167, fighters.get(2).cell().id());
-        assertSame(proxy.map().get(167), fighters.get(2).cell());
+        assertEquals(166, fighters.get(2).cell().id());
+        assertSame(proxy.map().get(166), fighters.get(2).cell());
         assertSame(fighters.get(2), fighters.get(2).cell().fighter().get());
 
         assertFalse(proxy.map().get(152).fighter().isPresent());
@@ -128,11 +128,11 @@ class ProxyAITest extends AiBaseCase {
         assertEquals(125, proxy.fighter().cell().id());
         assertSame(proxy.map().get(125), proxy.fighter().cell());
         assertSame(proxy.fighter(), proxy.fighter().cell().fighter().get());
-        assertEquals(166, fighters.get(1).cell().id());
-        assertSame(proxy.map().get(166), fighters.get(1).cell());
+        assertEquals(167, fighters.get(1).cell().id());
+        assertSame(proxy.map().get(167), fighters.get(1).cell());
         assertSame(fighters.get(1), fighters.get(1).cell().fighter().get());
-        assertEquals(167, fighters.get(2).cell().id());
-        assertSame(proxy.map().get(167), fighters.get(2).cell());
+        assertEquals(166, fighters.get(2).cell().id());
+        assertSame(proxy.map().get(166), fighters.get(2).cell());
         assertSame(fighters.get(2), fighters.get(2).cell().fighter().get());
 
         assertFalse(proxy.map().get(123).fighter().isPresent());

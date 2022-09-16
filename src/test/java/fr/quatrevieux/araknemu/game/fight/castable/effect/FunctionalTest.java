@@ -22,35 +22,49 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
+import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FunctionalTest extends FightBaseCase {
     private SpellService service;
@@ -71,6 +85,8 @@ public class FunctionalTest extends FightBaseCase {
         fight = createFight();
         fight.register(new CommonEffectsModule(fight));
         fight.register(new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)));
+        fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
+        fight.register(new AiModule(container.get(AiFactory.class)));
 
         fighter1 = player.fighter();
         fighter2 = other.fighter();
@@ -1130,6 +1146,34 @@ public class FunctionalTest extends FightBaseCase {
 
         assertFalse(fighter2.hidden());
         requestStack.assertOne(ActionEffect.fighterVisible(fighter1, fighter2));
+    }
+
+    @Test
+    void invocation() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        castNormal(35, fight.map().get(199)); // Invocation de Bouftou
+
+        assertTrue(fight.map().get(199).fighter().isPresent());
+
+        PassiveFighter invocation = fight.map().get(199).fighter().get();
+
+        assertInstanceOf(InvocationFighter.class, invocation);
+
+        requestStack.assertOne(new ActionEffect(181, fighter1, "+" + invocation.sprite()));
+        requestStack.assertOne(new ActionEffect(999, fighter1, (new FighterTurnOrder(fight.turnList())).toString()));
+
+        assertTrue(fight.fighters().contains(invocation));
+        assertEquals(1, fight.turnList().fighters().indexOf(invocation));
+        assertSame(fighter1.team(), invocation.team());
+        assertSame(fighter1, invocation.invoker());
+        assertEquals(36, InvocationFighter.class.cast(invocation).monster().id());
+        assertSame(fight.map().get(199), invocation.cell());
+
+        assertInstanceOf(FighterAI.class, ((ActiveFighter) invocation).attachment(FighterAI.class));
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
@@ -80,7 +81,8 @@ class MonsterFighterCharacteristicsTest extends FightBaseCase {
                 new Position(0, 0)
             ),
             Collections.singletonList(map.get(123)),
-            1
+            1,
+            container.get(FighterFactory.class)
         );
 
         fighter = (MonsterFighter) team.fighters().stream().findFirst().get();

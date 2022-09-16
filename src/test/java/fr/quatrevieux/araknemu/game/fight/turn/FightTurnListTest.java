@@ -30,7 +30,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +41,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -294,5 +297,40 @@ class FightTurnListTest extends FightBaseCase {
         turnList.start();
 
         assertThrows(NoSuchElementException.class, () -> turnList.remove(third));
+    }
+
+    @Test
+    void add() throws NoSuchFieldException, IllegalAccessException {
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+
+        assertSame(player.fighter(), turnList.currentFighter());
+
+        Fighter f1 = Mockito.mock(Fighter.class);
+        Fighter f2 = Mockito.mock(Fighter.class);
+        Fighter f3 = Mockito.mock(Fighter.class);
+
+        turnList.add(f1);
+        assertSame(player.fighter(), turnList.currentFighter());
+        assertIterableEquals(turnList.fighters(), Arrays.asList(player.fighter(), f1, other.fighter()));
+
+        turnList.add(f2);
+        assertIterableEquals(turnList.fighters(), Arrays.asList(player.fighter(), f2, f1, other.fighter()));
+
+        setIndex(3);
+        turnList.add(f3);
+        assertIterableEquals(turnList.fighters(), Arrays.asList(player.fighter(), f2, f1, other.fighter(), f3));
+    }
+
+    @Test
+    void addNotInitializedShouldThrowError() {
+        assertThrows(IllegalStateException.class, () -> turnList.add(Mockito.mock(Fighter.class)));
+    }
+
+    private void setIndex(int index) throws NoSuchFieldException, IllegalAccessException {
+        Field field = FightTurnList.class.getDeclaredField("index");
+        field.setAccessible(true);
+
+        field.set(turnList, index);
     }
 }

@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -84,7 +85,8 @@ class MonsterGroupTeamTest extends FightBaseCase {
                 new Position(0, 0)
             ),
             Arrays.asList(map.get(123), map.get(321)),
-            1
+            1,
+            container.get(FighterFactory.class)
         );
     }
 

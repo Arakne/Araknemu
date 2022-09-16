@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.monster.Monster;
@@ -46,16 +47,16 @@ public final class MonsterGroupTeam implements FightTeam {
     private final int number;
     private final List<FightCell> startPlaces;
 
-    private final List<MonsterFighter> fighters;
+    private final List<Fighter> fighters;
     private final TeamOptions options;
 
     @SuppressWarnings({"assignment", "argument"})
-    public MonsterGroupTeam(MonsterGroup monsterGroup, List<FightCell> startPlaces, int number) {
+    public MonsterGroupTeam(MonsterGroup monsterGroup, List<FightCell> startPlaces, int number, FighterFactory fighterFactory) {
         this.monsterGroup = monsterGroup;
         this.number = number;
         this.startPlaces = startPlaces;
 
-        this.fighters = makeFighters(this, monsterGroup.monsters());
+        this.fighters = makeFighters(this, monsterGroup.monsters(), fighterFactory);
         this.options = new DefaultTeamOptions(this);
     }
 
@@ -140,13 +141,11 @@ public final class MonsterGroupTeam implements FightTeam {
      * Creates fighters from monsters of the group
      * Ids of monsters are negative integer sequence (starting at -1 for the first monster)
      */
-    private static List<MonsterFighter> makeFighters(MonsterGroupTeam team, List<Monster> monsters) {
-        final List<MonsterFighter> fighters = new ArrayList<>(monsters.size());
-
-        int id = 0;
+    private static List<Fighter> makeFighters(MonsterGroupTeam team, List<Monster> monsters, FighterFactory fighterFactory) {
+        final List<Fighter> fighters = new ArrayList<>(monsters.size());
 
         for (Monster monster : monsters) {
-            fighters.add(new MonsterFighter(--id, monster, team));
+            fighters.add(fighterFactory.create(monster, team));
         }
 
         return fighters;

@@ -27,9 +27,9 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.checkerframework.checker.index.qual.NonNegative;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 import java.util.stream.Stream;
 
 /**
@@ -44,7 +44,7 @@ public final class ProxyAI implements AI<ActiveFighter> {
     private ProxyActiveFighter fighter;
     private ProxyTurn turn;
 
-    private final Map<PassiveFighter, PassiveFighter> fighters = new HashMap<>();
+    private final Map<PassiveFighter, PassiveFighter> fighters = new WeakHashMap<>();
 
     public ProxyAI(AI<?> ai) {
         this.ai = ai;
