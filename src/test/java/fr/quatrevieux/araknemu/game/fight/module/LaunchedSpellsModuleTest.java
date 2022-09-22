@@ -49,11 +49,8 @@ class LaunchedSpellsModuleTest extends FightBaseCase {
         Fight fight = createFight(false);
         fight.register(new LaunchedSpellsModule(fight));
         fight.nextState();
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
         fight.turnList().start();
-        fight.start();
-
-        player.fighter().init();
 
         FightTurn currentTurn = fight.turnList().current().get();
 
@@ -81,12 +78,8 @@ class LaunchedSpellsModuleTest extends FightBaseCase {
         Fight fight = createFight(false);
         fight.register(new LaunchedSpellsModule(fight));
         fight.nextState();
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
         fight.turnList().start();
-        fight.start();
-
-        player.fighter().init();
-        other.fighter().init();
 
         player.fighter().attachment(LaunchedSpells.class).push(player.fighter().spells().get(6), player.fighter().cell());
         assertFalse(player.fighter().attachment(LaunchedSpells.class).valid(player.fighter().spells().get(6), player.fighter().cell()));

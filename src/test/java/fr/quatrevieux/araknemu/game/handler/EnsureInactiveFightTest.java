@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -64,7 +65,7 @@ class EnsureInactiveFightTest extends FightBaseCase {
     @Test
     void handleFightingActive() throws Exception {
         Fight fight = createFight();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         PacketHandler inner = Mockito.mock(PacketHandler.class);
         EnsureInactiveFight handler = new EnsureInactiveFight<>(inner);

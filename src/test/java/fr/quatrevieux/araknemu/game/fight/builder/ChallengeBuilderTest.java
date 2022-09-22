@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,8 @@ class ChallengeBuilderTest extends GameBaseCase {
 
         assertInstanceOf(ChallengeType.class, fight.type());
         assertCount(2, fight.teams());
-        assertCount(2, fight.fighters(false));
+        assertCount(1, fight.team(0).fighters());
+        assertCount(1, fight.team(1).fighters());
         assertContainsOnly(SimpleTeam.class, fight.teams());
         assertContainsOnly(PlayerFighter.class, fight.fighters());
         assertEquals(1, fight.id());

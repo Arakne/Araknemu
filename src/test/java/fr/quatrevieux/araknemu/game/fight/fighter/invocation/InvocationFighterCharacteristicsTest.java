@@ -57,8 +57,6 @@ class InvocationFighterCharacteristicsTest extends FightBaseCase {
         assertEquals(80, characteristics.get(Characteristic.LUCK));
         assertEquals(70, characteristics.get(Characteristic.AGILITY));
         assertEquals(60, characteristics.get(Characteristic.WISDOM));
-
-        System.out.println(player.fighter().level());
     }
 
     @Test

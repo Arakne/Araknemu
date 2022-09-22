@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminated;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +51,7 @@ class ActionHandlerTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
         turn = new FightTurn(fight.fighters().get(0), fight, Duration.ZERO);
         actionHandler = new ActionHandler(turn, fight);
     }

@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -144,7 +145,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
             )
         ));
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         turn.perform(move);
         turn.terminate();

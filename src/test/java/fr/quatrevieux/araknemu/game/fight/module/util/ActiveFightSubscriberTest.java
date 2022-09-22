@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.module.util;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +48,10 @@ class ActiveFightSubscriberTest extends FightBaseCase {
 
         fight.dispatcher().register(new ActiveFightSubscriber(new Listener[] {new MyListener()}));
 
-        fight.start();
+        // Call join fight on fighters
+        new PlacementState().start(fight);
+
+        fight.start(new AlternateTeamFighterOrder());
         assertTrue(fight.dispatcher().has(MyListener.class));
 
         fight.stop();

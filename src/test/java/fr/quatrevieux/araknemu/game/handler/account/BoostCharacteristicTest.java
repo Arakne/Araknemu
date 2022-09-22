@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
@@ -81,7 +82,7 @@ class BoostCharacteristicTest extends FightBaseCase {
         this.<Player>readField(gamePlayer(), "entity").setBoostPoints(10);
 
         Fight fight = createFight();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         assertErrorPacket(Error.cantDoDuringFight(), () -> handlePacket(new AskBoost(Characteristic.INTELLIGENCE)));
     }

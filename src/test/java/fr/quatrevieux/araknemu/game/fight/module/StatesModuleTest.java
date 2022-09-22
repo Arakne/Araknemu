@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.module;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshStates;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendState;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -36,7 +37,7 @@ class StatesModuleTest extends FightBaseCase {
 
         fight.register(new RaulebaqueModule(fight));
         fight.nextState();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         assertTrue(fight.dispatcher().has(RefreshStates.class));
         assertTrue(fight.dispatcher().has(SendState.class));
@@ -53,7 +54,7 @@ class StatesModuleTest extends FightBaseCase {
 
         fight.register(new RaulebaqueModule(fight));
         fight.nextState();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         CastScope scope = makeCastScopeForEffect(950);
 
@@ -68,7 +69,7 @@ class StatesModuleTest extends FightBaseCase {
 
         fight.register(new RaulebaqueModule(fight));
         fight.nextState();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         other.fighter().states().push(0);
         requestStack.clear();

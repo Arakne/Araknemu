@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
@@ -124,7 +125,7 @@ class FightHandlerTest extends GameBaseCase {
 
         requestStack.clear();
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
         requestStack.assertLast(new HideFight(fight));
 
         fight.stop();

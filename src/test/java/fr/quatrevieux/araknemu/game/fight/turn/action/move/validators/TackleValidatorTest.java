@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -326,7 +327,7 @@ class TackleValidatorTest extends FightBaseCase {
         }
 
         fight = builder.build(true);
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
@@ -374,7 +375,7 @@ class TackleValidatorTest extends FightBaseCase {
         ;
 
         fight = builder.build(true);
-        fight.start();
+        fight.start(a -> fight.fighters());
 
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
@@ -425,7 +426,7 @@ class TackleValidatorTest extends FightBaseCase {
             )
         ));
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         turn.perform(move);
         turn.terminate();
@@ -450,7 +451,7 @@ class TackleValidatorTest extends FightBaseCase {
             )
         ));
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         turn.perform(move);
         turn.terminate();

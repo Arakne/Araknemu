@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -43,7 +44,7 @@ class RaulebaqueModuleTest extends FightBaseCase {
 
         fight.register(new RaulebaqueModule(fight));
         fight.nextState();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         FightCell playerCell = player.fighter().cell();
         FightCell otherCell = other.fighter().cell();
@@ -68,7 +69,7 @@ class RaulebaqueModuleTest extends FightBaseCase {
 
         fight.register(module);
         fight.nextState();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         FightCell playerCell = player.fighter().cell();
         FightCell otherCell = other.fighter().cell();

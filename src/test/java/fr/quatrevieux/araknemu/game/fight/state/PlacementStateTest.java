@@ -120,7 +120,7 @@ class PlacementStateTest extends FightBaseCase {
     @Test
     void start() {
         AtomicReference<FightJoined> ref = new AtomicReference<>();
-        PlayerFighter.class.cast(fight.fighters(false).get(0)).dispatcher().add(FightJoined.class, ref::set);
+        PlayerFighter.class.cast(new ArrayList<>(fight.team(0).fighters()).get(0)).dispatcher().add(FightJoined.class, ref::set);
 
         state.start(fight);
 

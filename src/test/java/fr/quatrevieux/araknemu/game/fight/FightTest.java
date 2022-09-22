@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -57,7 +58,9 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -115,7 +118,6 @@ class FightTest extends GameBaseCase {
     @Test
     void getters() {
         assertEquals(5, fight.id());
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
         assertSame(map, fight.map());
         assertInstanceOf(NullState.class, fight.state());
         assertEquals(teams, fight.teams());
@@ -129,16 +131,14 @@ class FightTest extends GameBaseCase {
 
     @Test
     void fighters() {
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
-        assertCount(0, fight.fighters(true));
+        assertCount(0, fight.fighters());
 
         new PlacementState().start(fight);
 
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(true));
-
-        fight.turnList().init(new AlternateTeamFighterOrder());
         assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
+
+        fight.start(new AlternateTeamFighterOrder());
+        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
     }
 
     @Test
@@ -302,9 +302,10 @@ class FightTest extends GameBaseCase {
             }
         });
 
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        // Call join fight on fighters
+        new PlacementState().start(fight);
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
         assertTrue(fight.active());
         assertNotNull(ref.get());
         assertSame(fight, ref.get().fight());
@@ -322,8 +323,38 @@ class FightTest extends GameBaseCase {
     }
 
     @Test
+    void startShouldInitFighterAndOrderTurnList() {
+        // Perform join fight on fighters
+        new PlacementState().start(fight);
+
+        Set<Fighter> initializedFighters = new HashSet<>();
+
+        fight.dispatcher().add(new Listener<FighterInitialized>() {
+            @Override
+            public void on(FighterInitialized event) {
+                initializedFighters.add(event.fighter());
+            }
+
+            @Override
+            public Class<FighterInitialized> event() {
+                return FighterInitialized.class;
+            }
+        });
+
+        fight.start(t -> Arrays.asList(fighter2, fighter1));
+
+        assertEquals(Arrays.asList(fighter2, fighter1), fight.turnList().fighters());
+
+        assertCount(2, initializedFighters);
+        assertContainsAll(initializedFighters, fighter1, fighter2);
+    }
+
+    @Test
     void cancelActive() {
-        fight.start();
+        // Call join fight on fighters
+        new PlacementState().start(fight);
+
+        fight.start(new AlternateTeamFighterOrder());
 
         assertThrows(IllegalStateException.class, () -> fight.cancel());
         assertTrue(fight.alive());
@@ -347,13 +378,15 @@ class FightTest extends GameBaseCase {
         AtomicReference<FightCancelled> ref = new AtomicReference<>();
         fight.dispatcher().add(FightCancelled.class, ref::set);
 
-        fight.start();
+        // Call join fight on fighters
+        new PlacementState().start(fight);
+
+        fight.start(new AlternateTeamFighterOrder());
 
         fight.cancel(true);
 
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
-        assertCount(0, fight.fighters());
         assertFalse(fight.alive());
     }
 
@@ -423,7 +456,7 @@ class FightTest extends GameBaseCase {
         spectator.join();
 
         new PlacementState().start(fight); // Init cell to ensure that Fighter#isOnFight() is true
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
 
         InvocationFighter invoc = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);
         fight.turnList().add(invoc);
@@ -438,5 +471,15 @@ class FightTest extends GameBaseCase {
         fight.dispatchToAll(new Foo());
 
         assertEquals(4, ai.get());
+    }
+
+    @Test
+    void turnListNotStartedShouldFailed() {
+        assertThrows(IllegalStateException.class, fight::turnList);
+    }
+
+    @Test
+    void stopNotStartedShouldFailed() {
+        assertThrows(IllegalStateException.class, fight::stop);
     }
 }

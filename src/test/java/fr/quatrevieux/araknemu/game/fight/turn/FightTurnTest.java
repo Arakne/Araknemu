@@ -56,10 +56,8 @@ class FightTurnTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        fight.fighters().forEach(Fighter::init);
-        fight.turnList().init(teams -> Arrays.asList(player.fighter(), other.fighter()));
+        fight.start(teams -> Arrays.asList(player.fighter(), other.fighter()));
         fight.turnList().start();
-        fight.start();
 
         fight.dispatcher().add(new RefreshBuffs());
         fight.dispatcher().add(new RefreshStates());

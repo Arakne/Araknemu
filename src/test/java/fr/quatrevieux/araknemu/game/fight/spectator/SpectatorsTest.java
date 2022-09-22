@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorLeaved;
 import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.game.fight.team.event.AllowSpectatorChanged;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.listener.fight.SendBlockSpectatorsOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.fight.spectator.SendSpectatorHasJoined;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
@@ -186,7 +187,7 @@ class SpectatorsTest extends FightBaseCase {
         Spectators spectators = new Spectators(fight);
 
         assertFalse(spectators.canJoin());
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         assertTrue(spectators.canJoin());
 

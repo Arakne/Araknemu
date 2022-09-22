@@ -61,7 +61,7 @@ class FighterTurnOrderTest extends GameBaseCase {
             )
         ;
 
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
     }
 
     @Test

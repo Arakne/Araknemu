@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.option.BlockSpectatorRequest;
@@ -101,6 +102,7 @@ class ToggleBlockSpectatorsTest extends FightBaseCase {
     void shouldKickSpectators() throws Exception {
         ToggleBlockSpectator handler = new ToggleBlockSpectator();
         Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
+        fight.start(new AlternateTeamFighterOrder());
         PlayerFighter leader = (PlayerFighter) fight.team(0).leader();
 
         Field f = GamePlayer.class.getDeclaredField("session");

@@ -61,7 +61,7 @@ class SendFightStartedTest extends GameBaseCase {
             )
         );
 
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
         requestStack.clear();
     }
 
