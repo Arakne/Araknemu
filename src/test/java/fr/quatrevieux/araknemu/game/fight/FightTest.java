@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
@@ -462,6 +461,9 @@ class FightTest extends GameBaseCase {
         fight.turnList().add(invoc);
         invoc.joinFight(fight, fight.map().get(122));
         invoc.init();
+
+        InvocationFighter notInFight = new InvocationFighter(-6, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);
+        fight.turnList().add(notInFight);
 
         fighter1.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
         fighter2.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
