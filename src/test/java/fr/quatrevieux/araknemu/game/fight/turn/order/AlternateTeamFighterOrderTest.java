@@ -113,11 +113,6 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void setFight(Fight fight) {
-
-        }
-
-        @Override
         public void join(Fighter fighter) throws JoinFightException {
             throw new JoinFightException(JoinFightError.CANT_DO_TOO_LATE);
         }

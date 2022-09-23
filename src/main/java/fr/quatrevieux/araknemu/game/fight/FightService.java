@@ -196,7 +196,7 @@ public final class FightService implements EventsSubscriber {
      * Create a new fight instance
      * Internal: must only be called by a {@link FightBuilder}
      */
-    public Fight create(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
+    public Fight create(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow) {
         return factory.create(id, type, map, teams, statesFlow, executor);
     }
 
@@ -251,6 +251,6 @@ public final class FightService implements EventsSubscriber {
          * Create a new fight instance
          * Should not be used directly, but by a {@link FightBuilder}
          */
-        public Fight create(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, ScheduledExecutorService executor);
+        public Fight create(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, ScheduledExecutorService executor);
     }
 }

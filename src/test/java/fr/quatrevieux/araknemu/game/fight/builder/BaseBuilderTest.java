@@ -64,8 +64,8 @@ class BaseBuilderTest extends GameBaseCase {
         PlayerFighter fighter = new PlayerFighter(gamePlayer());
         PlayerFighter other = new PlayerFighter(makeOtherPlayer());
 
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter, startPlaces, number));
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(other, startPlaces, number));
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, fighter, startPlaces, number));
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, other, startPlaces, number));
         builder.map(container.get(ExplorationMapService.class).load(10340));
 
         Fight fight = builder.build(1);
@@ -101,8 +101,8 @@ class BaseBuilderTest extends GameBaseCase {
         PlayerFighter fighter = new PlayerFighter(gamePlayer());
         PlayerFighter other = new PlayerFighter(makeOtherPlayer());
 
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter, startPlaces, number));
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(other, startPlaces, number));
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, fighter, startPlaces, number));
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, other, startPlaces, number));
         builder.map(container.get(ExplorationMapService.class).load(10340));
 
         int nbTeam0 = 0;
@@ -138,8 +138,8 @@ class BaseBuilderTest extends GameBaseCase {
             PlayerFighter fighter = new PlayerFighter(player1);
             PlayerFighter other = new PlayerFighter(player2);
 
-            builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter, startPlaces, number));
-            builder.addTeam((number, startPlaces) -> new SimpleTeam(other, startPlaces, number));
+            builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, fighter, startPlaces, number));
+            builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, other, startPlaces, number));
             builder.map(container.get(ExplorationMapService.class).load(10340));
 
             Fight fight = builder.build(1);

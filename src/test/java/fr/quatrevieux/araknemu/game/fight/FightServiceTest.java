@@ -228,8 +228,8 @@ class FightServiceTest extends FightBaseCase {
 
         BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()));
         builder.map(container.get(ExplorationMapService.class).load(10340));
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter1, startPlaces, number));
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter2, startPlaces, number));
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, fighter1, startPlaces, number));
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(fight, fighter2, startPlaces, number));
         Fight fight = builder.build(1);
 
         Collection<FightModule> modules = service.modules(fight);

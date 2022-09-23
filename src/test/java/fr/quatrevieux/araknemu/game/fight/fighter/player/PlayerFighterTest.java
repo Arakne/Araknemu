@@ -97,8 +97,8 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
-    void team() {
-        FightTeam team = new SimpleTeam(fighter, new ArrayList<>(), 0);
+    void team() throws Exception {
+        FightTeam team = new SimpleTeam(fight, fighter, new ArrayList<>(), 0);
         fighter.setTeam(team);
 
         assertSame(team, fighter.team());

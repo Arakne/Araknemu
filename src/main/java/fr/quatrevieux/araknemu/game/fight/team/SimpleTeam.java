@@ -28,7 +28,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,15 +43,16 @@ public final class SimpleTeam implements FightTeam {
     private final List<FightCell> startPlaces;
     private final int number;
 
-    private @MonotonicNonNull ConfigurableTeamOptions options;
+    private final ConfigurableTeamOptions options;
 
     @SuppressWarnings({"argument", "assignment"})
-    public SimpleTeam(PlayerFighter leader, List<FightCell> startPlaces, int number) {
+    public SimpleTeam(Fight fight, PlayerFighter leader, List<FightCell> startPlaces, int number) {
         this.leader = leader;
         this.fighters = new ArrayList<>();
         this.fighters.add(leader);
         this.startPlaces = startPlaces;
         this.number = number;
+        this.options = new ConfigurableTeamOptions(this, fight);
 
         leader.setTeam(this);
     }
@@ -109,16 +109,12 @@ public final class SimpleTeam implements FightTeam {
 
     @Override
     public ConfigurableTeamOptions options() {
-        if (options == null) {
-            throw new IllegalStateException("FightTeam#setFight() must be called before use the FightTeam instance");
-        }
-
         return options;
     }
 
     @Override
     public void join(Fighter fighter) throws JoinFightException {
-        if (options != null && !options.allowJoinTeam()) {
+        if (!options.allowJoinTeam()) {
             throw new JoinFightException(JoinFightError.TEAM_CLOSED);
         }
 
@@ -143,10 +139,5 @@ public final class SimpleTeam implements FightTeam {
     @Override
     public void kick(Fighter fighter) {
         fighters.remove(fighter);
-    }
-
-    @Override
-    public void setFight(Fight fight) {
-        options = new ConfigurableTeamOptions(this, fight);
     }
 }

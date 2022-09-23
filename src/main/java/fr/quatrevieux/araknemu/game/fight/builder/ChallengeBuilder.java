@@ -58,7 +58,8 @@ public final class ChallengeBuilder implements FightBuilder {
      * Add new fighter
      */
     public ChallengeBuilder fighter(GamePlayer player) {
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(
+            fight,
             fighterFactory.create(player),
             startPlaces,
             number

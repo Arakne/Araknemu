@@ -86,8 +86,8 @@ class PlacementStateTest extends FightBaseCase {
             new ChallengeType(configuration.fight()),
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -171,8 +171,8 @@ class PlacementStateTest extends FightBaseCase {
             type,
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -202,8 +202,8 @@ class PlacementStateTest extends FightBaseCase {
             type,
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -238,8 +238,8 @@ class PlacementStateTest extends FightBaseCase {
             type,
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),

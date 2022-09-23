@@ -44,6 +44,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactor
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
@@ -71,7 +72,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FightTest extends GameBaseCase {
     private Fight fight;
     private FightMap map;
-    private List<FightTeam> teams;
+    private List<FightTeam.Factory> teams;
     private Logger logger;
     private ScheduledExecutorService executor;
 
@@ -84,13 +85,16 @@ class FightTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
+        final GamePlayer me = gamePlayer(true);
+        final GamePlayer enemy = makeOtherPlayer();
+
         fight = new Fight(
             5,
             new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             teams = new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(map.get(123)), 0),
-                new SimpleTeam(fighter2 = new PlayerFighter(makeOtherPlayer()), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter1 = new PlayerFighter(me), Arrays.asList(map.get(123)), 0),
+                fight -> new SimpleTeam(fight, fighter2 = new PlayerFighter(enemy), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -119,7 +123,8 @@ class FightTest extends GameBaseCase {
         assertEquals(5, fight.id());
         assertSame(map, fight.map());
         assertInstanceOf(NullState.class, fight.state());
-        assertEquals(teams, fight.teams());
+        assertCount(2, fight.teams());
+        assertContainsOnly(SimpleTeam.class, fight.teams());
         assertInstanceOf(ChallengeType.class, fight.type());
         assertInstanceOf(EffectsHandler.class, fight.effects());
         assertFalse(fight.active());
@@ -156,8 +161,10 @@ class FightTest extends GameBaseCase {
 
     @Test
     void teamByNumber() {
-        assertSame(teams.get(0), fight.team(0));
-        assertSame(teams.get(1), fight.team(1));
+        assertInstanceOf(SimpleTeam.class, fight.team(0));
+        assertSame(fighter1, fight.team(0).leader());
+        assertInstanceOf(SimpleTeam.class, fight.team(1));
+        assertSame(fighter2, fight.team(1).leader());
     }
 
     @Test

@@ -68,12 +68,13 @@ public final class PvmBuilder implements FightBuilder {
         final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type);
 
         builder.map(map);
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(
+        builder.addTeam((fight, number, startPlaces) -> new SimpleTeam(
+            fight,
             fighterFactory.create(initiator),
             startPlaces,
             number
         ));
-        builder.addTeam((number, startPlaces) -> new MonsterGroupTeam(group, startPlaces, number, fighterFactory));
+        builder.addTeam((fight, number, startPlaces) -> new MonsterGroupTeam(/*fight, */group, startPlaces, number, fighterFactory));
 
         return builder.build(fightId);
     }

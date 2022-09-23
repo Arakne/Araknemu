@@ -84,19 +84,17 @@ public final class Fight implements Dispatcher, Sender {
     private volatile boolean alive = true;
 
     @SuppressWarnings({"assignment", "argument"})
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<Fighter> actions) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<Fighter> actions) {
         this.id = id;
         this.type = type;
         this.map = map;
-        this.teams = teams;
+        this.teams = teams.stream().map(factory ->  factory.create(this)).collect(Collectors.toList());
         this.statesFlow = statesFlow;
         this.logger = logger;
         this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
         this.actions = actions;
-
-        teams.forEach(team -> team.setFight(this)); // @todo team factory ?
     }
 
     /**
