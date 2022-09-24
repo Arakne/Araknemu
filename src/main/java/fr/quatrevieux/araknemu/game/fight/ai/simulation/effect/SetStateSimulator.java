@@ -63,7 +63,7 @@ public final class SetStateSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
         final Integer base = stateBoost.get(effect.effect().special());
 
         if (base == null) {

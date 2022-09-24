@@ -67,7 +67,7 @@ class AlterCharacteristicSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(10, simulation.selfBoost());
@@ -89,7 +89,7 @@ class AlterCharacteristicSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-50, simulation.selfBoost());
@@ -112,7 +112,7 @@ class AlterCharacteristicSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(20, simulation.selfBoost());
@@ -152,7 +152,7 @@ class AlterCharacteristicSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(10, simulation.selfBoost());

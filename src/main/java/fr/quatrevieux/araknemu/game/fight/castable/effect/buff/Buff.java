@@ -20,8 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 
@@ -34,18 +33,18 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 public final class Buff {
     private final SpellEffect effect;
     private final Castable action;
-    private final ActiveFighter caster;
-    private final PassiveFighter target;
+    private final Fighter caster;
+    private final Fighter target;
     private final BuffHook hook;
     private final boolean canBeDispelled;
 
     private @GTENegativeOne int remainingTurns;
 
-    public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook) {
+    public Buff(SpellEffect effect, Castable action, Fighter caster, Fighter target, BuffHook hook) {
         this(effect, action, caster, target, hook, true);
     }
 
-    public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook, boolean canBeDispelled) {
+    public Buff(SpellEffect effect, Castable action, Fighter caster, Fighter target, BuffHook hook, boolean canBeDispelled) {
         this.effect = effect;
         this.action = action;
         this.caster = caster;
@@ -73,14 +72,14 @@ public final class Buff {
     /**
      * Get the buff caster
      */
-    public ActiveFighter caster() {
+    public Fighter caster() {
         return caster;
     }
 
     /**
      * Get the buff target
      */
-    public PassiveFighter target() {
+    public Fighter target() {
         return target;
     }
 

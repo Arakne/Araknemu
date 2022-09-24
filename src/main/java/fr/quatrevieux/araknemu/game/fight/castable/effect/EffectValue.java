@@ -188,7 +188,7 @@ public final class EffectValue implements Cloneable {
      *
      * @param effect The spell effect
      * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
-     * @param target The target on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue, PassiveFighter)} will be called
+     * @param target The target on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)} will be called
      *
      * @return The configured effect
      */
@@ -196,7 +196,7 @@ public final class EffectValue implements Cloneable {
         final EffectValue value = new EffectValue(effect);
 
         caster.buffs().onEffectValueCast(value);
-        target.buffs().onEffectValueTarget(value, caster);
+        target.buffs().onEffectValueTarget(value);
 
         return value;
     }
@@ -205,7 +205,7 @@ public final class EffectValue implements Cloneable {
      * Create and configure multiple effect values for multiple targets
      *
      * Only one "dice" will be used for all targets, but each target will receive their own EffectValue,
-     * configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue, PassiveFighter)}.
+     * configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)}.
      *
      * So {@link EffectValue#minimize()} and {@link EffectValue#maximize()} are effective, without change the effects value of others targets
      *
@@ -221,18 +221,18 @@ public final class EffectValue implements Cloneable {
      *
      * @param effect The spell effect
      * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
-     * @param targets Targets used to configure the effect value using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue, PassiveFighter)}
+     * @param targets Targets used to configure the effect value using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)}
      * @param action Action to perform on each target, with their related effect value
      */
-    public static void forEachTargets(SpellEffect effect, PassiveFighter caster, Iterable<PassiveFighter> targets, BiConsumer<PassiveFighter, EffectValue> action) {
+    public static <F extends PassiveFighter> void forEachTargets(SpellEffect effect, PassiveFighter caster, Iterable<F> targets, BiConsumer<F, EffectValue> action) {
         final EffectValue value = new EffectValue(effect);
 
         caster.buffs().onEffectValueCast(value);
         value.roll();
 
-        for (PassiveFighter target : targets) {
+        for (F target : targets) {
             final EffectValue targetValue = value.clone();
-            target.buffs().onEffectValueTarget(targetValue, caster);
+            target.buffs().onEffectValueTarget(targetValue);
 
             action.accept(target, targetValue);
         }

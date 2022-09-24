@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
  */
 public final class RevealInvisibleHandler implements EffectHandler {
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        final PassiveFighter caster = cast.caster();
 
         // @todo reveal traps
         for (PassiveFighter fighter : effect.targets()) {
@@ -41,7 +41,7 @@ public final class RevealInvisibleHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Reveal invisible effect can only be used as direct effect");
     }
 }

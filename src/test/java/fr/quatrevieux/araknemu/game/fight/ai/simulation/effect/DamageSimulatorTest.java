@@ -97,7 +97,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-22.5, simulation.selfLife());
@@ -132,7 +132,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-112.5, simulation.selfLife());
@@ -154,7 +154,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-15, simulation.selfLife());
@@ -174,7 +174,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, target.cell());
         new DamageSimulator(Element.EARTH).simulate(simulation, scope.effects().get(0));
 
         return simulation.enemiesLife();

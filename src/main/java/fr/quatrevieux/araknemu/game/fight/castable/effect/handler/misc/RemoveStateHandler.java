@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
@@ -28,14 +29,14 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
  */
 public final class RemoveStateHandler implements EffectHandler {
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         for (PassiveFighter target : effect.targets()) {
             target.states().remove(effect.effect().special());
         }
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot remove state from a buff");
     }
 }

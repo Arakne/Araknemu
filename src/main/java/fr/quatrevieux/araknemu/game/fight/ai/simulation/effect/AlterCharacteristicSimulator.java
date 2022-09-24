@@ -46,7 +46,7 @@ public final class AlterCharacteristicSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
         int duration = effect.effect().duration();
 
         if (duration == -1 || duration > 10) {

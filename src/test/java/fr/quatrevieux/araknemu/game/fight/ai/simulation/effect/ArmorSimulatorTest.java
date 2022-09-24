@@ -183,7 +183,7 @@ class ArmorSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         return simulation;

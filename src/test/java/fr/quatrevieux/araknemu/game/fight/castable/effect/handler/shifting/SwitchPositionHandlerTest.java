@@ -65,7 +65,7 @@ class SwitchPositionHandlerTest extends FightBaseCase {
 
         FightCell target = fight.map().get(250);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target);
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertAll(
@@ -100,7 +100,7 @@ class SwitchPositionHandlerTest extends FightBaseCase {
         FightCell lastCell = caster.cell();
         FightCell target = fight.map().get(120);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target);
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertEmpty();
@@ -127,7 +127,7 @@ class SwitchPositionHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(player.fighter(), spell, effect, fight.map().get(150));
+        CastScope<Fighter> scope = makeCastScope(player.fighter(), spell, effect, fight.map().get(150));
 
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }

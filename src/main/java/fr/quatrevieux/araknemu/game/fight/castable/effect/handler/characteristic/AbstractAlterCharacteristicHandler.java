@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -45,14 +45,14 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Alter characteristic effect must be used as a buff");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
-        final ActiveFighter caster = cast.caster();
+        final Fighter caster = cast.caster();
 
         EffectValue.forEachTargets(
             spellEffect,

@@ -256,15 +256,15 @@ public class FightBaseCase extends GameBaseCase {
         equipWeapon(player, 40);
     }
 
-    public CastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
+    public CastScope<Fighter> makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
         return CastScope.simple(castable, caster, target, Collections.singletonList(effect));
     }
 
-    public CastScope makeCastScopeForEffect(int effectId) {
+    public CastScope<Fighter> makeCastScopeForEffect(int effectId) {
         return makeCastScopeForEffect(effectId, player.fighter(), other.fighter().cell());
     }
 
-    public CastScope makeCastScopeForEffect(int effectId, Fighter caster, FightCell target) {
+    public CastScope<Fighter> makeCastScopeForEffect(int effectId, Fighter caster, FightCell target) {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);

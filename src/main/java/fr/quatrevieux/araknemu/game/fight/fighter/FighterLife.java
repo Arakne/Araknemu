@@ -57,5 +57,5 @@ public interface FighterLife extends Life {
     /**
      * Kill the fighter
      */
-    public void kill(ActiveFighter caster);
+    public void kill(PassiveFighter caster);
 }

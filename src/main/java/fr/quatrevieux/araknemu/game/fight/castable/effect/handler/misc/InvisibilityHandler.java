@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
@@ -54,17 +54,17 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Invisibility effect must be used as a buff");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
-        final ActiveFighter caster = cast.caster();
+        final Fighter caster = cast.caster();
         final Castable action = cast.action();
 
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(spellEffect, action, caster, target, this));
         }
     }
@@ -85,7 +85,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onCast(Buff buff, CastScope cast) {
+    public void onCast(Buff buff, CastScope<Fighter> cast) {
         final PassiveFighter target = buff.target();
 
         if (!target.hidden()) {
@@ -121,8 +121,8 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     /**
      * Does the given cast will perform direct damage or not
      */
-    private boolean hasDirectDamageEffect(CastScope cast) {
-        for (CastScope.EffectScope effect : cast.effects()) {
+    private boolean hasDirectDamageEffect(CastScope<Fighter> cast) {
+        for (CastScope<Fighter>.EffectScope effect : cast.effects()) {
             final SpellEffect spellEffect = effect.effect();
 
             if (spellEffect.duration() == 0 && EffectsUtils.isDamageEffect(spellEffect.effect())) {

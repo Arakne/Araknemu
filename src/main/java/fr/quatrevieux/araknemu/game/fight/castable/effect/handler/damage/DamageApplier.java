@@ -24,8 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
@@ -59,10 +58,10 @@ public final class DamageApplier {
      * @return The real damage value
      *
      * @see DamageApplier#apply(Buff) For apply a buff damage (i.e. poison)
-     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(ActiveFighter, Damage) The called buff hook
-     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(ActiveFighter, int) Buff called when damage are applied
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(Fighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(Fighter, int) Buff called when damage are applied
      */
-    public int apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
+    public int apply(Fighter caster, SpellEffect effect, Fighter target) {
         final Damage damage = computeDamage(caster, effect, target);
 
         return applyDirectDamage(caster, damage, target);
@@ -71,7 +70,7 @@ public final class DamageApplier {
     /**
      * Apply a fixed (i.e. precomputed) amount of damage on the target
      *
-     * Like {@link DamageApplier#apply(ActiveFighter, SpellEffect, PassiveFighter)} :
+     * Like {@link DamageApplier#apply(Fighter, SpellEffect, Fighter)} :
      * - resistance are applied
      * - direct damage buff are called
      * - returned damage are applied
@@ -83,10 +82,10 @@ public final class DamageApplier {
      * @return The applied damage value. Negative for damage, or positive for heal.
      *
      * @see DamageApplier#applyFixed(Buff, int) For apply a precomputed damage buff
-     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(ActiveFighter, Damage) The called buff hook
-     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(ActiveFighter, int) Buff called when damage are applied
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(Fighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(Fighter, int) Buff called when damage are applied
      */
-    public int applyFixed(ActiveFighter caster, int value, PassiveFighter target) {
+    public int applyFixed(Fighter caster, int value, Fighter target) {
         final Damage damage = createDamage(caster, target, value);
 
         return applyDirectDamage(caster, damage, target);
@@ -95,7 +94,7 @@ public final class DamageApplier {
     /**
      * Apply a fixed (i.e. precomputed) amount of damage on the target, but as indirect
      *
-     * So, unlike {@link DamageApplier#applyFixed(ActiveFighter, int, PassiveFighter)} :
+     * So, unlike {@link DamageApplier#applyFixed(Fighter, int, Fighter)} :
      * - indirect damage buff are called instead of direct one
      * - returned damage are not applied
      *
@@ -108,9 +107,9 @@ public final class DamageApplier {
      * @return The applied damage value. Negative for damage, or positive for heal.
      *
      * @see DamageApplier#applyFixed(Buff, int) Apply damage with the same way
-     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onIndirectDamage(ActiveFighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onIndirectDamage(Fighter, Damage) The called buff hook
      */
-    public int applyIndirectFixed(ActiveFighter caster, int value, PassiveFighter target) {
+    public int applyIndirectFixed(Fighter caster, int value, Fighter target) {
         final Damage damage = createDamage(caster, target, value);
 
         target.buffs().onIndirectDamage(caster, damage);
@@ -128,8 +127,8 @@ public final class DamageApplier {
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onBuffDamage(Buff, Damage) The called buff hook
      */
     public int apply(Buff buff) {
-        final PassiveFighter target = buff.target();
-        final ActiveFighter caster = buff.caster();
+        final Fighter target = buff.target();
+        final Fighter caster = buff.caster();
 
         final Damage damage = computeDamage(caster, buff.effect(), target);
 
@@ -151,7 +150,7 @@ public final class DamageApplier {
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onBuffDamage(Buff, Damage) The called buff hook
      */
     public int applyFixed(Buff buff, int value) {
-        final PassiveFighter target = buff.target();
+        final Fighter target = buff.target();
         final Damage damage = createDamage(buff.caster(), target, value);
 
         return applyBuffDamage(buff, damage, target);
@@ -160,7 +159,7 @@ public final class DamageApplier {
     /**
      * Create the damage object
      */
-    private Damage computeDamage(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
+    private Damage computeDamage(Fighter caster, SpellEffect effect, Fighter target) {
         final EffectValue value = EffectValue.create(effect, caster, target)
             .percent(caster.characteristics().get(element.boost()))
             .percent(caster.characteristics().get(Characteristic.PERCENT_DAMAGE))
@@ -177,7 +176,7 @@ public final class DamageApplier {
      *
      * @return The life change value. Negative for damage, positive for heal.
      */
-    private int applyDirectDamage(ActiveFighter caster, Damage damage, PassiveFighter target) {
+    private int applyDirectDamage(Fighter caster, Damage damage, Fighter target) {
         target.buffs().onDirectDamage(caster, damage);
 
         if (!caster.equals(target)) {
@@ -200,7 +199,7 @@ public final class DamageApplier {
      *
      * @return The life change value. Negative for damage, positive for heal.
      */
-    private int applyBuffDamage(Buff buff, Damage damage, PassiveFighter target) {
+    private int applyBuffDamage(Buff buff, Damage damage, Fighter target) {
         target.buffs().onBuffDamage(buff, damage);
 
         return applyDamage(buff.caster(), damage, target);
@@ -211,7 +210,7 @@ public final class DamageApplier {
      *
      * @return The life change value. Negative for damage, positive for heal.
      */
-    private int applyDamage(ActiveFighter caster, Damage damage, PassiveFighter target) {
+    private int applyDamage(Fighter caster, Damage damage, Fighter target) {
         if (damage.reducedDamage() > 0) {
             fight.send(ActionEffect.reducedDamage(target, damage.reducedDamage()));
         }
@@ -235,7 +234,7 @@ public final class DamageApplier {
      * @param caster The original spell caster
      * @param damage The applied damage
      */
-    private void applyReflectedDamage(PassiveFighter castTarget, ActiveFighter caster, Damage damage) {
+    private void applyReflectedDamage(Fighter castTarget, Fighter caster, Damage damage) {
         final ReflectedDamage returnedDamage = new ReflectedDamage(damage, caster);
         caster.buffs().onReflectedDamage(returnedDamage);
 
@@ -246,7 +245,7 @@ public final class DamageApplier {
     }
 
     /**
-     * Create the damage object, and call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastDamage(Damage, PassiveFighter)}
+     * Create the damage object, and call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastDamage(Damage, Fighter)}
      *
      * @param caster The spell caster
      * @param target The effect target
@@ -254,7 +253,7 @@ public final class DamageApplier {
      *
      * @return The damage object to apply
      */
-    private Damage createDamage(ActiveFighter caster, PassiveFighter target, int value) {
+    private Damage createDamage(Fighter caster, Fighter target, int value) {
         final Damage damage = new Damage(value, element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))

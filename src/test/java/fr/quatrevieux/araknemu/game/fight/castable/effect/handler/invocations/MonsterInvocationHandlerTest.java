@@ -80,7 +80,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         handler.handle(scope, scope.effects().get(0));
 
         PassiveFighter invoc = fight.map().get(123).fighter().get();
@@ -112,7 +112,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         handler.buff(scope, scope.effects().get(0));
 
         PassiveFighter invoc = fight.map().get(123).fighter().get();

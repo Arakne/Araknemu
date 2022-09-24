@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -83,7 +84,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -109,7 +110,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -141,7 +142,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertAll(
@@ -167,7 +168,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
 
         player.properties().characteristics().base().set(Characteristic.AGILITY, 100);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -187,7 +188,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(5));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(5));
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertEmpty();
@@ -205,7 +206,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -232,7 +233,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
@@ -252,7 +253,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
 }

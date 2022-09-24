@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.EffectSimulator;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -83,7 +84,7 @@ public final class Simulator {
      *
      * @param scope The cast scope
      */
-    private CastSimulation simulate(Spell spell, CastScope scope) {
+    private CastSimulation simulate(Spell spell, CastScope<PassiveFighter> scope) {
         // Remove invisible fighters from simulation
         scope.targets().forEach(target -> {
             if (target.hidden()) {
@@ -93,7 +94,7 @@ public final class Simulator {
 
         final CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
 
-        for (CastScope.EffectScope effect : scope.effects()) {
+        for (CastScope<PassiveFighter>.EffectScope effect : scope.effects()) {
             final EffectSimulator simulator = simulators.get(effect.effect().effect());
 
             if (simulator == null) {

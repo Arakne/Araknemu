@@ -278,7 +278,7 @@ class EffectValueTest extends FightBaseCase {
         assertEquals(5, ev.value());
 
         Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(casterBuff, ev);
-        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, ev, caster);
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, ev);
     }
 
     @Test
@@ -317,8 +317,8 @@ class EffectValueTest extends FightBaseCase {
 
         Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(Mockito.eq(casterBuff), Mockito.any());
 
-        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueTarget(casterBuff, values.get(0), caster);
-        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, values.get(1), caster);
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueTarget(casterBuff, values.get(0));
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, values.get(1));
     }
 
     @Test
@@ -330,7 +330,7 @@ class EffectValueTest extends FightBaseCase {
 
         Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value, PassiveFighter caster) {
+            public void onEffectValueTarget(Buff buff, EffectValue value) {
                 value.maximize();
             }
         });

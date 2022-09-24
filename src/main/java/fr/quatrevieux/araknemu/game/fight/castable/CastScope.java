@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -41,15 +40,15 @@ import java.util.stream.Collectors;
 /**
  * Wrap casting arguments
  */
-public final class CastScope {
+public final class CastScope<F extends PassiveFighter> {
     private final Castable action;
-    private final ActiveFighter caster;
+    private final F caster;
     private final FightCell target;
 
     private final List<EffectScope> effects;
-    private final Map<PassiveFighter, @Nullable PassiveFighter> targetMapping = new HashMap<>();
+    private final Map<F, @Nullable F> targetMapping = new HashMap<>();
 
-    private CastScope(Castable action, ActiveFighter caster, FightCell target, List<SpellEffect> effects) {
+    private CastScope(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
         this.action = action;
         this.caster = caster;
         this.target = target;
@@ -60,7 +59,7 @@ public final class CastScope {
         ;
 
         for (EffectScope effect : this.effects) {
-            for (PassiveFighter fighter : effect.targets) {
+            for (F fighter : effect.targets) {
                 this.targetMapping.put(fighter, fighter);
             }
         }
@@ -89,7 +88,7 @@ public final class CastScope {
      * Get the caster
      */
     @Pure
-    public ActiveFighter caster() {
+    public F caster() {
         return caster;
     }
 
@@ -111,7 +110,7 @@ public final class CastScope {
      *
      * Note: a new instance is returned to ensure that concurrent modification will not occur
      */
-    public Set<PassiveFighter> targets() {
+    public Set<F> targets() {
         return new HashSet<>(targetMapping.keySet());
     }
 
@@ -121,7 +120,7 @@ public final class CastScope {
      * @param originalTarget The base target fighter
      * @param newTarget The new target fighter
      */
-    public void replaceTarget(PassiveFighter originalTarget, PassiveFighter newTarget) {
+    public void replaceTarget(F originalTarget, F newTarget) {
         targetMapping.put(originalTarget, newTarget);
 
         // Add new target as target if not yet defined
@@ -136,7 +135,7 @@ public final class CastScope {
      * Note: this method will definitively remove the target,
      * even if {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)} is called
      */
-    public void removeTarget(PassiveFighter target) {
+    public void removeTarget(F target) {
         // Set target to null without remove the key to ensure that it will effectively remove
         // even if a replaceTarget() point to it
         targetMapping.put(target, null);
@@ -154,8 +153,8 @@ public final class CastScope {
      * Create a basic CastScope instance
      * Should be used for weapons
      */
-    public static CastScope simple(Castable action, ActiveFighter caster, FightCell target, List<SpellEffect> effects) {
-        return new CastScope(action, caster, target, effects);
+    public static <F extends PassiveFighter> CastScope<F> simple(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
+        return new CastScope<>(action, caster, target, effects);
     }
 
     /**
@@ -165,8 +164,8 @@ public final class CastScope {
      * @see RandomEffectSelector#select(List)
      * @see SpellEffect#probability()
      */
-    public static CastScope probable(Castable action, ActiveFighter caster, FightCell target, List<SpellEffect> effects) {
-        return new CastScope(action, caster, target, RandomEffectSelector.select(effects));
+    public static <F extends PassiveFighter> CastScope<F> probable(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
+        return new CastScope<>(action, caster, target, RandomEffectSelector.select(effects));
     }
 
     /**
@@ -176,8 +175,8 @@ public final class CastScope {
      *
      * @return Resolved target. Null if the target is removed
      */
-    private @Nullable PassiveFighter resolveTarget(PassiveFighter baseTarget) {
-        PassiveFighter target = targetMapping.get(baseTarget);
+    private @Nullable F resolveTarget(F baseTarget) {
+        F target = targetMapping.get(baseTarget);
 
         // Target is removed, or it's the original one : do not resolve chaining
         if (target == null || target.equals(baseTarget)) {
@@ -185,7 +184,7 @@ public final class CastScope {
         }
 
         // Keep list of visited mapping to break recursion
-        final Set<PassiveFighter> resolved = new HashSet<>();
+        final Set<F> resolved = new HashSet<>();
 
         resolved.add(baseTarget);
         resolved.add(target);
@@ -205,9 +204,9 @@ public final class CastScope {
 
     public final class EffectScope {
         private final SpellEffect effect;
-        private final Collection<PassiveFighter> targets;
+        private final Collection<F> targets;
 
-        public EffectScope(SpellEffect effect, Collection<PassiveFighter> targets) {
+        public EffectScope(SpellEffect effect, Collection<F> targets) {
             this.effect = effect;
             this.targets = targets;
         }
@@ -223,12 +222,12 @@ public final class CastScope {
         /**
          * Get all targeted fighters for the current effect
          */
-        public Collection<PassiveFighter> targets() {
-            PassiveFighter firstTarget = null;
-            Collection<PassiveFighter> resolvedTargets = null;
+        public Collection<F> targets() {
+            F firstTarget = null;
+            Collection<F> resolvedTargets = null;
 
-            for (PassiveFighter baseTarget : targets) {
-                final PassiveFighter resolved = resolveTarget(baseTarget);
+            for (F baseTarget : targets) {
+                final F resolved = resolveTarget(baseTarget);
 
                 if (resolved == null || resolved.dead()) {
                     continue;

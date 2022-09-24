@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
@@ -78,7 +77,7 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public void kill(ActiveFighter caster) {
+    public void kill(PassiveFighter caster) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");
         }

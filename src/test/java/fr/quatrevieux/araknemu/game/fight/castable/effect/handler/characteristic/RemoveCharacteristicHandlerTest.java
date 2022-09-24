@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -77,7 +78,7 @@ class RemoveCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, caster.cell());
         assertThrows(UnsupportedOperationException.class, () -> handler.handle(scope, scope.effects().get(0)));
     }
 
@@ -96,7 +97,7 @@ class RemoveCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst();

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -84,7 +85,7 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, caster.cell());
         assertThrows(UnsupportedOperationException.class, () -> handler.handle(scope, scope.effects().get(0)));
     }
 
@@ -105,7 +106,7 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
@@ -138,7 +139,7 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
     void buffSingleTargetMaximized() {
         target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value, PassiveFighter caster) {
+            public void onEffectValueTarget(Buff buff, EffectValue value) {
                 value.maximize();
             }
         }));
@@ -158,7 +159,7 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
@@ -202,7 +203,7 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(15));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(15));
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
@@ -242,7 +243,7 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(fight.fighters().get(0), spell, effect, fight.map().get(241));
+        CastScope<Fighter> scope = makeCastScope(fight.fighters().get(0), spell, effect, fight.map().get(241));
         handler.buff(scope, scope.effects().get(0));
 
         requestStack.assertOne(ActionEffect.buff(fight.fighters().get(1).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get(), 10));

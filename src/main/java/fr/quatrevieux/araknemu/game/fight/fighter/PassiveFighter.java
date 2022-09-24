@@ -29,6 +29,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Fighter type which can be a target of spells or other actions
+ *
+ * @todo rename to FighterData ou ReadOnlyFighter ?
  */
 public interface PassiveFighter extends Creature<FightCell> {
     /**
@@ -97,6 +99,8 @@ public interface PassiveFighter extends Creature<FightCell> {
      *
      * @param caster Effect caster
      * @param hidden New hidden state
+     *
+     * @todo remove from this interface ?
      *
      * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden Trigger when the fighter is actually hidden
      * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible Trigger when the fighter is actually visible

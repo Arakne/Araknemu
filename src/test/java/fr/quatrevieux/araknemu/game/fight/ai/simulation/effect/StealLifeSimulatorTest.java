@@ -94,7 +94,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, target.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-22.5, simulation.enemiesLife());
@@ -128,7 +128,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-8, simulation.selfLife());
@@ -148,7 +148,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, target.cell());
         new StealLifeSimulator(Element.EARTH).simulate(simulation, scope.effects().get(0));
 
         return simulation;

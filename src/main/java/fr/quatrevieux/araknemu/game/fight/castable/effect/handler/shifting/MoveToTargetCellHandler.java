@@ -25,7 +25,8 @@ import fr.arakne.utils.maps.path.Decoder;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
 /**
@@ -46,8 +47,8 @@ public final class MoveToTargetCellHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        final PassiveFighter caster = cast.caster();
         final CoordinateCell<FightCell> casterCell = caster.cell().coordinate();
 
         // Remove 1 because the distance should be computed from the target fighter cell
@@ -65,7 +66,7 @@ public final class MoveToTargetCellHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use move back as buff effect");
     }
 }

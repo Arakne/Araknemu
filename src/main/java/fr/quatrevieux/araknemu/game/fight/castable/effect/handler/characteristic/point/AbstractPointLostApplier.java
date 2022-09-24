@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.ComputedCharacteristics;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -72,8 +72,8 @@ public abstract class AbstractPointLostApplier {
      *
      * @return Number of lost points
      */
-    public final int apply(CastScope cast, PassiveFighter target, SpellEffect effect)  {
-        final ActiveFighter caster = cast.caster();
+    public final int apply(CastScope<Fighter> cast, Fighter target, SpellEffect effect)  {
+        final Fighter caster = cast.caster();
 
         final int baseValue = EffectValue.create(effect, caster, target).value();
         final int lost = computePointLost(caster, target, baseValue);
@@ -114,7 +114,7 @@ public abstract class AbstractPointLostApplier {
      *
      * @return Number of lost points. Can be 0 if dodge all loose, and cannot exceed value parameter.
      */
-    private int computePointLost(ActiveFighter caster, PassiveFighter target, @NonNegative int value) {
+    private int computePointLost(PassiveFighter caster, PassiveFighter target, @NonNegative int value) {
         final int maxPoints = target.characteristics().initial().get(this.characteristic);
         final int currentPoints = target.characteristics().get(this.characteristic);
 

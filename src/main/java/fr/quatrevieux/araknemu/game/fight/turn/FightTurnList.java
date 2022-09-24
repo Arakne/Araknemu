@@ -106,6 +106,8 @@ public final class FightTurnList {
 
     /**
      * Get the current turn
+     *
+     * @todo nullable instead of optional ?
      */
     public Optional<FightTurn> current() {
         return Optional.ofNullable(turn);

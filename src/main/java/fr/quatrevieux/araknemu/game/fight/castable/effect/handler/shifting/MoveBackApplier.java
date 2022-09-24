@@ -24,7 +24,6 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -71,7 +70,7 @@ public final class MoveBackApplier {
      * @param target The spell target
      * @param distance The move back distance
      */
-    public void apply(ActiveFighter caster, PassiveFighter target, @NonNegative int distance) {
+    public void apply(PassiveFighter caster, PassiveFighter target, @NonNegative int distance) {
         final Direction direction = caster.cell().coordinate().directionTo(target.cell());
         FightCell destination = target.cell();
 
@@ -110,7 +109,7 @@ public final class MoveBackApplier {
      * @param direction The move direction
      * @param distance Remain move distance
      */
-    private void applyBlockingDamageChain(ActiveFighter caster, PassiveFighter target, FightCell lastCell, Direction direction, @NonNegative int distance) {
+    private void applyBlockingDamageChain(PassiveFighter caster, PassiveFighter target, FightCell lastCell, Direction direction, @NonNegative int distance) {
         int damage = computeDamage(caster, distance);
 
         if (damage <= 0) {
@@ -146,7 +145,7 @@ public final class MoveBackApplier {
      *
      * @return The damage
      */
-    private @NonNegative int computeDamage(ActiveFighter caster, @NonNegative int distance) {
+    private @NonNegative int computeDamage(PassiveFighter caster, @NonNegative int distance) {
         return (baseDamage + random.rand(1, maxDamage) * caster.level() / 50) * distance;
     }
 }

@@ -24,8 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -51,25 +50,25 @@ public final class ApplySpellOnStartTurnHandler implements EffectHandler, BuffHo
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         buff(cast, effect);
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        final PassiveFighter target = buff.target();
+        final Fighter target = buff.target();
         final Spell spell = spellService.get(buff.effect().min())
             .level(Asserter.assertPositive(buff.effect().max()))
         ;
 
-        final CastScope castScope = CastScope.probable(spell, (ActiveFighter) target, target.cell(), spell.effects());
+        final CastScope<Fighter> castScope = CastScope.probable(spell, target, target.cell(), spell.effects());
 
         fight.send(ActionEffect.launchVisualEffect(target, target.cell(), spell));
         fight.effects().apply(castScope);

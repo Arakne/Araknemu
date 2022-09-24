@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
@@ -43,15 +43,15 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Switch position on damage is a buff effect");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        final Fighter caster = cast.caster();
 
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             if (!target.equals(caster)) {
                 target.buffs().add(new Buff(effect.effect(), cast.action(), caster, target, this));
             }
@@ -59,13 +59,13 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
     }
 
     @Override
-    public boolean onCastTarget(Buff buff, CastScope cast) {
+    public boolean onCastTarget(Buff buff, CastScope<Fighter> cast) {
         if (!isDamageCast(cast)) {
             return true;
         }
 
-        final ActiveFighter buffCaster = buff.caster();
-        final PassiveFighter target = buff.target();
+        final Fighter buffCaster = buff.caster();
+        final Fighter target = buff.target();
 
         applier.apply(buffCaster, target);
         cast.replaceTarget(target, buffCaster);
@@ -75,8 +75,8 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
 
     @Override
     public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
-        final ActiveFighter buffCaster = buff.caster();
-        final PassiveFighter target = buff.target();
+        final Fighter buffCaster = buff.caster();
+        final Fighter target = buff.target();
 
         applier.apply(buffCaster, target);
         damage.changeTarget(buffCaster);
@@ -89,7 +89,7 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
      *
      * @return true if the cast can be dodged
      */
-    private boolean isDamageCast(CastScope cast) {
+    private boolean isDamageCast(CastScope<Fighter> cast) {
         return cast.effects().stream()
             .map(CastScope.EffectScope::effect)
             // Should return only direct damage effects

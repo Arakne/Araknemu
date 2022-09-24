@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
@@ -33,8 +33,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
  */
 public final class FixedDamageHandler implements EffectHandler, BuffHook {
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        final PassiveFighter caster = cast.caster();
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
@@ -44,8 +44,8 @@ public final class FixedDamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }

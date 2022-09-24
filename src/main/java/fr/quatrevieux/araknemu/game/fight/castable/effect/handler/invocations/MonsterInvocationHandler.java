@@ -21,12 +21,10 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope.EffectScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
-import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
@@ -54,16 +52,16 @@ public final class MonsterInvocationHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         handle(cast, effect);
     }
 
     @Override
-    public void handle(CastScope cast, EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         final Fighter invocation = fighterFactory.generate(id -> new InvocationFighter(
             id,
             monsterService.load(effect.effect().min()).get(effect.effect().max()),
-            (FightTeam) cast.caster().team(),
+            cast.caster().team(),
             cast.caster()
         ));
 

@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
 import fr.arakne.utils.value.Interval;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -36,7 +35,7 @@ public final class CastSimulation {
     public static final double POISON_RATE = 0.75;
 
     private final Spell spell;
-    private final ActiveFighter caster;
+    private final PassiveFighter caster;
     private final FightCell target;
 
     private double enemiesLife;
@@ -53,7 +52,7 @@ public final class CastSimulation {
 
     private double actionPointsModifier = 0;
 
-    public CastSimulation(Spell spell, ActiveFighter caster, FightCell target) {
+    public CastSimulation(Spell spell, PassiveFighter caster, FightCell target) {
         this.spell = spell;
         this.caster = caster;
         this.target = target;
@@ -250,7 +249,7 @@ public final class CastSimulation {
     /**
      * Get the simulated spell caster
      */
-    public ActiveFighter caster() {
+    public PassiveFighter caster() {
         return caster;
     }
 

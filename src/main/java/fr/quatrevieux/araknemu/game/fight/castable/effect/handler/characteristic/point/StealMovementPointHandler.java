@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.checkerframework.checker.index.qual.Positive;
@@ -49,7 +49,7 @@ public final class StealMovementPointHandler extends AbstractStealPointHandler {
     }
 
     @Override
-    protected void applyOnCurrentTurn(Fight fight, Turn turn, ActiveFighter caster, @Positive int toAdd) {
+    protected void applyOnCurrentTurn(Fight fight, Turn turn, PassiveFighter caster, @Positive int toAdd) {
         turn.points().addMovementPoints(toAdd);
         fight.send(ActionEffect.addMovementPoints(caster, toAdd));
     }

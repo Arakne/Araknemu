@@ -26,8 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 
 /**
@@ -48,13 +47,13 @@ public final class DamageOnActionPointUseHandler implements EffectHandler, BuffH
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Damage on action point use can only be used as buff");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
@@ -63,7 +62,7 @@ public final class DamageOnActionPointUseHandler implements EffectHandler, BuffH
     public void onEndTurn(Buff buff, Turn turn) {
         final int usedAP = turn.points().usedActionPoints();
         final int minAP = buff.effect().min();
-        final ActiveFighter caster = buff.caster();
+        final Fighter caster = buff.caster();
 
         // Not enough AP used for apply the effect
         if (usedAP < minAP) {

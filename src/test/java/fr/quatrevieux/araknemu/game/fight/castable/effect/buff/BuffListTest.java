@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -285,7 +287,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff3);
 
         Damage damage = new Damage(10, Element.NEUTRAL);
-        ActiveFighter fighter = Mockito.mock(ActiveFighter.class);
+        Fighter fighter = Mockito.mock(Fighter.class);
 
         list.onDirectDamage(fighter, damage);
 
@@ -306,7 +308,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff2);
         list.add(buff3);
 
-        ActiveFighter fighter = Mockito.mock(ActiveFighter.class);
+        Fighter fighter = Mockito.mock(Fighter.class);
 
         list.onDirectDamageApplied(fighter, 15);
 
@@ -322,7 +324,7 @@ class BuffListTest extends FightBaseCase {
 
         BuffHook hook1 = new BuffHook() {
             @Override
-            public void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {
+            public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
                 list.add(buff2);
             }
         };
@@ -331,7 +333,7 @@ class BuffListTest extends FightBaseCase {
 
         list.add(buff1);
 
-        ActiveFighter fighter = Mockito.mock(ActiveFighter.class);
+        Fighter fighter = Mockito.mock(Fighter.class);
 
         list.onDirectDamageApplied(fighter, 15);
 
@@ -352,7 +354,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff3);
 
         Damage damage = new Damage(10, Element.NEUTRAL);
-        ActiveFighter fighter = Mockito.mock(ActiveFighter.class);
+        Fighter fighter = Mockito.mock(Fighter.class);
 
         list.onIndirectDamage(fighter, damage);
 
@@ -479,11 +481,11 @@ class BuffListTest extends FightBaseCase {
 
         EffectValue ev = EffectValue.create(Mockito.mock(SpellEffect.class), other.fighter(), other.fighter());
 
-        list.onEffectValueTarget(ev, player.fighter());
+        list.onEffectValueTarget(ev);
 
-        Mockito.verify(hook1).onEffectValueTarget(buff1, ev, player.fighter());
-        Mockito.verify(hook2).onEffectValueTarget(buff2, ev, player.fighter());
-        Mockito.verify(hook3).onEffectValueTarget(buff3, ev, player.fighter());
+        Mockito.verify(hook1).onEffectValueTarget(buff1, ev);
+        Mockito.verify(hook2).onEffectValueTarget(buff2, ev);
+        Mockito.verify(hook3).onEffectValueTarget(buff3, ev);
     }
 
     @Test

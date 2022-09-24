@@ -23,9 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.util.SafeLinkedList;
@@ -95,14 +93,14 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onCast(CastScope cast) {
+    public void onCast(CastScope<Fighter> cast) {
         for (Buff buff : buffs) {
             buff.hook().onCast(buff, cast);
         }
     }
 
     @Override
-    public boolean onCastTarget(CastScope cast) {
+    public boolean onCastTarget(CastScope<Fighter> cast) {
         for (Buff buff : buffs) {
             if (!buff.hook().onCastTarget(buff, cast)) {
                 return false;
@@ -113,14 +111,14 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onDirectDamage(ActiveFighter caster, Damage value) {
+    public void onDirectDamage(Fighter caster, Damage value) {
         for (Buff buff : buffs) {
             buff.hook().onDirectDamage(buff, caster, value);
         }
     }
 
     @Override
-    public void onIndirectDamage(ActiveFighter caster, Damage value) {
+    public void onIndirectDamage(Fighter caster, Damage value) {
         for (Buff buff : buffs) {
             buff.hook().onIndirectDamage(buff, caster, value);
         }
@@ -134,7 +132,7 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onDirectDamageApplied(ActiveFighter caster, @Positive int value) {
+    public void onDirectDamageApplied(Fighter caster, @Positive int value) {
         for (Buff buff : buffs) {
             buff.hook().onDirectDamageApplied(buff, caster, value);
         }
@@ -155,7 +153,7 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onCastDamage(Damage damage, PassiveFighter target) {
+    public void onCastDamage(Damage damage, Fighter target) {
         for (Buff buff : buffs) {
             buff.hook().onCastDamage(buff, damage, target);
         }
@@ -169,9 +167,9 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onEffectValueTarget(EffectValue value, PassiveFighter caster) {
+    public void onEffectValueTarget(EffectValue value) {
         for (Buff buff : buffs) {
-            buff.hook().onEffectValueTarget(buff, value, caster);
+            buff.hook().onEffectValueTarget(buff, value);
         }
     }
 
@@ -188,7 +186,7 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public boolean removeByCaster(PassiveFighter caster) {
+    public boolean removeByCaster(Fighter caster) {
         return removeIf(buff -> buff.caster().equals(caster));
     }
 

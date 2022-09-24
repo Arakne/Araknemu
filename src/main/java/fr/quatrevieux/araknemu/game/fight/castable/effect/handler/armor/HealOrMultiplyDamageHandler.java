@@ -27,8 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.MultipliableDamage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
@@ -40,19 +39,19 @@ public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
     private final RandomUtil random = new RandomUtil();
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("HealOrMultiplyDamageHandler can only be used as buff");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+    public void onDirectDamage(Buff buff, Fighter caster, Damage value) {
         apply(buff, value);
     }
 

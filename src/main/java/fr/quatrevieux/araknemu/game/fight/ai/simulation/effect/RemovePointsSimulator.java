@@ -48,7 +48,7 @@ public final class RemovePointsSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
         final int casterChance = Math.max(simulation.caster().characteristics().get(Characteristic.WISDOM) / 10, 1);
 
         int duration = effect.effect().duration();

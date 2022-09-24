@@ -68,7 +68,7 @@ class MoveFrontHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
 
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
@@ -96,7 +96,7 @@ class MoveFrontHandlerTest extends FightBaseCase {
         FightCell lastCell = target.cell();
         FightCell destination = fight.map().get(263);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertLast(ActionEffect.slide(caster, target, destination));
@@ -128,7 +128,7 @@ class MoveFrontHandlerTest extends FightBaseCase {
 
         FightCell destination = fight.map().get(161);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertOne(ActionEffect.slide(caster, target, destination));
@@ -155,7 +155,7 @@ class MoveFrontHandlerTest extends FightBaseCase {
 
         requestStack.clear();
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(191));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(191));
         handler.handle(scope, scope.effects().get(0));
 
         List<Fighter> enemies = new ArrayList<>(fight.team(1).fighters());

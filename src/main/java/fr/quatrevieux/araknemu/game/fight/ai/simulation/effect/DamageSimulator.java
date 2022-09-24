@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
@@ -45,8 +44,8 @@ public final class DamageSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        final ActiveFighter caster = simulation.caster();
+    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
+        final PassiveFighter caster = simulation.caster();
         final int boost = caster.characteristics().get(element.boost());
         final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);
         final int fixed = caster.characteristics().get(Characteristic.FIXED_DAMAGE);

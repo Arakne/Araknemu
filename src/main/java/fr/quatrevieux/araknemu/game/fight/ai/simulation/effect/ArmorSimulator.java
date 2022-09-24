@@ -31,7 +31,7 @@ import java.util.Set;
 
 public final class ArmorSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
         int duration = effect.effect().duration();
 
         if (duration == 0) {

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
@@ -39,7 +40,7 @@ public final class RaulebaqueHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         module.startPositions().forEach((fighter, startCell) -> {
             if (fighter.dead()) {
                 return;
@@ -62,7 +63,7 @@ public final class RaulebaqueHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use Raulebaque as buff effect");
     }
 }

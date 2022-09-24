@@ -52,7 +52,7 @@ class RaulebaqueModuleTest extends FightBaseCase {
         player.fighter().move(fight.map().get(123));
         other.fighter().move(fight.map().get(321));
 
-        CastScope scope = makeCastScopeForEffect(784);
+        CastScope<Fighter> scope = makeCastScopeForEffect(784);
 
         fight.effects().apply(scope);
 

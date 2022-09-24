@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -80,7 +81,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, caster.cell());
         assertThrows(UnsupportedOperationException.class, () -> handler.handle(scope, scope.effects().get(0)));
     }
 
@@ -97,7 +98,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
@@ -127,7 +128,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
         requestStack.assertOne(new ActionEffect(150, caster, target.id(), 1));
@@ -150,7 +151,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         assertTrue(target.hidden());
@@ -176,7 +177,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         assertTrue(target.hidden());
@@ -209,7 +210,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         assertTrue(target.hidden());
@@ -242,7 +243,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         assertTrue(target.hidden());
@@ -274,7 +275,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         assertTrue(target.hidden());
@@ -308,7 +309,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Mockito.when(effect.duration()).thenReturn(3);
@@ -351,7 +352,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
         handler.buff(scope, scope.effects().get(0));
 
@@ -383,7 +384,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         SpellEffect otherBuffEffect = Mockito.mock(SpellEffect.class);
@@ -421,7 +422,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
 
         SpellEffect otherBuffEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(otherBuffEffect.effect()).thenReturn(144);

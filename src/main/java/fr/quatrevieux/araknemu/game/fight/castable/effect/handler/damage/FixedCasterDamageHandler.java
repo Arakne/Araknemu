@@ -22,7 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle fixed damage, on the spell caster
@@ -33,8 +34,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
  */
 public final class FixedCasterDamageHandler implements EffectHandler {
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+        final PassiveFighter caster = cast.caster();
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
@@ -42,7 +43,7 @@ public final class FixedCasterDamageHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
         throw new UnsupportedOperationException("Fixed caster damage effect do not supports buff");
     }
 }

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -83,7 +84,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         assertEquals(10, computeHeal());
@@ -105,7 +106,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         player.properties().characteristics().base().set(Characteristic.INTELLIGENCE, 20);
         player.properties().characteristics().base().set(Characteristic.HEALTH_BOOST, 5);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         assertEquals(17, computeHeal());
@@ -124,7 +125,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
@@ -150,7 +151,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
         assertTrue(caster.buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
@@ -170,7 +171,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
         target.life().alter(caster, -10);
@@ -194,7 +195,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
         target.life().alter(caster, 10);
@@ -218,7 +219,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         player.properties().characteristics().base().set(Characteristic.INTELLIGENCE, 20);
         player.properties().characteristics().base().set(Characteristic.HEALTH_BOOST, 5);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
         target.life().alter(caster, -10);

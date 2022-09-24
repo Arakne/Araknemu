@@ -66,7 +66,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
         caster.move(fight.map().get(125));
         other.fighter().move(fight.map().get(325));
 
-        CastScope scope = makeCastScopeForEffect(784);
+        CastScope<Fighter> scope = makeCastScopeForEffect(784);
 
         handler.handle(scope, scope.effects().get(0));
 
@@ -87,7 +87,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
 
         newFighter.move(fight.map().get(236));
 
-        CastScope scope = makeCastScopeForEffect(784);
+        CastScope<Fighter> scope = makeCastScopeForEffect(784);
 
         handler.handle(scope, scope.effects().get(0));
 
@@ -107,7 +107,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
         newFighter.move(fight.map().get(123));
         fight.team(0).join(newFighter);
 
-        CastScope scope = makeCastScopeForEffect(784);
+        CastScope<Fighter> scope = makeCastScopeForEffect(784);
 
         handler.handle(scope, scope.effects().get(0));
 
@@ -120,7 +120,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
 
     @Test
     void handleWithoutChanges() {
-        CastScope scope = makeCastScopeForEffect(784);
+        CastScope<Fighter> scope = makeCastScopeForEffect(784);
 
         handler.handle(scope, scope.effects().get(0));
 
@@ -132,7 +132,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
 
     @Test
     void handleWillNotMoveDeadFighter() {
-        CastScope scope = makeCastScopeForEffect(784);
+        CastScope<Fighter> scope = makeCastScopeForEffect(784);
 
         other.fighter().move(fight.map().get(124));
         other.fighter().life().kill(other.fighter());
@@ -147,7 +147,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
 
     @Test
     void buff() {
-        CastScope scope = makeCastScopeForEffect(784);
+        CastScope<Fighter> scope = makeCastScopeForEffect(784);
 
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }

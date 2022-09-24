@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 import java.util.Collections;
@@ -49,12 +50,12 @@ public final class EffectsHandler {
      * - {@link EffectHandler#handle(CastScope, CastScope.EffectScope)} if duration is 0
      * - {@link EffectHandler#buff(CastScope, CastScope.EffectScope)} if the effect has a duration
      */
-    public void apply(CastScope cast) {
+    public void apply(CastScope<Fighter> cast) {
         cast.caster().buffs().onCast(cast);
 
         applyCastTarget(cast);
 
-        for (CastScope.EffectScope effect : cast.effects()) {
+        for (CastScope<Fighter>.EffectScope effect : cast.effects()) {
             final EffectHandler handler = handlers.get(effect.effect().effect());
             // @todo Warning if handler is not found
             if (handler != null) {
@@ -74,15 +75,15 @@ public final class EffectsHandler {
      * If a target is changed (by calling {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)}),
      * new targets will also be called
      */
-    private void applyCastTarget(CastScope cast) {
-        Set<PassiveFighter> visitedTargets = Collections.emptySet();
+    private void applyCastTarget(CastScope<Fighter> cast) {
+        Set<Fighter> visitedTargets = Collections.emptySet();
 
         for (;;) {
-            final Set<PassiveFighter> currentTargets = cast.targets();
+            final Set<Fighter> currentTargets = cast.targets();
 
             boolean hasChanged = false;
 
-            for (PassiveFighter target : currentTargets) {
+            for (Fighter target : currentTargets) {
                 // Ignore already called targets
                 if (!visitedTargets.contains(target)) {
                     if (!target.buffs().onCastTarget(cast)) {

@@ -23,8 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -40,7 +39,7 @@ public interface Buffs extends Iterable<Buff> {
     /**
      * @see BuffHook#onCast(Buff, CastScope)
      */
-    public void onCast(CastScope cast);
+    public void onCast(CastScope<Fighter> cast);
 
     /**
      * Apply buffs when the fighter is a target of a cast
@@ -52,17 +51,17 @@ public interface Buffs extends Iterable<Buff> {
      *
      * @see BuffHook#onCastTarget(Buff, CastScope)
      */
-    public boolean onCastTarget(CastScope cast);
+    public boolean onCastTarget(CastScope<Fighter> cast);
 
     /**
-     * @see BuffHook#onDirectDamage(Buff, ActiveFighter, Damage)
+     * @see BuffHook#onDirectDamage(Buff, Fighter, Damage)
      */
-    public void onDirectDamage(ActiveFighter caster, Damage value);
+    public void onDirectDamage(Fighter caster, Damage value);
 
     /**
-     * @see BuffHook#onIndirectDamage(Buff, ActiveFighter, Damage)
+     * @see BuffHook#onIndirectDamage(Buff, Fighter, Damage)
      */
-    public void onIndirectDamage(ActiveFighter caster, Damage value);
+    public void onIndirectDamage(Fighter caster, Damage value);
 
     /**
      * @see BuffHook#onBuffDamage(Buff, Buff, Damage)
@@ -70,9 +69,9 @@ public interface Buffs extends Iterable<Buff> {
     public void onBuffDamage(Buff poison, Damage value);
 
     /**
-     * @see BuffHook#onDirectDamageApplied(Buff, ActiveFighter, int)
+     * @see BuffHook#onDirectDamageApplied(Buff, Fighter, int)
      */
-    public void onDirectDamageApplied(ActiveFighter caster, @Positive int value);
+    public void onDirectDamageApplied(Fighter caster, @Positive int value);
 
     /**
      * @see BuffHook#onLifeAltered(Buff, int)
@@ -95,9 +94,9 @@ public interface Buffs extends Iterable<Buff> {
     public void onEndTurn(Turn turn);
 
     /**
-     * @see BuffHook#onCastDamage(Buff, Damage, PassiveFighter)
+     * @see BuffHook#onCastDamage(Buff, Damage, Fighter)
      */
-    public void onCastDamage(Damage damage, PassiveFighter target);
+    public void onCastDamage(Damage damage, Fighter target);
 
     /**
      * @see BuffHook#onEffectValueCast(Buff, EffectValue)
@@ -105,9 +104,9 @@ public interface Buffs extends Iterable<Buff> {
     public void onEffectValueCast(EffectValue value);
 
     /**
-     * @see BuffHook#onEffectValueTarget(Buff, EffectValue, PassiveFighter)
+     * @see BuffHook#onEffectValueTarget(Buff, EffectValue)
      */
-    public void onEffectValueTarget(EffectValue value, PassiveFighter caster);
+    public void onEffectValueTarget(EffectValue value);
 
     /**
      * Refresh the buff list after turn end
@@ -126,5 +125,5 @@ public interface Buffs extends Iterable<Buff> {
      *
      * @return true if there is at least one removed buff
      */
-    public boolean removeByCaster(PassiveFighter caster);
+    public boolean removeByCaster(Fighter caster);
 }

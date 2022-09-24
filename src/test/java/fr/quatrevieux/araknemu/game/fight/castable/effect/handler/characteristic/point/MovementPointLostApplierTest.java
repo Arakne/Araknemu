@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -76,7 +77,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
 
     @Test
     void computeLostPointsWithoutPoints() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", ActiveFighter.class, PassiveFighter.class, int.class);
+        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", PassiveFighter.class, PassiveFighter.class, int.class);
         method.setAccessible(true);
 
         target.characteristics().alter(Characteristic.MOVEMENT_POINT, -3);
@@ -86,7 +87,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
 
     @Test
     void computeLostPointsWithoutMaxPointsButBoosted() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", ActiveFighter.class, PassiveFighter.class, int.class);
+        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", PassiveFighter.class, PassiveFighter.class, int.class);
         method.setAccessible(true);
 
         target.player().properties().characteristics().base().set(Characteristic.MOVEMENT_POINT, -3);
@@ -99,7 +100,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
     @ParameterizedTest
     @MethodSource("provideLostPoints")
     void computeLostPoints(int casterWisdom, int targetResistance, int baseValue, double expectedAvg) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", ActiveFighter.class, PassiveFighter.class, int.class);
+        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", PassiveFighter.class, PassiveFighter.class, int.class);
         method.setAccessible(true);
 
         target.characteristics().alter(Characteristic.RESISTANCE_MOVEMENT_POINT, targetResistance);
@@ -166,7 +167,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
         Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
@@ -198,7 +199,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, caster.cell());
         applier.apply(scope, caster, effect);
 
         Buff buff = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
@@ -231,7 +232,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
         assertFalse(target.buffs().stream().anyMatch(b -> b.effect().effect() == 127));
@@ -256,7 +257,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
         Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
