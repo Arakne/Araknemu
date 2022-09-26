@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -118,12 +118,12 @@ public final class FighterAI implements Runnable, AI<Fighter> {
     }
 
     @Override
-    public Stream<? extends PassiveFighter> fighters() {
+    public Stream<? extends FighterData> fighters() {
         return fight.fighters().stream().filter(other -> !other.dead());
     }
 
     @Override
-    public Optional<? extends PassiveFighter> enemy() {
+    public Optional<? extends FighterData> enemy() {
         return helper.enemies().nearest();
     }
 

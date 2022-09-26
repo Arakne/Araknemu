@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle steal life
@@ -59,7 +59,7 @@ public final class StealLifeHandler implements EffectHandler, BuffHook {
         return !buff.target().dead();
     }
 
-    private void applyCasterHeal(int damage, PassiveFighter caster) {
+    private void applyCasterHeal(int damage, FighterData caster) {
         // #56 : do not heal if dead
         if (damage >= 0 || caster.dead()) { // Heal or no effect
             return;

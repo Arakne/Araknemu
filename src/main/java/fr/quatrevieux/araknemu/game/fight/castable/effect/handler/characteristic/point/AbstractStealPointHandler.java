@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.index.qual.Positive;
@@ -95,7 +95,7 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
      * @param turn The active turn
      * @param toAdd Number of points to add. This value is always >= 1
      */
-    protected abstract void applyOnCurrentTurn(Fight fight, Turn turn, PassiveFighter caster, @Positive int toAdd);
+    protected abstract void applyOnCurrentTurn(Fight fight, Turn turn, FighterData caster, @Positive int toAdd);
 
     /**
      * Apply to all targets and compute the stolen points

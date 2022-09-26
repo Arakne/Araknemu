@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public final class EffectsHandler {
      * Call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastTarget(CastScope)}
      * on each target.
      *
-     * If a target is changed (by calling {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)}),
+     * If a target is changed (by calling {@link CastScope#replaceTarget(FighterData, FighterData)}),
      * new targets will also be called
      */
     private void applyCastTarget(CastScope<Fighter> cast) {

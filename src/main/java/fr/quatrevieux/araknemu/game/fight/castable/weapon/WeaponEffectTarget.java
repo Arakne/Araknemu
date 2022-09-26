@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.weapon;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 
 /**
@@ -34,7 +34,7 @@ public final class WeaponEffectTarget implements EffectTarget {
     }
 
     @Override
-    public boolean test(PassiveFighter caster, PassiveFighter fighter) {
+    public boolean test(FighterData caster, FighterData fighter) {
         return !caster.equals(fighter);
     }
 }

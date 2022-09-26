@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellsHelper;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -68,7 +68,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
             return Optional.empty();
         }
 
-        final Optional<? extends PassiveFighter> enemy = ai.enemy();
+        final Optional<? extends FighterData> enemy = ai.enemy();
 
         if (!enemy.isPresent()) {
             return Optional.empty();

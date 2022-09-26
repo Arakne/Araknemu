@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai;
 
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 
@@ -61,7 +61,7 @@ public interface AI<F extends ActiveFighter> {
     /**
      * Get all fighter of the current fight
      */
-    public Stream<? extends PassiveFighter> fighters();
+    public Stream<? extends FighterData> fighters();
 
     /**
      * Get the best enemy
@@ -69,7 +69,7 @@ public interface AI<F extends ActiveFighter> {
      *
      * An empty optional can be returned, if there is no enemy which match
      */
-    public Optional<? extends PassiveFighter> enemy();
+    public Optional<? extends FighterData> enemy();
 
     /**
      * Get helper for the current AI

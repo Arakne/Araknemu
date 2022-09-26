@@ -24,9 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -76,7 +75,7 @@ class ActionPointLostApplierTest extends FightBaseCase {
 
     @Test
     void computeLostPointsWithoutPoints() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", PassiveFighter.class, PassiveFighter.class, int.class);
+        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", FighterData.class, FighterData.class, int.class);
         method.setAccessible(true);
 
         target.characteristics().alter(Characteristic.ACTION_POINT, -6);
@@ -86,7 +85,7 @@ class ActionPointLostApplierTest extends FightBaseCase {
 
     @Test
     void computeLostPointsWithoutMaxPointsButBoosted() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", PassiveFighter.class, PassiveFighter.class, int.class);
+        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", FighterData.class, FighterData.class, int.class);
         method.setAccessible(true);
 
         target.player().properties().characteristics().base().set(Characteristic.ACTION_POINT, -6);
@@ -99,7 +98,7 @@ class ActionPointLostApplierTest extends FightBaseCase {
     @ParameterizedTest
     @MethodSource("provideLostPoints")
     void computeLostPoints(int casterWisdom, int targetResistance, int baseValue, double expectedAvg) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", PassiveFighter.class, PassiveFighter.class, int.class);
+        Method method = AbstractPointLostApplier.class.getDeclaredMethod("computePointLost", FighterData.class, FighterData.class, int.class);
         method.setAccessible(true);
 
         target.characteristics().alter(Characteristic.RESISTANCE_ACTION_POINT, targetResistance);

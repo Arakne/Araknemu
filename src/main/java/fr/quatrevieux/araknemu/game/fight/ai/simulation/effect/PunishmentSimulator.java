@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Simulator for punishment effect
@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
  */
 public final class PunishmentSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
         int duration = effect.effect().duration();
 
         if (duration == -1 || duration > 10) {
@@ -41,7 +41,7 @@ public final class PunishmentSimulator implements EffectSimulator {
 
         final int value = duration * effect.effect().max();
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             simulation.addBoost(value, target);
         }
     }

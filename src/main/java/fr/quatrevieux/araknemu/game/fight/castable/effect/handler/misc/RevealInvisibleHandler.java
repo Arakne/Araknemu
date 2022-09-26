@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Reveal all invisible objects and fighters
@@ -30,10 +30,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 public final class RevealInvisibleHandler implements EffectHandler {
     @Override
     public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
-        final PassiveFighter caster = cast.caster();
+        final FighterData caster = cast.caster();
 
         // @todo reveal traps
-        for (PassiveFighter fighter : effect.targets()) {
+        for (Fighter fighter : effect.targets()) {
             if (fighter.hidden()) {
                 fighter.setHidden(caster, false);
             }

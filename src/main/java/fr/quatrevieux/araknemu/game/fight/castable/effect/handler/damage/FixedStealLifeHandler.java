@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle steal a fixed amount of like
@@ -36,12 +36,12 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 public final class FixedStealLifeHandler implements EffectHandler {
     @Override
     public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
-        final PassiveFighter caster = cast.caster();
+        final FighterData caster = cast.caster();
         final FighterLife casterLife = caster.life();
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             casterLife.alter(caster, -target.life().alter(caster, -EffectValue.create(effect.effect(), caster, target).value()));
         }
     }

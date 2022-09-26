@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -192,7 +192,7 @@ public final class EffectValue implements Cloneable {
      *
      * @return The configured effect
      */
-    public static EffectValue create(SpellEffect effect, PassiveFighter caster, PassiveFighter target) {
+    public static EffectValue create(SpellEffect effect, FighterData caster, FighterData target) {
         final EffectValue value = new EffectValue(effect);
 
         caster.buffs().onEffectValueCast(value);
@@ -224,7 +224,7 @@ public final class EffectValue implements Cloneable {
      * @param targets Targets used to configure the effect value using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)}
      * @param action Action to perform on each target, with their related effect value
      */
-    public static <F extends PassiveFighter> void forEachTargets(SpellEffect effect, PassiveFighter caster, Iterable<F> targets, BiConsumer<F, EffectValue> action) {
+    public static <F extends FighterData> void forEachTargets(SpellEffect effect, FighterData caster, Iterable<F> targets, BiConsumer<F, EffectValue> action) {
         final EffectValue value = new EffectValue(effect);
 
         caster.buffs().onEffectValueCast(value);

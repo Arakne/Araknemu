@@ -20,12 +20,13 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Add vitality with buff effect
  * The effect will be added to current and max fighter life
  *
- * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alterMax(fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter, int)
+ * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alterMax(FighterData, int)
  */
 public final class AddVitalityHandler extends AbstractAlterCharacteristicHandler {
     public AddVitalityHandler(Fight fight) {

@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -34,12 +34,12 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  */
 public final class HealSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
-        final PassiveFighter caster = simulation.caster();
+    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
+        final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(Characteristic.INTELLIGENCE);
         final int fixed = caster.characteristics().get(Characteristic.HEALTH_BOOST);
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             final SpellEffect spellEffect = effect.effect();
             final Interval value = EffectValue.create(spellEffect, simulation.caster(), target)
                 .percent(boost)

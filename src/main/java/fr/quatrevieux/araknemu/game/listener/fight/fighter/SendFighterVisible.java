@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * The fighter position will be sent before to ensure that
  * the fighter will be shown at correct position
  *
- * @see ActionEffect#fighterVisible(PassiveFighter, PassiveFighter)
+ * @see ActionEffect#fighterVisible(FighterData, FighterData)
  */
 public final class SendFighterVisible implements Listener<FighterVisible> {
     private final Fight fight;
@@ -43,7 +43,7 @@ public final class SendFighterVisible implements Listener<FighterVisible> {
 
     @Override
     public void on(FighterVisible event) {
-        final PassiveFighter target = event.fighter();
+        final FighterData target = event.fighter();
 
         fight.send(new FighterPositions(target));
         fight.send(ActionEffect.fighterVisible(event.caster(), target));

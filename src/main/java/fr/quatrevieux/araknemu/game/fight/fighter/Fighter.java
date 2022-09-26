@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.function.Consumer;
 
@@ -46,6 +47,25 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
      * Change the fighter orientation
      */
     public void setOrientation(Direction orientation);
+
+    /**
+     * Go to the given cell
+     */
+    public void move(@Nullable FightCell cell);
+
+    /**
+     * Change the hidden state of the fighter
+     * An event will be dispatched to the fight if effective
+     *
+     * Note: this method will do nothing if the fighter is already on the requested state
+     *
+     * @param caster Effect caster
+     * @param hidden New hidden state
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden Trigger when the fighter is actually hidden
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible Trigger when the fighter is actually visible
+     */
+    public void setHidden(FighterData caster, boolean hidden);
 
     /**
      * Get the weapon

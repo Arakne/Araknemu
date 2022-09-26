@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * Wrap casting arguments
  */
-public final class CastScope<F extends PassiveFighter> {
+public final class CastScope<F extends FighterData> {
     private final Castable action;
     private final F caster;
     private final FightCell target;
@@ -105,7 +105,7 @@ public final class CastScope<F extends PassiveFighter> {
      *
      * This method will not resolve target mapping, nor effect target mapping
      * It will return all targets, before the mapping is resolved
-     * So if {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)} is called,
+     * So if {@link CastScope#replaceTarget(FighterData, FighterData)} is called,
      * the new target will be added on this set
      *
      * Note: a new instance is returned to ensure that concurrent modification will not occur
@@ -133,7 +133,7 @@ public final class CastScope<F extends PassiveFighter> {
      * Remove a target of the cast
      *
      * Note: this method will definitively remove the target,
-     * even if {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)} is called
+     * even if {@link CastScope#replaceTarget(FighterData, FighterData)} is called
      */
     public void removeTarget(F target) {
         // Set target to null without remove the key to ensure that it will effectively remove
@@ -153,7 +153,7 @@ public final class CastScope<F extends PassiveFighter> {
      * Create a basic CastScope instance
      * Should be used for weapons
      */
-    public static <F extends PassiveFighter> CastScope<F> simple(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
+    public static <F extends FighterData> CastScope<F> simple(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
         return new CastScope<>(action, caster, target, effects);
     }
 
@@ -164,7 +164,7 @@ public final class CastScope<F extends PassiveFighter> {
      * @see RandomEffectSelector#select(List)
      * @see SpellEffect#probability()
      */
-    public static <F extends PassiveFighter> CastScope<F> probable(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
+    public static <F extends FighterData> CastScope<F> probable(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
         return new CastScope<>(action, caster, target, RandomEffectSelector.select(effects));
     }
 

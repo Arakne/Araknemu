@@ -190,7 +190,7 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
-    public void setHidden(PassiveFighter caster, boolean hidden) {
+    public void setHidden(FighterData caster, boolean hidden) {
         if (this.hidden == hidden) {
             return;
         }
@@ -208,11 +208,11 @@ public abstract class AbstractFighter implements Fighter {
             return true;
         }
 
-        if (!(obj instanceof PassiveFighter)) {
+        if (!(obj instanceof FighterData)) {
             return false;
         }
 
-        return id() == ((PassiveFighter) obj).id();
+        return id() == ((FighterData) obj).id();
     }
 
     @Override

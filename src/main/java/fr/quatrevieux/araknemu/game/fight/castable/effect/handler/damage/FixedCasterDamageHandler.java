@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle fixed damage, on the spell caster
@@ -35,7 +35,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 public final class FixedCasterDamageHandler implements EffectHandler {
     @Override
     public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
-        final PassiveFighter caster = cast.caster();
+        final FighterData caster = cast.caster();
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks

@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
@@ -44,7 +44,7 @@ public final class ProxyAI implements AI<ActiveFighter> {
     private ProxyActiveFighter fighter;
     private ProxyTurn turn;
 
-    private final Map<PassiveFighter, PassiveFighter> fighters = new WeakHashMap<>();
+    private final Map<FighterData, FighterData> fighters = new WeakHashMap<>();
 
     public ProxyAI(AI<?> ai) {
         this.ai = ai;
@@ -81,12 +81,12 @@ public final class ProxyAI implements AI<ActiveFighter> {
     }
 
     @Override
-    public Stream<? extends PassiveFighter> fighters() {
+    public Stream<? extends FighterData> fighters() {
         return ai.fighters().map(this::getProxyFighter);
     }
 
     @Override
-    public Optional<? extends PassiveFighter> enemy() {
+    public Optional<? extends FighterData> enemy() {
         return ai.enemy().map(this::getProxyFighter);
     }
 
@@ -108,7 +108,7 @@ public final class ProxyAI implements AI<ActiveFighter> {
             modifier.free(fighter().cell().id()).setFighter(cellId, newAi.fighter);
 
             ai.fighters().filter(other -> other.id() != this.fighter.id()).forEach(other -> {
-                final PassiveFighter proxyFighter = new ProxyPassiveFighter(other, newAi);
+                final FighterData proxyFighter = new ProxyPassiveFighter(other, newAi);
 
                 newAi.fighters.put(other, proxyFighter);
                 modifier.setFighter(other.cell().id(), proxyFighter);
@@ -125,7 +125,7 @@ public final class ProxyAI implements AI<ActiveFighter> {
      *
      * @return The proxy fighter
      */
-    private PassiveFighter getProxyFighter(PassiveFighter fighter) {
+    private FighterData getProxyFighter(FighterData fighter) {
         if (fighter.id() == this.fighter.id()) {
             return this.fighter;
         }

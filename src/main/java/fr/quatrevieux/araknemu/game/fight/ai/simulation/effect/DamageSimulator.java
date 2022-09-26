@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -44,13 +44,13 @@ public final class DamageSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
-        final PassiveFighter caster = simulation.caster();
+    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
+        final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(element.boost());
         final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);
         final int fixed = caster.characteristics().get(Characteristic.FIXED_DAMAGE);
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             final SpellEffect spellEffect = effect.effect();
             final Interval value = EffectValue.create(spellEffect, simulation.caster(), target)
                 .percent(boost)
@@ -71,7 +71,7 @@ public final class DamageSimulator implements EffectSimulator {
         }
     }
 
-    private @NonNegative int computeDamage(@NonNegative int value, PassiveFighter target) {
+    private @NonNegative int computeDamage(@NonNegative int value, FighterData target) {
         final Damage damage = new Damage(value, element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))

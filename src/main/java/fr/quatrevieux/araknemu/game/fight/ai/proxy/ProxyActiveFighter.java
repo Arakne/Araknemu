@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
@@ -93,11 +93,6 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public void move(@Nullable FightCell cell) {
-        throw new UnsupportedOperationException("This is a proxy fighter");
-    }
-
-    @Override
     public FighterLife life() {
         return fighter.life();
     }
@@ -123,7 +118,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public Team<? extends PassiveFighter> team() {
+    public Team<? extends FighterData> team() {
         return fighter.team();
     }
 
@@ -143,21 +138,16 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public void setHidden(PassiveFighter caster, boolean hidden) {
-        throw new UnsupportedOperationException("Cannot modify a proxy fighter");
-    }
-
-    @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (!(o instanceof PassiveFighter)) {
+        if (!(o instanceof FighterData)) {
             return false;
         }
 
-        final PassiveFighter that = (PassiveFighter) o;
+        final FighterData that = (FighterData) o;
 
         return id() == that.id();
     }
@@ -183,7 +173,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public @Nullable PassiveFighter invoker() {
+    public @Nullable FighterData invoker() {
         return fighter.invoker();
     }
 }

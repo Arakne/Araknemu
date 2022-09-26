@@ -78,32 +78,6 @@ class ProxyPassiveFighterTest extends AiBaseCase {
     }
 
     @Test
-    void moveIsNotAllowed() {
-        configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(152))
-            .addEnemy(builder -> builder.cell(167))
-            .addAlly(builder -> builder.cell(166))
-        );
-
-        ProxyPassiveFighter fighter = new ProxyPassiveFighter(ai.enemy().get(), ai);
-
-        assertThrows(UnsupportedOperationException.class, () -> fighter.move(ai.map().get(123)));
-    }
-
-    @Test
-    void setHiddenIsNotAllowed() {
-        configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(152))
-            .addEnemy(builder -> builder.cell(167))
-            .addAlly(builder -> builder.cell(166))
-        );
-
-        ProxyPassiveFighter fighter = new ProxyPassiveFighter(ai.enemy().get(), ai);
-
-        assertThrows(UnsupportedOperationException.class, () -> fighter.setHidden(fighter, true));
-    }
-
-    @Test
     void withOverriddenMap() {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(152))

@@ -115,30 +115,4 @@ class ProxyActiveFighterTest extends AiBaseCase {
         assertSame(foo, fighter.attachment(Foo.class));
         assertSame(foo, fighter.attachment((Object) Foo.class));
     }
-
-    @Test
-    void moveIsNotAllowed() {
-        configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(152))
-            .addEnemy(builder -> builder.cell(167))
-            .addAlly(builder -> builder.cell(166))
-        );
-
-        ProxyActiveFighter fighter = new ProxyActiveFighter(ai.fighter());
-
-        assertThrows(UnsupportedOperationException.class, () -> fighter.move(ai.map().get(123)));
-    }
-
-    @Test
-    void setHiddenIsNotAllowed() {
-        configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(152))
-            .addEnemy(builder -> builder.cell(167))
-            .addAlly(builder -> builder.cell(166))
-        );
-
-        ProxyActiveFighter fighter = new ProxyActiveFighter(ai.fighter());
-
-        assertThrows(UnsupportedOperationException.class, () -> fighter.setHidden(fighter, true));
-    }
 }

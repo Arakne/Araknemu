@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
@@ -39,7 +39,7 @@ public final class InvocationFighterCharacteristics implements FighterCharacteri
     private final MutableCharacteristics boost;
     private final float rate;
 
-    public InvocationFighterCharacteristics(Monster monster, Fighter fighter, PassiveFighter invoker) {
+    public InvocationFighterCharacteristics(Monster monster, Fighter fighter, FighterData invoker) {
         this.base = monster.characteristics();
         this.fighter = fighter;
         this.boost = new DefaultCharacteristics();
@@ -86,7 +86,7 @@ public final class InvocationFighterCharacteristics implements FighterCharacteri
      * Get the characteristics modifier for the given invoke
      * The value is always higher than 1
      */
-    public static float modifier(PassiveFighter invoker) {
+    public static float modifier(FighterData invoker) {
         return 1 + invoker.level() / 100f;
     }
 }

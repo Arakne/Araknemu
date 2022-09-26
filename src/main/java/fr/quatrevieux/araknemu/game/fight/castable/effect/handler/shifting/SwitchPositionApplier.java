@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -40,7 +40,7 @@ public final class SwitchPositionApplier {
      * @param caster The switch spell caster
      * @param target The other fighter to switch with
      */
-    public void apply(PassiveFighter caster, PassiveFighter target) {
+    public void apply(Fighter caster, Fighter target) {
         final FightCell casterCell = caster.cell();
         final FightCell targetCell = target.cell();
 

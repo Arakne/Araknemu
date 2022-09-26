@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -56,7 +56,7 @@ class ProxyAITest extends AiBaseCase {
         assertInstanceOf(ProxyPassiveFighter.class, proxy.enemy().get());
         assertEquals(ai.enemy().get(), proxy.enemy().get());
 
-        List<PassiveFighter> fighters = proxy.fighters().collect(Collectors.toList());
+        List<FighterData> fighters = proxy.fighters().collect(Collectors.toList());
 
         assertSame(proxy.fighter(), fighters.get(0));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(1));
@@ -96,7 +96,7 @@ class ProxyAITest extends AiBaseCase {
         assertInstanceOf(ProxyBattlefield.class, proxy.map());
         assertInstanceOf(ProxyTurn.class, proxy.turn());
 
-        List<PassiveFighter> fighters = proxy.fighters().collect(Collectors.toList());
+        List<FighterData> fighters = proxy.fighters().collect(Collectors.toList());
 
         assertSame(proxy.fighter(), fighters.get(0));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(1));

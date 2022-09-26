@@ -27,13 +27,13 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Buff effect for switch position between buff caster and target when the target will take damage
  * This effect will also replace the cast target
  *
- * @see CastScope#replaceTarget(PassiveFighter, PassiveFighter)
+ * @see CastScope#replaceTarget(FighterData, FighterData)
  */
 public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffHook {
     private final SwitchPositionApplier applier;

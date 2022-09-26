@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
@@ -49,7 +49,7 @@ public final class CastTargetResolver {
      *
      * @see fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget
      */
-    public static <F extends PassiveFighter> Collection<F> resolveFromEffect(F caster, FightCell target, Castable action, SpellEffect effect) {
+    public static <F extends FighterData> Collection<F> resolveFromEffect(F caster, FightCell target, Castable action, SpellEffect effect) {
         if (effect.target().onlyCaster()) {
             return Collections.singleton(caster);
         }
@@ -64,7 +64,7 @@ public final class CastTargetResolver {
     /**
      * Perform resolution from effect target and effect area
      */
-    private static <F extends PassiveFighter> Collection<F> resolveFromEffectArea(F caster, FightCell target, SpellEffect effect) {
+    private static <F extends FighterData> Collection<F> resolveFromEffectArea(F caster, FightCell target, SpellEffect effect) {
         // Use lazy instantiation and do not use stream API to optimise memory allocations
         F firstTarget = null;
         Collection<F> targets = null;

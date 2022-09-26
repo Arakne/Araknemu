@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 
@@ -43,8 +43,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
  * Note: If two (or more) invisibility buffs are effective on a fighter, the invisibility state will be terminated
  * with the last (i.e. longest) buff.
  *
- * @see PassiveFighter#hidden() Check the hidden state
- * @see PassiveFighter#setHidden(PassiveFighter, boolean) Called by the handler for change hidden state
+ * @see FighterData#hidden() Check the hidden state
+ * @see FighterData#setHidden(FighterData, boolean) Called by the handler for change hidden state
  */
 public final class InvisibilityHandler implements EffectHandler, BuffHook {
     private final Fight fight;
@@ -76,7 +76,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
 
     @Override
     public void onBuffTerminated(Buff buff) {
-        final PassiveFighter target = buff.target();
+        final Fighter target = buff.target();
 
         // Set visible only if not yet visible and there is no other active invisibility buff
         if (target.hidden() && !hasOtherInvisibilityBuff(target)) {
@@ -86,7 +86,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
 
     @Override
     public void onCast(Buff buff, CastScope<Fighter> cast) {
-        final PassiveFighter target = buff.target();
+        final Fighter target = buff.target();
 
         if (!target.hidden()) {
             return;
@@ -107,7 +107,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     /**
      * Check if another active invisibility buff is present
      */
-    private boolean hasOtherInvisibilityBuff(PassiveFighter fighter) {
+    private boolean hasOtherInvisibilityBuff(FighterData fighter) {
         for (Buff activeBuff : fighter.buffs()) {
             // Another invisibility buff exists : do not set target visible
             if (activeBuff.valid() && activeBuff.hook() == this) {
@@ -136,7 +136,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     /**
      * Check if the given buff is the first of the buff list
      */
-    private boolean isFirstInvisibilityBuff(PassiveFighter fighter, Buff currentBuff) {
+    private boolean isFirstInvisibilityBuff(FighterData fighter, Buff currentBuff) {
         for (Buff otherBuff : fighter.buffs()) {
             if (otherBuff.hook() == this) {
                 // Current buff is not the first active invisibility buff

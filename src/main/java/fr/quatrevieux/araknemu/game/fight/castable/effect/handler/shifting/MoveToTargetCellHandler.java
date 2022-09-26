@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
 /**
@@ -48,7 +48,7 @@ public final class MoveToTargetCellHandler implements EffectHandler {
 
     @Override
     public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
-        final PassiveFighter caster = cast.caster();
+        final FighterData caster = cast.caster();
         final CoordinateCell<FightCell> casterCell = caster.cell().coordinate();
 
         // Remove 1 because the distance should be computed from the target fighter cell
@@ -61,7 +61,7 @@ public final class MoveToTargetCellHandler implements EffectHandler {
 
         decoder.nextCellByDirection(casterCell.cell(), direction)
             .flatMap(FightCell::fighter)
-            .ifPresent(target -> applier.apply(caster, target, distance))
+            .ifPresent(target -> applier.apply(caster, (Fighter) target, distance)) // @todo do not cast
         ;
     }
 

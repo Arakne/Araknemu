@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -67,7 +67,7 @@ public final class DecreaseCasterSightHandler implements EffectHandler, BuffHook
     @Override
     public void onBuffStarted(Buff buff) {
         final int value = buff.effect().min();
-        final PassiveFighter target = buff.target();
+        final FighterData target = buff.target();
 
         target.characteristics().alter(Characteristic.SIGHT_BOOST, -value);
         fight.send(ActionEffect.decreaseSight(target, target, value, buff.remainingTurns()));

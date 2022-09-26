@@ -19,16 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.event;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Fighter max life has been updated
  */
 public final class FighterMaxLifeChanged {
-    private final PassiveFighter fighter;
-    private final PassiveFighter caster;
+    private final FighterData fighter;
+    private final FighterData caster;
 
-    public FighterMaxLifeChanged(PassiveFighter fighter, PassiveFighter caster) {
+    public FighterMaxLifeChanged(FighterData fighter, FighterData caster) {
         this.fighter = fighter;
         this.caster = caster;
     }
@@ -36,14 +36,14 @@ public final class FighterMaxLifeChanged {
     /**
      * The target: fighter which have its life updated
      */
-    public PassiveFighter fighter() {
+    public FighterData fighter() {
         return fighter;
     }
 
     /**
      * Spell caster
      */
-    public PassiveFighter caster() {
+    public FighterData caster() {
         return caster;
     }
 }

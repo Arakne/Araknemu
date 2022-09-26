@@ -24,7 +24,7 @@ import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
@@ -97,7 +97,7 @@ public final class TackleValidator implements FightPathValidator {
      * @return The dodge chance between 0 and 1.
      *     0 means that it's impossible to escape, 1 means that it's certain to escape
      */
-    private double computeTackle(Fighter fighter, PassiveFighter enemy) {
+    private double computeTackle(Fighter fighter, FighterData enemy) {
         final int fighterAgility = fighter.characteristics().get(Characteristic.AGILITY);
         final int enemyAgility = enemy.characteristics().get(Characteristic.AGILITY);
 

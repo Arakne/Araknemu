@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.spell.effect.target;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -50,7 +50,7 @@ public final class SpellEffectTarget implements EffectTarget {
     }
 
     @Override
-    public boolean test(PassiveFighter caster, PassiveFighter fighter) {
+    public boolean test(FighterData caster, FighterData fighter) {
         return checkSelf(caster, fighter)
             && checkTeam(caster.team(), fighter.team())
             && checkInvocation(fighter)
@@ -91,7 +91,7 @@ public final class SpellEffectTarget implements EffectTarget {
         return true;
     }
 
-    private boolean checkInvocation(PassiveFighter target) {
+    private boolean checkInvocation(FighterData target) {
         final boolean isInvocation = target.invoked();
 
         if (check(ONLY_INVOC) && !isInvocation) {
@@ -105,7 +105,7 @@ public final class SpellEffectTarget implements EffectTarget {
         return true;
     }
 
-    private boolean checkSelf(PassiveFighter caster, PassiveFighter target) {
+    private boolean checkSelf(FighterData caster, FighterData target) {
         return !check(NOT_SELF) || !caster.equals(target);
     }
 }

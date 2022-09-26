@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
@@ -46,7 +46,6 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -381,7 +380,7 @@ class TackleValidatorTest extends FightBaseCase {
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
         turn.start();
 
-        Method method = validator.getClass().getDeclaredMethod("computeTackle", Fighter.class, PassiveFighter.class);
+        Method method = validator.getClass().getDeclaredMethod("computeTackle", Fighter.class, FighterData.class);
         method.setAccessible(true);
 
         assertEquals(escapeProbability, (double) method.invoke(validator, fighter, fight.fighters().get(1)), 0.01);

@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -241,7 +241,7 @@ class MoveBackHandlerTest extends FightBaseCase {
         CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(312));
         handler.handle(scope, scope.effects().get(0));
 
-        List<PassiveFighter> enemies = new ArrayList<>(fight.team(1).fighters());
+        List<FighterData> enemies = new ArrayList<>(fight.team(1).fighters());
 
         // Start with most distant target
         requestStack.assertAll(

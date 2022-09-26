@@ -20,12 +20,11 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -129,7 +128,7 @@ class ProxyBattlefieldTest extends AiBaseCase {
         assertTrue(battlefield.get(154).sightBlocking());
         assertTrue(battlefield.get(167).sightBlocking());
 
-        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(PassiveFighter.class)));
+        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(FighterData.class)));
 
         assertFalse(battlefield.get(152).sightBlocking());
         assertTrue(battlefield.get(153).sightBlocking());
@@ -159,7 +158,7 @@ class ProxyBattlefieldTest extends AiBaseCase {
         assertFalse(battlefield.get(154).walkable());
         assertFalse(battlefield.get(167).walkable());
 
-        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(PassiveFighter.class)));
+        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(FighterData.class)));
 
         assertTrue(battlefield.get(152).walkable());
         assertFalse(battlefield.get(153).walkable());
@@ -178,7 +177,7 @@ class ProxyBattlefieldTest extends AiBaseCase {
         ProxyBattlefield battlefield = new ProxyBattlefield(ai.map()).modify(modifier -> {});
 
         assertThrows(UnsupportedOperationException.class, () -> battlefield.get(123).removeFighter());
-        assertThrows(UnsupportedOperationException.class, () -> battlefield.get(123).set(Mockito.mock(PassiveFighter.class)));
+        assertThrows(UnsupportedOperationException.class, () -> battlefield.get(123).set(Mockito.mock(FighterData.class)));
     }
 
     @Test

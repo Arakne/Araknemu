@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 import java.util.EnumSet;
@@ -31,7 +31,7 @@ import java.util.Set;
 
 public final class ArmorSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends PassiveFighter>.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
         int duration = effect.effect().duration();
 
         if (duration == 0) {
@@ -48,7 +48,7 @@ public final class ArmorSimulator implements EffectSimulator {
             : Element.fromBitSet(effect.effect().special())
         ;
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             for (Element element : elements) {
                 int armor = effect.effect().min();
 

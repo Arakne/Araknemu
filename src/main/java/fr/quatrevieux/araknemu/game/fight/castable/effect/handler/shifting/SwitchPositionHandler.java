@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Switch the caster position with the target one
@@ -37,7 +36,7 @@ public final class SwitchPositionHandler implements EffectHandler {
 
     @Override
     public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             applier.apply(cast.caster(), target);
 
             break; // Stop at first target

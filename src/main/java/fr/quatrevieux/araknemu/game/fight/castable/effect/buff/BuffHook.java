@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -111,8 +111,8 @@ public interface BuffHook {
      *
      * @return true to continue, or false if the cast target has changed (removed or replaced)
      *
-     * @see CastScope#removeTarget(PassiveFighter)
-     * @see CastScope#replaceTarget(PassiveFighter, PassiveFighter)
+     * @see CastScope#removeTarget(FighterData)
+     * @see CastScope#replaceTarget(FighterData, FighterData)
      */
     public default boolean onCastTarget(Buff buff, CastScope<Fighter> cast) {
         return true;
@@ -171,14 +171,14 @@ public interface BuffHook {
      * @param buff The active buff
      * @param value Altered life value. Negative for a damage, positive for a heal
      *
-     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(FighterData, int)
      */
     public default void onLifeAltered(Buff buff, int value) {}
 
     /**
      * Damage has been reflected by the cast target
      *
-     * The target can be changed using {@link ReflectedDamage#changeTarget(PassiveFighter)}
+     * The target can be changed using {@link ReflectedDamage#changeTarget(FighterData)}
      * Or modified using {@link ReflectedDamage#multiply(int)}
      *
      * @param buff The active buff

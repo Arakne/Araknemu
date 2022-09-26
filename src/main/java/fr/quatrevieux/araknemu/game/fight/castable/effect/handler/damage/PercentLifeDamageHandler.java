@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle damage based on the current caster life
@@ -60,8 +60,8 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        final PassiveFighter caster = buff.caster();
-        final PassiveFighter target = buff.target();
+        final FighterData caster = buff.caster();
+        final FighterData target = buff.target();
         final int damage = caster.life().current() * (EffectValue.create(buff.effect(), caster, target)).value() / 100;
 
         applier.applyFixed(buff, damage);

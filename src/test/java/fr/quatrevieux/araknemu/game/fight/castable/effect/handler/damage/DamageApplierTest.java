@@ -25,9 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -197,10 +196,10 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
 
         AtomicReference<Buff> calledBuff = new AtomicReference<>();
-        AtomicReference<PassiveFighter> calledCaster = new AtomicReference<>();
+        AtomicReference<FighterData> calledCaster = new AtomicReference<>();
         AtomicReference<Damage> calledDamage = new AtomicReference<>();
         AtomicReference<Buff> appliedDamageBuff = new AtomicReference<>();
-        AtomicReference<PassiveFighter> appliedDamageCaster = new AtomicReference<>();
+        AtomicReference<FighterData> appliedDamageCaster = new AtomicReference<>();
         AtomicInteger appliedDamageValue = new AtomicInteger();
 
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
@@ -506,10 +505,10 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.EARTH, fight);
 
         AtomicReference<Buff> calledBuff = new AtomicReference<>();
-        AtomicReference<PassiveFighter> calledCaster = new AtomicReference<>();
+        AtomicReference<FighterData> calledCaster = new AtomicReference<>();
         AtomicReference<Damage> calledDamage = new AtomicReference<>();
         AtomicReference<Buff> appliedDamageBuff = new AtomicReference<>();
-        AtomicReference<PassiveFighter> appliedDamageCaster = new AtomicReference<>();
+        AtomicReference<FighterData> appliedDamageCaster = new AtomicReference<>();
         AtomicInteger appliedDamageValue = new AtomicInteger();
 
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
@@ -622,7 +621,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.EARTH, fight);
 
         AtomicReference<Buff> calledBuff = new AtomicReference<>();
-        AtomicReference<PassiveFighter> calledCaster = new AtomicReference<>();
+        AtomicReference<FighterData> calledCaster = new AtomicReference<>();
         AtomicReference<Damage> calledDamage = new AtomicReference<>();
         AtomicBoolean appliedDamageHookCalled = new AtomicBoolean();
 

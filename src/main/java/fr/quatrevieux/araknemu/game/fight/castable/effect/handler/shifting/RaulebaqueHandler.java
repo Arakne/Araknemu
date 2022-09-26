@@ -55,7 +55,7 @@ public final class RaulebaqueHandler implements EffectHandler {
             fighter.move(null);
 
             // Cell is not free : exchange place
-            startCell.fighter().ifPresent(other -> other.move(lastCell));
+            startCell.fighter().ifPresent(other -> Fighter.class.cast(other).move(lastCell)); // @todo do not cast
             fighter.move(startCell);
         });
 

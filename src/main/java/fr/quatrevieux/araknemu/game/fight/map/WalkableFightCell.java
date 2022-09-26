@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.map;
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -37,7 +37,7 @@ public final class WalkableFightCell implements FightCell {
     private final @NonNegative int id;
     private final CoordinateCell<FightCell> coordinate;
 
-    private @Nullable PassiveFighter fighter;
+    private @Nullable FighterData fighter;
 
     @SuppressWarnings({"assignment", "argument"})
     public WalkableFightCell(FightMap map, CellData template, @NonNegative int id) {
@@ -78,12 +78,12 @@ public final class WalkableFightCell implements FightCell {
     }
 
     @Override
-    public Optional<PassiveFighter> fighter() {
+    public Optional<FighterData> fighter() {
         return Optional.ofNullable(fighter);
     }
 
     @Override
-    public void set(PassiveFighter fighter) {
+    public void set(FighterData fighter) {
         if (this.fighter != null) {
             throw new FightMapException("A fighter is already set on this cell (" + id + ")");
         }

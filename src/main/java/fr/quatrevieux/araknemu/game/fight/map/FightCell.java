@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.map;
 
 import fr.arakne.utils.maps.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 import java.util.Optional;
 
@@ -39,12 +39,12 @@ public interface FightCell extends BattlefieldCell<FightCell> {
     /**
      * Get the fighter on the cell
      */
-    public Optional<PassiveFighter> fighter();
+    public Optional<FighterData> fighter();
 
     /**
      * Set a fighter on this cell
      */
-    public void set(PassiveFighter fighter);
+    public void set(FighterData fighter);
 
     /**
      * Remove the fighter on the cell

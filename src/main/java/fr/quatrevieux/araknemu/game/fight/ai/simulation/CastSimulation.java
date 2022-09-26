@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
 import fr.arakne.utils.value.Interval;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.checkerframework.checker.index.qual.Positive;
@@ -35,7 +35,7 @@ public final class CastSimulation {
     public static final double POISON_RATE = 0.75;
 
     private final Spell spell;
-    private final PassiveFighter caster;
+    private final FighterData caster;
     private final FightCell target;
 
     private double enemiesLife;
@@ -52,7 +52,7 @@ public final class CastSimulation {
 
     private double actionPointsModifier = 0;
 
-    public CastSimulation(Spell spell, PassiveFighter caster, FightCell target) {
+    public CastSimulation(Spell spell, FighterData caster, FightCell target) {
         this.spell = spell;
         this.caster = caster;
         this.target = target;
@@ -108,7 +108,7 @@ public final class CastSimulation {
      * @param value The heal value
      * @param target The target fighter
      */
-    public void addHeal(final Interval value, final PassiveFighter target) {
+    public void addHeal(final Interval value, final FighterData target) {
         final int targetLostLife = target.life().max() - target.life().current();
 
         apply(new EffectValueComputer() {
@@ -125,7 +125,7 @@ public final class CastSimulation {
      * @param value The heal value
      * @param target The target fighter
      */
-    public void addHealBuff(final Interval value, final @Positive int duration, final PassiveFighter target) {
+    public void addHealBuff(final Interval value, final @Positive int duration, final FighterData target) {
         addHeal(value, target);
 
         if (duration > 1) {
@@ -139,7 +139,7 @@ public final class CastSimulation {
      * @param value The damage value
      * @param target The target fighter
      */
-    public void addDamage(final Interval value, final PassiveFighter target) {
+    public void addDamage(final Interval value, final FighterData target) {
         final int targetLife = target.life().current();
         final double killProbability = cappedProbability(value, targetLife);
 
@@ -163,7 +163,7 @@ public final class CastSimulation {
      * @param duration The poison duration in turns
      * @param target The target fighter
      */
-    public void addPoison(final Interval value, final @Positive int duration, final PassiveFighter target) {
+    public void addPoison(final Interval value, final @Positive int duration, final FighterData target) {
         apply(new EffectValueComputer() {
             @Override
             public double lifeChange() {
@@ -191,7 +191,7 @@ public final class CastSimulation {
      * @param values Computed effect values
      * @param target The target
      */
-    public void apply(EffectValueComputer values, PassiveFighter target) {
+    public void apply(EffectValueComputer values, FighterData target) {
         if (target.equals(caster)) {
             selfLife += values.lifeChange();
             suicide += values.killProbability();
@@ -237,7 +237,7 @@ public final class CastSimulation {
      * @param value The boost value. Can be negative for a malus
      * @param target The target fighter
      */
-    public void addBoost(double value, PassiveFighter target) {
+    public void addBoost(double value, FighterData target) {
         apply(new EffectValueComputer() {
             @Override
             public double boost() {
@@ -249,7 +249,7 @@ public final class CastSimulation {
     /**
      * Get the simulated spell caster
      */
-    public PassiveFighter caster() {
+    public FighterData caster() {
         return caster;
     }
 

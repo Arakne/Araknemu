@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -134,7 +134,7 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
         ));
     }
 
-    private @NonNegative int currentBoostValue(Buff buff, PassiveFighter target) {
+    private @NonNegative int currentBoostValue(Buff buff, FighterData target) {
         // Add 1 to duration in case of self damage
         final int expectedEffectDuration = buff.effect().special() + (target.equals(fight.turnList().currentFighter()) ? 1 : 0);
 

@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 /**
@@ -32,10 +32,10 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
  */
 public final class ReflectedDamage implements MultipliableDamage {
     private final Damage castDamage;
-    private PassiveFighter target;
+    private FighterData target;
     private int multiplier = 1;
 
-    public ReflectedDamage(Damage castDamage, PassiveFighter target) {
+    public ReflectedDamage(Damage castDamage, FighterData target) {
         this.castDamage = castDamage;
         this.target = target;
     }
@@ -43,7 +43,7 @@ public final class ReflectedDamage implements MultipliableDamage {
     /**
      * Fighter which will take reflected damage
      */
-    public PassiveFighter target() {
+    public FighterData target() {
         return target;
     }
 
@@ -76,7 +76,7 @@ public final class ReflectedDamage implements MultipliableDamage {
     /**
      * Change the reflection target
      */
-    public void changeTarget(PassiveFighter newTarget) {
+    public void changeTarget(FighterData newTarget) {
         this.target = newTarget;
     }
 

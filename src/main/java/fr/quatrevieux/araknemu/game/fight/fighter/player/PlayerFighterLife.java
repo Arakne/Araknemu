@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -59,7 +59,7 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public int alter(PassiveFighter caster, int value) {
+    public int alter(FighterData caster, int value) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");
         }
@@ -68,7 +68,7 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public void alterMax(PassiveFighter caster, int value) {
+    public void alterMax(FighterData caster, int value) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");
         }
@@ -77,7 +77,7 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public void kill(PassiveFighter caster) {
+    public void kill(FighterData caster) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");
         }

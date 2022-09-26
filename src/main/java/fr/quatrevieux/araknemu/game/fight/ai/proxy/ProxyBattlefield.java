@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.value.Dimensions;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.checkerframework.checker.index.qual.IndexFor;
@@ -120,7 +120,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
     private final class ProxyCell implements FightCell {
         private final FightCell cell;
         private boolean free = false;
-        private @Nullable PassiveFighter fighter = null;
+        private @Nullable FighterData fighter = null;
         private @MonotonicNonNull CoordinateCell<FightCell> coordinates = null;
 
         private ProxyCell(FightCell cell) {
@@ -144,7 +144,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
         }
 
         @Override
-        public Optional<PassiveFighter> fighter() {
+        public Optional<FighterData> fighter() {
             if (free) {
                 return Optional.empty();
             }
@@ -157,7 +157,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
         }
 
         @Override
-        public void set(PassiveFighter fighter) {
+        public void set(FighterData fighter) {
             throw new UnsupportedOperationException("This is a proxy cell");
         }
 
@@ -249,7 +249,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
          *
          * @return this instance
          */
-        public Modifier setFighter(@NonNegative int cellId, PassiveFighter fighter) {
+        public Modifier setFighter(@NonNegative int cellId, FighterData fighter) {
             map.cells[cellId].free = false;
             map.cells[cellId].fighter = fighter;
 
