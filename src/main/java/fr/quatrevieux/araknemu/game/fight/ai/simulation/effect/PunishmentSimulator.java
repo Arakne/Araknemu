@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
  */
 public final class PunishmentSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         int duration = effect.effect().duration();
 
         if (duration == -1 || duration > 10) {

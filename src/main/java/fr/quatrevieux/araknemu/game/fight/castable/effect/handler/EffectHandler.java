@@ -19,8 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 
 /**
  * Handle a fight effect
@@ -29,7 +28,7 @@ public interface EffectHandler {
     /**
      * Handle the effect on the target
      */
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect);
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect);
 
     /**
      * Apply a buff to the target
@@ -37,5 +36,5 @@ public interface EffectHandler {
      * @param cast The cast action arguments
      * @param effect The effect to apply
      */
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect);
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect);
 }

@@ -14,15 +14,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
+package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.BaseCastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
-public interface EffectSimulator {
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect);
+import java.util.List;
+
+/**
+ * CastScope for AI simulations
+ */
+public final class SimulationCastScope extends BaseCastScope<FighterData> {
+    public SimulationCastScope(Castable action, FighterData caster, FightCell target, List<SpellEffect> effects) {
+        super(action, caster, target, effects);
+    }
 }

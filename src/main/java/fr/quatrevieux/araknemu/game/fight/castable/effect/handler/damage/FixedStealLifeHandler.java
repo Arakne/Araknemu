@@ -19,12 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 
 /**
  * Handle steal a fixed amount of like
@@ -35,7 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
  */
 public final class FixedStealLifeHandler implements EffectHandler {
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final FighterData caster = cast.caster();
         final FighterLife casterLife = caster.life();
 
@@ -47,7 +46,7 @@ public final class FixedStealLifeHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Fixed steal life effect do not supports buff");
     }
 }

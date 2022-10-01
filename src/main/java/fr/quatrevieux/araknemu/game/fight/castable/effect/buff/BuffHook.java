@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
@@ -58,9 +59,9 @@ public interface BuffHook {
 
     /**
      * The fighter has cast a spell or close combat attack
-     * This buff is called before apply effects and resolve targets using {@link BuffHook#onCastTarget(Buff, CastScope)}
+     * This buff is called before apply effects and resolve targets using {@link BuffHook#onCastTarget(Buff, FightCastScope)}
      */
-    public default void onCast(Buff buff, CastScope<Fighter> cast) {}
+    public default void onCast(Buff buff, FightCastScope cast) {}
 
     /**
      * The fighter is a target of a cast
@@ -114,7 +115,7 @@ public interface BuffHook {
      * @see CastScope#removeTarget(FighterData)
      * @see CastScope#replaceTarget(FighterData, FighterData)
      */
-    public default boolean onCastTarget(Buff buff, CastScope<Fighter> cast) {
+    public default boolean onCastTarget(Buff buff, FightCastScope cast) {
         return true;
     }
 

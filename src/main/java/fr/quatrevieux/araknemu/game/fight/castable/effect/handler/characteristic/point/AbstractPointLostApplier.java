@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
@@ -72,7 +72,7 @@ public abstract class AbstractPointLostApplier {
      *
      * @return Number of lost points
      */
-    public final int apply(CastScope<Fighter> cast, Fighter target, SpellEffect effect)  {
+    public final int apply(FightCastScope cast, Fighter target, SpellEffect effect)  {
         final Fighter caster = cast.caster();
 
         final int baseValue = EffectValue.create(effect, caster, target).value();

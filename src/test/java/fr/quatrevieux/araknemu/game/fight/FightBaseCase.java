@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
@@ -256,15 +257,15 @@ public class FightBaseCase extends GameBaseCase {
         equipWeapon(player, 40);
     }
 
-    public CastScope<Fighter> makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
-        return CastScope.simple(castable, caster, target, Collections.singletonList(effect));
+    public FightCastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
+        return FightCastScope.simple(castable, caster, target, Collections.singletonList(effect));
     }
 
-    public CastScope<Fighter> makeCastScopeForEffect(int effectId) {
+    public FightCastScope makeCastScopeForEffect(int effectId) {
         return makeCastScopeForEffect(effectId, player.fighter(), other.fighter().cell());
     }
 
-    public CastScope<Fighter> makeCastScopeForEffect(int effectId, Fighter caster, FightCell target) {
+    public FightCastScope makeCastScopeForEffect(int effectId, Fighter caster, FightCell target) {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);

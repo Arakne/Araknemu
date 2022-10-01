@@ -21,9 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
@@ -44,7 +43,7 @@ public final class MoveBackHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final FighterData caster = cast.caster();
         final int distance = effect.effect().min();
         final CoordinateCell<FightCell> casterCell = caster.cell().coordinate();
@@ -57,7 +56,7 @@ public final class MoveBackHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use move back as buff effect");
     }
 }

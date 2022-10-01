@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
@@ -33,7 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
  */
 public final class FixedDamageHandler implements EffectHandler, BuffHook {
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final FighterData caster = cast.caster();
 
         // This is a fixed effect, without any elements
@@ -44,7 +44,7 @@ public final class FixedDamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }

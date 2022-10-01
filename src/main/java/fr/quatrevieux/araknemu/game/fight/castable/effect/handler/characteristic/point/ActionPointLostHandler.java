@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
@@ -36,12 +36,12 @@ public final class ActionPointLostHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         buff(cast, effect);
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
             applier.apply(cast, target, effect.effect());
         }

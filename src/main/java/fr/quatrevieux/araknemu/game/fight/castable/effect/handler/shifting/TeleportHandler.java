@@ -20,9 +20,8 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -36,7 +35,7 @@ public final class TeleportHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         if (!cast.target().walkable()) {
             return; // @todo exception ?
         }
@@ -47,7 +46,7 @@ public final class TeleportHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use Teleport as buff effect");
     }
 }

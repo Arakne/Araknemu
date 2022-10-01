@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -165,7 +166,7 @@ class ActionPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
         Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
@@ -197,7 +198,7 @@ class ActionPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, caster.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         applier.apply(scope, caster, effect);
 
         Buff buff = caster.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
@@ -230,7 +231,7 @@ class ActionPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
         assertFalse(target.buffs().stream().anyMatch(b -> b.effect().effect() == 101));
@@ -255,7 +256,7 @@ class ActionPointLostApplierTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
         Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();

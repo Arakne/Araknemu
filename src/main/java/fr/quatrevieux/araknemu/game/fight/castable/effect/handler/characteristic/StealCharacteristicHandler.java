@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
@@ -74,12 +74,12 @@ public class StealCharacteristicHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Alter characteristic effect must be used as a buff");
     }
 
     @Override
-    public final void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public final void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
         final Fighter caster = cast.caster();
         final Castable action = cast.action();

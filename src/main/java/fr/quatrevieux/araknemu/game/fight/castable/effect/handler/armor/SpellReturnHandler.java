@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
@@ -45,19 +46,19 @@ public final class SpellReturnHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Spell return effect can be only used as buff");
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public boolean onCastTarget(Buff buff, CastScope<Fighter> cast) {
+    public boolean onCastTarget(Buff buff, FightCastScope cast) {
         if (buff.target().equals(cast.caster()) || !isReturnableCast(cast)) {
             return true;
         }
@@ -80,7 +81,7 @@ public final class SpellReturnHandler implements EffectHandler, BuffHook {
      *
      * @return true if the cast can is returnable
      */
-    private boolean isReturnableCast(CastScope<Fighter> cast) {
+    private boolean isReturnableCast(FightCastScope cast) {
         return cast.effects().stream()
             .map(CastScope.EffectScope::effect)
             .anyMatch(effect -> {

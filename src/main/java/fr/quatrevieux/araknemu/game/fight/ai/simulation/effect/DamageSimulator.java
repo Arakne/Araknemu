@@ -44,7 +44,7 @@ public final class DamageSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(element.boost());
         final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);

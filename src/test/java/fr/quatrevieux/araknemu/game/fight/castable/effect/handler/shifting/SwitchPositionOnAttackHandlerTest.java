@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -66,7 +67,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         assertThrows(UnsupportedOperationException.class, () -> handler.handle(scope, scope.effects().get(0)));
     }
 
@@ -91,7 +92,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
@@ -126,7 +127,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, caster.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
@@ -152,7 +153,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(player.fighter(), spell, effect, fight.map().get(122));
+        FightCastScope scope = makeCastScope(player.fighter(), spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
         assertTrue(fight.fighters().get(1).buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
@@ -181,7 +182,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         requestStack.clear();
@@ -193,7 +194,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(damageEffect.area()).thenReturn(new CellArea());
         Mockito.when(damageEffect.target()).thenReturn(SpellEffectTarget.DEFAULT);
 
-        CastScope damageScope = makeCastScope(caster, spell, damageEffect, target.cell());
+        FightCastScope damageScope = makeCastScope(caster, spell, damageEffect, target.cell());
         fight.effects().apply(damageScope);
 
         assertTrue(target.buffs().stream().anyMatch(buff -> buff.effect().equals(damageEffect)));
@@ -222,7 +223,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         requestStack.clear();
@@ -233,7 +234,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(damageEffect.area()).thenReturn(new CellArea());
         Mockito.when(damageEffect.target()).thenReturn(SpellEffectTarget.DEFAULT);
 
-        CastScope damageScope = makeCastScope(caster, spell, damageEffect, target.cell());
+        FightCastScope damageScope = makeCastScope(caster, spell, damageEffect, target.cell());
         fight.effects().apply(damageScope);
 
         assertEquals(target.life().max(), target.life().current());
@@ -271,7 +272,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         requestStack.clear();
@@ -282,7 +283,7 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(damageEffect.area()).thenReturn(new CellArea());
         Mockito.when(damageEffect.target()).thenReturn(SpellEffectTarget.DEFAULT);
 
-        CastScope damageScope = makeCastScope(target, spell, damageEffect, caster.cell());
+        FightCastScope damageScope = makeCastScope(target, spell, damageEffect, caster.cell());
         fight.effects().apply(damageScope);
 
         assertEquals(target.life().max(), target.life().current());

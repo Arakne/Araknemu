@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
@@ -56,7 +56,7 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final Fighter caster = cast.caster();
         final int stolen = apply(cast, effect);
 
@@ -69,7 +69,7 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         final Fighter caster = cast.caster();
         final int stolen = apply(cast, effect);
 
@@ -102,7 +102,7 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
      *
      * @return Stolen action points. 0 if target has dodged
      */
-    private int apply(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    private int apply(FightCastScope cast, FightCastScope.EffectScope effect) {
         final Fighter caster = cast.caster();
         final SpellEffect baseEffect = effect.effect();
 

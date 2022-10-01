@@ -38,7 +38,7 @@ public final class StealLifeSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         final double lastDamage = -simulation.alliesLife() - simulation.enemiesLife();
 
         // Poison is already handled by the DamageSimulator

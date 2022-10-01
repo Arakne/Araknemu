@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
@@ -37,9 +37,9 @@ public interface Buffs extends Iterable<Buff> {
     public void add(Buff buff);
 
     /**
-     * @see BuffHook#onCast(Buff, CastScope)
+     * @see BuffHook#onCast(Buff, FightCastScope)
      */
-    public void onCast(CastScope<Fighter> cast);
+    public void onCast(FightCastScope cast);
 
     /**
      * Apply buffs when the fighter is a target of a cast
@@ -49,9 +49,9 @@ public interface Buffs extends Iterable<Buff> {
      *
      * @return true to continue, or false if the target has changed (or is removed)
      *
-     * @see BuffHook#onCastTarget(Buff, CastScope)
+     * @see BuffHook#onCastTarget(Buff, FightCastScope)
      */
-    public boolean onCastTarget(CastScope<Fighter> cast);
+    public boolean onCastTarget(FightCastScope cast);
 
     /**
      * @see BuffHook#onDirectDamage(Buff, Fighter, Damage)

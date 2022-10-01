@@ -34,7 +34,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  */
 public final class HealSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope<? extends FighterData>.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(Characteristic.INTELLIGENCE);
         final int fixed = caster.characteristics().get(Characteristic.HEALTH_BOOST);

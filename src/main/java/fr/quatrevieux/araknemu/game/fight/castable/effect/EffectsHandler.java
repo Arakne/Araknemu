@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -43,19 +44,19 @@ public final class EffectsHandler {
     /**
      * Apply a cast to the fight
      *
-     * First, this method will call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCast(Buff, CastScope)} to caster
-     * Then call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCastTarget(Buff, CastScope)} to all targets
+     * First, this method will call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCast(Buff, FightCastScope)} to caster
+     * Then call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCastTarget(Buff, FightCastScope)} to all targets
      *
      * After that, all effects will be applied by calling :
-     * - {@link EffectHandler#handle(CastScope, CastScope.EffectScope)} if duration is 0
-     * - {@link EffectHandler#buff(CastScope, CastScope.EffectScope)} if the effect has a duration
+     * - {@link EffectHandler#handle(FightCastScope, FightCastScope.EffectScope)} if duration is 0
+     * - {@link EffectHandler#buff(FightCastScope, FightCastScope.EffectScope)} if the effect has a duration
      */
-    public void apply(CastScope<Fighter> cast) {
+    public void apply(FightCastScope cast) {
         cast.caster().buffs().onCast(cast);
 
         applyCastTarget(cast);
 
-        for (CastScope<Fighter>.EffectScope effect : cast.effects()) {
+        for (FightCastScope.EffectScope effect : cast.effects()) {
             final EffectHandler handler = handlers.get(effect.effect().effect());
             // @todo Warning if handler is not found
             if (handler != null) {
@@ -69,13 +70,13 @@ public final class EffectsHandler {
     }
 
     /**
-     * Call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastTarget(CastScope)}
+     * Call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastTarget(FightCastScope)}
      * on each target.
      *
      * If a target is changed (by calling {@link CastScope#replaceTarget(FighterData, FighterData)}),
      * new targets will also be called
      */
-    private void applyCastTarget(CastScope<Fighter> cast) {
+    private void applyCastTarget(FightCastScope cast) {
         Set<Fighter> visitedTargets = Collections.emptySet();
 
         for (;;) {

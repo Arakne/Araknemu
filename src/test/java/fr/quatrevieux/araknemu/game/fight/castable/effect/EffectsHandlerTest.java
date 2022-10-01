@@ -22,9 +22,11 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -206,7 +208,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Buff buff = new Buff(effect, spell, player.fighter(), player.fighter(), hook);
         other.fighter().buffs().add(buff);
 
-        CastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
+        FightCastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
 
         handler.apply(cast);
 
@@ -228,7 +230,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Buff buff = new Buff(effect, spell, player.fighter(), player.fighter(), hook);
         player.fighter().buffs().add(buff);
 
-        CastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
+        FightCastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
 
         handler.apply(cast);
 
@@ -254,7 +256,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Buff buff2 = new Buff(effect, spell, player.fighter(), player.fighter(), hook2);
         player.fighter().buffs().add(buff2);
 
-        CastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
+        FightCastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
 
         Mockito.when(hook.onCastTarget(buff, cast)).then((params) -> {
             params.getArgument(1, CastScope.class).replaceTarget(other.fighter(), player.fighter());

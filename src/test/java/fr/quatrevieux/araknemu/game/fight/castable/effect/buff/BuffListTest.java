@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
@@ -210,7 +211,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff2);
         list.add(buff3);
 
-        CastScope cast = CastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
+        FightCastScope cast = FightCastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
 
         list.onCast(cast);
 
@@ -231,7 +232,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff2);
         list.add(buff3);
 
-        CastScope cast = CastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
+        FightCastScope cast = FightCastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
 
         Mockito.when(hook1.onCastTarget(buff1, cast)).thenReturn(true);
         Mockito.when(hook2.onCastTarget(buff2, cast)).thenReturn(true);
@@ -256,7 +257,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff2);
         list.add(buff3);
 
-        CastScope cast = CastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
+        FightCastScope cast = FightCastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
 
         Mockito.when(hook1.onCastTarget(buff1, cast)).thenReturn(true);
         Mockito.when(hook2.onCastTarget(buff2, cast)).thenReturn(false);

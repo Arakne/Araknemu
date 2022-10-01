@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.module;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
@@ -52,7 +53,7 @@ class RaulebaqueModuleTest extends FightBaseCase {
         player.fighter().move(fight.map().get(123));
         other.fighter().move(fight.map().get(321));
 
-        CastScope<Fighter> scope = makeCastScopeForEffect(784);
+        FightCastScope scope = makeCastScopeForEffect(784);
 
         fight.effects().apply(scope);
 

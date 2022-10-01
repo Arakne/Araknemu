@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -84,7 +85,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -106,7 +107,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -131,7 +132,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -164,7 +165,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
 
         player.properties().characteristics().base().set(Characteristic.AGILITY, 100);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -187,7 +188,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         target.characteristics().alter(Characteristic.RESISTANCE_AIR, 5);
         target.characteristics().alter(Characteristic.RESISTANCE_PERCENT_AIR, 10);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -207,7 +208,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(5));
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(5));
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertEmpty();
@@ -225,7 +226,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
@@ -247,7 +248,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -20));
@@ -267,7 +268,7 @@ class PercentLifeLostDamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
 }

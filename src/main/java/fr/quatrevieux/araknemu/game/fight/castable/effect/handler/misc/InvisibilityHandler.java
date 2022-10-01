@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
@@ -44,7 +45,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
  * with the last (i.e. longest) buff.
  *
  * @see FighterData#hidden() Check the hidden state
- * @see FighterData#setHidden(FighterData, boolean) Called by the handler for change hidden state
+ * @see Fighter#setHidden(FighterData, boolean) Called by the handler for change hidden state
  */
 public final class InvisibilityHandler implements EffectHandler, BuffHook {
     private final Fight fight;
@@ -54,12 +55,12 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Invisibility effect must be used as a buff");
     }
 
     @Override
-    public void buff(CastScope<Fighter> cast, CastScope<Fighter>.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
         final Fighter caster = cast.caster();
         final Castable action = cast.action();
@@ -85,7 +86,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onCast(Buff buff, CastScope<Fighter> cast) {
+    public void onCast(Buff buff, FightCastScope cast) {
         final Fighter target = buff.target();
 
         if (!target.hidden()) {
@@ -121,8 +122,8 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     /**
      * Does the given cast will perform direct damage or not
      */
-    private boolean hasDirectDamageEffect(CastScope<Fighter> cast) {
-        for (CastScope<Fighter>.EffectScope effect : cast.effects()) {
+    private boolean hasDirectDamageEffect(FightCastScope cast) {
+        for (CastScope.EffectScope<Fighter> effect : cast.effects()) {
             final SpellEffect spellEffect = effect.effect();
 
             if (spellEffect.duration() == 0 && EffectsUtils.isDamageEffect(spellEffect.effect())) {

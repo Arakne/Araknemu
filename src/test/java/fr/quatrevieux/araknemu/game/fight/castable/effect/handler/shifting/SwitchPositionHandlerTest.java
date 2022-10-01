@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -65,7 +66,7 @@ class SwitchPositionHandlerTest extends FightBaseCase {
 
         FightCell target = fight.map().get(250);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target);
+        FightCastScope scope = makeCastScope(caster, spell, effect, target);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertAll(
@@ -100,7 +101,7 @@ class SwitchPositionHandlerTest extends FightBaseCase {
         FightCell lastCell = caster.cell();
         FightCell target = fight.map().get(120);
 
-        CastScope<Fighter> scope = makeCastScope(caster, spell, effect, target);
+        FightCastScope scope = makeCastScope(caster, spell, effect, target);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertEmpty();
@@ -127,7 +128,7 @@ class SwitchPositionHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter> scope = makeCastScope(player.fighter(), spell, effect, fight.map().get(150));
+        FightCastScope scope = makeCastScope(player.fighter(), spell, effect, fight.map().get(150));
 
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
