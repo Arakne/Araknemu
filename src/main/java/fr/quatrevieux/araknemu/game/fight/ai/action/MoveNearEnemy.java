@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -51,7 +50,7 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         if (helper == null || !helper.canMove()) {
             return Optional.empty();
         }
@@ -63,7 +62,7 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
             .map(enemy -> NullnessUtil.castNonNull(pathfinder).findPath(currentCell, enemy.cell()).truncate(movementPoints + 1))
             .map(path -> path.keepWhile(step -> step.cell().equals(currentCell) || step.cell().walkable())) // Truncate path to first unwalkable cell (may occur if the enemy cell is inaccessible or if other fighters block the path)
             .filter(path -> path.size() > 1)
-            .map(path -> actions.move().create(ai.fighter(), path))
+            .map(path -> actions.move(path))
         ;
     }
 

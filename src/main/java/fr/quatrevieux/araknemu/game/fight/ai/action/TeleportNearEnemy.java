@@ -29,7 +29,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
@@ -57,7 +56,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         if (teleportSpells.isEmpty()) {
             return Optional.empty();
         }
@@ -74,7 +73,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
             return Optional.empty();
         }
 
-        final SpellCaster caster = ai.helper().spells().caster(actions.cast().validator());
+        final SpellCaster caster = ai.helper().spells().caster(actions.castSpellValidator());
         final Selector selector = new Selector(enemy.get().cell(), ai.fighter().cell());
 
         // Already at adjacent cell of the enemy
@@ -89,11 +88,11 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
             }
 
             if (selectBestTeleportTargetForSpell(caster, selector, ai.map(), spell)) {
-                return selector.action(ai.fighter(), actions);
+                return selector.action(actions);
             }
         }
 
-        return selector.action(ai.fighter(), actions);
+        return selector.action(actions);
     }
 
     /**
@@ -160,12 +159,12 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
          * Get the best cast action
          * May returns an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
          */
-        public Optional<Action> action(F fighter, ActionsFactory<F> actions) {
+        public Optional<Action> action(AiActionFactory actions) {
             if (spell == null || cell == null) {
                 return Optional.empty();
             }
 
-            return Optional.of(actions.cast().create(fighter, spell, cell));
+            return Optional.of(actions.cast(spell, cell));
         }
     }
 }

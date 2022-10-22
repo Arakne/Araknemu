@@ -29,7 +29,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         final AIHelper helper = ai.helper();
         final F fighter = ai.fighter();
 
@@ -97,11 +96,11 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
      */
     public final class GenerationScope {
         private final F fighter;
-        private final ActionsFactory<F> actions;
+        private final AiActionFactory actions;
         private final AIHelper helper;
         private final Map<FightCell, Collection<CastSimulation>> possibleActionsCache = new HashMap<>();
 
-        public GenerationScope(F fighter, ActionsFactory<F> actions, AIHelper helper) {
+        public GenerationScope(F fighter, AiActionFactory actions, AIHelper helper) {
             this.fighter = fighter;
             this.actions = actions;
             this.helper = helper;
@@ -151,7 +150,7 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
                 return possibleCasts;
             }
 
-            possibleCasts = helper.withPosition(cell).spells().caster(actions.cast().validator())
+            possibleCasts = helper.withPosition(cell).spells().caster(actions.castSpellValidator())
                 .simulate(simulator)
                 .filter(selector::valid) // Keep only effective effects
                 .collect(Collectors.toList())

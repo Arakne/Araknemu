@@ -43,7 +43,7 @@ class MoveToBoostTest extends AiBaseCase {
 
     @Test
     void generateNotInitialized() {
-        assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(ActionsFactory.class)).isPresent());
+        assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(AiActionFactory.class)).isPresent());
     }
 
     @Test

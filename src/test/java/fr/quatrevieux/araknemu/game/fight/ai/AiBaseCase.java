@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.DummyGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.FightAiActionFactoryAdapter;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
@@ -104,7 +105,7 @@ public class AiBaseCase extends FightBaseCase {
 
     public Optional<Action> generateAction() {
         lastAction = null;
-        final Optional<Action> generated = action.generate(ai, fight.actions());
+        final Optional<Action> generated = action.generate(ai, new FightAiActionFactoryAdapter(ai.fighter(), fight, fight.actions()));
 
         generated.ifPresent(a -> lastAction = a);
 

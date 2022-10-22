@@ -36,7 +36,7 @@ public class DummyGenerator implements ActionGenerator {
     public void initialize(AI ai) {}
 
     @Override
-    public Optional<Action> generate(AI ai, ActionsFactory actions) {
+    public Optional<Action> generate(AI ai, AiActionFactory actions) {
         return Optional.of(
             new Action() {
                 @Override

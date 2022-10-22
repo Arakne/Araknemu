@@ -26,10 +26,10 @@ import fr.arakne.utils.maps.path.PathException;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -72,7 +72,7 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         final Pathfinder<FightCell> pathfinder = NullnessUtil.castNonNull(this.pathfinder);
         final int movementPoints = ai.turn().points().movementPoints();
         final List<ScoredCell> selectedCells = selectCells(ai, movementPoints);
@@ -103,7 +103,7 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
                 continue;
             }
 
-            return Optional.of(actions.move().create(ai.fighter(), path));
+            return Optional.of(actions.move(path));
         }
 
         return Optional.empty();
