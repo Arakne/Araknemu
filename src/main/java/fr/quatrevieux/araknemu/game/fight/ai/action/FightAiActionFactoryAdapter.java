@@ -49,11 +49,13 @@ public final class FightAiActionFactoryAdapter implements AiActionFactory {
     }
 
     @Override
+    @SuppressWarnings("argument") // Cell ID is valid
     public Action cast(Spell spell, FightCell target) {
         return actionFactory.cast().create(fighter, spell, fight.map().get(target.id()));
     }
 
     @Override
+    @SuppressWarnings("argument") // Cell ID is valid
     public Action move(Path<FightCell> path) {
         // Recreate path with actual fight cell
         final FightMap map = fight.map();
