@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
+import fr.arakne.utils.maps.DofusMap;
 import fr.arakne.utils.maps.MapCell;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
@@ -61,7 +62,7 @@ public final class MoveBackApplier {
         this.fight = fight;
         this.baseDamage = baseDamage;
         this.maxDamage = maxDamage;
-        this.decoder = new Decoder<>(fight.map());
+        this.decoder = fight.map().decoder();
     }
 
     /**

@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Cast scope for actual fight
  */
-public final class FightCastScope extends BaseCastScope<Fighter> {
+public final class FightCastScope extends BaseCastScope<Fighter, FightCell> {
     private FightCastScope(Castable action, Fighter caster, FightCell target, List<SpellEffect> effects) {
         super(action, caster, target, effects);
     }

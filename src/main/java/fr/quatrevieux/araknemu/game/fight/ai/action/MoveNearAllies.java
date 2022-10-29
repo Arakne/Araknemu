@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Collections;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 public final class MoveNearAllies<F extends ActiveFighter> implements ActionGenerator<F> {
     private final Movement<F> movement;
 
-    private List<CoordinateCell<FightCell>> alliesCells = Collections.emptyList();
+    private List<CoordinateCell<BattlefieldCell>> alliesCells = Collections.emptyList();
 
     @SuppressWarnings("methodref.receiver.bound")
     public MoveNearAllies() {
@@ -60,7 +60,7 @@ public final class MoveNearAllies<F extends ActiveFighter> implements ActionGene
             return Optional.empty();
         }
 
-        alliesCells = helper.allies().cells().map(FightCell::coordinate).collect(Collectors.toList());
+        alliesCells = helper.allies().cells().map(BattlefieldCell::coordinate).collect(Collectors.toList());
 
         return movement.generate(ai, actions);
     }
@@ -71,7 +71,7 @@ public final class MoveNearAllies<F extends ActiveFighter> implements ActionGene
      * Select the lowest distance from one ally + lowest average distance
      * If the target cell will block an ally by taking the only free adjacent cell, the score will be lowered
      */
-    private double score(CoordinateCell<FightCell> cell) {
+    private double score(CoordinateCell<BattlefieldCell> cell) {
         final BattlefieldMap map = cell.cell().map();
 
         double min = Double.MAX_VALUE;
@@ -79,7 +79,7 @@ public final class MoveNearAllies<F extends ActiveFighter> implements ActionGene
         int count = 0;
         int malus = 0;
 
-        for (CoordinateCell<FightCell> allyCell : alliesCells) {
+        for (CoordinateCell<BattlefieldCell> allyCell : alliesCells) {
             final int distance = cell.distance(allyCell);
 
             min = Math.min(min, distance);
@@ -98,7 +98,7 @@ public final class MoveNearAllies<F extends ActiveFighter> implements ActionGene
     /**
      * Compute the count of free cells around the given ally cell
      */
-    private static int freeAdjacentCellsCount(BattlefieldMap map, CoordinateCell<FightCell> allyCell) {
+    private static int freeAdjacentCellsCount(BattlefieldMap map, CoordinateCell<BattlefieldCell> allyCell) {
         int walkableAdjacentCellsCount = 0;
 
         for (Direction direction : Direction.restrictedDirections()) {

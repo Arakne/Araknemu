@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -97,7 +98,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-22.5, simulation.selfLife());
@@ -132,7 +133,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-112.5, simulation.selfLife());
@@ -154,7 +155,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-15, simulation.selfLife());
@@ -174,7 +175,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, target.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
         new DamageSimulator(Element.EARTH).simulate(simulation, scope.effects().get(0));
 
         return simulation.enemiesLife();

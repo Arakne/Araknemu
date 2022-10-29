@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
+import fr.arakne.utils.maps.DofusMap;
+import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
@@ -40,11 +42,13 @@ import java.util.List;
 public final class FightMap implements BattlefieldMap {
     private final MapTemplate template;
     private final FightCell @SameLen("this") [] cells;
+    private final Decoder<FightCell> decoder;
 
     @SuppressWarnings("argument") // Do not result SameLen from template.cells()
     public FightMap(MapTemplate template) {
         this.template = template;
         this.cells = makeCells(this, template.cells());
+        this.decoder = createDecoder();
     }
 
     /**
@@ -97,8 +101,15 @@ public final class FightMap implements BattlefieldMap {
     }
 
     @Override
-    public Iterator<FightCell> iterator() {
-        return Arrays.stream(cells).iterator();
+    public Iterator<BattlefieldCell> iterator() {
+        return Arrays.<BattlefieldCell>stream(cells).iterator();
+    }
+
+    /**
+     * Get related cell decoder
+     */
+    public Decoder<FightCell> decoder() {
+        return decoder;
     }
 
     /**
@@ -108,6 +119,28 @@ public final class FightMap implements BattlefieldMap {
         for (FightCell cell : cells) {
             cell.fighter().ifPresent(fighter -> cell.removeFighter());
         }
+    }
+
+    private Decoder<FightCell> createDecoder() {
+        // Because FightMap can't implement DofusMap<FightCell>
+        // (java do not authorize two implementations of same interface with different generics parameters)
+        // an adapter is created as Decoder parameter
+        return new Decoder<>(new DofusMap<FightCell>() {
+            @Override
+            public @LengthOf({"this"}) int size() {
+                return FightMap.this.size();
+            }
+
+            @Override
+            public FightCell get(@IndexFor({"this"}) int id) {
+                return FightMap.this.get(id);
+            }
+
+            @Override
+            public Dimensions dimensions() {
+                return FightMap.this.dimensions();
+            }
+        });
     }
 
     private static FightCell @SameLen("#1") [] makeCells(FightMap map, CellData @SameLen("#1") [] template) {

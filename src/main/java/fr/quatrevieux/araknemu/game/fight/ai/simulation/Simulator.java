@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.EffectSimulator;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -60,7 +61,7 @@ public final class Simulator {
      *
      * @return The simulation result
      */
-    public CastSimulation simulate(Spell spell, ActiveFighter caster, FightCell target) {
+    public CastSimulation simulate(Spell spell, ActiveFighter caster, BattlefieldCell target) {
         final CastSimulation normalSimulation = simulate(spell, new SimulationCastScope(spell, caster, target, spell.effects()));
         final int hitRate = spell.criticalHit();
 
@@ -84,7 +85,7 @@ public final class Simulator {
      *
      * @param scope The cast scope
      */
-    private CastSimulation simulate(Spell spell, CastScope<FighterData> scope) {
+    private CastSimulation simulate(Spell spell, CastScope<FighterData, BattlefieldCell> scope) {
         // Remove invisible fighters from simulation
         scope.targets().forEach(target -> {
             if (target.hidden()) {

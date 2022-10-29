@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -69,7 +70,7 @@ class SetStateSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(50, simulation.selfBoost());
@@ -89,7 +90,7 @@ class SetStateSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-500, simulation.selfBoost());
@@ -109,7 +110,7 @@ class SetStateSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(0, simulation.selfBoost());
@@ -130,7 +131,7 @@ class SetStateSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(100, simulation.selfBoost());
@@ -168,7 +169,7 @@ class SetStateSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope<Fighter> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(50, simulation.selfBoost());

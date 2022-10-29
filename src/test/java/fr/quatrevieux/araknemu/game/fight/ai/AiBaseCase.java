@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -173,7 +174,7 @@ public class AiBaseCase extends FightBaseCase {
         return cast.spell().effects().stream()
             .map(SpellEffect::area)
             .flatMap(area -> area.resolve(cast.target(), cast.caster().cell()).stream())
-            .map(FightCell::id)
+            .map(BattlefieldCell::id)
             .collect(Collectors.toSet())
         ;
     }

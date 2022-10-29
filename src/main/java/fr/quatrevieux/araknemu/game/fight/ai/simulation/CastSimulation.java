@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -36,7 +36,7 @@ public final class CastSimulation {
 
     private final Spell spell;
     private final FighterData caster;
-    private final FightCell target;
+    private final BattlefieldCell target;
 
     private double enemiesLife;
     private double alliesLife;
@@ -52,7 +52,7 @@ public final class CastSimulation {
 
     private double actionPointsModifier = 0;
 
-    public CastSimulation(Spell spell, FighterData caster, FightCell target) {
+    public CastSimulation(Spell spell, FighterData caster, BattlefieldCell target) {
         this.spell = spell;
         this.caster = caster;
         this.target = target;
@@ -263,7 +263,7 @@ public final class CastSimulation {
     /**
      * Get the target cell
      */
-    public FightCell target() {
+    public BattlefieldCell target() {
         return target;
     }
 

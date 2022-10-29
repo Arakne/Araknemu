@@ -62,7 +62,7 @@ public final class TackleValidator implements FightPathValidator {
         }
 
         final FightCell currentCell = result.path().first().cell();
-        final Decoder<FightCell> decoder = new Decoder<>(performer.cell().map());
+        final Decoder<FightCell> decoder = performer.cell().map().decoder();
 
         // The escape probability (i.e. between 0 and 1)
         double escapeProbability = 1d;

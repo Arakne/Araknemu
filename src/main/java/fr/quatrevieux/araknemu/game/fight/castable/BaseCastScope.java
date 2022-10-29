@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,15 +40,15 @@ import java.util.stream.Collectors;
 /**
  * Wrap casting arguments
  */
-public class BaseCastScope<F extends FighterData> implements CastScope<F> {
+public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> implements CastScope<F, C> {
     private final Castable action;
     private final F caster;
-    private final FightCell target;
+    private final C target;
 
     private final List<EffectScope> effects;
     private final Map<F, @Nullable F> targetMapping = new HashMap<>();
 
-    protected BaseCastScope(Castable action, F caster, FightCell target, List<SpellEffect> effects) {
+    protected BaseCastScope(Castable action, F caster, C target, List<SpellEffect> effects) {
         this.action = action;
         this.caster = caster;
         this.target = target;
@@ -88,7 +88,7 @@ public class BaseCastScope<F extends FighterData> implements CastScope<F> {
 
     @Override
     @Pure
-    public final FightCell target() {
+    public final C target() {
         return target;
     }
 

@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.spell;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public final class LaunchedSpells {
      * @param spell The launched spell
      * @param target The target
      */
-    public void push(Spell spell, FightCell target) {
+    public void push(Spell spell, BattlefieldCell target) {
         final Entry entry = spells.get(spell.id());
 
         if (entry == null) {
@@ -70,7 +70,7 @@ public final class LaunchedSpells {
      *
      * @return true is the spell can be launched
      */
-    public boolean valid(Spell spell, FightCell target) {
+    public boolean valid(Spell spell, BattlefieldCell target) {
         final Entry entry = spells.get(spell.id());
 
         if (entry == null) {
@@ -88,7 +88,7 @@ public final class LaunchedSpells {
         return checkPerTarget(spell, entry, target);
     }
 
-    private boolean checkPerTarget(Spell spell, Entry entry, FightCell target) {
+    private boolean checkPerTarget(Spell spell, Entry entry, BattlefieldCell target) {
         if (spell.constraints().launchPerTarget() <= 0 || !target.fighter().isPresent()) {
             return true;
         }
@@ -103,7 +103,7 @@ public final class LaunchedSpells {
         private int count = 1;
         private final Map<FighterData, Integer> countPerTarget = new HashMap<>();
 
-        Entry(Spell spell, FightCell cell) {
+        Entry(Spell spell, BattlefieldCell cell) {
             cooldown = spell.constraints().launchDelay();
 
             cell.fighter().ifPresent(fighter -> countPerTarget.put(fighter, 1));

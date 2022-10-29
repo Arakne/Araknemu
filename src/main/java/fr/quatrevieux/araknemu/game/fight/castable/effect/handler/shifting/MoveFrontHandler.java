@@ -43,7 +43,7 @@ public final class MoveFrontHandler implements EffectHandler {
 
     public MoveFrontHandler(Fight fight) {
         this.fight = fight;
-        this.decoder = new Decoder<>(fight.map());
+        this.decoder = fight.map().decoder();
     }
 
     @Override

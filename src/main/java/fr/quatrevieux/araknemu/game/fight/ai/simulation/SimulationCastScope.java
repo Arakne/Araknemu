@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 import fr.quatrevieux.araknemu.game.fight.castable.BaseCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.util.List;
@@ -30,8 +30,8 @@ import java.util.List;
 /**
  * CastScope for AI simulations
  */
-public final class SimulationCastScope extends BaseCastScope<FighterData> {
-    public SimulationCastScope(Castable action, FighterData caster, FightCell target, List<SpellEffect> effects) {
+public final class SimulationCastScope extends BaseCastScope<FighterData, BattlefieldCell> {
+    public SimulationCastScope(Castable action, FighterData caster, BattlefieldCell target, List<SpellEffect> effects) {
         super(action, caster, target, effects);
     }
 }

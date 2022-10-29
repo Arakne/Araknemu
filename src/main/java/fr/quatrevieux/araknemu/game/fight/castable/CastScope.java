@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -33,7 +34,7 @@ import java.util.Set;
 /**
  * Wrap casting arguments
  */
-public interface CastScope<F extends FighterData> {
+public interface CastScope<F extends FighterData, C extends BattlefieldCell> {
     /**
      * Get the casted action
      */
@@ -55,7 +56,7 @@ public interface CastScope<F extends FighterData> {
      * Get the targeted cell
      */
     @Pure
-    public FightCell target();
+    public C target();
 
     /**
      * Get the cast targets

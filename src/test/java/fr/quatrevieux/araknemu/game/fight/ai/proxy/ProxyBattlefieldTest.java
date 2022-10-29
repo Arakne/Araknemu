@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -167,20 +168,6 @@ class ProxyBattlefieldTest extends AiBaseCase {
     }
 
     @Test
-    void cellRemoveAndSetNotAllowed() {
-        configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(152))
-            .addEnemy(builder -> builder.cell(167))
-            .addAlly(builder -> builder.cell(166))
-        );
-
-        ProxyBattlefield battlefield = new ProxyBattlefield(ai.map()).modify(modifier -> {});
-
-        assertThrows(UnsupportedOperationException.class, () -> battlefield.get(123).removeFighter());
-        assertThrows(UnsupportedOperationException.class, () -> battlefield.get(123).set(Mockito.mock(FighterData.class)));
-    }
-
-    @Test
     void cellValues() {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(152))
@@ -190,7 +177,7 @@ class ProxyBattlefieldTest extends AiBaseCase {
 
         ProxyBattlefield battlefield = new ProxyBattlefield(ai.map()).modify(modifier -> {});
 
-        for (FightCell cell : battlefield) {
+        for (BattlefieldCell cell : battlefield) {
             assertSame(battlefield, cell.map());
             assertEquals(cell.walkableIgnoreFighter(), ai.map().get(cell.id()).walkableIgnoreFighter());
             assertEquals(cell.fighter(), ai.map().get(cell.id()).fighter());

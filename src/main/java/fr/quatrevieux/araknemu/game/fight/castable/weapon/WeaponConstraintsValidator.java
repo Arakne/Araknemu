@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.LineOfSightValidato
 import fr.quatrevieux.araknemu.game.fight.castable.validator.RangeValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.StatesValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -53,12 +53,12 @@ public final class WeaponConstraintsValidator implements CastConstraintValidator
     }
 
     @Override
-    public boolean check(Turn turn, CastableWeapon castable, FightCell target) {
+    public boolean check(Turn turn, CastableWeapon castable, BattlefieldCell target) {
         return validator.check(turn, castable, target);
     }
 
     @Override
-    public @Nullable Error validate(Turn turn, CastableWeapon weapon, FightCell target) {
+    public @Nullable Error validate(Turn turn, CastableWeapon weapon, BattlefieldCell target) {
         return validator.validate(turn, weapon, target);
     }
 }

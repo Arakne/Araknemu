@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.SpellsHelper;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -102,7 +102,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
      * @return true if the spell can reach an adjacent cell
      */
     private boolean selectBestTeleportTargetForSpell(SpellCaster caster, Selector selector, BattlefieldMap map, Spell spell) {
-        for (FightCell cell : map) {
+        for (BattlefieldCell cell : map) {
             // Target or launch is not valid
             if (!cell.walkable() || !caster.validate(spell, cell)) {
                 continue;
@@ -121,12 +121,12 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
      * Select the best spell and cell couple for teleport
      */
     private class Selector {
-        private final CoordinateCell<FightCell> enemyCell;
+        private final CoordinateCell<BattlefieldCell> enemyCell;
         private int distance;
-        private @MonotonicNonNull FightCell cell;
+        private @MonotonicNonNull BattlefieldCell cell;
         private @MonotonicNonNull Spell spell;
 
-        public Selector(FightCell enemyCell, FightCell currentCell) {
+        public Selector(BattlefieldCell enemyCell, BattlefieldCell currentCell) {
             this.enemyCell = enemyCell.coordinate();
             this.distance = this.enemyCell.distance(currentCell);
         }
@@ -143,7 +143,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
          *
          * @return true if the new cell is adjacent to the target
          */
-        public boolean push(Spell spell, FightCell cell) {
+        public boolean push(Spell spell, BattlefieldCell cell) {
             final int currentDistance = enemyCell.distance(cell);
 
             if (currentDistance < distance) {

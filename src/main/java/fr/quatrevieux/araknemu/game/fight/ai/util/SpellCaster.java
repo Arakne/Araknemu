@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -47,7 +48,7 @@ public final class SpellCaster {
     /**
      * Validate the cast action
      */
-    public boolean validate(Spell spell, FightCell target) {
+    public boolean validate(Spell spell, BattlefieldCell target) {
         // A non-walkable cell can't be a valid target
         if (!target.walkableIgnoreFighter()) {
             return false;

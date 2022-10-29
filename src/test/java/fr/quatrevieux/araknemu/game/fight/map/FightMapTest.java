@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -55,8 +56,15 @@ class FightMapTest extends GameBaseCase {
     }
 
     @Test
+    void decoder() {
+        assertSame(map.decoder(), map.decoder());
+        assertSame(map.get(124), map.decoder().nextCellByDirection(map.get(123), Direction.EAST).get());
+        assertSame(map.get(122), map.decoder().nextCellByDirection(map.get(123), Direction.WEST).get());
+    }
+
+    @Test
     void iterator() {
-        Iterator<FightCell> it = map.iterator();
+        Iterator<BattlefieldCell> it = map.iterator();
 
         assertSame(map.get(0), it.next());
         assertSame(map.get(1), it.next());

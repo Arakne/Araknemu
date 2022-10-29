@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import org.checkerframework.checker.index.qual.Positive;
@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Fighter type which contains all necessary data for perform computation on fight
  * This type is read only : no modification can be performed following this interface
  */
-public interface FighterData extends Creature<FightCell> {
+public interface FighterData extends Creature<BattlefieldCell> {
     /**
      * Get the fighter id
      */
@@ -40,7 +40,7 @@ public interface FighterData extends Creature<FightCell> {
     /**
      * The fighter cell
      */
-    public FightCell cell();
+    public BattlefieldCell cell();
 
     /**
      * Get the fighter level

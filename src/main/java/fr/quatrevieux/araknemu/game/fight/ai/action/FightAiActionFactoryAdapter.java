@@ -25,6 +25,7 @@ import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -50,17 +51,17 @@ public final class FightAiActionFactoryAdapter implements AiActionFactory {
 
     @Override
     @SuppressWarnings("argument") // Cell ID is valid
-    public Action cast(Spell spell, FightCell target) {
+    public Action cast(Spell spell, BattlefieldCell target) {
         return actionFactory.cast().create(fighter, spell, fight.map().get(target.id()));
     }
 
     @Override
     @SuppressWarnings("argument") // Cell ID is valid
-    public Action move(Path<FightCell> path) {
+    public Action move(Path<BattlefieldCell> path) {
         // Recreate path with actual fight cell
         final FightMap map = fight.map();
         final Path<FightCell> actualPath = new Path<>(
-            new Decoder<>(map),
+            map.decoder(),
             path.stream()
                 .map(step -> new PathStep<>(map.get(step.cell().id()), step.direction()))
                 .collect(Collectors.toList())

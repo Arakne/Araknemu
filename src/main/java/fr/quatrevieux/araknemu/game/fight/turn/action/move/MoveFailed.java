@@ -69,7 +69,7 @@ public final class MoveFailed implements MoveResult {
     @Override
     public Path<FightCell> path() {
         return new Path<>(
-            new Decoder<>(performer.cell().map()),
+            performer.cell().map().decoder(),
             Collections.singletonList(new PathStep<>(performer.cell(), Direction.EAST))
         );
     }

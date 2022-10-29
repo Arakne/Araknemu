@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.Positive;
@@ -58,7 +58,7 @@ public final class ProxyPassiveFighter implements FighterData {
 
     @Override
     @SuppressWarnings("argument") // cell id always valid
-    public FightCell cell() {
+    public BattlefieldCell cell() {
         return ai.map().get(fighter.cell().id());
     }
 

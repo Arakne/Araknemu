@@ -63,7 +63,7 @@ class MoveTest extends FightBaseCase {
         assertFalse(
             new Move(turn.fighter(),
                 new Path<>(
-                    new Decoder<>(fight.map()),
+                    fight.map().decoder(),
                     Arrays.asList(new PathStep<>(fight.map().get(185), Direction.EAST))
                 ),
                 new FightPathValidator[0]
@@ -76,7 +76,7 @@ class MoveTest extends FightBaseCase {
         assertFalse(
             new Move(turn.fighter(),
                 new Path<>(
-                    new Decoder<>(fight.map()),
+                    fight.map().decoder(),
                     Arrays.asList(
                         new PathStep<>(fight.map().get(185), Direction.EAST),
                         new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -95,7 +95,7 @@ class MoveTest extends FightBaseCase {
         assertFalse(
             new Move(turn.fighter(),
                 new Path<>(
-                    new Decoder<>(fight.map()),
+                    fight.map().decoder(),
                     Arrays.asList(
                         new PathStep<>(fight.map().get(185), Direction.EAST),
                         new PathStep<>(fight.map().get(186), Direction.EAST),
@@ -113,7 +113,7 @@ class MoveTest extends FightBaseCase {
         assertFalse(
             new Move(turn.fighter(),
                 new Path<>(
-                    new Decoder<>(fight.map()),
+                    fight.map().decoder(),
                     Arrays.asList(
                         new PathStep<>(fight.map().get(0), Direction.EAST),
                         new PathStep<>(fight.map().get(14), Direction.SOUTH_WEST)
@@ -129,7 +129,7 @@ class MoveTest extends FightBaseCase {
         assertTrue(
             new Move(turn.fighter(),
                 new Path<>(
-                    new Decoder<>(fight.map()),
+                    fight.map().decoder(),
                     Arrays.asList(
                         new PathStep<>(fight.map().get(185), Direction.EAST),
                         new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -146,7 +146,7 @@ class MoveTest extends FightBaseCase {
     void startSuccess() {
         Move move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -180,7 +180,7 @@ class MoveTest extends FightBaseCase {
 
         Move move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -199,7 +199,7 @@ class MoveTest extends FightBaseCase {
 
         move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -227,7 +227,7 @@ class MoveTest extends FightBaseCase {
     void startTruncatedBecauseOfEnemy() {
         Move move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -260,7 +260,7 @@ class MoveTest extends FightBaseCase {
     void startWithTackle() {
         Move move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -304,7 +304,7 @@ class MoveTest extends FightBaseCase {
 
         Move move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -345,7 +345,7 @@ class MoveTest extends FightBaseCase {
     void end() {
         Move move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -366,7 +366,7 @@ class MoveTest extends FightBaseCase {
     void duration() {
         Move move = new Move(turn.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),

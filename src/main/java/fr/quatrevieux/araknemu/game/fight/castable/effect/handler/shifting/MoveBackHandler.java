@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
 import java.util.Comparator;
 
@@ -46,7 +46,7 @@ public final class MoveBackHandler implements EffectHandler {
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final FighterData caster = cast.caster();
         final int distance = effect.effect().min();
-        final CoordinateCell<FightCell> casterCell = caster.cell().coordinate();
+        final CoordinateCell<BattlefieldCell> casterCell = caster.cell().coordinate();
 
         // Apply to most distant targets before, to ensure that they will not block mutually
         effect.targets().stream()

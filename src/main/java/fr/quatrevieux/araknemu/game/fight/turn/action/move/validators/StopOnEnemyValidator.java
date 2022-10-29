@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move.validators;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.PathStep;
-import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
@@ -35,8 +35,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
 public final class StopOnEnemyValidator implements FightPathValidator {
     @Override
     public MoveResult validate(Move move, MoveResult result) {
-        final BattlefieldMap map = move.performer().cell().map();
-        final Decoder<FightCell> decoder = new Decoder<>(map);
+        final FightMap map = move.performer().cell().map();
+        final Decoder<FightCell> decoder = map.decoder();
 
         // Do not check the first cell which is the current one
         // nor the last, because truncate on the last step does nothing

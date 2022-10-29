@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
@@ -39,7 +39,7 @@ public interface AiActionFactory {
      *
      * @see AiActionFactory#castSpellValidator() For validate cast before perform action
      */
-    public Action cast(Spell spell, FightCell target);
+    public Action cast(Spell spell, BattlefieldCell target);
 
     /**
      * Create a move action
@@ -48,7 +48,7 @@ public interface AiActionFactory {
      *
      * @return Action to perform
      */
-    public Action move(Path<FightCell> path);
+    public Action move(Path<BattlefieldCell> path);
 
     /**
      * Validator for cast spell action

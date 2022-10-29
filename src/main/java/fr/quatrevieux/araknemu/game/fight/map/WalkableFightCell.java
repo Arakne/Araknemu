@@ -35,7 +35,7 @@ public final class WalkableFightCell implements FightCell {
     private final FightMap map;
     private final CellData template;
     private final @NonNegative int id;
-    private final CoordinateCell<FightCell> coordinate;
+    private final CoordinateCell<BattlefieldCell> coordinate;
 
     private @Nullable FighterData fighter;
 
@@ -73,7 +73,7 @@ public final class WalkableFightCell implements FightCell {
     }
 
     @Override
-    public CoordinateCell<FightCell> coordinate() {
+    public CoordinateCell<BattlefieldCell> coordinate() {
         return coordinate;
     }
 

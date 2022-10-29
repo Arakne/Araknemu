@@ -43,7 +43,7 @@ public final class MoveFactory implements MoveActionFactory<Fighter> {
             throw new IllegalArgumentException("Invalid move arguments");
         }
 
-        return create(fighter, new Decoder<>(fighter.fight().map()).decode(arguments[0], fighter.cell()));
+        return create(fighter, fighter.fight().map().decoder().decode(arguments[0], fighter.cell()));
     }
 
     @Override

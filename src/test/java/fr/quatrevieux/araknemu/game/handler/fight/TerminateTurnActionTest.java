@@ -69,7 +69,7 @@ class TerminateTurnActionTest extends FightBaseCase {
             new Move(
                 fighter,
                 new Path<>(
-                    new Decoder<>(fight.map()),
+                    fight.map().decoder(),
                     Arrays.asList(
                         new PathStep<>(fight.map().get(185), Direction.EAST),
                         new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),

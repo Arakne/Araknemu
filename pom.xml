@@ -34,7 +34,7 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.10-alpha</version>
+    <version>0.10-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>fr.arakne</groupId>
             <artifactId>arakne-map</artifactId>
-            <version>0.7-alpha</version>
+            <version>0.8-alpha</version>
         </dependency>
         <dependency>
             <groupId>de.mkammerer</groupId>

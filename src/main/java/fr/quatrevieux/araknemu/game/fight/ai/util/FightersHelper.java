@@ -23,7 +23,7 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -63,11 +63,11 @@ public final class FightersHelper {
      *
      * @return Stream of fighters
      *
-     * @see CellsHelper#adjacent(FightCell)
+     * @see CellsHelper#adjacent(BattlefieldCell)
      */
-    public Stream<FighterData> adjacent(FightCell cell) {
+    public Stream<FighterData> adjacent(BattlefieldCell cell) {
         return helper.cells().adjacent(cell)
-            .map(FightCell::fighter)
+            .map(BattlefieldCell::fighter)
             .filter(Optional::isPresent).map(Optional::get)
             .filter(fighter -> !fighter.hidden())
             .filter(filter)
@@ -93,7 +93,7 @@ public final class FightersHelper {
      * @return The nearest fighter
      */
     public Optional<? extends FighterData> nearest() {
-        final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
+        final CoordinateCell<BattlefieldCell> currentCell = ai.fighter().cell().coordinate();
 
         return stream()
             .filter(fighter -> !fighter.hidden())
@@ -109,7 +109,7 @@ public final class FightersHelper {
      *
      * @return Stream of cells
      */
-    public Stream<FightCell> cells() {
+    public Stream<BattlefieldCell> cells() {
         return stream().filter(fighter -> !fighter.hidden()).map(FighterData::cell);
     }
 
@@ -121,7 +121,7 @@ public final class FightersHelper {
      * @return Stream of fighters
      */
     public Stream<? extends FighterData> inRange(Interval range) {
-        final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
+        final CoordinateCell<BattlefieldCell> currentCell = ai.fighter().cell().coordinate();
 
         return stream().filter(fighter -> !fighter.hidden()).filter(fighter -> range.contains(currentCell.distance(fighter.cell())));
     }

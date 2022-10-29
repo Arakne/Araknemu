@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -41,14 +41,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class ProxyActiveFighter implements ActiveFighter {
     private final ActiveFighter fighter;
-    private final @Nullable FightCell position;
+    private final @Nullable BattlefieldCell position;
 
     public ProxyActiveFighter(ActiveFighter fighter) {
         this.fighter = fighter;
         this.position = null;
     }
 
-    private ProxyActiveFighter(ActiveFighter fighter, @Nullable FightCell position) {
+    private ProxyActiveFighter(ActiveFighter fighter, @Nullable BattlefieldCell position) {
         this.fighter = fighter;
         this.position = position;
     }
@@ -74,7 +74,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public FightCell cell() {
+    public BattlefieldCell cell() {
         if (position != null) {
             return position;
         }
@@ -168,7 +168,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
      *
      * @see ProxyAI#withPosition(int) To set the position and update the map
      */
-    ProxyActiveFighter withPosition(FightCell position) {
+    ProxyActiveFighter withPosition(BattlefieldCell position) {
         return new ProxyActiveFighter(fighter, position);
     }
 

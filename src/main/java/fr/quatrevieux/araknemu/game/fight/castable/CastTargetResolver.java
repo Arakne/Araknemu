@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public final class CastTargetResolver {
      *
      * @see fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget
      */
-    public static <F extends FighterData> Collection<F> resolveFromEffect(F caster, FightCell target, Castable action, SpellEffect effect) {
+    public static <F extends FighterData> Collection<F> resolveFromEffect(F caster, BattlefieldCell target, Castable action, SpellEffect effect) {
         if (effect.target().onlyCaster()) {
             return Collections.singleton(caster);
         }
@@ -64,12 +64,12 @@ public final class CastTargetResolver {
     /**
      * Perform resolution from effect target and effect area
      */
-    private static <F extends FighterData> Collection<F> resolveFromEffectArea(F caster, FightCell target, SpellEffect effect) {
+    private static <F extends FighterData> Collection<F> resolveFromEffectArea(F caster, BattlefieldCell target, SpellEffect effect) {
         // Use lazy instantiation and do not use stream API to optimise memory allocations
         F firstTarget = null;
         Collection<F> targets = null;
 
-        for (FightCell cell : effect.area().resolve(target, caster.cell())) {
+        for (BattlefieldCell cell : effect.area().resolve(target, caster.cell())) {
             // @todo change fight cell
             final Optional<F> resolvedTarget = (Optional<F>) cell.fighter().filter(fighter -> effect.target().test(caster, fighter));
 

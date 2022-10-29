@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 /**
  * Base fighter
  */
-public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter {
+public interface Fighter extends Dispatcher, ActiveFighter {
     /**
      * Initialise the fighter when fight started
      */
@@ -47,6 +47,9 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
      * Change the fighter orientation
      */
     public void setOrientation(Direction orientation);
+
+    @Override
+    public FightCell cell();
 
     /**
      * Go to the given cell

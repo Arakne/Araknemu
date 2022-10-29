@@ -24,26 +24,21 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import java.util.Optional;
 
 /**
- * Cell for a fight map
- * This type should be used only for actual fight and not AI system
- * Mutation operation of fight cell must be declared here instead of {@link BattlefieldCell}
+ * Base cell type for a battlefield
+ * This type is shared between actual fight and AI system
+ * Mutation operation are not allowed on this interface, and must be added on a sub interface like {@link FightCell}
  */
-public interface FightCell extends BattlefieldCell {
+public interface BattlefieldCell extends fr.arakne.utils.maps.BattlefieldCell<BattlefieldCell> {
     @Override
-    public FightMap map();
+    public BattlefieldMap map();
+
+    /**
+     * Check if the cell is walkable, ignoring current fighter
+     */
+    public boolean walkableIgnoreFighter();
 
     /**
      * Get the fighter on the cell
      */
     public Optional<FighterData> fighter();
-
-    /**
-     * Set a fighter on this cell
-     */
-    public void set(FighterData fighter);
-
-    /**
-     * Remove the fighter on the cell
-     */
-    public void removeFighter();
 }

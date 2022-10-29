@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -73,17 +73,17 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
         final AdminUser user = AdminUser.class.cast(performer);
         final FightMap map = new FightMap(repository.get(user.player().position().map()));
 
-        final CoordinateCell<FightCell> current = map.get(user.player().position().cell()).coordinate();
-        final CellSight<FightCell> sight = new CellSight<>(current);
+        final CoordinateCell<BattlefieldCell> current = map.get(user.player().position().cell()).coordinate();
+        final CellSight<BattlefieldCell> sight = new CellSight<>(current);
 
-        final List<FightCell> accessible;
-        final List<FightCell> blocked;
+        final List<BattlefieldCell> accessible;
+        final List<BattlefieldCell> blocked;
 
         if (!arguments.hasTargetCell()) {
             accessible = new ArrayList<>(sight.accessible());
             blocked = new ArrayList<>(sight.blocked());
         } else {
-            final Iterator<FightCell> los = sight.to(map.get(arguments.cellId()));
+            final Iterator<BattlefieldCell> los = sight.to(map.get(arguments.cellId()));
 
             accessible = new ArrayList<>();
             blocked = new ArrayList<>();
@@ -91,7 +91,7 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
             boolean isFree = true;
 
             while (los.hasNext()) {
-                final FightCell cell = los.next();
+                final BattlefieldCell cell = los.next();
 
                 if (isFree) {
                     accessible.add(cell);
