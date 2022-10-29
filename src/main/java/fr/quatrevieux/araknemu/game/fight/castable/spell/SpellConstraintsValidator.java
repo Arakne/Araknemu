@@ -30,7 +30,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.SpellLaunchValidato
 import fr.quatrevieux.araknemu.game.fight.castable.validator.StatesValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;

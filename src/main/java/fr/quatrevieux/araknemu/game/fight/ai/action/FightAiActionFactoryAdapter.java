@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.Fight;

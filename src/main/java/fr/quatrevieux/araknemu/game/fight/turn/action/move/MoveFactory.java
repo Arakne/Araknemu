@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
-import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;

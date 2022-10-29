@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.constant.Direction;
-import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;

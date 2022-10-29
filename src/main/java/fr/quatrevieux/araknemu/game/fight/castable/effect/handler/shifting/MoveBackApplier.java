@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
-import fr.arakne.utils.maps.DofusMap;
 import fr.arakne.utils.maps.MapCell;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;

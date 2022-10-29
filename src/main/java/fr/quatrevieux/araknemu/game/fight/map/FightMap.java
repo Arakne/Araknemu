@@ -44,7 +44,7 @@ public final class FightMap implements BattlefieldMap {
     private final FightCell @SameLen("this") [] cells;
     private final Decoder<FightCell> decoder;
 
-    @SuppressWarnings("argument") // Do not result SameLen from template.cells()
+    @SuppressWarnings({"argument", "method.invocation"}) // Do not resolve SameLen from template.cells()
     public FightMap(MapTemplate template) {
         this.template = template;
         this.cells = makeCells(this, template.cells());

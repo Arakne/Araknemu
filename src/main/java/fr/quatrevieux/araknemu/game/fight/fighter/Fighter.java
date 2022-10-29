@@ -29,7 +29,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.function.Consumer;
