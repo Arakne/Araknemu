@@ -63,7 +63,7 @@ class SendFightActionTest extends FightBaseCase {
         Move move = new Move(
             player.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -86,7 +86,7 @@ class SendFightActionTest extends FightBaseCase {
         Move move = new Move(
             other.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -112,7 +112,7 @@ class SendFightActionTest extends FightBaseCase {
         Move move = new Move(
             other.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -137,7 +137,7 @@ class SendFightActionTest extends FightBaseCase {
         Move move = new Move(
             player.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -176,7 +176,7 @@ class SendFightActionTest extends FightBaseCase {
         Move move = new Move(
             player.fighter(),
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 new ArrayList<>()
             ),
             new FightPathValidator[0]
@@ -206,7 +206,7 @@ class SendFightActionTest extends FightBaseCase {
         Move move = new Move(
             monster,
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(125), Direction.EAST),
                     new PathStep<>(fight.map().get(139), Direction.SOUTH_WEST)

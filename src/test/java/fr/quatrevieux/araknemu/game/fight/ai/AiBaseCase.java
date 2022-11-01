@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.DummyGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.FightAiActionFactoryAdapter;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
@@ -32,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -104,7 +106,7 @@ public class AiBaseCase extends FightBaseCase {
 
     public Optional<Action> generateAction() {
         lastAction = null;
-        final Optional<Action> generated = action.generate(ai, fight.actions());
+        final Optional<Action> generated = action.generate(ai, new FightAiActionFactoryAdapter(ai.fighter(), fight, fight.actions()));
 
         generated.ifPresent(a -> lastAction = a);
 
@@ -172,7 +174,7 @@ public class AiBaseCase extends FightBaseCase {
         return cast.spell().effects().stream()
             .map(SpellEffect::area)
             .flatMap(area -> area.resolve(cast.target(), cast.caster().cell()).stream())
-            .map(FightCell::id)
+            .map(BattlefieldCell::id)
             .collect(Collectors.toSet())
         ;
     }

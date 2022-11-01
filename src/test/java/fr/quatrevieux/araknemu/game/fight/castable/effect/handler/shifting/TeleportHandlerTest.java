@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -71,14 +73,14 @@ class TeleportHandlerTest extends FightBaseCase {
 
         FightCell target = fight.map().get(123);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target);
+        FightCastScope scope = makeCastScope(caster, spell, effect, target);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertLast(ActionEffect.teleport(caster, caster, target));
 
-        assertSame(caster, target.fighter().get());
+        assertSame(caster, target.fighter());
         assertSame(target, caster.cell());
-        assertFalse(lastCell.fighter().isPresent());
+        assertFalse(lastCell.hasFighter());
     }
 
     @Test
@@ -96,7 +98,7 @@ class TeleportHandlerTest extends FightBaseCase {
 
         FightCell target = other.fighter().cell();
 
-        CastScope scope = makeCastScope(caster, spell, effect, target);
+        FightCastScope scope = makeCastScope(caster, spell, effect, target);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertEmpty();

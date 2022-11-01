@@ -39,7 +39,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SimpleTeamTest extends FightBaseCase {
     private SimpleTeam team;
@@ -52,35 +57,11 @@ class SimpleTeamTest extends FightBaseCase {
 
         FightMap map = loadFightMap(10340);
         team = new SimpleTeam(
+            createFight(),
             fighter = new PlayerFighter(gamePlayer(true)),
             Arrays.asList(map.get(123), map.get(456)),
             1
         );
-
-        team.setFight(createFight());
-    }
-
-    @Test
-    void withoutFight() throws SQLException {
-        FightMap map = loadFightMap(10340);
-        team = new SimpleTeam(
-            fighter = new PlayerFighter(gamePlayer(true)),
-            Arrays.asList(map.get(123), map.get(456)),
-            1
-        );
-
-        assertSame(fighter, team.leader());
-        assertEquals(Arrays.asList(fighter), new ArrayList<>(team.fighters())); // Make list copy for equality
-        assertEquals(Arrays.asList(map.get(123), map.get(456)), team.startPlaces());
-        assertEquals(1, team.number());
-        assertEquals(1, team.id());
-        assertEquals(0, team.type());
-        assertEquals(Alignment.NONE, team.alignment());
-        assertEquals(player.position().cell(), team.cell());
-
-        assertSame(team, fighter.team());
-
-        assertThrows(IllegalStateException.class, team::options);
     }
 
     @Test
@@ -160,7 +141,6 @@ class SimpleTeamTest extends FightBaseCase {
 
     @Test
     void joinLocked() throws Exception {
-        team.setFight(createFight());
         team.options().toggleAllowJoinTeam();
         PlayerFighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
 

@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
@@ -73,14 +74,17 @@ class ActiveStateTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
+        final GamePlayer me = gamePlayer(true);
+        final GamePlayer enemy = makeOtherPlayer();
+
         FightMap map;
         fight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
-                new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(other = new PlayerFighter(makeOtherPlayer()), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = new PlayerFighter(me), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, other = new PlayerFighter(enemy), Arrays.asList(map.get(321)), 1)
             ),
             new StatesFlow(
                 new NullState(),
@@ -216,7 +220,7 @@ class ActiveStateTest extends GameBaseCase {
         state.leave(mutineer);
 
         assertTrue(fight.active());
-        assertFalse(mutineer.cell().fighter().isPresent());
+        assertFalse(mutineer.cell().hasFighter());
         assertTrue(mutineer.dead());
         assertFalse(fight.team(0).fighters().contains(mutineer));
         assertFalse(fight.fighters().contains(mutineer));

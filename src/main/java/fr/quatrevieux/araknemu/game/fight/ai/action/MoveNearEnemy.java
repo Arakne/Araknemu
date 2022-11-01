@@ -23,9 +23,8 @@ import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -37,7 +36,7 @@ import java.util.Optional;
  * Try to move near the selected enemy
  */
 public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
-    private @MonotonicNonNull Pathfinder<FightCell> pathfinder;
+    private @MonotonicNonNull Pathfinder<BattlefieldCell> pathfinder;
     private @MonotonicNonNull AIHelper helper;
 
     @Override
@@ -51,26 +50,26 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         if (helper == null || !helper.canMove()) {
             return Optional.empty();
         }
 
         final int movementPoints = helper.movementPoints();
-        final FightCell currentCell = ai.fighter().cell();
+        final BattlefieldCell currentCell = ai.fighter().cell();
 
         return ai.enemy()
             .map(enemy -> NullnessUtil.castNonNull(pathfinder).findPath(currentCell, enemy.cell()).truncate(movementPoints + 1))
             .map(path -> path.keepWhile(step -> step.cell().equals(currentCell) || step.cell().walkable())) // Truncate path to first unwalkable cell (may occur if the enemy cell is inaccessible or if other fighters block the path)
             .filter(path -> path.size() > 1)
-            .map(path -> actions.move().create(ai.fighter(), path))
+            .map(path -> actions.move(path))
         ;
     }
 
     /**
      * Compute the cell cost for optimize the path finding
      */
-    private @Positive int cellCost(FightCell cell) {
+    private @Positive int cellCost(BattlefieldCell cell) {
         // Fix #94 : Some cells are not accessible, but walkable/targetable using teleport.
         // In this case the pathfinder will fail, so instead of ignoring unwalkable cells, simply set a very high cost,
         // which allows the AI to generate a path to an inaccessible cell without throws a PathException
@@ -81,7 +80,7 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
         // A fighter is on the cell : the cell is not walkable
         // But the fighter may leave the place at the next turn
         // The cost is higher than a simple detour, but permit to resolve a path blocked by a fighter
-        if (cell.fighter().isPresent()) {
+        if (cell.hasFighter()) {
             return 15;
         }
 

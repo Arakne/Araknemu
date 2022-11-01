@@ -21,7 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 public interface EffectSimulator {
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect);
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect);
 }

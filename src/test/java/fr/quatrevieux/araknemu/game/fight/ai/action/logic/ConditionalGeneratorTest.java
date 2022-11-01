@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ class ConditionalGeneratorTest {
         ActionGenerator go = Mockito.mock(ActionGenerator.class);
 
         AI ai = Mockito.mock(AI.class);
-        ActionsFactory actions = Mockito.mock(ActionsFactory.class);
+        AiActionFactory actions = Mockito.mock(AiActionFactory.class);
         Action action = Mockito.mock(Action.class);
 
         Mockito.when(gs.generate(ai, actions)).thenReturn(Optional.of(action));
@@ -68,7 +69,7 @@ class ConditionalGeneratorTest {
         ActionGenerator go = Mockito.mock(ActionGenerator.class);
 
         AI ai = Mockito.mock(AI.class);
-        ActionsFactory actions = Mockito.mock(ActionsFactory.class);
+        AiActionFactory actions = Mockito.mock(AiActionFactory.class);
         Action action = Mockito.mock(Action.class);
 
         Mockito.when(go.generate(ai, actions)).thenReturn(Optional.of(action));

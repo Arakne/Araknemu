@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
@@ -30,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -44,6 +44,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactor
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
@@ -57,7 +58,9 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -69,7 +72,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FightTest extends GameBaseCase {
     private Fight fight;
     private FightMap map;
-    private List<FightTeam> teams;
+    private List<FightTeam.Factory> teams;
     private Logger logger;
     private ScheduledExecutorService executor;
 
@@ -82,13 +85,16 @@ class FightTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
+        final GamePlayer me = gamePlayer(true);
+        final GamePlayer enemy = makeOtherPlayer();
+
         fight = new Fight(
             5,
             new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             teams = new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(map.get(123)), 0),
-                new SimpleTeam(fighter2 = new PlayerFighter(makeOtherPlayer()), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter1 = new PlayerFighter(me), Arrays.asList(map.get(123)), 0),
+                fight -> new SimpleTeam(fight, fighter2 = new PlayerFighter(enemy), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -115,10 +121,10 @@ class FightTest extends GameBaseCase {
     @Test
     void getters() {
         assertEquals(5, fight.id());
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
         assertSame(map, fight.map());
         assertInstanceOf(NullState.class, fight.state());
-        assertEquals(teams, fight.teams());
+        assertCount(2, fight.teams());
+        assertContainsOnly(SimpleTeam.class, fight.teams());
         assertInstanceOf(ChallengeType.class, fight.type());
         assertInstanceOf(EffectsHandler.class, fight.effects());
         assertFalse(fight.active());
@@ -129,16 +135,14 @@ class FightTest extends GameBaseCase {
 
     @Test
     void fighters() {
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
-        assertCount(0, fight.fighters(true));
+        assertCount(0, fight.fighters());
 
         new PlacementState().start(fight);
 
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(true));
-
-        fight.turnList().init(new AlternateTeamFighterOrder());
         assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
+
+        fight.start(new AlternateTeamFighterOrder());
+        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
     }
 
     @Test
@@ -157,8 +161,10 @@ class FightTest extends GameBaseCase {
 
     @Test
     void teamByNumber() {
-        assertSame(teams.get(0), fight.team(0));
-        assertSame(teams.get(1), fight.team(1));
+        assertInstanceOf(SimpleTeam.class, fight.team(0));
+        assertSame(fighter1, fight.team(0).leader());
+        assertInstanceOf(SimpleTeam.class, fight.team(1));
+        assertSame(fighter2, fight.team(1).leader());
     }
 
     @Test
@@ -302,9 +308,10 @@ class FightTest extends GameBaseCase {
             }
         });
 
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        // Call join fight on fighters
+        new PlacementState().start(fight);
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
         assertTrue(fight.active());
         assertNotNull(ref.get());
         assertSame(fight, ref.get().fight());
@@ -322,8 +329,38 @@ class FightTest extends GameBaseCase {
     }
 
     @Test
+    void startShouldInitFighterAndOrderTurnList() {
+        // Perform join fight on fighters
+        new PlacementState().start(fight);
+
+        Set<Fighter> initializedFighters = new HashSet<>();
+
+        fight.dispatcher().add(new Listener<FighterInitialized>() {
+            @Override
+            public void on(FighterInitialized event) {
+                initializedFighters.add(event.fighter());
+            }
+
+            @Override
+            public Class<FighterInitialized> event() {
+                return FighterInitialized.class;
+            }
+        });
+
+        fight.start(t -> Arrays.asList(fighter2, fighter1));
+
+        assertEquals(Arrays.asList(fighter2, fighter1), fight.turnList().fighters());
+
+        assertCount(2, initializedFighters);
+        assertContainsAll(initializedFighters, fighter1, fighter2);
+    }
+
+    @Test
     void cancelActive() {
-        fight.start();
+        // Call join fight on fighters
+        new PlacementState().start(fight);
+
+        fight.start(new AlternateTeamFighterOrder());
 
         assertThrows(IllegalStateException.class, () -> fight.cancel());
         assertTrue(fight.alive());
@@ -347,13 +384,15 @@ class FightTest extends GameBaseCase {
         AtomicReference<FightCancelled> ref = new AtomicReference<>();
         fight.dispatcher().add(FightCancelled.class, ref::set);
 
-        fight.start();
+        // Call join fight on fighters
+        new PlacementState().start(fight);
+
+        fight.start(new AlternateTeamFighterOrder());
 
         fight.cancel(true);
 
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
-        assertCount(0, fight.fighters());
         assertFalse(fight.alive());
     }
 
@@ -423,12 +462,15 @@ class FightTest extends GameBaseCase {
         spectator.join();
 
         new PlacementState().start(fight); // Init cell to ensure that Fighter#isOnFight() is true
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
 
         InvocationFighter invoc = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);
         fight.turnList().add(invoc);
         invoc.joinFight(fight, fight.map().get(122));
         invoc.init();
+
+        InvocationFighter notInFight = new InvocationFighter(-6, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);
+        fight.turnList().add(notInFight);
 
         fighter1.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
         fighter2.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
@@ -438,5 +480,15 @@ class FightTest extends GameBaseCase {
         fight.dispatchToAll(new Foo());
 
         assertEquals(4, ai.get());
+    }
+
+    @Test
+    void turnListNotStartedShouldFailed() {
+        assertThrows(IllegalStateException.class, fight::turnList);
+    }
+
+    @Test
+    void stopNotStartedShouldFailed() {
+        assertThrows(IllegalStateException.class, fight::stop);
     }
 }

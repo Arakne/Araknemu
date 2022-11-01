@@ -20,12 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * Handle simple damage effect
@@ -38,15 +38,15 @@ public final class DamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             applier.apply(cast.caster(), effect.effect(), target);
         }
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }

@@ -56,6 +56,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
 
 /**
  * Placement before start fight
@@ -93,7 +94,10 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
 
         fight.dispatcher().register(this);
         startTime = System.currentTimeMillis();
-        addFighters(fight.fighters(false));
+
+        // Add all fighters to fight
+        // Note: fight.fighters() cannot be used because at this state fighters are not yet on fight
+        addFighters(fight.teams().stream().flatMap(team -> team.fighters().stream()).collect(Collectors.toList()));
 
         if (fight.type().hasPlacementTimeLimit()) {
             timer = fight.schedule(this::innerStartFight, fight.type().placementDuration());

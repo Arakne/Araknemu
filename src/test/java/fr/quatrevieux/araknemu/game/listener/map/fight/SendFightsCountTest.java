@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +57,7 @@ class SendFightsCountTest extends FightBaseCase {
         createSimpleFight(map);
 
         Fight fight = createSimpleFight(map);
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
         fight.stop();
         requestStack.clear();
 

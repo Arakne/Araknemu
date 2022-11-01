@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.network.game.out.fight.ClearAllBuffs;
@@ -40,7 +39,8 @@ public final class DispelDeadFighterBuff implements Listener<FighterDie> {
 
     @Override
     public void on(FighterDie event) {
-        if (removeBuffByCaster(event.fighter())) {
+        // @todo use Fighter on  events
+        if (removeBuffByCaster((Fighter) event.fighter())) {
             synchronizeBuffs();
         }
     }
@@ -55,7 +55,7 @@ public final class DispelDeadFighterBuff implements Listener<FighterDie> {
      *
      * @return true if there is at least one dispelled buff
      */
-    private boolean removeBuffByCaster(PassiveFighter caster) {
+    private boolean removeBuffByCaster(Fighter caster) {
         boolean hasChange = false;
 
         for (Fighter fighter : fight.fighters()) {

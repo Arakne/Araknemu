@@ -26,10 +26,10 @@ import fr.arakne.utils.maps.path.PathException;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -50,10 +50,10 @@ import java.util.function.ToDoubleFunction;
  * - If a path is found, and can be performed by the current number of MPs, return the move action
  */
 public final class Movement<F extends ActiveFighter> implements ActionGenerator<F> {
-    private final ToDoubleFunction<CoordinateCell<FightCell>> scoreFunction;
+    private final ToDoubleFunction<CoordinateCell<BattlefieldCell>> scoreFunction;
     private final Predicate<ScoredCell> filter;
 
-    private @MonotonicNonNull Pathfinder<FightCell> pathfinder;
+    private @MonotonicNonNull Pathfinder<BattlefieldCell> pathfinder;
 
     /**
      * Creates the Movement action generator
@@ -61,7 +61,7 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
      * @param scoreFunction The score function. The returned score is used for select the best cell. Higher score are selected first.
      * @param filter The selection cell filter
      */
-    public Movement(ToDoubleFunction<CoordinateCell<FightCell>> scoreFunction, Predicate<ScoredCell> filter) {
+    public Movement(ToDoubleFunction<CoordinateCell<BattlefieldCell>> scoreFunction, Predicate<ScoredCell> filter) {
         this.scoreFunction = scoreFunction;
         this.filter = filter;
     }
@@ -72,12 +72,12 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
-        final Pathfinder<FightCell> pathfinder = NullnessUtil.castNonNull(this.pathfinder);
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+        final Pathfinder<BattlefieldCell> pathfinder = NullnessUtil.castNonNull(this.pathfinder);
         final int movementPoints = ai.turn().points().movementPoints();
         final List<ScoredCell> selectedCells = selectCells(ai, movementPoints);
 
-        final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
+        final CoordinateCell<BattlefieldCell> currentCell = ai.fighter().cell().coordinate();
         final ScoredCell currentCellScore = new ScoredCell(currentCell, scoreFunction.applyAsDouble(currentCell));
         final boolean currentCellIsValid = filter.test(currentCellScore);
 
@@ -88,7 +88,7 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
                 continue;
             }
 
-            final Path<FightCell> path;
+            final Path<BattlefieldCell> path;
 
             try {
                 path = pathfinder.findPath(ai.fighter().cell(), cell.coordinates.cell());
@@ -103,7 +103,7 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
                 continue;
             }
 
-            return Optional.of(actions.move().create(ai.fighter(), path));
+            return Optional.of(actions.move(path));
         }
 
         return Optional.empty();
@@ -113,15 +113,15 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
      * Select all reachable cells for movement
      */
     private List<ScoredCell> selectCells(AI<F> ai, int movementPoints) {
-        final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
+        final CoordinateCell<BattlefieldCell> currentCell = ai.fighter().cell().coordinate();
         final List<ScoredCell> selectedCells = new ArrayList<>();
 
-        for (FightCell cell : ai.map()) {
+        for (BattlefieldCell cell : ai.map()) {
             if (!cell.walkable()) {
                 continue;
             }
 
-            final CoordinateCell<FightCell> coordinates = cell.coordinate();
+            final CoordinateCell<BattlefieldCell> coordinates = cell.coordinate();
 
             if (coordinates.distance(currentCell) > movementPoints) {
                 continue;
@@ -134,10 +134,10 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
     }
 
     public static final class ScoredCell implements Comparable<ScoredCell> {
-        private final CoordinateCell<FightCell> coordinates;
+        private final CoordinateCell<BattlefieldCell> coordinates;
         private final double score;
 
-        public ScoredCell(CoordinateCell<FightCell> coordinates, double score) {
+        public ScoredCell(CoordinateCell<BattlefieldCell> coordinates, double score) {
             this.coordinates = coordinates;
             this.score = score;
         }
@@ -145,7 +145,7 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
         /**
          * Get the cell coordinates
          */
-        public CoordinateCell<FightCell> coordinates() {
+        public CoordinateCell<BattlefieldCell> coordinates() {
             return coordinates;
         }
 

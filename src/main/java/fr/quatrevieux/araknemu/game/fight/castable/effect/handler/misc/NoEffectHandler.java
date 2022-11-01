@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 
 /**
@@ -27,12 +27,12 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
  */
 public final class NoEffectHandler implements EffectHandler {
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         // No-op
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         // No-op
     }
 }

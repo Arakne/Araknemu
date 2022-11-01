@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -62,7 +63,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithNoEnnemy() {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -83,7 +84,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemy() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -110,7 +111,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemyOnLastStepShouldDoNothing() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -135,7 +136,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
         other.fighter().move(fight.map().get(198));
 
         Move move = (Move) fight.actions().move().create(fighter, new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -144,7 +145,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
             )
         ));
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         turn.perform(move);
         turn.terminate();

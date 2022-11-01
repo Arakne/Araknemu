@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidat
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -50,7 +50,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
-import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -1157,9 +1156,9 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(35, fight.map().get(199)); // Invocation de Bouftou
 
-        assertTrue(fight.map().get(199).fighter().isPresent());
+        assertTrue(fight.map().get(199).hasFighter());
 
-        PassiveFighter invocation = fight.map().get(199).fighter().get();
+        FighterData invocation = fight.map().get(199).fighter();
 
         assertInstanceOf(InvocationFighter.class, invocation);
 

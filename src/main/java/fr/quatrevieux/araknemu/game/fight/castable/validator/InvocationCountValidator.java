@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -44,7 +44,7 @@ public final class InvocationCountValidator implements CastConstraintValidator<S
     }
 
     @Override
-    public boolean check(Turn turn, Spell castable, FightCell target) {
+    public boolean check(Turn turn, Spell castable, BattlefieldCell target) {
         if (!isInvocationSpell(castable)) {
             return true;
         }
@@ -60,11 +60,11 @@ public final class InvocationCountValidator implements CastConstraintValidator<S
     }
 
     @Override
-    public @Nullable Error validate(Turn turn, Spell castable, FightCell target) {
+    public @Nullable Error validate(Turn turn, Spell castable, BattlefieldCell target) {
         return check(turn, castable, target) ? null : Error.cantCastMaxSummonedCreaturesReached(max(turn.fighter()));
     }
 
-    private int max(PassiveFighter fighter) {
+    private int max(FighterData fighter) {
         return fighter.characteristics().get(Characteristic.MAX_SUMMONED_CREATURES);
     }
 

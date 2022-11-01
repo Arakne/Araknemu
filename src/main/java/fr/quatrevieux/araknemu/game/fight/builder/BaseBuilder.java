@@ -33,9 +33,10 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,13 +78,12 @@ public final class BaseBuilder implements FightBuilder {
         teamFactories.add(factory);
     }
 
-    @RequiresNonNull("map")
-    private List<FightTeam> buildTeams() {
+    private List<FightTeam.Factory> buildTeams() {
         final List<TeamFactory> factories = random != null ? random.shuffle(teamFactories) : teamFactories;
-        final List<FightTeam> teams = new ArrayList<>(factories.size());
+        final List<FightTeam.Factory> teams = new ArrayList<>(factories.size());
 
         for (int number = 0; number < factories.size(); ++number) {
-            teams.add(factories.get(number).create(number, map.startPlaces(number)));
+            teams.add(createTeamFactory(factories.get(number), number));
         }
 
         return teams;
@@ -99,6 +99,10 @@ public final class BaseBuilder implements FightBuilder {
         );
     }
 
+    private FightTeam.Factory createTeamFactory(TeamFactory teamFactory, @NonNegative int number) {
+        return fight -> teamFactory.create(fight, number, NullnessUtil.castNonNull(map).startPlaces(number));
+    }
+
     public interface TeamFactory {
         /**
          * Creates the fight team
@@ -106,6 +110,6 @@ public final class BaseBuilder implements FightBuilder {
          * @param number The team number
          * @param startPlaces The available start places
          */
-        public FightTeam create(int number, List<FightCell> startPlaces);
+        public FightTeam create(Fight fight, int number, List<FightCell> startPlaces);
     }
 }

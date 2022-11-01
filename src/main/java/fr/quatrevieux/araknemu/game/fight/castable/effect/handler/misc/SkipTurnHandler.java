@@ -20,11 +20,11 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -38,13 +38,13 @@ public final class SkipTurnHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         buff(cast, effect);
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }

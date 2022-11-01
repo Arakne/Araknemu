@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.RangeValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.SpellLaunchValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.StatesValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -60,12 +60,12 @@ public final class SpellConstraintsValidator implements CastConstraintValidator<
     }
 
     @Override
-    public boolean check(Turn turn, Spell castable, FightCell target) {
+    public boolean check(Turn turn, Spell castable, BattlefieldCell target) {
         return validator.check(turn, castable, target);
     }
 
     @Override
-    public @Nullable Error validate(Turn turn, Spell spell, FightCell target) {
+    public @Nullable Error validate(Turn turn, Spell spell, BattlefieldCell target) {
         return validator.validate(turn, spell, target);
     }
 }

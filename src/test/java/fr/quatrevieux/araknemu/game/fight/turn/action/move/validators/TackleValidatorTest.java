@@ -27,13 +27,14 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,7 +46,6 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,7 +75,7 @@ class TackleValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithNoEnnemy() {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -96,7 +96,7 @@ class TackleValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemyNotOnFirstStep() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -119,7 +119,7 @@ class TackleValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemyOnFirstStepWithLessAgilityShouldNotBlock() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -143,7 +143,7 @@ class TackleValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemyOnFirstStepWithMoreAgilityShouldBlockAndRemoveAP() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -173,7 +173,7 @@ class TackleValidatorTest extends FightBaseCase {
         fighter.states().push(TackleValidator.STATE_ROOTED);
 
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -197,7 +197,7 @@ class TackleValidatorTest extends FightBaseCase {
     void validateWithRootedStateEnemyShouldIgnoreTackle() throws SQLException {
 
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -221,7 +221,7 @@ class TackleValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemyOnFirstStepWithSameAgilityShouldBlockHalfChance() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -253,7 +253,7 @@ class TackleValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemyOnFirstStepWithSlightlyLessAgilityShouldBlockLessThanHalfChance() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -286,7 +286,7 @@ class TackleValidatorTest extends FightBaseCase {
     @Test
     void validatePathWithEnnemyOnFirstStepWithSlightlyMoreAgilityShouldBlockMoreThanHalfChance() throws SQLException {
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -326,14 +326,14 @@ class TackleValidatorTest extends FightBaseCase {
         }
 
         fight = builder.build(true);
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
         turn.start();
 
         Path<FightCell> path = new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -374,13 +374,13 @@ class TackleValidatorTest extends FightBaseCase {
         ;
 
         fight = builder.build(true);
-        fight.start();
+        fight.start(a -> fight.fighters());
 
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
         turn.start();
 
-        Method method = validator.getClass().getDeclaredMethod("computeTackle", Fighter.class, PassiveFighter.class);
+        Method method = validator.getClass().getDeclaredMethod("computeTackle", Fighter.class, FighterData.class);
         method.setAccessible(true);
 
         assertEquals(escapeProbability, (double) method.invoke(validator, fighter, fight.fighters().get(1)), 0.01);
@@ -416,7 +416,7 @@ class TackleValidatorTest extends FightBaseCase {
         other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
 
         Move move = (Move) fight.actions().move().create(fighter, new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -425,7 +425,7 @@ class TackleValidatorTest extends FightBaseCase {
             )
         ));
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         turn.perform(move);
         turn.terminate();
@@ -441,7 +441,7 @@ class TackleValidatorTest extends FightBaseCase {
         fighter.characteristics().alter(Characteristic.AGILITY, 500);
 
         Move move = (Move) fight.actions().move().create(fighter, new Path<FightCell>(
-            new Decoder<FightCell>(fight.map()),
+            fight.map().decoder(),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
                 new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -450,7 +450,7 @@ class TackleValidatorTest extends FightBaseCase {
             )
         ));
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         turn.perform(move);
         turn.terminate();

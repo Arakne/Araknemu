@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -38,7 +38,7 @@ public interface CastConstraintValidator<C extends Castable> {
      *
      * @return true if the cast is valid, or false if not
      */
-    public boolean check(Turn turn, C castable, FightCell target);
+    public boolean check(Turn turn, C castable, BattlefieldCell target);
 
     /**
      * Check if the spell can be casted
@@ -49,5 +49,5 @@ public interface CastConstraintValidator<C extends Castable> {
      *
      * @return The error if constraint failed, or null
      */
-    public @Nullable Error validate(Turn turn, C castable, FightCell target);
+    public @Nullable Error validate(Turn turn, C castable, BattlefieldCell target);
 }

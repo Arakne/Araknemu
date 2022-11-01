@@ -30,9 +30,9 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
-import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
@@ -182,23 +182,25 @@ public class FightBaseCase extends GameBaseCase {
         return createFight(true);
     }
 
-    public FightTeam createTeam0(FightMap map) throws ContainerException {
-        return new SimpleTeam(
+    public FightTeam.Factory createTeam0(FightMap map) throws ContainerException {
+        return fight -> new SimpleTeam(
+            fight,
             makePlayerFighter(player),
             Arrays.asList(map.get(122), map.get(123), map.get(124)),
             0
         );
     }
 
-    public FightTeam createTeam1(FightMap map) throws ContainerException {
-        return new SimpleTeam(
+    public FightTeam.Factory createTeam1(FightMap map) throws ContainerException {
+        return fight -> new SimpleTeam(
+            fight,
             makePlayerFighter(other),
             Arrays.asList(map.get(125), map.get(126), map.get(127)),
             0
         );
     }
 
-    public FightTeam createMonsterTeam(FightMap map) throws ContainerException, SQLException {
+    public FightTeam.Factory createMonsterTeam(FightMap map) throws ContainerException, SQLException {
         MonsterService service = container.get(MonsterService.class);
 
         dataSet
@@ -206,7 +208,7 @@ public class FightBaseCase extends GameBaseCase {
             .pushMonsterTemplates()
         ;
 
-        return new MonsterGroupTeam(
+        return fight -> new MonsterGroupTeam(
             new MonsterGroup(
                 new LivingMonsterGroupPosition(
                     container.get(MonsterGroupFactory.class),
@@ -255,15 +257,15 @@ public class FightBaseCase extends GameBaseCase {
         equipWeapon(player, 40);
     }
 
-    public CastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
-        return CastScope.simple(castable, caster, target, Collections.singletonList(effect));
+    public FightCastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
+        return FightCastScope.simple(castable, caster, target, Collections.singletonList(effect));
     }
 
-    public CastScope makeCastScopeForEffect(int effectId) {
+    public FightCastScope makeCastScopeForEffect(int effectId) {
         return makeCastScopeForEffect(effectId, player.fighter(), other.fighter().cell());
     }
 
-    public CastScope makeCastScopeForEffect(int effectId, Fighter caster, FightCell target) {
+    public FightCastScope makeCastScopeForEffect(int effectId, Fighter caster, FightCell target) {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
@@ -304,14 +306,8 @@ public class FightBaseCase extends GameBaseCase {
             new ActiveState(),
             new FinishState()
         );
-        private List<FightTeam> teams = new ArrayList<>();
+        private List<List<PlayerFighter>> fightersByTeamNumber = new ArrayList<>();
         private List<FighterBuilder> fighterBuilders = new ArrayList<>();
-
-        public FightBuilder addSimpleTeam(PlayerFighter leader, List<Integer> places) {
-            teams.add(new SimpleTeam(leader, places.stream().map(map()::get).collect(Collectors.toList()), teams.size()));
-
-            return this;
-        }
 
         public FightBuilder map(int mapId) {
             map = loadFightMap(mapId);
@@ -335,10 +331,6 @@ public class FightBaseCase extends GameBaseCase {
         }
 
         public FightBuilder addEnemy(Consumer<FighterBuilder> configurator) {
-            if (teams.isEmpty()) {
-                addSelf(builder -> {});
-            }
-
             try {
                 return addToTeam(1, configurator);
             } catch (Exception throwables) {
@@ -353,16 +345,23 @@ public class FightBaseCase extends GameBaseCase {
 
             PlayerFighter fighter = builder.build();
 
-            if (teams.size() < teamNumber + 1) {
-                addSimpleTeam(fighter, IntStream.range(10, 300).filter(value -> value % 2 == teamNumber).boxed().collect(Collectors.toList()));
-            } else {
-                teams.get(teamNumber).join(fighter);
+            // Create all teams
+            while (fightersByTeamNumber.size() <= teamNumber) {
+                fightersByTeamNumber.add(new ArrayList<>());
             }
+
+            fightersByTeamNumber.get(teamNumber).add(fighter);
 
             return this;
         }
 
         public Fight build(boolean init) {
+            final List<FightTeam.Factory> teams = new ArrayList<>();
+
+            for (int teamNumber = 0; teamNumber < fightersByTeamNumber.size(); ++teamNumber) {
+                teams.add(buildTeam(teamNumber, fightersByTeamNumber.get(teamNumber)));
+            }
+
             Fight fight = new Fight(
                 id,
                 type,
@@ -393,6 +392,20 @@ public class FightBaseCase extends GameBaseCase {
             }
 
             return fight;
+        }
+
+        private FightTeam.Factory buildTeam(int number, List<PlayerFighter> fighters) {
+            final List<FightCell> startPlaces = IntStream.range(10, 300).filter(value -> value % 2 == number)
+                .mapToObj(map()::get)
+                .collect(Collectors.toList())
+            ;
+
+            return fight -> {
+                FightTeam team = new SimpleTeam(fight, fighters.get(0), startPlaces, number);
+                fighters.stream().skip(1).forEach(team::join);
+
+                return team;
+            };
         }
 
         private FightMap map() {

@@ -37,10 +37,12 @@ import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
@@ -76,26 +78,23 @@ public final class Fight implements Dispatcher, Sender {
 
     private final Lock executorLock = new ReentrantLock();
     private final EffectsHandler effects = new EffectsHandler();
-    private final FightTurnList turnList;
+    private @MonotonicNonNull FightTurnList turnList;
 
     private final StopWatch duration = new StopWatch();
     private volatile boolean alive = true;
 
     @SuppressWarnings({"assignment", "argument"})
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<Fighter> actions) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<Fighter> actions) {
         this.id = id;
         this.type = type;
         this.map = map;
-        this.teams = teams;
+        this.teams = teams.stream().map(factory ->  factory.create(this)).collect(Collectors.toList());
         this.statesFlow = statesFlow;
         this.logger = logger;
         this.executor = executor;
-        this.turnList = new FightTurnList(this);
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
         this.actions = actions;
-
-        teams.forEach(team -> team.setFight(this)); // @todo team factory ?
     }
 
     /**
@@ -134,34 +133,14 @@ public final class Fight implements Dispatcher, Sender {
      * Get all fighters on the fight
      */
     public List<Fighter> fighters() {
-        final Stream<Fighter> fighterStream = turnList.isInitialized()
+        final FightTurnList turnList = this.turnList;
+        final Stream<Fighter> fighterStream = turnList != null
             ? turnList.fighters().stream()
             : teams.stream().flatMap(fightTeam -> fightTeam.fighters().stream())
         ;
 
         return fighterStream
             .filter(Fighter::isOnFight)
-            .collect(Collectors.toList())
-        ;
-    }
-
-    /**
-     * Get all fighters
-     *
-     * @param onlyInitialized true to returns only initialized fighter (is on the fight)
-     */
-    public List<Fighter> fighters(boolean onlyInitialized) {
-        if (onlyInitialized) {
-            return fighters();
-        }
-
-        if (turnList.isInitialized()) {
-            return turnList.fighters();
-        }
-
-        return teams
-            .stream()
-            .flatMap(fightTeam -> fightTeam.fighters().stream())
             .collect(Collectors.toList())
         ;
     }
@@ -212,8 +191,16 @@ public final class Fight implements Dispatcher, Sender {
 
     /**
      * Get the turn list
+     *
+     * @throws IllegalStateException When fight is not yet started
      */
     public FightTurnList turnList() {
+        final FightTurnList turnList = this.turnList;
+
+        if (turnList == null) {
+            throw new IllegalStateException("Fight is not started");
+        }
+
         return turnList;
     }
 
@@ -258,11 +245,12 @@ public final class Fight implements Dispatcher, Sender {
      * @see Fight#dispatch(Object) To dispatch on the Fight's listeners
      */
     public void dispatchToAll(Object event) {
-        if (turnList.isInitialized()) {
-            turnList.fighters().stream()
-                .filter(Fighter::isOnFight)
-                .forEach(fighter -> fighter.dispatch(event))
-            ;
+        if (turnList != null) {
+            for (Fighter fighter : turnList.fighters()) {
+                if (fighter.isOnFight()) {
+                    fighter.dispatch(event);
+                }
+            }
         } else {
             for (FightTeam team : teams) {
                 for (Fighter fighter : team.fighters()) {
@@ -312,8 +300,14 @@ public final class Fight implements Dispatcher, Sender {
 
     /**
      * Start the fight
+     *
+     * @param orderStrategy Strategy to use for order fighter turn list
      */
-    public void start() {
+    public void start(FighterOrderStrategy orderStrategy) {
+        final FightTurnList turnList = this.turnList = new FightTurnList(this, orderStrategy);
+
+        turnList.fighters().forEach(Fighter::init);
+
         schedule(turnList::start, Duration.ofMillis(200));
         dispatch(new FightStarted(this));
 
@@ -324,6 +318,10 @@ public final class Fight implements Dispatcher, Sender {
      * Stop the fight
      */
     public void stop() {
+        if (turnList == null) {
+            throw new IllegalStateException("Fight not started");
+        }
+
         duration.stop();
         turnList.stop();
 

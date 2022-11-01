@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -70,7 +72,7 @@ class MoveToTargetCellHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
@@ -97,13 +99,13 @@ class MoveToTargetCellHandlerTest extends FightBaseCase {
         FightCell lastCell = target.cell();
         FightCell destination = fight.map().get(179);
 
-        CastScope scope = makeCastScope(caster, spell, effect, destination);
+        FightCastScope scope = makeCastScope(caster, spell, effect, destination);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertLast(ActionEffect.slide(caster, target, destination));
 
-        assertFalse(lastCell.fighter().isPresent());
-        assertSame(target, destination.fighter().get());
+        assertFalse(lastCell.hasFighter());
+        assertSame(target, destination.fighter());
         assertSame(destination, target.cell());
     }
 
@@ -128,13 +130,13 @@ class MoveToTargetCellHandlerTest extends FightBaseCase {
 
         FightCell lastCell = target.cell();
 
-        CastScope scope = makeCastScope(caster, spell, effect, lastCell);
+        FightCastScope scope = makeCastScope(caster, spell, effect, lastCell);
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertNotContains(ActionEffect.class);
 
-        assertTrue(lastCell.fighter().isPresent());
-        assertSame(target, lastCell.fighter().get());
+        assertTrue(lastCell.hasFighter());
+        assertSame(target, lastCell.fighter());
         assertSame(lastCell, target.cell());
     }
 
@@ -160,7 +162,7 @@ class MoveToTargetCellHandlerTest extends FightBaseCase {
 
         FightCell destination = fight.map().get(168);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(targetCell));
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(targetCell));
         handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();

@@ -23,10 +23,10 @@ import fr.arakne.utils.maps.MapCell;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -43,19 +43,19 @@ public final class MoveFrontHandler implements EffectHandler {
 
     public MoveFrontHandler(Fight fight) {
         this.fight = fight;
-        this.decoder = new Decoder<>(fight.map());
+        this.decoder = fight.map().decoder();
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
 
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             apply(caster, target, effect.effect().min());
         }
     }
 
-    private void apply(ActiveFighter caster, PassiveFighter target, int distance) {
+    private void apply(FighterData caster, Fighter target, int distance) {
         final FightCell startCell = target.cell();
         final Direction direction = startCell.coordinate().directionTo(caster.cell());
 
@@ -83,7 +83,7 @@ public final class MoveFrontHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use move back as buff effect");
     }
 }

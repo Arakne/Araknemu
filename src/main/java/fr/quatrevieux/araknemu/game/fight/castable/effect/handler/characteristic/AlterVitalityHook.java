@@ -22,11 +22,11 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Hook for handle vitality alteration
- * Synchronize fighter life using {@link fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alterMax(PassiveFighter, int)}
+ * Synchronize fighter life using {@link fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alterMax(FighterData, int)}
  * in addition to characteristic change performed by the base {@link AlterCharacteristicHook}
  *
  * @see AddVitalityHandler
@@ -42,7 +42,7 @@ public final class AlterVitalityHook extends AlterCharacteristicHook {
     }
 
     @Override
-    protected void apply(Buff buff, PassiveFighter target, int value) {
+    protected void apply(Buff buff, FighterData target, int value) {
         super.apply(buff, target, value);
         target.life().alterMax(buff.caster(), value);
     }

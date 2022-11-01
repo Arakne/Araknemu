@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -41,7 +41,7 @@ public final class AlterActionPointsSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         int duration = effect.effect().duration();
 
         if (duration == -1 || duration > 10) {
@@ -54,7 +54,7 @@ public final class AlterActionPointsSimulator implements EffectSimulator {
             : (double) (effect.effect().min() + effect.effect().max()) / 2
         ;
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             apply(simulation, target, value, duration);
         }
     }
@@ -67,7 +67,7 @@ public final class AlterActionPointsSimulator implements EffectSimulator {
      * @param value Effect value (i.e. number of points to add or remove)
      * @param duration Effect duration. 0 for effect applied only on current turn.
      */
-    private void apply(CastSimulation simulation, PassiveFighter target, double value, @NonNegative int duration) {
+    private void apply(CastSimulation simulation, FighterData target, double value, @NonNegative int duration) {
         // Modify actions points on current turn
         if (target.equals(simulation.caster())) {
             applyToCurrentFighter(simulation, target, value, duration);
@@ -82,7 +82,7 @@ public final class AlterActionPointsSimulator implements EffectSimulator {
     /**
      * Apply to current fighter to handle actual spell AP cost
      */
-    private void applyToCurrentFighter(CastSimulation simulation, PassiveFighter target, double value, @NonNegative int duration) {
+    private void applyToCurrentFighter(CastSimulation simulation, FighterData target, double value, @NonNegative int duration) {
         // In case of negative effect compute a boost is not needed : it will automatically take in account by AP cost
         if (multiplier < 0) {
             simulation.alterActionPoints(-value);

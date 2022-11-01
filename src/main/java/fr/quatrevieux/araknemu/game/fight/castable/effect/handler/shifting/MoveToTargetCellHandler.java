@@ -23,9 +23,10 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
 /**
@@ -41,31 +42,32 @@ public final class MoveToTargetCellHandler implements EffectHandler {
     private final MoveBackApplier applier;
 
     public MoveToTargetCellHandler(Fight fight) {
-        this.decoder = new Decoder<>(fight.map());
+        this.decoder = fight.map().decoder();
         this.applier = new MoveBackApplier(fight);
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
-        final CoordinateCell<FightCell> casterCell = caster.cell().coordinate();
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
+        final FightCell casterCell = caster.cell();
+        final CoordinateCell<BattlefieldCell> casterCellCoordinate = casterCell.coordinate();
 
         // Remove 1 because the distance should be computed from the target fighter cell
-        final int distance = casterCell.distance(cast.target()) - 1;
-        final Direction direction = casterCell.directionTo(cast.target());
+        final int distance = casterCellCoordinate.distance(cast.target()) - 1;
+        final Direction direction = casterCellCoordinate.directionTo(cast.target());
 
         if (distance < 1) {
             return;
         }
 
-        decoder.nextCellByDirection(casterCell.cell(), direction)
-            .flatMap(FightCell::fighter)
+        decoder.nextCellByDirection(casterCell, direction)
+            .map(FightCell::fighter)
             .ifPresent(target -> applier.apply(caster, target, distance))
         ;
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use move back as buff effect");
     }
 }

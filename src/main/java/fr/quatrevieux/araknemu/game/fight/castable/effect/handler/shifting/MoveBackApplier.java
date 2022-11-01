@@ -24,12 +24,14 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Optional;
 
@@ -61,7 +63,7 @@ public final class MoveBackApplier {
         this.fight = fight;
         this.baseDamage = baseDamage;
         this.maxDamage = maxDamage;
-        this.decoder = new Decoder<>(fight.map());
+        this.decoder = fight.map().decoder();
     }
 
     /**
@@ -71,7 +73,7 @@ public final class MoveBackApplier {
      * @param target The spell target
      * @param distance The move back distance
      */
-    public void apply(ActiveFighter caster, PassiveFighter target, @NonNegative int distance) {
+    public void apply(Fighter caster, Fighter target, @NonNegative int distance) {
         final Direction direction = caster.cell().coordinate().directionTo(target.cell());
         FightCell destination = target.cell();
 
@@ -110,7 +112,7 @@ public final class MoveBackApplier {
      * @param direction The move direction
      * @param distance Remain move distance
      */
-    private void applyBlockingDamageChain(ActiveFighter caster, PassiveFighter target, FightCell lastCell, Direction direction, @NonNegative int distance) {
+    private void applyBlockingDamageChain(Fighter caster, Fighter target, FightCell lastCell, Direction direction, @NonNegative int distance) {
         int damage = computeDamage(caster, distance);
 
         if (damage <= 0) {
@@ -123,7 +125,7 @@ public final class MoveBackApplier {
         for (damage /= 2; damage > 0; damage /= 2) {
             final Optional<FightCell> nextCell = decoder
                 .nextCellByDirection(lastCell, direction)
-                .filter(cell -> cell.fighter().isPresent())
+                .filter(BattlefieldCell::hasFighter)
             ;
 
             // Out of map, or no player is present here : stop the chain
@@ -132,7 +134,7 @@ public final class MoveBackApplier {
             }
 
             lastCell = nextCell.get();
-            lastCell.fighter().get().life().alter(caster, -damage);
+            NullnessUtil.castNonNull(lastCell.fighter()).life().alter(caster, -damage);
         }
     }
 
@@ -146,7 +148,7 @@ public final class MoveBackApplier {
      *
      * @return The damage
      */
-    private @NonNegative int computeDamage(ActiveFighter caster, @NonNegative int distance) {
+    private @NonNegative int computeDamage(FighterData caster, @NonNegative int distance) {
         return (baseDamage + random.rand(1, maxDamage) * caster.level() / 50) * distance;
     }
 }

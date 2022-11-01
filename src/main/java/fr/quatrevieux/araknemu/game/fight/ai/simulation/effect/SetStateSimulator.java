@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +63,7 @@ public final class SetStateSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         final Integer base = stateBoost.get(effect.effect().special());
 
         if (base == null) {
@@ -78,7 +78,7 @@ public final class SetStateSimulator implements EffectSimulator {
 
         final int boost = base * Math.max(duration, 1);
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             simulation.addBoost(boost, target);
         }
     }

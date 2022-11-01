@@ -19,8 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.spell.effect.target;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle effect targets
@@ -39,5 +38,5 @@ public interface EffectTarget {
      *
      * @return true if the fighter is a valid target, or false
      */
-    public boolean test(ActiveFighter caster, PassiveFighter fighter);
+    public boolean test(FighterData caster, FighterData fighter);
 }

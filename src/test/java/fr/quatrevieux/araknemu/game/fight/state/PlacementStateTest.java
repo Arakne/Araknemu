@@ -86,8 +86,8 @@ class PlacementStateTest extends FightBaseCase {
             new ChallengeType(configuration.fight()),
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -120,7 +120,7 @@ class PlacementStateTest extends FightBaseCase {
     @Test
     void start() {
         AtomicReference<FightJoined> ref = new AtomicReference<>();
-        PlayerFighter.class.cast(fight.fighters(false).get(0)).dispatcher().add(FightJoined.class, ref::set);
+        PlayerFighter.class.cast(new ArrayList<>(fight.team(0).fighters()).get(0)).dispatcher().add(FightJoined.class, ref::set);
 
         state.start(fight);
 
@@ -171,8 +171,8 @@ class PlacementStateTest extends FightBaseCase {
             type,
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -202,8 +202,8 @@ class PlacementStateTest extends FightBaseCase {
             type,
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -238,8 +238,8 @@ class PlacementStateTest extends FightBaseCase {
             type,
             map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -313,7 +313,7 @@ class PlacementStateTest extends FightBaseCase {
         state.changePlace(fighter, fight.map().get(222));
 
         assertEquals(222, fighter.cell().id());
-        assertEquals(fighter, fight.map().get(222).fighter().get());
+        assertEquals(fighter, fight.map().get(222).fighter());
 
         requestStack.assertLast(new FighterPositions(fight.fighters()));
     }
@@ -369,7 +369,7 @@ class PlacementStateTest extends FightBaseCase {
         assertSame(fight, newFighter.fight());
         assertSame(fight.team(0), newFighter.team());
         assertNotNull(newFighter.cell());
-        assertSame(newFighter, newFighter.cell().fighter().get());
+        assertSame(newFighter, newFighter.cell().fighter());
         assertContains(newFighter.cell(), fight.team(0).startPlaces());
 
         assertSame(newFighter, ref.get().fighter());
@@ -423,7 +423,7 @@ class PlacementStateTest extends FightBaseCase {
         state.leave(newFighter);
         assertSame(newFighter, ref.get().fighter());
         assertFalse(fight.fighters().contains(newFighter));
-        assertFalse(newFighter.cell().fighter().isPresent());
+        assertFalse(newFighter.cell().hasFighter());
 
         requestStack.assertLast(new RemoveSprite(newFighter.sprite()));
     }
@@ -493,7 +493,7 @@ class PlacementStateTest extends FightBaseCase {
         state.kick(newFighter);
         assertSame(newFighter, ref.get().fighter());
         assertFalse(fight.fighters().contains(newFighter));
-        assertFalse(newFighter.cell().fighter().isPresent());
+        assertFalse(newFighter.cell().hasFighter());
 
         requestStack.assertLast(new RemoveSprite(newFighter.sprite()));
     }

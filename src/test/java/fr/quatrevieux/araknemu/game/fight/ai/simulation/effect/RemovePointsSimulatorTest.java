@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -72,7 +73,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-1000, simulation.selfBoost());
@@ -93,7 +94,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-250, simulation.selfBoost());
@@ -114,7 +115,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-2000, simulation.selfBoost());
@@ -154,7 +155,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-100, simulation.selfBoost());
@@ -179,7 +180,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(expectedBoost, simulation.enemiesBoost());
@@ -213,7 +214,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-1200, simulation.enemiesBoost());
@@ -235,7 +236,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
 
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        CastScope scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(0.0, simulation.enemiesBoost());

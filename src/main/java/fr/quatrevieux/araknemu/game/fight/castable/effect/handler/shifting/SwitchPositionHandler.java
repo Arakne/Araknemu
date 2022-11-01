@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * Switch the caster position with the target one
@@ -35,8 +35,8 @@ public final class SwitchPositionHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             applier.apply(cast.caster(), target);
 
             break; // Stop at first target
@@ -44,7 +44,7 @@ public final class SwitchPositionHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use switch position effect as buff");
     }
 }

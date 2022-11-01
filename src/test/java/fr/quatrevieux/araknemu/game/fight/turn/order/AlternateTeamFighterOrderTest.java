@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -46,7 +46,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -110,11 +109,6 @@ class AlternateTeamFighterOrderTest extends TestCase {
         @Override
         public TeamOptions options() {
             return null;
-        }
-
-        @Override
-        public void setFight(Fight fight) {
-
         }
 
         @Override
@@ -210,7 +204,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void setHidden(PassiveFighter caster, boolean hidden) {
+        public void setHidden(Fighter caster, boolean hidden) {
 
         }
 
@@ -302,7 +296,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public PassiveFighter invoker() {
+        public FighterData invoker() {
             return null;
         }
 

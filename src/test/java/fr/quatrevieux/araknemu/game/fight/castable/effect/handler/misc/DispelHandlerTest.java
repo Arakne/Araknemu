@@ -23,8 +23,10 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -72,7 +74,7 @@ class DispelHandlerTest extends FightBaseCase {
         Buff buff_wisdom = makeWisdomBuffThatCannotBeDebuff();
         target.buffs().add(buff_wisdom);
 
-        CastScope scope = makeDebuffSpell(target.cell());
+        FightCastScope scope = makeDebuffSpell(target.cell());
         requestStack.clear();
         handler.handle(scope, scope.effects().get(0));
 
@@ -86,7 +88,7 @@ class DispelHandlerTest extends FightBaseCase {
 
     @Test
     void buff() {
-        CastScope scope = makeDebuffSpell(target.cell());
+        FightCastScope scope = makeDebuffSpell(target.cell());
 
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
@@ -101,7 +103,7 @@ class DispelHandlerTest extends FightBaseCase {
         caster.buffs().add(buff_luck);
         caster.buffs().add(buff_wisdom);
 
-        CastScope scope = makeDebuffSpell(caster.cell());
+        FightCastScope scope = makeDebuffSpell(caster.cell());
         handler.handle(scope, scope.effects().get(0));
 
         Optional<Buff> buff1 = caster.buffs().stream().filter(x -> x.effect().effect() == 123).findFirst();
@@ -120,14 +122,14 @@ class DispelHandlerTest extends FightBaseCase {
         caster.buffs().add(buff1);
         assertArrayEquals(new Buff[] {buff1}, caster.buffs().stream().toArray());
 
-        CastScope scope = makeDebuffSpell(caster.cell());
+        FightCastScope scope = makeDebuffSpell(caster.cell());
         handler.handle(scope, scope.effects().get(0));
 
         assertArrayEquals(new Buff[] {}, caster.buffs().stream().toArray());
         Mockito.verify(hook).onBuffTerminated(buff1);
     }
 
-    private CastScope makeDebuffSpell(FightCell cell) {
+    private FightCastScope makeDebuffSpell(FightCell cell) {
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
         SpellEffect debuff = Mockito.mock(SpellEffect.class);

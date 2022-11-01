@@ -20,13 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -38,16 +37,16 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  */
 public final class HealOnDamageHandler implements EffectHandler, BuffHook {
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         // @fixme How to handle this case ? Used by spell 521
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             apply(cast.caster(), effect.effect(), target);
         }
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
@@ -59,7 +58,7 @@ public final class HealOnDamageHandler implements EffectHandler, BuffHook {
         }
     }
 
-    private void apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
+    private void apply(Fighter caster, SpellEffect effect, Fighter target) {
         final EffectValue value = EffectValue.create(effect, caster, target)
             .percent(caster.characteristics().get(Characteristic.INTELLIGENCE))
             .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))

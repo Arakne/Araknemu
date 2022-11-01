@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -37,7 +38,7 @@ class NullGeneratorTest {
 
     @Test
     void shouldAlwaysGeneratesEmpty() {
-        assertFalse(NullGenerator.INSTANCE.generate(Mockito.mock(AI.class), Mockito.mock(ActionsFactory.class)).isPresent());
+        assertFalse(NullGenerator.INSTANCE.generate(Mockito.mock(AI.class), Mockito.mock(AiActionFactory.class)).isPresent());
     }
 
     @Test

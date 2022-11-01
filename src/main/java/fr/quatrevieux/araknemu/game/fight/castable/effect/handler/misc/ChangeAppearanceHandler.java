@@ -20,12 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -42,10 +42,10 @@ public final class ChangeAppearanceHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final int newGfxId = effect.effect().special();
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             if (newGfxId > 0) {
                 // Positive effect : change the appearance
                 fight.send(ActionEffect.changeAppearance(cast.caster(), target, newGfxId, 1));
@@ -57,16 +57,16 @@ public final class ChangeAppearanceHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
     public void onBuffStarted(Buff buff) {
-        final ActiveFighter caster = buff.caster();
-        final PassiveFighter target = buff.target();
+        final FighterData caster = buff.caster();
+        final FighterData target = buff.target();
 
         // Add 1 turn for duration on self cast
         final int duration = buff.effect().duration() + (caster.equals(target) ? 1 : 0);
@@ -77,7 +77,7 @@ public final class ChangeAppearanceHandler implements EffectHandler, BuffHook {
     /**
      * Get the current active appearance sprite id
      */
-    private int getCurrentGfxId(PassiveFighter fighter) {
+    private int getCurrentGfxId(FighterData fighter) {
         int gfxId = fighter.sprite().gfxId();
 
         for (Buff buff : fighter.buffs()) {

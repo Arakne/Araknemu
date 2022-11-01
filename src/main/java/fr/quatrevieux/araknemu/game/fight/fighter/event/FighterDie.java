@@ -19,25 +19,25 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.event;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * A fighter is dead
  */
 public final class FighterDie {
-    private final PassiveFighter fighter;
-    private final PassiveFighter caster;
+    private final Fighter fighter;
+    private final Fighter caster;
 
-    public FighterDie(PassiveFighter fighter, PassiveFighter caster) {
+    public FighterDie(Fighter fighter, Fighter caster) {
         this.fighter = fighter;
         this.caster = caster;
     }
 
-    public PassiveFighter fighter() {
+    public Fighter fighter() {
         return fighter;
     }
 
-    public PassiveFighter caster() {
+    public Fighter caster() {
         return caster;
     }
 }

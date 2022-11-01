@@ -24,5 +24,5 @@ import fr.arakne.utils.maps.DofusMap;
 /**
  * Base type for dofus fight map
  */
-public interface BattlefieldMap extends DofusMap<FightCell>, Iterable<FightCell> {
+public interface BattlefieldMap extends DofusMap<BattlefieldCell>, Iterable<BattlefieldCell> {
 }

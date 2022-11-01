@@ -20,22 +20,19 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.arakne.utils.value.Interval;
-import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -278,7 +275,7 @@ class EffectValueTest extends FightBaseCase {
         assertEquals(5, ev.value());
 
         Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(casterBuff, ev);
-        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, ev, caster);
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, ev);
     }
 
     @Test
@@ -302,7 +299,7 @@ class EffectValueTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
 
         List<EffectValue> values = new ArrayList<>();
-        List<PassiveFighter> fighters = new ArrayList<>();
+        List<FighterData> fighters = new ArrayList<>();
 
         EffectValue.forEachTargets(effect, caster, Arrays.asList(caster, target), ((fighter, value) -> {
             values.add(value);
@@ -317,8 +314,8 @@ class EffectValueTest extends FightBaseCase {
 
         Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(Mockito.eq(casterBuff), Mockito.any());
 
-        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueTarget(casterBuff, values.get(0), caster);
-        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, values.get(1), caster);
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueTarget(casterBuff, values.get(0));
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, values.get(1));
     }
 
     @Test
@@ -330,7 +327,7 @@ class EffectValueTest extends FightBaseCase {
 
         Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value, PassiveFighter caster) {
+            public void onEffectValueTarget(Buff buff, EffectValue value) {
                 value.maximize();
             }
         });
@@ -342,7 +339,7 @@ class EffectValueTest extends FightBaseCase {
         Mockito.when(effect.max()).thenReturn(10000);
 
         List<EffectValue> values = new ArrayList<>();
-        List<PassiveFighter> fighters = new ArrayList<>();
+        List<FighterData> fighters = new ArrayList<>();
 
         EffectValue.forEachTargets(effect, caster, Arrays.asList(caster, target), ((fighter, value) -> {
             values.add(value);

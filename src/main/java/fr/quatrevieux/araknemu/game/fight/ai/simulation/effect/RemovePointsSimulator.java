@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import org.checkerframework.checker.index.qual.Positive;
 
 /**
@@ -48,7 +48,7 @@ public final class RemovePointsSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         final int casterChance = Math.max(simulation.caster().characteristics().get(Characteristic.WISDOM) / 10, 1);
 
         int duration = effect.effect().duration();
@@ -61,7 +61,7 @@ public final class RemovePointsSimulator implements EffectSimulator {
             duration = 1;
         }
 
-        for (PassiveFighter target : effect.targets()) {
+        for (FighterData target : effect.targets()) {
             // @todo actual turn AP is target is current fighter
             final int currentPoints = target.characteristics().get(pointCharacteristic);
 

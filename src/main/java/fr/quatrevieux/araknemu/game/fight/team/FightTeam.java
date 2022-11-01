@@ -101,9 +101,12 @@ public interface FightTeam extends Sender, Team<Fighter> {
      */
     public void kick(Fighter fighter);
 
-    /**
-     * Define the related fight instance
-     * Note: this method is internal and should only be called by {@link Fight}
-     */
-    public void setFight(Fight fight);
+    public static interface Factory {
+        /**
+         * Create the team for the given fight
+         *
+         * @param fight Related fight
+         */
+        public FightTeam create(Fight fight);
+    }
 }

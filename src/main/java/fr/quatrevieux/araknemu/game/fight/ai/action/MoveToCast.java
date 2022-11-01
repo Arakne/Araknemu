@@ -27,9 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         final AIHelper helper = ai.helper();
         final F fighter = ai.fighter();
 
@@ -97,11 +96,11 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
      */
     public final class GenerationScope {
         private final F fighter;
-        private final ActionsFactory<F> actions;
+        private final AiActionFactory actions;
         private final AIHelper helper;
-        private final Map<FightCell, Collection<CastSimulation>> possibleActionsCache = new HashMap<>();
+        private final Map<BattlefieldCell, Collection<CastSimulation>> possibleActionsCache = new HashMap<>();
 
-        public GenerationScope(F fighter, ActionsFactory<F> actions, AIHelper helper) {
+        public GenerationScope(F fighter, AiActionFactory actions, AIHelper helper) {
             this.fighter = fighter;
             this.actions = actions;
             this.helper = helper;
@@ -125,7 +124,7 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
         /**
          * Check if there is at least one cast possible from the given cell
          */
-        private boolean canCastFromCell(FightCell cell) {
+        private boolean canCastFromCell(BattlefieldCell cell) {
             return !computePossibleCasts(cell).isEmpty();
         }
 
@@ -144,14 +143,14 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
          *
          * @see CastSpell.SimulationSelector#valid(CastSimulation) To check if the cast is effective
          */
-        public Collection<CastSimulation> computePossibleCasts(FightCell cell) {
+        public Collection<CastSimulation> computePossibleCasts(BattlefieldCell cell) {
             Collection<CastSimulation> possibleCasts = possibleActionsCache.get(cell);
 
             if (possibleCasts != null) {
                 return possibleCasts;
             }
 
-            possibleCasts = helper.withPosition(cell).spells().caster(actions.cast().validator())
+            possibleCasts = helper.withPosition(cell).spells().caster(actions.castSpellValidator())
                 .simulate(simulator)
                 .filter(selector::valid) // Keep only effective effects
                 .collect(Collectors.toList())
@@ -172,7 +171,7 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
          *
          * @return The score as double. The highest value will be selected
          */
-        public double score(MoveToCast<F>.GenerationScope scope, CoordinateCell<FightCell> target);
+        public double score(MoveToCast<F>.GenerationScope scope, CoordinateCell<BattlefieldCell> target);
     }
 
     /**
@@ -180,14 +179,14 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
      */
     public static final class BestTargetStrategy<F extends ActiveFighter> implements TargetSelectionStrategy<F> {
         @Override
-        public double score(MoveToCast<F>.GenerationScope scope, CoordinateCell<FightCell> target) {
+        public double score(MoveToCast<F>.GenerationScope scope, CoordinateCell<BattlefieldCell> target) {
             return maxScore(scope, target.cell()) - target.distance(scope.fighter().cell());
         }
 
         /**
          * Compute the max spell score from the given cell
          */
-        private static <F extends ActiveFighter> double maxScore(MoveToCast<F>.GenerationScope scope, FightCell cell) {
+        private static <F extends ActiveFighter> double maxScore(MoveToCast<F>.GenerationScope scope, BattlefieldCell cell) {
             return scope.computePossibleCasts(cell).stream()
                 .mapToDouble(scope::castScore)
                 .max().orElse(0)
@@ -203,7 +202,7 @@ public final class MoveToCast<F extends ActiveFighter> implements ActionGenerato
      */
     public static final class NearestStrategy<F extends ActiveFighter> implements TargetSelectionStrategy<F> {
         @Override
-        public double score(MoveToCast<F>.GenerationScope scope, CoordinateCell<FightCell> target) {
+        public double score(MoveToCast<F>.GenerationScope scope, CoordinateCell<BattlefieldCell> target) {
             return -target.distance(scope.fighter().cell()) + sigmoid(BestTargetStrategy.maxScore(scope, target.cell()));
         }
 

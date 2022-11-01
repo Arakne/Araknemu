@@ -47,6 +47,6 @@ class ClearFighterTest extends FightBaseCase {
     void onFighterRemoved() {
         listener.on(new FighterRemoved(fighter, fight));
 
-        assertFalse(fighter.cell().fighter().isPresent());
+        assertFalse(fighter.cell().hasFighter());
     }
 }

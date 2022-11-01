@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -96,7 +96,7 @@ public final class CastSuccess implements ActionResult {
         }
 
         turn.points().useActionPoints(spell.apCost());
-        turn.fight().effects().apply(CastScope.probable(spell, caster, target, effects()));
+        turn.fight().effects().apply(FightCastScope.probable(spell, caster, target, effects()));
 
         turn.fight().dispatch(new SpellCasted(action));
     }

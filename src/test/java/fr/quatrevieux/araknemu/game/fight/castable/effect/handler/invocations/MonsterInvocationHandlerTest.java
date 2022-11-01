@@ -22,9 +22,10 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -36,12 +37,9 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
-import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -80,10 +78,10 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         handler.handle(scope, scope.effects().get(0));
 
-        PassiveFighter invoc = fight.map().get(123).fighter().get();
+        FighterData invoc = fight.map().get(123).fighter();
 
         assertInstanceOf(InvocationFighter.class, invoc);
         assertContains(invoc, fight.fighters());
@@ -112,10 +110,10 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         handler.buff(scope, scope.effects().get(0));
 
-        PassiveFighter invoc = fight.map().get(123).fighter().get();
+        FighterData invoc = fight.map().get(123).fighter();
 
         assertInstanceOf(InvocationFighter.class, invoc);
         assertContains(invoc, fight.fighters());

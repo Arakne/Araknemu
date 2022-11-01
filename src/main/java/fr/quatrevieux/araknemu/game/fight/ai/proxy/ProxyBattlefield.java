@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.value.Dimensions;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -34,7 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -73,7 +72,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
 
     @Override
     @SuppressWarnings({"argument"}) // map and this have same length
-    public FightCell get(@IndexFor("this") int id) {
+    public BattlefieldCell get(@IndexFor("this") int id) {
         if (cells == null) {
             return map.get(id);
         }
@@ -87,12 +86,12 @@ public final class ProxyBattlefield implements BattlefieldMap {
     }
 
     @Override
-    public Iterator<FightCell> iterator() {
+    public Iterator<BattlefieldCell> iterator() {
         if (cells == null) {
             return map.iterator();
         }
 
-        return Arrays.<FightCell>asList(cells).iterator();
+        return Arrays.<BattlefieldCell>asList(cells).iterator();
     }
 
     /**
@@ -117,13 +116,13 @@ public final class ProxyBattlefield implements BattlefieldMap {
         return modifier.map;
     }
 
-    private final class ProxyCell implements FightCell {
-        private final FightCell cell;
+    private final class ProxyCell implements BattlefieldCell {
+        private final BattlefieldCell cell;
         private boolean free = false;
-        private @Nullable PassiveFighter fighter = null;
-        private @MonotonicNonNull CoordinateCell<FightCell> coordinates = null;
+        private @Nullable FighterData fighter = null;
+        private @MonotonicNonNull CoordinateCell<BattlefieldCell> coordinates = null;
 
-        private ProxyCell(FightCell cell) {
+        private ProxyCell(BattlefieldCell cell) {
             this.cell = cell;
         }
 
@@ -144,26 +143,16 @@ public final class ProxyBattlefield implements BattlefieldMap {
         }
 
         @Override
-        public Optional<PassiveFighter> fighter() {
+        public @Nullable FighterData fighter() {
             if (free) {
-                return Optional.empty();
+                return null;
             }
 
             if (fighter != null) {
-                return Optional.of(fighter);
+                return fighter;
             }
 
             return cell.fighter();
-        }
-
-        @Override
-        public void set(PassiveFighter fighter) {
-            throw new UnsupportedOperationException("This is a proxy cell");
-        }
-
-        @Override
-        public void removeFighter() {
-            throw new UnsupportedOperationException("This is a proxy cell");
         }
 
         @Override
@@ -198,7 +187,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
         }
 
         @Override
-        public CoordinateCell<FightCell> coordinate() {
+        public CoordinateCell<BattlefieldCell> coordinate() {
             if (coordinates == null) {
                 coordinates = new CoordinateCell<>(this);
             }
@@ -237,7 +226,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
          *
          * @param cellId The cell to get
          */
-        public FightCell get(@NonNegative int cellId) {
+        public BattlefieldCell get(@NonNegative int cellId) {
             return map.cells[cellId];
         }
 
@@ -249,7 +238,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
          *
          * @return this instance
          */
-        public Modifier setFighter(@NonNegative int cellId, PassiveFighter fighter) {
+        public Modifier setFighter(@NonNegative int cellId, FighterData fighter) {
             map.cells[cellId].free = false;
             map.cells[cellId].fighter = fighter;
 

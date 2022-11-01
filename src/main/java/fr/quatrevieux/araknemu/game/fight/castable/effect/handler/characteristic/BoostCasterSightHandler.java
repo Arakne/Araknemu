@@ -21,14 +21,14 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -46,14 +46,14 @@ public final class BoostCasterSightHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Alter characteristic effect must be used as a buff");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
-        final ActiveFighter caster = cast.caster();
+        final Fighter caster = cast.caster();
 
         caster.buffs().add(new Buff(
             BuffEffect.fixed(spellEffect, EffectValue.create(spellEffect, caster, caster).value()),
@@ -67,7 +67,7 @@ public final class BoostCasterSightHandler implements EffectHandler, BuffHook {
     @Override
     public void onBuffStarted(Buff buff) {
         final int value = buff.effect().min();
-        final PassiveFighter target = buff.target();
+        final FighterData target = buff.target();
 
         target.characteristics().alter(Characteristic.SIGHT_BOOST, value);
         fight.send(ActionEffect.boostSight(target, target, value, buff.remainingTurns()));

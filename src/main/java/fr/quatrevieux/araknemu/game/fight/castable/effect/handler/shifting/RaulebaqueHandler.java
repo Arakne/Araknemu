@@ -20,8 +20,9 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
@@ -39,7 +40,7 @@ public final class RaulebaqueHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         module.startPositions().forEach((fighter, startCell) -> {
             if (fighter.dead()) {
                 return;
@@ -53,8 +54,13 @@ public final class RaulebaqueHandler implements EffectHandler {
 
             fighter.move(null);
 
+            final Fighter other = startCell.fighter();
+
             // Cell is not free : exchange place
-            startCell.fighter().ifPresent(other -> other.move(lastCell));
+            if (other != null) {
+                other.move(lastCell);
+            }
+
             fighter.move(startCell);
         });
 
@@ -62,7 +68,7 @@ public final class RaulebaqueHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use Raulebaque as buff effect");
     }
 }

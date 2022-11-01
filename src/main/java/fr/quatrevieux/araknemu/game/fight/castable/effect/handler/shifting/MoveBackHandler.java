@@ -21,11 +21,11 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
 import java.util.Comparator;
 
@@ -44,20 +44,20 @@ public final class MoveBackHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
         final int distance = effect.effect().min();
-        final CoordinateCell<FightCell> casterCell = caster.cell().coordinate();
+        final CoordinateCell<BattlefieldCell> casterCell = caster.cell().coordinate();
 
         // Apply to most distant targets before, to ensure that they will not block mutually
         effect.targets().stream()
-            .sorted(Comparator.<PassiveFighter>comparingInt(target -> casterCell.distance(target.cell())).reversed())
+            .sorted(Comparator.<FighterData>comparingInt(target -> casterCell.distance(target.cell())).reversed())
             .forEach(target -> applier.apply(caster, target, distance))
         ;
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use move back as buff effect");
     }
 }

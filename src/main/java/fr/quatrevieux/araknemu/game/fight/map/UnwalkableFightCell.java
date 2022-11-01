@@ -22,11 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.map;
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Optional;
 
 /**
  * Non walkable fight cell
@@ -35,7 +33,7 @@ public final class UnwalkableFightCell implements FightCell {
     private final FightMap map;
     private final CellData template;
     private final @NonNegative int id;
-    private final CoordinateCell<FightCell> coordinate;
+    private final CoordinateCell<BattlefieldCell> coordinate;
 
     @SuppressWarnings({"assignment", "argument"})
     public UnwalkableFightCell(FightMap map, CellData template, @NonNegative int id) {
@@ -71,17 +69,17 @@ public final class UnwalkableFightCell implements FightCell {
     }
 
     @Override
-    public CoordinateCell<FightCell> coordinate() {
+    public CoordinateCell<BattlefieldCell> coordinate() {
         return coordinate;
     }
 
     @Override
-    public Optional<PassiveFighter> fighter() {
-        return Optional.empty();
+    public @Nullable Fighter fighter() {
+        return null;
     }
 
     @Override
-    public void set(PassiveFighter fighter) {
+    public void set(Fighter fighter) {
         throw new FightMapException("Cannot add fighter on unwalkable cell");
     }
 

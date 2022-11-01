@@ -21,13 +21,13 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -62,16 +62,16 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Alter characteristic effect must be used as a buff");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
-        final ActiveFighter caster = cast.caster();
+        final Fighter caster = cast.caster();
 
-        for (PassiveFighter target : cast.targets()) {
+        for (Fighter target : cast.targets()) {
             target.buffs().add(new Buff(
                 spellEffect,
                 cast.action(),
@@ -110,8 +110,8 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
     }
 
     @Override
-    public void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {
-        final PassiveFighter target = buff.target();
+    public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
+        final Fighter target = buff.target();
         final int boostEffectId = buff.effect().min();
         final AlterCharacteristicHook hook = hooksMapping.get(boostEffectId);
 
@@ -134,7 +134,7 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
         ));
     }
 
-    private @NonNegative int currentBoostValue(Buff buff, PassiveFighter target) {
+    private @NonNegative int currentBoostValue(Buff buff, FighterData target) {
         // Add 1 to duration in case of self damage
         final int expectedEffectDuration = buff.effect().special() + (target.equals(fight.turnList().currentFighter()) ? 1 : 0);
 

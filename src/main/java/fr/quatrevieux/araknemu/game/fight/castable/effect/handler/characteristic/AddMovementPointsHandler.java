@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.AlterPointHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
@@ -40,7 +40,7 @@ public final class AddMovementPointsHandler extends AbstractAlterCharacteristicH
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         fight.turnList().current().ifPresent(turn -> {
             final ActiveFighter fighter = turn.fighter();
             final EffectValue value = EffectValue.create(effect.effect(), fighter, fighter);

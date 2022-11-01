@@ -57,19 +57,11 @@ class FightTurnListTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        turnList = new FightTurnList(fight);
+        turnList = new FightTurnList(fight, new AlternateTeamFighterOrder());
     }
 
     @Test
-    void notInitialized() {
-        assertThrows(IllegalStateException.class, () -> turnList.fighters());
-        assertThrows(IllegalStateException.class, () -> turnList.remove(null));
-    }
-
-    @Test
-    void initWillOrderFighters() {
-        turnList.init(new AlternateTeamFighterOrder());
-
+    void constructorWillOrderFighters() {
         assertEquals(
             Arrays.asList(player.fighter(), other.fighter()),
             turnList.fighters()
@@ -79,17 +71,10 @@ class FightTurnListTest extends FightBaseCase {
     }
 
     @Test
-    void initAlreadyInitialised() {
-        turnList.init(new AlternateTeamFighterOrder());
-
-        assertThrows(IllegalStateException.class, () -> turnList.init(new AlternateTeamFighterOrder()));
-    }
-
-    @Test
-    void initWithoutFighters() {
+    void constructorWithoutFighters() {
         fight.cancel(true);
 
-        assertThrowsWithMessage(IllegalStateException.class, "Cannot initialise turn list without fighters", () -> turnList.init(new AlternateTeamFighterOrder()));
+        assertThrowsWithMessage(IllegalStateException.class, "Cannot initialise turn list without fighters", () -> new FightTurnList(fight, new AlternateTeamFighterOrder()));
     }
 
     @Test
@@ -99,7 +84,6 @@ class FightTurnListTest extends FightBaseCase {
 
     @Test
     void start() {
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         assertTrue(turnList.current().isPresent());
@@ -109,7 +93,6 @@ class FightTurnListTest extends FightBaseCase {
 
     @Test
     void startAlreadyStartedShouldRaiseException() {
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         assertThrows(IllegalStateException.class, turnList::start);
@@ -117,7 +100,6 @@ class FightTurnListTest extends FightBaseCase {
 
     @Test
     void nextWillStartNextFighterTurn() {
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         AtomicReference<TurnStarted> ref1 = new AtomicReference<>();
@@ -160,7 +142,6 @@ class FightTurnListTest extends FightBaseCase {
 
     @Test
     void nextOnEndOfListWillRestartToFirst() {
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         turnList.next();
@@ -172,7 +153,6 @@ class FightTurnListTest extends FightBaseCase {
     @Test
     void nextWillSkipDeadFighter() {
         fight.fighters().forEach(Fighter::init);
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         other.fighter().life().alter(other.fighter(), -1000);
@@ -187,8 +167,7 @@ class FightTurnListTest extends FightBaseCase {
     void stop() {
         // @todo to remove : because turn is linked to fight and not to turn list, calling turn.stop() will stop the incorrect turnlist
         // so it will be not initialized
-        turnList = fight.turnList();
-        turnList.init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
         turnList.start();
 
         turnList.stop();
@@ -204,7 +183,6 @@ class FightTurnListTest extends FightBaseCase {
 
     @Test
     void remove() {
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         AtomicReference<TurnListChanged> ref = new AtomicReference<>();
@@ -222,7 +200,7 @@ class FightTurnListTest extends FightBaseCase {
         PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
         fight.team(0).join(third);
 
-        turnList.init(new AlternateTeamFighterOrder());
+        turnList = new FightTurnList(fight, new AlternateTeamFighterOrder());
         turnList.start();
         assertEquals(player.fighter(), turnList.currentFighter());
 
@@ -246,7 +224,7 @@ class FightTurnListTest extends FightBaseCase {
         PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
         fight.team(0).join(third);
 
-        turnList.init(new AlternateTeamFighterOrder());
+        turnList = new FightTurnList(fight, new AlternateTeamFighterOrder());
         turnList.start();
         assertEquals(player.fighter(), turnList.currentFighter());
 
@@ -271,7 +249,7 @@ class FightTurnListTest extends FightBaseCase {
         PlayerFighter fourth = makePlayerFighter(makeSimpleGamePlayer(6));
         fight.team(0).join(fourth);
 
-        turnList.init(teams -> new ArrayList<>(Arrays.asList(player.fighter(), other.fighter(), third, fourth)));
+        turnList = new FightTurnList(fight, teams -> new ArrayList<>(Arrays.asList(player.fighter(), other.fighter(), third, fourth)));
         turnList.start();
         assertEquals(player.fighter(), turnList.currentFighter());
 
@@ -293,7 +271,6 @@ class FightTurnListTest extends FightBaseCase {
     void removeFighterNotFound() throws SQLException {
         PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
 
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         assertThrows(NoSuchElementException.class, () -> turnList.remove(third));
@@ -301,7 +278,6 @@ class FightTurnListTest extends FightBaseCase {
 
     @Test
     void add() throws NoSuchFieldException, IllegalAccessException {
-        turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 
         assertSame(player.fighter(), turnList.currentFighter());
@@ -320,11 +296,6 @@ class FightTurnListTest extends FightBaseCase {
         setIndex(3);
         turnList.add(f3);
         assertIterableEquals(turnList.fighters(), Arrays.asList(player.fighter(), f2, f1, other.fighter(), f3));
-    }
-
-    @Test
-    void addNotInitializedShouldThrowError() {
-        assertThrows(IllegalStateException.class, () -> turnList.add(Mockito.mock(Fighter.class)));
     }
 
     private void setIndex(int index) throws NoSuchFieldException, IllegalAccessException {

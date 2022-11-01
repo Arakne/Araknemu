@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
-import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -43,7 +42,7 @@ public final class MoveFactory implements MoveActionFactory<Fighter> {
             throw new IllegalArgumentException("Invalid move arguments");
         }
 
-        return create(fighter, new Decoder<>(fighter.fight().map()).decode(arguments[0], fighter.cell()));
+        return create(fighter, fighter.fight().map().decoder().decode(arguments[0], fighter.cell()));
     }
 
     @Override

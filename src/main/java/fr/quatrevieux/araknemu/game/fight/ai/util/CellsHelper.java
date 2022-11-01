@@ -23,7 +23,7 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Arrays;
@@ -39,7 +39,7 @@ import java.util.stream.StreamSupport;
 public final class CellsHelper {
     private final AI ai;
 
-    private @MonotonicNonNull Decoder<FightCell> decoder;
+    private @MonotonicNonNull Decoder<BattlefieldCell> decoder;
 
     CellsHelper(AI ai) {
         this.ai = ai;
@@ -51,8 +51,8 @@ public final class CellsHelper {
      *
      * @return Stream of all targetable cells
      */
-    public Stream<FightCell> stream() {
-        return StreamSupport.stream(ai.map().spliterator(), false).filter(FightCell::walkableIgnoreFighter);
+    public Stream<BattlefieldCell> stream() {
+        return StreamSupport.stream(ai.map().spliterator(), false).filter(BattlefieldCell::walkableIgnoreFighter);
     }
 
     /**
@@ -63,7 +63,7 @@ public final class CellsHelper {
      *
      * @see FightersHelper#adjacent() To check adjacent fighters
      */
-    public Stream<FightCell> adjacent() {
+    public Stream<BattlefieldCell> adjacent() {
         return adjacent(ai.fighter().cell());
     }
 
@@ -75,27 +75,27 @@ public final class CellsHelper {
      *
      * @return Stream of cells adjacent to the given cell
      *
-     * @see FightersHelper#adjacent(FightCell) To check adjacent fighters
+     * @see FightersHelper#adjacent(BattlefieldCell) To check adjacent fighters
      */
-    public Stream<FightCell> adjacent(FightCell cell) {
-        final Decoder<FightCell> decoder = decoder();
+    public Stream<BattlefieldCell> adjacent(BattlefieldCell cell) {
+        final Decoder<BattlefieldCell> decoder = decoder();
 
         return Arrays.stream(Direction.restrictedDirections())
             .map(direction -> decoder.nextCellByDirection(cell, direction))
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .filter(FightCell::walkableIgnoreFighter)
+            .filter(BattlefieldCell::walkableIgnoreFighter)
         ;
     }
 
     /**
      * Create a new instance of the pathfinder
      */
-    public Pathfinder<FightCell> pathfinder() {
+    public Pathfinder<BattlefieldCell> pathfinder() {
         return decoder().pathfinder();
     }
 
-    private Decoder<FightCell> decoder() {
+    private Decoder<BattlefieldCell> decoder() {
         if (decoder == null) {
             decoder = new Decoder<>(ai.map());
         }

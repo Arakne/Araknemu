@@ -19,27 +19,27 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.event;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * Fighter life is changed
  */
 public final class FighterLifeChanged {
-    private final PassiveFighter fighter;
-    private final PassiveFighter caster;
+    private final Fighter fighter;
+    private final Fighter caster;
     private final int value;
 
-    public FighterLifeChanged(PassiveFighter fighter, PassiveFighter caster, int value) {
+    public FighterLifeChanged(Fighter fighter, Fighter caster, int value) {
         this.fighter = fighter;
         this.caster = caster;
         this.value = value;
     }
 
-    public PassiveFighter fighter() {
+    public Fighter fighter() {
         return fighter;
     }
 
-    public PassiveFighter caster() {
+    public Fighter caster() {
         return caster;
     }
 

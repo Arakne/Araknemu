@@ -25,9 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.Positive;
@@ -38,15 +38,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * Note: this object is immutable
  */
-public final class ProxyPassiveFighter implements PassiveFighter {
-    private final PassiveFighter fighter;
+public final class ProxyPassiveFighter implements FighterData {
+    private final FighterData fighter;
     private final AI ai;
 
     /**
      * @param fighter The fighter to wrap
      * @param ai The AI instance use to resolve the cell instance
      */
-    public ProxyPassiveFighter(PassiveFighter fighter, AI ai) {
+    public ProxyPassiveFighter(FighterData fighter, AI ai) {
         this.fighter = fighter;
         this.ai = ai;
     }
@@ -58,7 +58,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
 
     @Override
     @SuppressWarnings("argument") // cell id always valid
-    public FightCell cell() {
+    public BattlefieldCell cell() {
         return ai.map().get(fighter.cell().id());
     }
 
@@ -70,11 +70,6 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     @Override
     public Direction orientation() {
         return fighter.orientation();
-    }
-
-    @Override
-    public void move(@Nullable FightCell cell) {
-        throw new UnsupportedOperationException("This is a proxy fighter");
     }
 
     @Override
@@ -103,7 +98,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public Team<? extends PassiveFighter> team() {
+    public Team<? extends FighterData> team() {
         return fighter.team();
     }
 
@@ -123,21 +118,16 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public void setHidden(PassiveFighter caster, boolean hidden) {
-        throw new UnsupportedOperationException("Cannot modify a proxy fighter");
-    }
-
-    @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (!(o instanceof PassiveFighter)) {
+        if (!(o instanceof FighterData)) {
             return false;
         }
 
-        final PassiveFighter that = (PassiveFighter) o;
+        final FighterData that = (FighterData) o;
 
         return id() == that.id();
     }
@@ -148,7 +138,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public @Nullable PassiveFighter invoker() {
+    public @Nullable FighterData invoker() {
         return fighter.invoker();
     }
 }

@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Optional;
 
@@ -54,7 +53,7 @@ public final class MoveToAttack<F extends ActiveFighter> implements ActionGenera
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         return generator.generate(ai, actions);
     }
 

@@ -53,7 +53,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
         turn.start();
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
 
         validator = new InvocationCountValidator();
     }

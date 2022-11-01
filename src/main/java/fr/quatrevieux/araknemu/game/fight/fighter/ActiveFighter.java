@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface ActiveFighter extends PassiveFighter {
+public interface ActiveFighter extends FighterData {
     /**
      * Get the fighter spells
      */

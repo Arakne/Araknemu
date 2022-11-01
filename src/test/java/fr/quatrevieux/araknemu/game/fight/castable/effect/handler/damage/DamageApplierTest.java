@@ -25,7 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -195,22 +196,22 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
 
         AtomicReference<Buff> calledBuff = new AtomicReference<>();
-        AtomicReference<ActiveFighter> calledCaster = new AtomicReference<>();
+        AtomicReference<FighterData> calledCaster = new AtomicReference<>();
         AtomicReference<Damage> calledDamage = new AtomicReference<>();
         AtomicReference<Buff> appliedDamageBuff = new AtomicReference<>();
-        AtomicReference<ActiveFighter> appliedDamageCaster = new AtomicReference<>();
+        AtomicReference<FighterData> appliedDamageCaster = new AtomicReference<>();
         AtomicInteger appliedDamageValue = new AtomicInteger();
 
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+            public void onDirectDamage(Buff buff, Fighter caster, Damage value) {
                 calledBuff.set(buff);
                 calledCaster.set(caster);
                 calledDamage.set(value);
             }
 
             @Override
-            public void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {
+            public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
                 appliedDamageBuff.set(buff);
                 appliedDamageCaster.set(caster);
                 appliedDamageValue.set(damage);
@@ -254,7 +255,7 @@ class DamageApplierTest extends FightBaseCase {
             }
 
             @Override
-            public void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {
+            public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
                 appliedDamageHookCalled.set(true);
             }
         });
@@ -475,12 +476,12 @@ class DamageApplierTest extends FightBaseCase {
 
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+            public void onDirectDamage(Buff buff, Fighter caster, Damage value) {
                 value.multiply(-1);
             }
 
             @Override
-            public void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {
+            public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
                 appliedDamageHookCalled.set(true);
             }
         });
@@ -504,22 +505,22 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.EARTH, fight);
 
         AtomicReference<Buff> calledBuff = new AtomicReference<>();
-        AtomicReference<ActiveFighter> calledCaster = new AtomicReference<>();
+        AtomicReference<FighterData> calledCaster = new AtomicReference<>();
         AtomicReference<Damage> calledDamage = new AtomicReference<>();
         AtomicReference<Buff> appliedDamageBuff = new AtomicReference<>();
-        AtomicReference<ActiveFighter> appliedDamageCaster = new AtomicReference<>();
+        AtomicReference<FighterData> appliedDamageCaster = new AtomicReference<>();
         AtomicInteger appliedDamageValue = new AtomicInteger();
 
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+            public void onDirectDamage(Buff buff, Fighter caster, Damage value) {
                 calledBuff.set(buff);
                 calledCaster.set(caster);
                 calledDamage.set(value);
             }
 
             @Override
-            public void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {
+            public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
                 appliedDamageBuff.set(buff);
                 appliedDamageCaster.set(caster);
                 appliedDamageValue.set(damage);
@@ -620,20 +621,20 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.EARTH, fight);
 
         AtomicReference<Buff> calledBuff = new AtomicReference<>();
-        AtomicReference<ActiveFighter> calledCaster = new AtomicReference<>();
+        AtomicReference<FighterData> calledCaster = new AtomicReference<>();
         AtomicReference<Damage> calledDamage = new AtomicReference<>();
         AtomicBoolean appliedDamageHookCalled = new AtomicBoolean();
 
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onIndirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+            public void onIndirectDamage(Buff buff, Fighter caster, Damage value) {
                 calledBuff.set(buff);
                 calledCaster.set(caster);
                 calledDamage.set(value);
             }
 
             @Override
-            public void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {
+            public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
                 appliedDamageHookCalled.set(true);
             }
         });

@@ -25,11 +25,10 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellsHelper;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
@@ -57,7 +56,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         if (teleportSpells.isEmpty()) {
             return Optional.empty();
         }
@@ -68,13 +67,13 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
             return Optional.empty();
         }
 
-        final Optional<? extends PassiveFighter> enemy = ai.enemy();
+        final Optional<? extends FighterData> enemy = ai.enemy();
 
         if (!enemy.isPresent()) {
             return Optional.empty();
         }
 
-        final SpellCaster caster = ai.helper().spells().caster(actions.cast().validator());
+        final SpellCaster caster = ai.helper().spells().caster(actions.castSpellValidator());
         final Selector selector = new Selector(enemy.get().cell(), ai.fighter().cell());
 
         // Already at adjacent cell of the enemy
@@ -89,11 +88,11 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
             }
 
             if (selectBestTeleportTargetForSpell(caster, selector, ai.map(), spell)) {
-                return selector.action(ai.fighter(), actions);
+                return selector.action(actions);
             }
         }
 
-        return selector.action(ai.fighter(), actions);
+        return selector.action(actions);
     }
 
     /**
@@ -103,7 +102,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
      * @return true if the spell can reach an adjacent cell
      */
     private boolean selectBestTeleportTargetForSpell(SpellCaster caster, Selector selector, BattlefieldMap map, Spell spell) {
-        for (FightCell cell : map) {
+        for (BattlefieldCell cell : map) {
             // Target or launch is not valid
             if (!cell.walkable() || !caster.validate(spell, cell)) {
                 continue;
@@ -122,12 +121,12 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
      * Select the best spell and cell couple for teleport
      */
     private class Selector {
-        private final CoordinateCell<FightCell> enemyCell;
+        private final CoordinateCell<BattlefieldCell> enemyCell;
         private int distance;
-        private @MonotonicNonNull FightCell cell;
+        private @MonotonicNonNull BattlefieldCell cell;
         private @MonotonicNonNull Spell spell;
 
-        public Selector(FightCell enemyCell, FightCell currentCell) {
+        public Selector(BattlefieldCell enemyCell, BattlefieldCell currentCell) {
             this.enemyCell = enemyCell.coordinate();
             this.distance = this.enemyCell.distance(currentCell);
         }
@@ -144,7 +143,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
          *
          * @return true if the new cell is adjacent to the target
          */
-        public boolean push(Spell spell, FightCell cell) {
+        public boolean push(Spell spell, BattlefieldCell cell) {
             final int currentDistance = enemyCell.distance(cell);
 
             if (currentDistance < distance) {
@@ -160,12 +159,12 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
          * Get the best cast action
          * May returns an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
          */
-        public Optional<Action> action(F fighter, ActionsFactory<F> actions) {
+        public Optional<Action> action(AiActionFactory actions) {
             if (spell == null || cell == null) {
                 return Optional.empty();
             }
 
-            return Optional.of(actions.cast().create(fighter, spell, cell));
+            return Optional.of(actions.cast(spell, cell));
         }
     }
 }

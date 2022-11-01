@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
@@ -89,7 +90,7 @@ class UseObjectBeforeStartTest extends FightBaseCase {
         InventoryEntry entry = player.inventory().add(container.get(ItemService.class).create(468));
 
         Fight fight = createFight();
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         assertErrorPacket(Error.cantDoDuringFight(), () -> handlePacket(new ObjectUseRequest(entry.id(), 0, 0, false)));
     }

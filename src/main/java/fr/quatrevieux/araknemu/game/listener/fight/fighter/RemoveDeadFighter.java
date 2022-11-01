@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
@@ -36,7 +37,8 @@ public final class RemoveDeadFighter implements Listener<FighterDie> {
 
     @Override
     public void on(FighterDie event) {
-        event.fighter().cell().removeFighter();
+        // @todo use Fighter on events
+        ((Fighter) event.fighter()).cell().removeFighter();
 
         // Stop turn if it's the playing fighter
         fight.turnList().current()

@@ -186,7 +186,7 @@ public class FunctionalTest extends GameBaseCase {
         Move move = new Move(
             fighter1,
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(185), Direction.EAST),
                     new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
@@ -246,7 +246,7 @@ public class FunctionalTest extends GameBaseCase {
         move = new Move(
             fighter2,
             new Path<>(
-                new Decoder<>(fight.map()),
+                fight.map().decoder(),
                 Arrays.asList(
                     new PathStep<>(fight.map().get(150), Direction.SOUTH_EAST),
                     new PathStep<>(fight.map().get(195), Direction.SOUTH_EAST)

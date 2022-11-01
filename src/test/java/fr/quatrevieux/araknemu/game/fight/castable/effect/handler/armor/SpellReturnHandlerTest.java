@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -73,7 +75,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         assertThrows(UnsupportedOperationException.class, () -> handler.handle(scope, scope.effects().get(0)));
     }
@@ -90,7 +92,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
@@ -116,7 +118,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
@@ -141,7 +143,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
@@ -166,7 +168,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
@@ -191,7 +193,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(returnEffect.max()).thenReturn(5);
@@ -218,7 +220,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(returnEffect.max()).thenReturn(5);
@@ -245,7 +247,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(returnEffect.max()).thenReturn(6);
@@ -273,7 +275,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(returnEffect.max()).thenReturn(6);

@@ -97,8 +97,8 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
-    void team() {
-        FightTeam team = new SimpleTeam(fighter, new ArrayList<>(), 0);
+    void team() throws Exception {
+        FightTeam team = new SimpleTeam(fight, fighter, new ArrayList<>(), 0);
         fighter.setTeam(team);
 
         assertSame(team, fighter.team());
@@ -119,7 +119,7 @@ class PlayerFighterTest extends FightBaseCase {
 
         assertSame(fight, fighter.fight());
         assertSame(map.get(123), fighter.cell());
-        assertSame(fighter, fighter.cell().fighter().get());
+        assertSame(fighter, fighter.cell().fighter());
         assertTrue(fighter.isOnFight());
     }
 
@@ -128,7 +128,7 @@ class PlayerFighterTest extends FightBaseCase {
         fighter.move(map.get(123));
 
         assertSame(map.get(123), fighter.cell());
-        assertSame(fighter, map.get(123).fighter().get());
+        assertSame(fighter, map.get(123).fighter());
     }
 
     @Test
@@ -137,9 +137,9 @@ class PlayerFighterTest extends FightBaseCase {
         fighter.move(map.get(124));
 
         assertSame(map.get(124), fighter.cell());
-        assertSame(fighter, map.get(124).fighter().get());
+        assertSame(fighter, map.get(124).fighter());
 
-        assertFalse(map.get(123).fighter().isPresent());
+        assertFalse(map.get(123).hasFighter());
     }
 
     @Test
@@ -148,7 +148,7 @@ class PlayerFighterTest extends FightBaseCase {
         fighter.move(null);
 
         assertThrows(IllegalStateException.class, fighter::cell);
-        assertFalse(map.get(123).fighter().isPresent());
+        assertFalse(map.get(123).hasFighter());
     }
 
     @Test

@@ -23,6 +23,7 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Simulate steal life effect
@@ -37,7 +38,7 @@ public final class StealLifeSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
         final double lastDamage = -simulation.alliesLife() - simulation.enemiesLife();
 
         // Poison is already handled by the DamageSimulator

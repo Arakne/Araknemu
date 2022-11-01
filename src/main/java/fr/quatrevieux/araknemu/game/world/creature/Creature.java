@@ -25,7 +25,7 @@ import fr.arakne.utils.maps.constant.Direction;
 /**
  * Base interface for Dofus creatures (monsters, players...)
  */
-public interface Creature<C extends MapCell<C>> {
+public interface Creature<C extends MapCell> {
     /**
      * Get the sprite
      */

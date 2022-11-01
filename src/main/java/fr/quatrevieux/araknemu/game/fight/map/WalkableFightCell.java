@@ -22,11 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.map;
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Optional;
 
 /**
  * Base fight cell
@@ -35,9 +33,9 @@ public final class WalkableFightCell implements FightCell {
     private final FightMap map;
     private final CellData template;
     private final @NonNegative int id;
-    private final CoordinateCell<FightCell> coordinate;
+    private final CoordinateCell<BattlefieldCell> coordinate;
 
-    private @Nullable PassiveFighter fighter;
+    private @Nullable Fighter fighter;
 
     @SuppressWarnings({"assignment", "argument"})
     public WalkableFightCell(FightMap map, CellData template, @NonNegative int id) {
@@ -73,17 +71,17 @@ public final class WalkableFightCell implements FightCell {
     }
 
     @Override
-    public CoordinateCell<FightCell> coordinate() {
+    public CoordinateCell<BattlefieldCell> coordinate() {
         return coordinate;
     }
 
     @Override
-    public Optional<PassiveFighter> fighter() {
-        return Optional.ofNullable(fighter);
+    public @Nullable Fighter fighter() {
+        return fighter;
     }
 
     @Override
-    public void set(PassiveFighter fighter) {
+    public void set(Fighter fighter) {
         if (this.fighter != null) {
             throw new FightMapException("A fighter is already set on this cell (" + id + ")");
         }

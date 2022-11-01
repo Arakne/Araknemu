@@ -21,14 +21,13 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -75,14 +74,14 @@ public class StealCharacteristicHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Alter characteristic effect must be used as a buff");
     }
 
     @Override
-    public final void buff(CastScope cast, CastScope.EffectScope effect) {
+    public final void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
-        final ActiveFighter caster = cast.caster();
+        final Fighter caster = cast.caster();
         final Castable action = cast.action();
 
         final Applier applier = new Applier(caster, spellEffect, action);
@@ -103,20 +102,20 @@ public class StealCharacteristicHandler implements EffectHandler {
     /**
      * Apply removal effect to target
      */
-    private class Applier implements BiConsumer<PassiveFighter, EffectValue> {
-        private final ActiveFighter caster;
+    private class Applier implements BiConsumer<Fighter, EffectValue> {
+        private final Fighter caster;
         private final SpellEffect spellEffect;
         private final Castable action;
         private @NonNegative int total = 0;
 
-        public Applier(ActiveFighter caster, SpellEffect spellEffect, Castable action) {
+        public Applier(Fighter caster, SpellEffect spellEffect, Castable action) {
             this.caster = caster;
             this.spellEffect = spellEffect;
             this.action = action;
         }
 
         @Override
-        public void accept(PassiveFighter target, EffectValue effectValue) {
+        public void accept(Fighter target, EffectValue effectValue) {
             final int value = effectValue.value();
             total += value;
 

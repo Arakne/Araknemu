@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.MonsterInvocationHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
@@ -69,12 +68,12 @@ public final class MonsterInvocationModule implements FightModule {
 
                     if (!invocations.isEmpty()) {
                         // Kill all invocations asynchronously
-                        fight.execute(() -> invocations.forEach(fighter -> fighter.life().kill((ActiveFighter) event.caster())));
+                        fight.execute(() -> invocations.forEach(fighter -> fighter.life().kill(event.caster())));
                     }
 
                     // If the creature is an invocation, delete from turn list
                     if (event.fighter().invoked()) {
-                        fight.turnList().remove((Fighter) event.fighter());
+                        fight.turnList().remove(event.fighter());
                     }
                 }
 

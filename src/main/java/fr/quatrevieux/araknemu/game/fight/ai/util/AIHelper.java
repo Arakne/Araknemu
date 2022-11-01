@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.proxy.ProxyAI;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
 /**
  * Utility class for perform common AI operations on the current fighter
@@ -113,7 +113,7 @@ public final class AIHelper {
      * Check if the current fighter has movement points, and he's not blocked by enemies on adjacent cells
      */
     public boolean canMove() {
-        return hasMovementPoints() && cells().adjacent().anyMatch(FightCell::walkable);
+        return hasMovementPoints() && cells().adjacent().anyMatch(BattlefieldCell::walkable);
     }
 
     /**
@@ -142,7 +142,7 @@ public final class AIHelper {
      *
      * @return The modified AI helper instance
      */
-    public AIHelper withPosition(FightCell cell) {
+    public AIHelper withPosition(BattlefieldCell cell) {
         return new AIHelper(ai.withPosition(cell.id()));
     }
 }

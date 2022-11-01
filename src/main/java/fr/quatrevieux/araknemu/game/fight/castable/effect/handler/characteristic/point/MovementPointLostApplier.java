@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -47,7 +47,7 @@ public final class MovementPointLostApplier extends AbstractPointLostApplier {
     }
 
     @Override
-    protected ActionEffect dodgeMessage(PassiveFighter caster, PassiveFighter target, int value) {
+    protected ActionEffect dodgeMessage(FighterData caster, FighterData target, int value) {
         return ActionEffect.dodgeMovementPointLost(caster, target, value);
     }
 }

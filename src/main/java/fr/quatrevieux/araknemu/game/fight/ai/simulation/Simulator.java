@@ -22,7 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.EffectSimulator;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
@@ -59,15 +60,15 @@ public final class Simulator {
      *
      * @return The simulation result
      */
-    public CastSimulation simulate(Spell spell, ActiveFighter caster, FightCell target) {
-        final CastSimulation normalSimulation = simulate(spell, CastScope.simple(spell, caster, target, spell.effects()));
+    public CastSimulation simulate(Spell spell, ActiveFighter caster, BattlefieldCell target) {
+        final CastSimulation normalSimulation = simulate(spell, new SimulationCastScope(spell, caster, target, spell.effects()));
         final int hitRate = spell.criticalHit();
 
         if (hitRate < 2) {
             return normalSimulation;
         }
 
-        final CastSimulation criticalSimulation = simulate(spell, CastScope.simple(spell, caster, target, spell.criticalEffects()));
+        final CastSimulation criticalSimulation = simulate(spell, new SimulationCastScope(spell, caster, target, spell.criticalEffects()));
         final CastSimulation simulation = new CastSimulation(spell, caster, target);
 
         final int criticalRate = 100 / criticalityStrategy.hitRate(caster, hitRate);
@@ -83,7 +84,7 @@ public final class Simulator {
      *
      * @param scope The cast scope
      */
-    private CastSimulation simulate(Spell spell, CastScope scope) {
+    private CastSimulation simulate(Spell spell, CastScope<FighterData, BattlefieldCell> scope) {
         // Remove invisible fighters from simulation
         scope.targets().forEach(target -> {
             if (target.hidden()) {
@@ -93,7 +94,7 @@ public final class Simulator {
 
         final CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
 
-        for (CastScope.EffectScope effect : scope.effects()) {
+        for (CastScope.EffectScope<FighterData> effect : scope.effects()) {
             final EffectSimulator simulator = simulators.get(effect.effect().effect());
 
             if (simulator == null) {

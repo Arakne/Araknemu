@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
 import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -31,14 +31,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class SpellLaunchValidator implements CastConstraintValidator<Spell> {
     @Override
-    public boolean check(Turn turn, Spell castable, FightCell target) {
+    public boolean check(Turn turn, Spell castable, BattlefieldCell target) {
         final LaunchedSpells history = turn.fighter().attachment(LaunchedSpells.class);
 
         return history == null || history.valid(castable, target);
     }
 
     @Override
-    public @Nullable Error validate(Turn turn, Spell castable, FightCell target) {
+    public @Nullable Error validate(Turn turn, Spell castable, BattlefieldCell target) {
         return check(turn, castable, target) ? null : Error.cantCast();
     }
 }

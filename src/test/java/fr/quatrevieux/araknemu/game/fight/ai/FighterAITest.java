@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.ai;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.action.FightAiActionFactoryAdapter;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
@@ -108,15 +110,15 @@ class FighterAITest extends FightBaseCase {
 
         FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
-        Mockito.when(generator1.generate(ai, fight.actions())).thenReturn(Optional.of(Mockito.mock(Action.class)));
+        Mockito.when(generator1.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.of(Mockito.mock(Action.class)));
 
         ai.start(turn);
 
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
 
-        Mockito.verify(generator1).generate(ai, fight.actions());
-        Mockito.verify(generator2, Mockito.never()).generate(ai, fight.actions());
+        Mockito.verify(generator1).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
+        Mockito.verify(generator2, Mockito.never()).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
 
         assertSame(turn, ai.turn());
         assertTrue(turn.active());
@@ -132,16 +134,16 @@ class FighterAITest extends FightBaseCase {
 
         FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
-        Mockito.when(generator1.generate(ai, fight.actions())).thenReturn(Optional.empty());
-        Mockito.when(generator2.generate(ai, fight.actions())).thenReturn(Optional.empty());
+        Mockito.when(generator1.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.empty());
+        Mockito.when(generator2.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.empty());
 
         ai.start(turn);
 
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
 
-        Mockito.verify(generator1).generate(ai, fight.actions());
-        Mockito.verify(generator2).generate(ai, fight.actions());
+        Mockito.verify(generator1).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
+        Mockito.verify(generator2).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
 
         assertFalse(turn.active());
     }
@@ -162,8 +164,8 @@ class FighterAITest extends FightBaseCase {
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
 
-        Mockito.verify(generator1, Mockito.never()).generate(ai, fight.actions());
-        Mockito.verify(generator2, Mockito.never()).generate(ai, fight.actions());
+        Mockito.verify(generator1, Mockito.never()).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
+        Mockito.verify(generator2, Mockito.never()).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
     }
 
     @Test

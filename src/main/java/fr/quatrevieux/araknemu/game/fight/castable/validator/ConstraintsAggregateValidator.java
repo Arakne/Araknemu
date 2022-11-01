@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -36,7 +36,7 @@ public final class ConstraintsAggregateValidator<T extends Castable> implements 
     }
 
     @Override
-    public boolean check(Turn turn, T castable, FightCell target) {
+    public boolean check(Turn turn, T castable, BattlefieldCell target) {
         for (CastConstraintValidator<? super T> validator : validators) {
             if (!validator.check(turn, castable, target)) {
                 return false;
@@ -47,7 +47,7 @@ public final class ConstraintsAggregateValidator<T extends Castable> implements 
     }
 
     @Override
-    public @Nullable Error validate(Turn turn, T action, FightCell target) {
+    public @Nullable Error validate(Turn turn, T action, BattlefieldCell target) {
         for (CastConstraintValidator<? super T> validator : validators) {
             final Error error = validator.validate(turn, action, target);
 

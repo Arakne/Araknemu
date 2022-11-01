@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -124,7 +125,7 @@ class PvmBuilderTest extends GameBaseCase {
 
         assertInstanceOf(PvmType.class, fight.type());
         assertCount(2, fight.teams());
-        assertCount(5, fight.fighters(false));
+        assertEquals(5, fight.team(0).fighters().size() + fight.team(1).fighters().size());
         assertContainsType(MonsterGroupTeam.class, fight.teams());
         assertContainsType(SimpleTeam.class, fight.teams());
         assertEquals(1, fight.id());

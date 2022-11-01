@@ -52,7 +52,7 @@ class RemoveDeadFighterTest extends FightBaseCase {
     void onFighterDieNotCurrentTurn() {
         listener.on(new FighterDie(other.fighter(), other.fighter()));
 
-        assertFalse(other.fighter().cell().fighter().isPresent());
+        assertFalse(other.fighter().cell().hasFighter());
     }
 
     @Test
@@ -60,7 +60,7 @@ class RemoveDeadFighterTest extends FightBaseCase {
         player.fighter().life().alter(player.fighter(), -1000);
         listener.on(new FighterDie(player.fighter(), player.fighter()));
 
-        assertFalse(player.fighter().cell().fighter().isPresent());
+        assertFalse(player.fighter().cell().hasFighter());
         assertThrows(FightException.class, () -> player.fighter().turn());
         assertFalse(fight.turnList().current().get().active());
     }

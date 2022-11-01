@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -39,27 +38,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class FightTurnList {
     private final Fight fight;
 
-    private @MonotonicNonNull List<Fighter> fighters;
-    private @Nullable Fighter current;
+    private final List<Fighter> fighters;
+    private Fighter current;
     private @Nullable FightTurn turn;
     private int index;
     private final AtomicBoolean active = new AtomicBoolean(false);
 
-    public FightTurnList(Fight fight) {
+    public FightTurnList(Fight fight, FighterOrderStrategy orderStrategy) {
         this.fight = fight;
-    }
-
-    /**
-     * Initialise the fighters order
-     *
-     * @todo remove: initialize in constructor
-     */
-    public void init(FighterOrderStrategy orderStrategy) {
-        if (fighters != null) {
-            throw new IllegalStateException("FightTurnList is already initialised");
-        }
-
-        fighters = orderStrategy.compute(fight.teams());
+        this.fighters = orderStrategy.compute(fight.teams());
 
         if (fighters.isEmpty()) {
             throw new IllegalStateException("Cannot initialise turn list without fighters");
@@ -72,10 +59,6 @@ public final class FightTurnList {
      * Get all fighters ordered by their turn order
      */
     public List<Fighter> fighters() {
-        if (fighters == null) {
-            throw new IllegalStateException("FightTurnList must be initialised");
-        }
-
         return fighters;
     }
 
@@ -87,10 +70,6 @@ public final class FightTurnList {
      * @see TurnListChanged Event triggered after the list is updated
      */
     public void remove(Fighter fighter) {
-        if (fighters == null) {
-            throw new IllegalStateException("FightTurnList must be initialised");
-        }
-
         final int index = fighters.indexOf(fighter);
 
         if (index == -1) {
@@ -121,16 +100,14 @@ public final class FightTurnList {
      * @see TurnListChanged Event triggered after the list is updated
      */
     public void add(Fighter fighter) {
-        if (fighters == null) {
-            throw new IllegalStateException("FightTurnList must be initialised");
-        }
-
         fighters.add(index + 1, fighter);
         fight.dispatch(new TurnListChanged(this));
     }
 
     /**
      * Get the current turn
+     *
+     * @todo nullable instead of optional ?
      */
     public Optional<FightTurn> current() {
         return Optional.ofNullable(turn);
@@ -139,7 +116,7 @@ public final class FightTurnList {
     /**
      * Get the current turn fighter
      */
-    public @Nullable Fighter currentFighter() {
+    public Fighter currentFighter() {
         return current;
     }
 
@@ -168,13 +145,6 @@ public final class FightTurnList {
             turn.stop();
             turn = null;
         }
-    }
-
-    /**
-     * @todo remove when init is done on constructor
-     */
-    public boolean isInitialized() {
-        return fighters != null;
     }
 
     /**

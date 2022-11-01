@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.event;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * The fighter is now visible
  *
- * @see PassiveFighter#hidden()
- * @see PassiveFighter#setHidden(PassiveFighter, boolean)
+ * @see Fighter#hidden()
+ * @see Fighter#setHidden(Fighter, boolean)
  */
 public final class FighterVisible {
-    private final PassiveFighter fighter;
-    private final PassiveFighter caster;
+    private final Fighter fighter;
+    private final Fighter caster;
 
-    public FighterVisible(PassiveFighter fighter, PassiveFighter caster) {
+    public FighterVisible(Fighter fighter, Fighter caster) {
         this.fighter = fighter;
         this.caster = caster;
     }
@@ -39,14 +39,14 @@ public final class FighterVisible {
     /**
      * Visible fighter
      */
-    public PassiveFighter fighter() {
+    public Fighter fighter() {
         return fighter;
     }
 
     /**
      * Effect caster / fighter who has show the fighter
      */
-    public PassiveFighter caster() {
+    public Fighter caster() {
         return caster;
     }
 }

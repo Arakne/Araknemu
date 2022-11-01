@@ -22,12 +22,12 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.player.characteristic.ComputedCharacteristics;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -72,8 +72,8 @@ public abstract class AbstractPointLostApplier {
      *
      * @return Number of lost points
      */
-    public final int apply(CastScope cast, PassiveFighter target, SpellEffect effect)  {
-        final ActiveFighter caster = cast.caster();
+    public final int apply(FightCastScope cast, Fighter target, SpellEffect effect)  {
+        final Fighter caster = cast.caster();
 
         final int baseValue = EffectValue.create(effect, caster, target).value();
         final int lost = computePointLost(caster, target, baseValue);
@@ -93,7 +93,7 @@ public abstract class AbstractPointLostApplier {
     /**
      * The packet to send when the target dodge the point lost
      */
-    protected abstract ActionEffect dodgeMessage(PassiveFighter caster, PassiveFighter target, int value);
+    protected abstract ActionEffect dodgeMessage(FighterData caster, FighterData target, int value);
 
     /**
      * Create the buff effect for the given point lost
@@ -114,7 +114,7 @@ public abstract class AbstractPointLostApplier {
      *
      * @return Number of lost points. Can be 0 if dodge all loose, and cannot exceed value parameter.
      */
-    private int computePointLost(ActiveFighter caster, PassiveFighter target, @NonNegative int value) {
+    private int computePointLost(FighterData caster, FighterData target, @NonNegative int value) {
         final int maxPoints = target.characteristics().initial().get(this.characteristic);
         final int currentPoints = target.characteristics().get(this.characteristic);
 

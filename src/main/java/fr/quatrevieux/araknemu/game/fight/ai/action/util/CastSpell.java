@@ -21,12 +21,12 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Optional;
 
@@ -47,18 +47,18 @@ public final class CastSpell<F extends ActiveFighter> implements ActionGenerator
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         final AIHelper helper = ai.helper();
 
         if (!helper.canCast() || !ai.enemy().isPresent()) {
             return Optional.empty();
         }
 
-        return helper.spells().caster(actions.cast().validator())
+        return helper.spells().caster(actions.castSpellValidator())
             .simulate(simulator)
             .filter(selector::valid)
             .reduce((s1, s2) -> selector.compare(s2, s1) ? s2 : s1)
-            .map(simulation -> actions.cast().create(ai.fighter(), simulation.spell(), simulation.target()))
+            .map(simulation -> actions.cast(simulation.spell(), simulation.target()))
         ;
     }
 

@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.util.DofusDate;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ class FightListTest extends FightBaseCase {
 
         Fight fight = createSimpleFight(map);
 
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         long time = DofusDate.fromDuration(fight.duration()).toMilliseconds();
 

@@ -58,9 +58,8 @@ class TurnMiddleTest extends FightBaseCase {
 
     @Test
     void generateWithActiveTurnShouldShowTurnPoints() {
-        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.start(new AlternateTeamFighterOrder());
         fight.turnList().start();
-        fight.start();
 
         fight.turnList().current().get().points().useActionPoints(3);
         fight.turnList().current().get().points().useMovementPoints(1);

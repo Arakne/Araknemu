@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class LineLaunchValidator implements CastConstraintValidator {
     @Override
-    public @Nullable Error validate(Turn turn, Castable castable, FightCell target) {
+    public @Nullable Error validate(Turn turn, Castable castable, BattlefieldCell target) {
         if (check(turn, castable, target)) {
             return null;
         }
@@ -40,7 +40,7 @@ public final class LineLaunchValidator implements CastConstraintValidator {
     }
 
     @Override
-    public boolean check(Turn turn, Castable castable, FightCell target) {
+    public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
         if (!castable.constraints().lineLaunch()) {
             return true;
         }

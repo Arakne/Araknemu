@@ -54,7 +54,7 @@ class WalkableFightCellTest extends GameBaseCase {
         assertTrue(cell.walkable());
         assertTrue(cell.walkableIgnoreFighter());
         assertFalse(cell.sightBlocking());
-        assertFalse(cell.fighter().isPresent());
+        assertFalse(cell.hasFighter());
         assertSame(map, cell.map());
         assertSame(cell.coordinate(), cell.coordinate());
         assertSame(cell, cell.coordinate().cell());
@@ -66,7 +66,7 @@ class WalkableFightCellTest extends GameBaseCase {
 
         cell.set(fighter);
 
-        assertSame(fighter, cell.fighter().get());
+        assertSame(fighter, cell.fighter());
         assertFalse(cell.walkable());
         assertTrue(cell.walkableIgnoreFighter());
         assertTrue(cell.sightBlocking());
@@ -93,7 +93,7 @@ class WalkableFightCellTest extends GameBaseCase {
 
         cell.removeFighter();
 
-        assertFalse(cell.fighter().isPresent());
+        assertFalse(cell.hasFighter());
     }
 
     @Test

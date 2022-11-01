@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Optional;
 
@@ -51,7 +51,7 @@ public final class GeneratorAggregate<F extends ActiveFighter> implements Action
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         for (ActionGenerator<F> generator : generators) {
             final Optional<Action> generated = generator.generate(ai, actions);
 

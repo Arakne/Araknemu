@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -123,11 +122,6 @@ public final class MonsterGroupTeam implements FightTeam {
     @Override
     public void kick(Fighter fighter) {
         throw new UnsupportedOperationException("Read-only team");
-    }
-
-    @Override
-    public void setFight(Fight fight) {
-        // No-op
     }
 
     /**

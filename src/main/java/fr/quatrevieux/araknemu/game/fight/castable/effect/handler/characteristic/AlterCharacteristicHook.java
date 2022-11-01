@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -76,7 +76,7 @@ public class AlterCharacteristicHook implements BuffHook {
      * @param target Buff target
      * @param value Value to apply. Negative for removing, positive for adding
      */
-    protected void apply(Buff buff, PassiveFighter target, int value) {
+    protected void apply(Buff buff, FighterData target, int value) {
         target.characteristics().alter(characteristic, value);
     }
 

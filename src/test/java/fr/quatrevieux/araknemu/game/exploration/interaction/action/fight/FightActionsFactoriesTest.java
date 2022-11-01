@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,7 +84,7 @@ class FightActionsFactoriesTest extends FightBaseCase {
         player.changeMap(map, 123);
 
         Fight fight = createSimpleFight(map);
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         Action action = factory.create(player, ActionType.JOIN_FIGHT, new String[] {fight.id() + ""});
 
@@ -98,7 +99,7 @@ class FightActionsFactoriesTest extends FightBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
         Fight fight = createSimpleFight(map);
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         assertThrows(IllegalArgumentException.class, () -> factory.create(player, ActionType.JOIN_FIGHT, new String[] {fight.id() + ""}));
     }
@@ -111,7 +112,7 @@ class FightActionsFactoriesTest extends FightBaseCase {
         player.changeMap(map, 123);
 
         Fight fight = createSimpleFight(map);
-        fight.start();
+        fight.start(new AlternateTeamFighterOrder());
 
         assertThrows(IllegalArgumentException.class, () -> factory.create(player, ActionType.JOIN_FIGHT, new String[] {}));
     }

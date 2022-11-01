@@ -20,13 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle effect of punishment spell
@@ -52,15 +51,15 @@ public final class PunishmentHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
         final FighterLife casterLife = caster.life();
 
         final double percentLife = (double) casterLife.current() / casterLife.max();
         final double base = Math.cos(2 * Math.PI * (percentLife - 0.5)) + 1;
         final double factor = base * base / 4 * casterLife.max();
 
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             final double percent = EffectValue.create(effect.effect(), caster, target).value() / 100d;
             final int value = (int) (factor * percent);
 
@@ -69,7 +68,7 @@ public final class PunishmentHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use punishment as buff");
     }
 }

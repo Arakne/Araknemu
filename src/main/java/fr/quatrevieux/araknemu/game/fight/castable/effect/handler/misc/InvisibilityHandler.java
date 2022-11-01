@@ -21,13 +21,14 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 
@@ -43,8 +44,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
  * Note: If two (or more) invisibility buffs are effective on a fighter, the invisibility state will be terminated
  * with the last (i.e. longest) buff.
  *
- * @see PassiveFighter#hidden() Check the hidden state
- * @see PassiveFighter#setHidden(PassiveFighter, boolean) Called by the handler for change hidden state
+ * @see FighterData#hidden() Check the hidden state
+ * @see Fighter#setHidden(FighterData, boolean) Called by the handler for change hidden state
  */
 public final class InvisibilityHandler implements EffectHandler, BuffHook {
     private final Fight fight;
@@ -54,17 +55,17 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Invisibility effect must be used as a buff");
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         final SpellEffect spellEffect = effect.effect();
-        final ActiveFighter caster = cast.caster();
+        final Fighter caster = cast.caster();
         final Castable action = cast.action();
 
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(spellEffect, action, caster, target, this));
         }
     }
@@ -76,7 +77,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
 
     @Override
     public void onBuffTerminated(Buff buff) {
-        final PassiveFighter target = buff.target();
+        final Fighter target = buff.target();
 
         // Set visible only if not yet visible and there is no other active invisibility buff
         if (target.hidden() && !hasOtherInvisibilityBuff(target)) {
@@ -85,8 +86,8 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onCast(Buff buff, CastScope cast) {
-        final PassiveFighter target = buff.target();
+    public void onCast(Buff buff, FightCastScope cast) {
+        final Fighter target = buff.target();
 
         if (!target.hidden()) {
             return;
@@ -107,7 +108,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     /**
      * Check if another active invisibility buff is present
      */
-    private boolean hasOtherInvisibilityBuff(PassiveFighter fighter) {
+    private boolean hasOtherInvisibilityBuff(FighterData fighter) {
         for (Buff activeBuff : fighter.buffs()) {
             // Another invisibility buff exists : do not set target visible
             if (activeBuff.valid() && activeBuff.hook() == this) {
@@ -121,8 +122,8 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     /**
      * Does the given cast will perform direct damage or not
      */
-    private boolean hasDirectDamageEffect(CastScope cast) {
-        for (CastScope.EffectScope effect : cast.effects()) {
+    private boolean hasDirectDamageEffect(FightCastScope cast) {
+        for (CastScope.EffectScope<Fighter> effect : cast.effects()) {
             final SpellEffect spellEffect = effect.effect();
 
             if (spellEffect.duration() == 0 && EffectsUtils.isDamageEffect(spellEffect.effect())) {
@@ -136,7 +137,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
     /**
      * Check if the given buff is the first of the buff list
      */
-    private boolean isFirstInvisibilityBuff(PassiveFighter fighter, Buff currentBuff) {
+    private boolean isFirstInvisibilityBuff(FighterData fighter, Buff currentBuff) {
         for (Buff otherBuff : fighter.buffs()) {
             if (otherBuff.hook() == this) {
                 // Current buff is not the first active invisibility buff

@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle push state to the fighter
@@ -35,15 +35,15 @@ public final class PushStateHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (FighterData target : effect.targets()) {
             target.states().push(effect.effect().special());
         }
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (FighterData target : effect.targets()) {
             int duration = effect.effect().duration();
 
             if (target.equals(fight.turnList().currentFighter())) {

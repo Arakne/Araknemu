@@ -21,14 +21,14 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
  * Send to client packet for make fighter invisible
  *
- * @see ActionEffect#fighterHidden(PassiveFighter, PassiveFighter)
+ * @see ActionEffect#fighterHidden(FighterData, FighterData)
  */
 public final class SendFighterHidden implements Listener<FighterHidden> {
     private final Fight fight;

@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -56,7 +56,7 @@ class ProxyAITest extends AiBaseCase {
         assertInstanceOf(ProxyPassiveFighter.class, proxy.enemy().get());
         assertEquals(ai.enemy().get(), proxy.enemy().get());
 
-        List<PassiveFighter> fighters = proxy.fighters().collect(Collectors.toList());
+        List<FighterData> fighters = proxy.fighters().collect(Collectors.toList());
 
         assertSame(proxy.fighter(), fighters.get(0));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(1));
@@ -96,7 +96,7 @@ class ProxyAITest extends AiBaseCase {
         assertInstanceOf(ProxyBattlefield.class, proxy.map());
         assertInstanceOf(ProxyTurn.class, proxy.turn());
 
-        List<PassiveFighter> fighters = proxy.fighters().collect(Collectors.toList());
+        List<FighterData> fighters = proxy.fighters().collect(Collectors.toList());
 
         assertSame(proxy.fighter(), fighters.get(0));
         assertInstanceOf(ProxyPassiveFighter.class, fighters.get(1));
@@ -109,16 +109,16 @@ class ProxyAITest extends AiBaseCase {
 
         assertEquals(123, proxy.fighter().cell().id());
         assertSame(proxy.map().get(123), proxy.fighter().cell());
-        assertSame(proxy.fighter(), proxy.fighter().cell().fighter().get());
+        assertSame(proxy.fighter(), proxy.fighter().cell().fighter());
         assertEquals(167, fighters.get(1).cell().id());
         assertSame(proxy.map().get(167), fighters.get(1).cell());
-        assertSame(fighters.get(1), fighters.get(1).cell().fighter().get());
+        assertSame(fighters.get(1), fighters.get(1).cell().fighter());
         assertEquals(166, fighters.get(2).cell().id());
         assertSame(proxy.map().get(166), fighters.get(2).cell());
-        assertSame(fighters.get(2), fighters.get(2).cell().fighter().get());
+        assertSame(fighters.get(2), fighters.get(2).cell().fighter());
 
-        assertFalse(proxy.map().get(152).fighter().isPresent());
-        assertTrue(ai.map().get(152).fighter().isPresent());
+        assertFalse(proxy.map().get(152).hasFighter());
+        assertTrue(ai.map().get(152).hasFighter());
 
         // Calling twice should works
         proxy = proxy.withPosition(125);
@@ -127,16 +127,16 @@ class ProxyAITest extends AiBaseCase {
 
         assertEquals(125, proxy.fighter().cell().id());
         assertSame(proxy.map().get(125), proxy.fighter().cell());
-        assertSame(proxy.fighter(), proxy.fighter().cell().fighter().get());
+        assertSame(proxy.fighter(), proxy.fighter().cell().fighter());
         assertEquals(167, fighters.get(1).cell().id());
         assertSame(proxy.map().get(167), fighters.get(1).cell());
-        assertSame(fighters.get(1), fighters.get(1).cell().fighter().get());
+        assertSame(fighters.get(1), fighters.get(1).cell().fighter());
         assertEquals(166, fighters.get(2).cell().id());
         assertSame(proxy.map().get(166), fighters.get(2).cell());
-        assertSame(fighters.get(2), fighters.get(2).cell().fighter().get());
+        assertSame(fighters.get(2), fighters.get(2).cell().fighter());
 
-        assertFalse(proxy.map().get(123).fighter().isPresent());
-        assertFalse(proxy.map().get(152).fighter().isPresent());
+        assertFalse(proxy.map().get(123).hasFighter());
+        assertFalse(proxy.map().get(152).hasFighter());
     }
 
     @Test

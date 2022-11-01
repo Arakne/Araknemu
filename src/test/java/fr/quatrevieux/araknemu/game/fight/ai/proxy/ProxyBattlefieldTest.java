@@ -20,18 +20,19 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,12 +73,13 @@ class ProxyBattlefieldTest extends AiBaseCase {
 
         assertNotSame(modified.get(123), battlefield.get(123));
 
-        assertFalse(modified.get(152).fighter().isPresent());
+        assertNull(modified.get(152).fighter());
+        assertFalse(modified.get(152).hasFighter());
         assertTrue(modified.get(152).walkableIgnoreFighter());
         assertTrue(modified.get(152).walkable());
         assertFalse(modified.get(152).sightBlocking());
 
-        assertSame(ai.fighters().collect(Collectors.toList()).get(2), modified.get(166).fighter().get());
+        assertSame(ai.fighters().collect(Collectors.toList()).get(2), modified.get(166).fighter());
         assertTrue(modified.get(166).walkableIgnoreFighter());
         assertFalse(modified.get(166).walkable());
         assertTrue(modified.get(166).sightBlocking());
@@ -100,8 +102,8 @@ class ProxyBattlefieldTest extends AiBaseCase {
         assertEquals(modified.size(), ai.map().size());
         assertSame(modified.dimensions(), ai.map().dimensions());
 
-        assertTrue(modified.get(123).fighter().isPresent());
-        assertInstanceOf(ProxyPassiveFighter.class, modified.get(123).fighter().get());
+        assertTrue(modified.get(123).hasFighter());
+        assertInstanceOf(ProxyPassiveFighter.class, modified.get(123).fighter());
         assertTrue(modified.get(123).walkableIgnoreFighter());
         assertFalse(modified.get(123).walkable());
         assertTrue(modified.get(123).sightBlocking());
@@ -129,7 +131,7 @@ class ProxyBattlefieldTest extends AiBaseCase {
         assertTrue(battlefield.get(154).sightBlocking());
         assertTrue(battlefield.get(167).sightBlocking());
 
-        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(PassiveFighter.class)));
+        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(FighterData.class)));
 
         assertFalse(battlefield.get(152).sightBlocking());
         assertTrue(battlefield.get(153).sightBlocking());
@@ -159,26 +161,12 @@ class ProxyBattlefieldTest extends AiBaseCase {
         assertFalse(battlefield.get(154).walkable());
         assertFalse(battlefield.get(167).walkable());
 
-        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(PassiveFighter.class)));
+        battlefield = battlefield.modify(modifier -> modifier.setFighter(153, Mockito.mock(FighterData.class)));
 
         assertTrue(battlefield.get(152).walkable());
         assertFalse(battlefield.get(153).walkable());
         assertFalse(battlefield.get(154).walkable());
         assertFalse(battlefield.get(167).walkable());
-    }
-
-    @Test
-    void cellRemoveAndSetNotAllowed() {
-        configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(152))
-            .addEnemy(builder -> builder.cell(167))
-            .addAlly(builder -> builder.cell(166))
-        );
-
-        ProxyBattlefield battlefield = new ProxyBattlefield(ai.map()).modify(modifier -> {});
-
-        assertThrows(UnsupportedOperationException.class, () -> battlefield.get(123).removeFighter());
-        assertThrows(UnsupportedOperationException.class, () -> battlefield.get(123).set(Mockito.mock(PassiveFighter.class)));
     }
 
     @Test
@@ -191,7 +179,7 @@ class ProxyBattlefieldTest extends AiBaseCase {
 
         ProxyBattlefield battlefield = new ProxyBattlefield(ai.map()).modify(modifier -> {});
 
-        for (FightCell cell : battlefield) {
+        for (BattlefieldCell cell : battlefield) {
             assertSame(battlefield, cell.map());
             assertEquals(cell.walkableIgnoreFighter(), ai.map().get(cell.id()).walkableIgnoreFighter());
             assertEquals(cell.fighter(), ai.map().get(cell.id()).fighter());

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -48,10 +48,10 @@ public final class InvocationFighter extends AbstractFighter {
     private final FighterCharacteristics characteristics;
     private final MonsterFighterSprite sprite;
     private final FighterSpellList spells;
-    private final PassiveFighter invoker;
+    private final FighterData invoker;
 
     @SuppressWarnings({"assignment", "argument"})
-    public InvocationFighter(int id, Monster monster, FightTeam team, PassiveFighter invoker) {
+    public InvocationFighter(int id, Monster monster, FightTeam team, FighterData invoker) {
         this.id = id;
         this.monster = monster;
         this.team = team;
@@ -116,7 +116,7 @@ public final class InvocationFighter extends AbstractFighter {
     }
 
     @Override
-    public @NonNull PassiveFighter invoker() {
+    public @NonNull FighterData invoker() {
         return invoker;
     }
 

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -68,7 +69,7 @@ class MoveFrontHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
 
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
@@ -96,13 +97,13 @@ class MoveFrontHandlerTest extends FightBaseCase {
         FightCell lastCell = target.cell();
         FightCell destination = fight.map().get(263);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertLast(ActionEffect.slide(caster, target, destination));
 
-        assertFalse(lastCell.fighter().isPresent());
-        assertSame(target, destination.fighter().get());
+        assertFalse(lastCell.hasFighter());
+        assertSame(target, destination.fighter());
         assertSame(destination, target.cell());
     }
 
@@ -128,7 +129,7 @@ class MoveFrontHandlerTest extends FightBaseCase {
 
         FightCell destination = fight.map().get(161);
 
-        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertOne(ActionEffect.slide(caster, target, destination));
@@ -155,7 +156,7 @@ class MoveFrontHandlerTest extends FightBaseCase {
 
         requestStack.clear();
 
-        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(191));
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(191));
         handler.handle(scope, scope.effects().get(0));
 
         List<Fighter> enemies = new ArrayList<>(fight.team(1).fighters());

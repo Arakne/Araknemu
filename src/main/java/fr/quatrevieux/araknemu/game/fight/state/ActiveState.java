@@ -73,10 +73,7 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
         this.fight = fight;
         fight.dispatcher().register(this);
 
-        fight.fighters().forEach(Fighter::init);
-        fight.turnList().init(orderStrategy);
-
-        fight.start();
+        fight.start(orderStrategy);
     }
 
     @Override
@@ -127,7 +124,7 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
         }
 
         // nextState is performed 1.5s after fight stop
-        // So leave can occurs on terminated fight
+        // So leave can occur on terminated fight
         if (!fight.active()) {
             return;
         }

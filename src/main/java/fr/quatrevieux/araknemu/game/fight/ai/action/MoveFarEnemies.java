@@ -24,9 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collections;
@@ -43,7 +42,7 @@ import java.util.stream.Collectors;
 public final class MoveFarEnemies<F extends ActiveFighter> implements ActionGenerator<F> {
     private final Movement<F> movement;
 
-    private List<CoordinateCell<FightCell>> enemiesCells = Collections.emptyList();
+    private List<CoordinateCell<BattlefieldCell>> enemiesCells = Collections.emptyList();
 
     @SuppressWarnings("methodref.receiver.bound")
     public MoveFarEnemies() {
@@ -56,14 +55,14 @@ public final class MoveFarEnemies<F extends ActiveFighter> implements ActionGene
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         final AIHelper helper = ai.helper();
 
         if (!helper.canMove()) {
             return Optional.empty();
         }
 
-        enemiesCells = helper.enemies().cells().map(FightCell::coordinate).collect(Collectors.toList());
+        enemiesCells = helper.enemies().cells().map(BattlefieldCell::coordinate).collect(Collectors.toList());
 
         return movement.generate(ai, actions);
     }
@@ -73,7 +72,7 @@ public final class MoveFarEnemies<F extends ActiveFighter> implements ActionGene
      *
      * Select the highest distance
      */
-    private double score(CoordinateCell<FightCell> cell) {
+    private double score(CoordinateCell<BattlefieldCell> cell) {
         return NullnessUtil.castNonNull(enemiesCells).stream().mapToDouble(cell::distance).min().orElse(0);
     }
 }

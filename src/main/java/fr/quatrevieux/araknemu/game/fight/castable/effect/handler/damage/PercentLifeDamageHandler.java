@@ -20,14 +20,14 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle damage based on the current caster life
@@ -42,8 +42,8 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
         final int currentLife = caster.life().current();
 
         EffectValue.forEachTargets(effect.effect(), caster, effect.targets(), (target, effectValue) -> {
@@ -52,16 +52,16 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (PassiveFighter target : effect.targets()) {
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        for (Fighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        final ActiveFighter caster = buff.caster();
-        final PassiveFighter target = buff.target();
+        final FighterData caster = buff.caster();
+        final FighterData target = buff.target();
         final int damage = caster.life().current() * (EffectValue.create(buff.effect(), caster, target)).value() / 100;
 
         applier.applyFixed(buff, damage);

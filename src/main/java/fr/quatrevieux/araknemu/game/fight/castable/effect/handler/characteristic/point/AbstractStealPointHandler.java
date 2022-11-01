@@ -20,12 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.index.qual.Positive;
@@ -56,8 +56,8 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
         final int stolen = apply(cast, effect);
 
         if (stolen > 0) {
@@ -69,8 +69,8 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
     }
 
     @Override
-    public void buff(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
         final int stolen = apply(cast, effect);
 
         if (stolen > 0) {
@@ -95,20 +95,20 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
      * @param turn The active turn
      * @param toAdd Number of points to add. This value is always >= 1
      */
-    protected abstract void applyOnCurrentTurn(Fight fight, Turn turn, ActiveFighter caster, @Positive int toAdd);
+    protected abstract void applyOnCurrentTurn(Fight fight, Turn turn, FighterData caster, @Positive int toAdd);
 
     /**
      * Apply to all targets and compute the stolen points
      *
      * @return Stolen action points. 0 if target has dodged
      */
-    private int apply(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
+    private int apply(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fighter caster = cast.caster();
         final SpellEffect baseEffect = effect.effect();
 
         int stolen = 0;
 
-        for (PassiveFighter target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             if (!target.equals(caster)) {
                 stolen += removePointApplier.apply(cast, target, baseEffect);
             }

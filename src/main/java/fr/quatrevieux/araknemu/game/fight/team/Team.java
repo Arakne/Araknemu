@@ -19,14 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.fight.team;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 import java.util.Collection;
 
 /**
  * Base team type for a fighter
  */
-public interface Team<F extends PassiveFighter> {
+public interface Team<F extends FighterData> {
     /**
      * Get the team number (0 or 1)
      */

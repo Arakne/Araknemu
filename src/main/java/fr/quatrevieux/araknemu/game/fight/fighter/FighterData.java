@@ -21,16 +21,17 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Fighter type which can be a target of spells or other actions
+ * Fighter type which contains all necessary data for perform computation on fight
+ * This type is read only : no modification can be performed following this interface
  */
-public interface PassiveFighter extends Creature<FightCell> {
+public interface FighterData extends Creature<BattlefieldCell> {
     /**
      * Get the fighter id
      */
@@ -39,12 +40,7 @@ public interface PassiveFighter extends Creature<FightCell> {
     /**
      * The fighter cell
      */
-    public FightCell cell();
-
-    /**
-     * Go to the given cell
-     */
-    public void move(@Nullable FightCell cell);
+    public BattlefieldCell cell();
 
     /**
      * Get the fighter level
@@ -74,7 +70,7 @@ public interface PassiveFighter extends Creature<FightCell> {
     /**
      * Get the fighter team
      */
-    public Team<? extends PassiveFighter> team();
+    public Team<? extends FighterData> team();
 
     /**
      * Get the related fight
@@ -90,20 +86,6 @@ public interface PassiveFighter extends Creature<FightCell> {
     public boolean hidden();
 
     /**
-     * Change the hidden state of the fighter
-     * An event will be dispatched to the fight if effective
-     *
-     * Note: this method will do nothing if the fighter is already on the requested state
-     *
-     * @param caster Effect caster
-     * @param hidden New hidden state
-     *
-     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden Trigger when the fighter is actually hidden
-     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible Trigger when the fighter is actually visible
-     */
-    public void setHidden(PassiveFighter caster, boolean hidden);
-
-    /**
      * Check if the player is dead
      */
     public default boolean dead() {
@@ -114,7 +96,7 @@ public interface PassiveFighter extends Creature<FightCell> {
      * Get the invoker fighter
      * This value is null if the fighter is not an invocation
      */
-    public @Nullable PassiveFighter invoker();
+    public @Nullable FighterData invoker();
 
     /**
      * Does the current fighter is an invocation ?

@@ -61,7 +61,7 @@ public final class BaseFighterLife implements FighterLife {
 
     @Override
     @SuppressWarnings("compound.assignment") // bound of value is not resolved
-    public int alter(PassiveFighter caster, int value) {
+    public int alter(Fighter caster, int value) {
         if (dead) {
             return 0;
         }
@@ -87,7 +87,7 @@ public final class BaseFighterLife implements FighterLife {
     }
 
     @Override
-    public void alterMax(PassiveFighter caster, int value) {
+    public void alterMax(Fighter caster, int value) {
         if (dead) {
             return;
         }
@@ -104,7 +104,7 @@ public final class BaseFighterLife implements FighterLife {
     }
 
     @Override
-    public void kill(ActiveFighter caster) {
+    public void kill(Fighter caster) {
         if (dead) {
             return;
         }
