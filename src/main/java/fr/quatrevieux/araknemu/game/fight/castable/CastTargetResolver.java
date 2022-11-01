@@ -64,13 +64,14 @@ public final class CastTargetResolver {
     /**
      * Perform resolution from effect target and effect area
      */
+    @SuppressWarnings("cast.unsafe") // @Nullable cast cause a compiler crash on java 8
     private static <F extends FighterData> Collection<F> resolveFromEffectArea(F caster, BattlefieldCell target, SpellEffect effect) {
         // Use lazy instantiation and do not use stream API to optimise memory allocations
         F firstTarget = null;
         Collection<F> targets = null;
 
         for (BattlefieldCell cell : effect.area().resolve(target, caster.cell())) {
-            final @Nullable F resolvedTarget = (@Nullable F) cell.fighter();
+            final @Nullable F resolvedTarget = (/*@Nullable*/ F) cell.fighter();
 
             if (resolvedTarget == null || !effect.target().test(caster, resolvedTarget)) {
                 continue;
