@@ -104,8 +104,8 @@ class MoveToTargetCellHandlerTest extends FightBaseCase {
 
         requestStack.assertLast(ActionEffect.slide(caster, target, destination));
 
-        assertFalse(lastCell.fighter().isPresent());
-        assertSame(target, destination.fighter().get());
+        assertFalse(lastCell.hasFighter());
+        assertSame(target, destination.fighter());
         assertSame(destination, target.cell());
     }
 
@@ -135,8 +135,8 @@ class MoveToTargetCellHandlerTest extends FightBaseCase {
 
         requestStack.assertNotContains(ActionEffect.class);
 
-        assertTrue(lastCell.fighter().isPresent());
-        assertSame(target, lastCell.fighter().get());
+        assertTrue(lastCell.hasFighter());
+        assertSame(target, lastCell.fighter());
         assertSame(lastCell, target.cell());
     }
 

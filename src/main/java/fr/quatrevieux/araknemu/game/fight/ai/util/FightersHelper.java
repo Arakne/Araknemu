@@ -24,8 +24,11 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -65,10 +68,11 @@ public final class FightersHelper {
      *
      * @see CellsHelper#adjacent(BattlefieldCell)
      */
+    @SuppressWarnings("methodref.return") // BattlefieldCell::fighter return a nullable fighter
     public Stream<FighterData> adjacent(BattlefieldCell cell) {
         return helper.cells().adjacent(cell)
             .map(BattlefieldCell::fighter)
-            .filter(Optional::isPresent).map(Optional::get)
+            .filter(Objects::nonNull)
             .filter(fighter -> !fighter.hidden())
             .filter(filter)
         ;

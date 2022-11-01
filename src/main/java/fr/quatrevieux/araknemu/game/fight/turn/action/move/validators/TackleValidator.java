@@ -70,7 +70,7 @@ public final class TackleValidator implements FightPathValidator {
         // Combine escape probability from all adjacent enemies
         for (Direction direction : Direction.restrictedDirections()) {
             escapeProbability *= decoder.nextCellByDirection(currentCell, direction)
-                .flatMap(FightCell::fighter)
+                .map(FightCell::fighter)
                 .filter(fighter -> !fighter.team().equals(performer.team()))
                 .filter(fighter -> !fighter.states().hasOne(ignoredStates))
                 .map(adjacentEnemy -> computeTackle(performer, adjacentEnemy))

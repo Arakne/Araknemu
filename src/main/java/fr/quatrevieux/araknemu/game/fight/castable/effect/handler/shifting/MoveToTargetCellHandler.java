@@ -61,8 +61,8 @@ public final class MoveToTargetCellHandler implements EffectHandler {
         }
 
         decoder.nextCellByDirection(casterCell, direction)
-            .flatMap(FightCell::fighter)
-            .ifPresent(target -> applier.apply(caster, (Fighter) target, distance)) // @todo do not cast
+            .map(FightCell::fighter)
+            .ifPresent(target -> applier.apply(caster, target, distance))
         ;
     }
 

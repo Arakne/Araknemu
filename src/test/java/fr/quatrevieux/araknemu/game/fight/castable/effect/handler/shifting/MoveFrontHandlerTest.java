@@ -102,8 +102,8 @@ class MoveFrontHandlerTest extends FightBaseCase {
 
         requestStack.assertLast(ActionEffect.slide(caster, target, destination));
 
-        assertFalse(lastCell.fighter().isPresent());
-        assertSame(target, destination.fighter().get());
+        assertFalse(lastCell.hasFighter());
+        assertSame(target, destination.fighter());
         assertSame(destination, target.cell());
     }
 

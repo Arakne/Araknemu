@@ -34,7 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -144,13 +143,13 @@ public final class ProxyBattlefield implements BattlefieldMap {
         }
 
         @Override
-        public Optional<FighterData> fighter() {
+        public @Nullable FighterData fighter() {
             if (free) {
-                return Optional.empty();
+                return null;
             }
 
             if (fighter != null) {
-                return Optional.of(fighter);
+                return fighter;
             }
 
             return cell.fighter();

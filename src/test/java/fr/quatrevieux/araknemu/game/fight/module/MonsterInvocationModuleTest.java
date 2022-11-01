@@ -81,8 +81,8 @@ class MonsterInvocationModuleTest extends FightBaseCase {
 
         assertTrue(invoc1.dead());
         assertTrue(invoc2.dead());
-        assertFalse(fight.map().get(123).fighter().isPresent());
-        assertFalse(fight.map().get(124).fighter().isPresent());
+        assertFalse(fight.map().get(123).hasFighter());
+        assertFalse(fight.map().get(124).hasFighter());
         assertFalse(fight.turnList().fighters().contains(invoc1));
         assertFalse(fight.turnList().fighters().contains(invoc2));
         assertFalse(fight.fighters().contains(invoc1));
@@ -90,7 +90,7 @@ class MonsterInvocationModuleTest extends FightBaseCase {
 
         // Do not change invocation of other fighter
         assertFalse(invoc3.dead());
-        assertTrue(fight.map().get(125).fighter().isPresent());
+        assertTrue(fight.map().get(125).hasFighter());
         assertTrue(fight.turnList().fighters().contains(invoc3));
         assertTrue(fight.fighters().contains(invoc3));
     }
@@ -111,7 +111,7 @@ class MonsterInvocationModuleTest extends FightBaseCase {
         invoc.life().kill(player.fighter());
 
         assertTrue(invoc.dead());
-        assertFalse(fight.map().get(123).fighter().isPresent());
+        assertFalse(fight.map().get(123).hasFighter());
         assertFalse(fight.turnList().fighters().contains(invoc));
         assertFalse(fight.fighters().contains(invoc));
     }

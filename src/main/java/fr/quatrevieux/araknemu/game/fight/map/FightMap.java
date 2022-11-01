@@ -117,7 +117,9 @@ public final class FightMap implements BattlefieldMap {
      */
     public void destroy() {
         for (FightCell cell : cells) {
-            cell.fighter().ifPresent(fighter -> cell.removeFighter());
+            if (cell.hasFighter()) {
+                cell.removeFighter();
+            }
         }
     }
 

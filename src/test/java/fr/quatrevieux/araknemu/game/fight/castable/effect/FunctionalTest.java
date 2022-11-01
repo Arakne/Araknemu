@@ -1156,9 +1156,9 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(35, fight.map().get(199)); // Invocation de Bouftou
 
-        assertTrue(fight.map().get(199).fighter().isPresent());
+        assertTrue(fight.map().get(199).hasFighter());
 
-        FighterData invocation = fight.map().get(199).fighter().get();
+        FighterData invocation = fight.map().get(199).fighter();
 
         assertInstanceOf(InvocationFighter.class, invocation);
 

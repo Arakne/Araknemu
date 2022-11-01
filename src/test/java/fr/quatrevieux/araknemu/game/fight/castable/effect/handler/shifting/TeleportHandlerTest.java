@@ -78,9 +78,9 @@ class TeleportHandlerTest extends FightBaseCase {
 
         requestStack.assertLast(ActionEffect.teleport(caster, caster, target));
 
-        assertSame(caster, target.fighter().get());
+        assertSame(caster, target.fighter());
         assertSame(target, caster.cell());
-        assertFalse(lastCell.fighter().isPresent());
+        assertFalse(lastCell.hasFighter());
     }
 
     @Test

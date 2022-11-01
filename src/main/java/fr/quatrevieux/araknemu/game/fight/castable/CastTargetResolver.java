@@ -22,11 +22,11 @@ package fr.quatrevieux.araknemu.game.fight.castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 /**
  * Perform target resolution for a casted effect
@@ -70,16 +70,15 @@ public final class CastTargetResolver {
         Collection<F> targets = null;
 
         for (BattlefieldCell cell : effect.area().resolve(target, caster.cell())) {
-            // @todo change fight cell
-            final Optional<F> resolvedTarget = (Optional<F>) cell.fighter().filter(fighter -> effect.target().test(caster, fighter));
+            final @Nullable F resolvedTarget = (@Nullable F) cell.fighter();
 
-            if (!resolvedTarget.isPresent()) {
+            if (resolvedTarget == null || !effect.target().test(caster, resolvedTarget)) {
                 continue;
             }
 
             // Found the first target
             if (firstTarget == null) {
-                firstTarget = resolvedTarget.get();
+                firstTarget = resolvedTarget;
                 continue;
             }
 
@@ -89,7 +88,7 @@ public final class CastTargetResolver {
                 targets.add(firstTarget);
             }
 
-            targets.add(resolvedTarget.get());
+            targets.add(resolvedTarget);
         }
 
         // There is multiple targets

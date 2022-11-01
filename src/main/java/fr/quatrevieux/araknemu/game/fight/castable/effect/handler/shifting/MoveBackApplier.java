@@ -26,10 +26,12 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Optional;
 
@@ -123,7 +125,7 @@ public final class MoveBackApplier {
         for (damage /= 2; damage > 0; damage /= 2) {
             final Optional<FightCell> nextCell = decoder
                 .nextCellByDirection(lastCell, direction)
-                .filter(cell -> cell.fighter().isPresent())
+                .filter(BattlefieldCell::hasFighter)
             ;
 
             // Out of map, or no player is present here : stop the chain
@@ -132,7 +134,7 @@ public final class MoveBackApplier {
             }
 
             lastCell = nextCell.get();
-            lastCell.fighter().get().life().alter(caster, -damage);
+            NullnessUtil.castNonNull(lastCell.fighter()).life().alter(caster, -damage);
         }
     }
 

@@ -170,7 +170,7 @@ class AvoidDamageByMovingBackHandlerTest extends FightBaseCase {
 
         assertEquals(target.life().max(), target.life().current());
         assertEquals(120, target.cell().id());
-        assertFalse(fight.map().get(150).fighter().isPresent());
+        assertFalse(fight.map().get(150).hasFighter());
 
         requestStack.assertOne(ActionEffect.slide(caster, target, fight.map().get(120)));
     }

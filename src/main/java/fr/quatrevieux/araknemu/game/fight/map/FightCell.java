@@ -19,9 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-
-import java.util.Optional;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Cell for a fight map
@@ -32,15 +31,12 @@ public interface FightCell extends BattlefieldCell {
     @Override
     public FightMap map();
 
-    /**
-     * Get the fighter on the cell
-     */
-    public Optional<FighterData> fighter();
+    public @Nullable Fighter fighter();
 
     /**
      * Set a fighter on this cell
      */
-    public void set(FighterData fighter);
+    public void set(Fighter fighter);
 
     /**
      * Remove the fighter on the cell

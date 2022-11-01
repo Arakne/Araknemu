@@ -20,8 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.map;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-
-import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Base cell type for a battlefield
@@ -39,6 +38,15 @@ public interface BattlefieldCell extends fr.arakne.utils.maps.BattlefieldCell<Ba
 
     /**
      * Get the fighter on the cell
+     * Will return null if the cell has no fighter
      */
-    public Optional<FighterData> fighter();
+    public @Nullable FighterData fighter();
+
+    /**
+     * Check if the cell contains a fighter
+     * This is equivalent to call {@code cell.fighter() != null}
+     */
+    public default boolean hasFighter() {
+        return fighter() != null;
+    }
 }

@@ -35,7 +35,7 @@ public final class TargetCellValidator implements CastConstraintValidator {
             return false;
         }
 
-        return !castable.constraints().freeCell() || !target.fighter().isPresent();
+        return !castable.constraints().freeCell() || !target.hasFighter();
     }
 
     @Override
@@ -44,7 +44,7 @@ public final class TargetCellValidator implements CastConstraintValidator {
             return Error.cantCastCellNotAvailable();
         }
 
-        if (castable.constraints().freeCell() && target.fighter().isPresent()) {
+        if (castable.constraints().freeCell() && target.hasFighter()) {
             return Error.cantCastInvalidCell();
         }
 

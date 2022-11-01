@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,12 +73,13 @@ class ProxyBattlefieldTest extends AiBaseCase {
 
         assertNotSame(modified.get(123), battlefield.get(123));
 
-        assertFalse(modified.get(152).fighter().isPresent());
+        assertNull(modified.get(152).fighter());
+        assertFalse(modified.get(152).hasFighter());
         assertTrue(modified.get(152).walkableIgnoreFighter());
         assertTrue(modified.get(152).walkable());
         assertFalse(modified.get(152).sightBlocking());
 
-        assertSame(ai.fighters().collect(Collectors.toList()).get(2), modified.get(166).fighter().get());
+        assertSame(ai.fighters().collect(Collectors.toList()).get(2), modified.get(166).fighter());
         assertTrue(modified.get(166).walkableIgnoreFighter());
         assertFalse(modified.get(166).walkable());
         assertTrue(modified.get(166).sightBlocking());
@@ -100,8 +102,8 @@ class ProxyBattlefieldTest extends AiBaseCase {
         assertEquals(modified.size(), ai.map().size());
         assertSame(modified.dimensions(), ai.map().dimensions());
 
-        assertTrue(modified.get(123).fighter().isPresent());
-        assertInstanceOf(ProxyPassiveFighter.class, modified.get(123).fighter().get());
+        assertTrue(modified.get(123).hasFighter());
+        assertInstanceOf(ProxyPassiveFighter.class, modified.get(123).fighter());
         assertTrue(modified.get(123).walkableIgnoreFighter());
         assertFalse(modified.get(123).walkable());
         assertTrue(modified.get(123).sightBlocking());

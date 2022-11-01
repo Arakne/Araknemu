@@ -220,7 +220,7 @@ class ActiveStateTest extends GameBaseCase {
         state.leave(mutineer);
 
         assertTrue(fight.active());
-        assertFalse(mutineer.cell().fighter().isPresent());
+        assertFalse(mutineer.cell().hasFighter());
         assertTrue(mutineer.dead());
         assertFalse(fight.team(0).fighters().contains(mutineer));
         assertFalse(fight.fighters().contains(mutineer));

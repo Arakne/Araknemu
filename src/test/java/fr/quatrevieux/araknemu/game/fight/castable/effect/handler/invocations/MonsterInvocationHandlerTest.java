@@ -81,7 +81,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         handler.handle(scope, scope.effects().get(0));
 
-        FighterData invoc = fight.map().get(123).fighter().get();
+        FighterData invoc = fight.map().get(123).fighter();
 
         assertInstanceOf(InvocationFighter.class, invoc);
         assertContains(invoc, fight.fighters());
@@ -113,7 +113,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         handler.buff(scope, scope.effects().get(0));
 
-        FighterData invoc = fight.map().get(123).fighter().get();
+        FighterData invoc = fight.map().get(123).fighter();
 
         assertInstanceOf(InvocationFighter.class, invoc);
         assertContains(invoc, fight.fighters());

@@ -80,7 +80,7 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
         // A fighter is on the cell : the cell is not walkable
         // But the fighter may leave the place at the next turn
         // The cost is higher than a simple detour, but permit to resolve a path blocked by a fighter
-        if (cell.fighter().isPresent()) {
+        if (cell.hasFighter()) {
             return 15;
         }
 

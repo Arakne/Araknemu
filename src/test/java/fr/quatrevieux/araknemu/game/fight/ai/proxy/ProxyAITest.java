@@ -109,16 +109,16 @@ class ProxyAITest extends AiBaseCase {
 
         assertEquals(123, proxy.fighter().cell().id());
         assertSame(proxy.map().get(123), proxy.fighter().cell());
-        assertSame(proxy.fighter(), proxy.fighter().cell().fighter().get());
+        assertSame(proxy.fighter(), proxy.fighter().cell().fighter());
         assertEquals(167, fighters.get(1).cell().id());
         assertSame(proxy.map().get(167), fighters.get(1).cell());
-        assertSame(fighters.get(1), fighters.get(1).cell().fighter().get());
+        assertSame(fighters.get(1), fighters.get(1).cell().fighter());
         assertEquals(166, fighters.get(2).cell().id());
         assertSame(proxy.map().get(166), fighters.get(2).cell());
-        assertSame(fighters.get(2), fighters.get(2).cell().fighter().get());
+        assertSame(fighters.get(2), fighters.get(2).cell().fighter());
 
-        assertFalse(proxy.map().get(152).fighter().isPresent());
-        assertTrue(ai.map().get(152).fighter().isPresent());
+        assertFalse(proxy.map().get(152).hasFighter());
+        assertTrue(ai.map().get(152).hasFighter());
 
         // Calling twice should works
         proxy = proxy.withPosition(125);
@@ -127,16 +127,16 @@ class ProxyAITest extends AiBaseCase {
 
         assertEquals(125, proxy.fighter().cell().id());
         assertSame(proxy.map().get(125), proxy.fighter().cell());
-        assertSame(proxy.fighter(), proxy.fighter().cell().fighter().get());
+        assertSame(proxy.fighter(), proxy.fighter().cell().fighter());
         assertEquals(167, fighters.get(1).cell().id());
         assertSame(proxy.map().get(167), fighters.get(1).cell());
-        assertSame(fighters.get(1), fighters.get(1).cell().fighter().get());
+        assertSame(fighters.get(1), fighters.get(1).cell().fighter());
         assertEquals(166, fighters.get(2).cell().id());
         assertSame(proxy.map().get(166), fighters.get(2).cell());
-        assertSame(fighters.get(2), fighters.get(2).cell().fighter().get());
+        assertSame(fighters.get(2), fighters.get(2).cell().fighter());
 
-        assertFalse(proxy.map().get(123).fighter().isPresent());
-        assertFalse(proxy.map().get(152).fighter().isPresent());
+        assertFalse(proxy.map().get(123).hasFighter());
+        assertFalse(proxy.map().get(152).hasFighter());
     }
 
     @Test

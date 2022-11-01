@@ -313,7 +313,7 @@ class PlacementStateTest extends FightBaseCase {
         state.changePlace(fighter, fight.map().get(222));
 
         assertEquals(222, fighter.cell().id());
-        assertEquals(fighter, fight.map().get(222).fighter().get());
+        assertEquals(fighter, fight.map().get(222).fighter());
 
         requestStack.assertLast(new FighterPositions(fight.fighters()));
     }
@@ -369,7 +369,7 @@ class PlacementStateTest extends FightBaseCase {
         assertSame(fight, newFighter.fight());
         assertSame(fight.team(0), newFighter.team());
         assertNotNull(newFighter.cell());
-        assertSame(newFighter, newFighter.cell().fighter().get());
+        assertSame(newFighter, newFighter.cell().fighter());
         assertContains(newFighter.cell(), fight.team(0).startPlaces());
 
         assertSame(newFighter, ref.get().fighter());
@@ -423,7 +423,7 @@ class PlacementStateTest extends FightBaseCase {
         state.leave(newFighter);
         assertSame(newFighter, ref.get().fighter());
         assertFalse(fight.fighters().contains(newFighter));
-        assertFalse(newFighter.cell().fighter().isPresent());
+        assertFalse(newFighter.cell().hasFighter());
 
         requestStack.assertLast(new RemoveSprite(newFighter.sprite()));
     }
@@ -493,7 +493,7 @@ class PlacementStateTest extends FightBaseCase {
         state.kick(newFighter);
         assertSame(newFighter, ref.get().fighter());
         assertFalse(fight.fighters().contains(newFighter));
-        assertFalse(newFighter.cell().fighter().isPresent());
+        assertFalse(newFighter.cell().hasFighter());
 
         requestStack.assertLast(new RemoveSprite(newFighter.sprite()));
     }

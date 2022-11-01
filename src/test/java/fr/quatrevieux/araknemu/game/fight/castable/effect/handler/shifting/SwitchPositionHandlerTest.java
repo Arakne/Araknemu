@@ -74,9 +74,9 @@ class SwitchPositionHandlerTest extends FightBaseCase {
             ActionEffect.teleport(caster, other, lastCell)
         );
 
-        assertSame(caster, target.fighter().get());
+        assertSame(caster, target.fighter());
         assertSame(target, caster.cell());
-        assertSame(other, lastCell.fighter().get());
+        assertSame(other, lastCell.fighter());
         assertSame(lastCell, other.cell());
     }
 
@@ -106,9 +106,9 @@ class SwitchPositionHandlerTest extends FightBaseCase {
 
         requestStack.assertEmpty();
 
-        assertFalse(target.fighter().isPresent());
+        assertFalse(target.hasFighter());
         assertSame(lastCell, caster.cell());
-        assertSame(caster, lastCell.fighter().get());
+        assertSame(caster, lastCell.fighter());
     }
 
     @Test

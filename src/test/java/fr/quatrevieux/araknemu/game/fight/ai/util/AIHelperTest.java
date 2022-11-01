@@ -147,12 +147,12 @@ class AIHelperTest extends AiBaseCase {
             .get();
 
         assertEquals(111, simulation.caster().cell().id());
-        assertEquals(simulation.caster(), simulation.caster().cell().fighter().get());
-        assertFalse(simulation.caster().cell().map().get(123).fighter().isPresent());
+        assertEquals(simulation.caster(), simulation.caster().cell().fighter());
+        assertFalse(simulation.caster().cell().map().get(123).hasFighter());
 
         assertEquals(123, fighter.cell().id());
-        assertFalse(fight.map().get(111).fighter().isPresent());
-        assertTrue(fight.map().get(123).fighter().isPresent());
+        assertFalse(fight.map().get(111).hasFighter());
+        assertTrue(fight.map().get(123).hasFighter());
     }
 
     @Test

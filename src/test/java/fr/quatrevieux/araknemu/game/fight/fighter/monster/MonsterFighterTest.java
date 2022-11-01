@@ -189,7 +189,7 @@ class MonsterFighterTest extends FightBaseCase {
 
         assertSame(fight, fighter.fight());
         assertSame(fight.map().get(123), fighter.cell());
-        assertSame(fighter, fighter.cell().fighter().get());
+        assertSame(fighter, fighter.cell().fighter());
         assertTrue(fighter.isOnFight());
     }
 
@@ -217,7 +217,7 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.move(fight.map().get(123));
 
         assertSame(fight.map().get(123), fighter.cell());
-        assertSame(fighter, fight.map().get(123).fighter().get());
+        assertSame(fighter, fight.map().get(123).fighter());
     }
 
     @Test
@@ -228,9 +228,9 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.move(fight.map().get(124));
 
         assertSame(fight.map().get(124), fighter.cell());
-        assertSame(fighter, fight.map().get(124).fighter().get());
+        assertSame(fighter, fight.map().get(124).fighter());
 
-        assertFalse(fight.map().get(123).fighter().isPresent());
+        assertFalse(fight.map().get(123).hasFighter());
     }
 
     @Test
@@ -241,7 +241,7 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.move(null);
 
         assertThrows(IllegalStateException.class, fighter::cell);
-        assertFalse(fight.map().get(123).fighter().isPresent());
+        assertFalse(fight.map().get(123).hasFighter());
     }
 
     @Test

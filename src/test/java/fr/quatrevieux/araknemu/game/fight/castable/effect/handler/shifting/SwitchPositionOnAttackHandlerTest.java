@@ -243,8 +243,8 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         assertEquals(165, target.cell().id());
         assertEquals(150, caster.cell().id());
 
-        assertEquals(caster, fight.map().get(150).fighter().get());
-        assertEquals(target, fight.map().get(165).fighter().get());
+        assertEquals(caster, fight.map().get(150).fighter());
+        assertEquals(target, fight.map().get(165).fighter());
 
         requestStack.assertOne(ActionEffect.teleport(caster, target, fight.map().get(165)));
         requestStack.assertOne(ActionEffect.teleport(caster, caster, fight.map().get(150)));
@@ -292,8 +292,8 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         assertEquals(165, target.cell().id());
         assertEquals(150, caster.cell().id());
 
-        assertEquals(caster, fight.map().get(150).fighter().get());
-        assertEquals(target, fight.map().get(165).fighter().get());
+        assertEquals(caster, fight.map().get(150).fighter());
+        assertEquals(target, fight.map().get(165).fighter());
 
         requestStack.assertOne(ActionEffect.teleport(caster, target, fight.map().get(165)));
         requestStack.assertOne(ActionEffect.teleport(caster, caster, fight.map().get(150)));

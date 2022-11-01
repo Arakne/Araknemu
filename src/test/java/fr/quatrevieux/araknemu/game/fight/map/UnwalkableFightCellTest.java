@@ -63,7 +63,7 @@ class UnwalkableFightCellTest extends GameBaseCase {
         assertEquals(0, cell.id());
         assertFalse(cell.walkable());
         assertFalse(cell.walkableIgnoreFighter());
-        assertSame(Optional.empty(), cell.fighter());
+        assertNull(cell.fighter());
         assertSame(map, cell.map());
 
         assertSame(cell.coordinate(), cell.coordinate());

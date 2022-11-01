@@ -47,7 +47,7 @@ public final class StopOnEnemyValidator implements FightPathValidator {
                 // An enemy is present on the adjacent cell
                 if (
                     decoder.nextCellByDirection(step.cell(), direction)
-                        .flatMap(FightCell::fighter)
+                        .map(FightCell::fighter)
                         .filter(fighter -> !fighter.team().equals(move.performer().team()))
                         .isPresent()
                 ) {

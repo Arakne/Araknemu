@@ -63,16 +63,16 @@ class SwitchPositionApplierTest extends FightBaseCase {
         FightCell lastCell = caster.cell();
         FightCell target = fight.map().get(250);
 
-        applier.apply(caster, (Fighter) target.fighter().get());
+        applier.apply(caster, target.fighter());
 
         requestStack.assertAll(
             ActionEffect.teleport(caster, caster, target),
             ActionEffect.teleport(caster, other, lastCell)
         );
 
-        assertSame(caster, target.fighter().get());
+        assertSame(caster, target.fighter());
         assertSame(target, caster.cell());
-        assertSame(other, lastCell.fighter().get());
+        assertSame(other, lastCell.fighter());
         assertSame(lastCell, other.cell());
     }
 
