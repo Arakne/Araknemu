@@ -34,7 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 public final class FixedDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final FighterData caster = cast.caster();
+        final Fighter caster = cast.caster();
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks

@@ -67,7 +67,7 @@ public interface Fighter extends Dispatcher, ActiveFighter {
      * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden Trigger when the fighter is actually hidden
      * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible Trigger when the fighter is actually visible
      */
-    public void setHidden(FighterData caster, boolean hidden);
+    public void setHidden(Fighter caster, boolean hidden);
 
     /**
      * Get the weapon

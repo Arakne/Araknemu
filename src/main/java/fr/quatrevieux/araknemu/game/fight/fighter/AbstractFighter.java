@@ -190,7 +190,7 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
-    public void setHidden(FighterData caster, boolean hidden) {
+    public void setHidden(Fighter caster, boolean hidden) {
         if (this.hidden == hidden) {
             return;
         }

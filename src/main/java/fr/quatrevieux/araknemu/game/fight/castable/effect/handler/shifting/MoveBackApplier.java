@@ -71,7 +71,7 @@ public final class MoveBackApplier {
      * @param target The spell target
      * @param distance The move back distance
      */
-    public void apply(FighterData caster, Fighter target, @NonNegative int distance) {
+    public void apply(Fighter caster, Fighter target, @NonNegative int distance) {
         final Direction direction = caster.cell().coordinate().directionTo(target.cell());
         FightCell destination = target.cell();
 
@@ -110,7 +110,7 @@ public final class MoveBackApplier {
      * @param direction The move direction
      * @param distance Remain move distance
      */
-    private void applyBlockingDamageChain(FighterData caster, FighterData target, FightCell lastCell, Direction direction, @NonNegative int distance) {
+    private void applyBlockingDamageChain(Fighter caster, Fighter target, FightCell lastCell, Direction direction, @NonNegative int distance) {
         int damage = computeDamage(caster, distance);
 
         if (damage <= 0) {

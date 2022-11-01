@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 public final class GivePercentLifeHandler implements EffectHandler {
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final FighterData caster = cast.caster();
+        final Fighter caster = cast.caster();
         final int heal = EffectValue.create(effect.effect(), caster, caster).value() * caster.life().current() / 100;
 
         caster.life().alter(caster, -heal);

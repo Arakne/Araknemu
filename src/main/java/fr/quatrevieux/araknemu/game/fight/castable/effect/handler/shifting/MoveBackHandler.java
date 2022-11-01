@@ -23,6 +23,7 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
@@ -44,7 +45,7 @@ public final class MoveBackHandler implements EffectHandler {
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final FighterData caster = cast.caster();
+        final Fighter caster = cast.caster();
         final int distance = effect.effect().min();
         final CoordinateCell<BattlefieldCell> casterCell = caster.cell().coordinate();
 

@@ -9,3 +9,6 @@ araknemu.iml
 .project
 config.ini
 /scripts/commands
+hs_err_*
+replay_*
+hotspot_*

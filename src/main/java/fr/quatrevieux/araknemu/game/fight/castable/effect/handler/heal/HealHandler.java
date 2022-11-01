@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -37,7 +36,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 public final class HealHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        for (FighterData target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             apply(cast.caster(), effect.effect(), target);
         }
     }
@@ -56,7 +55,7 @@ public final class HealHandler implements EffectHandler, BuffHook {
         return true;
     }
 
-    private void apply(FighterData caster, SpellEffect effect, FighterData target) {
+    private void apply(Fighter caster, SpellEffect effect, Fighter target) {
         final EffectValue value = EffectValue.create(effect, caster, target)
             .percent(caster.characteristics().get(Characteristic.INTELLIGENCE))
             .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))

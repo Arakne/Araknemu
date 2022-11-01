@@ -38,7 +38,7 @@ public interface FighterLife extends Life {
      * @param caster The caster
      * @param value The modified value. Positive for heal, negative for damage
      */
-    public int alter(FighterData caster, int value);
+    public int alter(Fighter caster, int value);
 
     /**
      * Change the max life of the current fighter
@@ -52,10 +52,10 @@ public interface FighterLife extends Life {
      *
      * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged Event triggered by this method
      */
-    public void alterMax(FighterData caster, int value);
+    public void alterMax(Fighter caster, int value);
 
     /**
      * Kill the fighter
      */
-    public void kill(FighterData caster);
+    public void kill(Fighter caster);
 }

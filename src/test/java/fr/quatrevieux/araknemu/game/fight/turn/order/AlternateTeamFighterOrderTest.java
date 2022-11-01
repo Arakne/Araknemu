@@ -204,7 +204,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void setHidden(FighterData caster, boolean hidden) {
+        public void setHidden(Fighter caster, boolean hidden) {
 
         }
 
