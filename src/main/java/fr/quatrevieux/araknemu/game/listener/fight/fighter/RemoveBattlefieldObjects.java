@@ -14,36 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.spell.effect.area;
+package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
-import fr.arakne.utils.maps.MapCell;
-import fr.quatrevieux.araknemu.data.value.EffectArea;
-import org.checkerframework.checker.index.qual.NonNegative;
-
-import java.util.Collections;
-import java.util.Set;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 
 /**
- * Resolve single cell
+ * Remove all battlefield objects created by the fighter on its death
  */
-public final class CellArea implements SpellEffectArea {
-    public static final CellArea INSTANCE = new CellArea();
+public final class RemoveBattlefieldObjects implements Listener<FighterDie> {
+    private final Fight fight;
 
-    @Override
-    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
-        return Collections.singleton(target);
+    public RemoveBattlefieldObjects(Fight fight) {
+        this.fight = fight;
     }
 
     @Override
-    public EffectArea.Type type() {
-        return EffectArea.Type.CELL;
+    public void on(FighterDie event) {
+        fight.map().removeObjectsIf(obj -> event.fighter().equals(obj.caster()));
     }
 
     @Override
-    public @NonNegative int size() {
-        return 0;
+    public Class<FighterDie> event() {
+        return FighterDie.class;
     }
 }

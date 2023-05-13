@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.spell.effect.area;
 import fr.arakne.utils.maps.MapCell;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +56,7 @@ public final class PerpendicularLineArea implements SpellEffectArea {
     }
 
     @Override
-    public int size() {
+    public @NonNegative int size() {
         return area.size();
     }
 }

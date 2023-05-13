@@ -23,6 +23,11 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ApplySpellOnStartTurnHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object.AddGlyphHandler;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveBattlefieldObjects;
+import fr.quatrevieux.araknemu.game.listener.fight.spectator.SendBattlefieldObjectsToSpectator;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 
 /**
@@ -41,10 +46,26 @@ public final class IndirectSpellApplyEffectsModule implements FightModule {
     @Override
     public void effects(EffectsHandler handler) {
         handler.register(787, new ApplySpellOnStartTurnHandler(fight, spellService));
+        handler.register(401, new AddGlyphHandler(fight, spellService));
     }
 
     @Override
     public Listener[] listeners() {
-        return new Listener[0];
+        return new Listener[] {
+            new RemoveBattlefieldObjects(fight),
+            new Listener<SpectatorJoined>() {
+                @Override
+                public void on(SpectatorJoined event) {
+                    final Spectator spectator = event.spectator();
+
+                    spectator.dispatcher().add(new SendBattlefieldObjectsToSpectator(spectator));
+                }
+
+                @Override
+                public Class<SpectatorJoined> event() {
+                    return SpectatorJoined.class;
+                }
+            },
+        };
     }
 }

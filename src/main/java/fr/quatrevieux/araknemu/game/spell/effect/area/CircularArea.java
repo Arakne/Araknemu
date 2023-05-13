@@ -23,6 +23,7 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.DofusMap;
 import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -63,7 +64,7 @@ public final class CircularArea implements SpellEffectArea {
     }
 
     @Override
-    public int size() {
+    public @NonNegative int size() {
         return area.size();
     }
 }

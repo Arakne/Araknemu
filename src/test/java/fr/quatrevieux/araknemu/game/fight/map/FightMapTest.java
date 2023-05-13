@@ -23,8 +23,10 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -108,5 +110,143 @@ class FightMapTest extends GameBaseCase {
         assertEquals(17, map.dimensions().height());
         assertEquals(15, map.dimensions().width());
         assertEquals(479, map.size());
+    }
+
+    @Test
+    void addObject() {
+        assertCount(0, map.objects());
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+
+        map.addObject(bo);
+        assertCollectionEquals(map.objects(), bo);
+    }
+
+    @Test
+    void onStartTurnShouldCallObjectIfFighterInArea() {
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        map.addObject(bo);
+
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.cell()).thenReturn(map.get(124));
+
+        map.onStartTurn(fighter);
+        Mockito.verify(bo).onStartTurnInArea(fighter);
+    }
+
+    @Test
+    void onStartTurnShouldNotCallObjectIfFighterOutOfArea() {
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        map.addObject(bo);
+
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.cell()).thenReturn(map.get(170));
+
+        map.onStartTurn(fighter);
+        Mockito.verify(bo, Mockito.never()).onStartTurnInArea(fighter);
+    }
+
+    @Test
+    void onStartTurnShouldCallRefreshWhenCasterIsGiven() {
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.caster()).thenReturn(caster);
+        Mockito.when(bo.refresh()).thenReturn(true);
+        map.addObject(bo);
+
+        map.onStartTurn(caster);
+        Mockito.verify(bo).refresh();
+
+        assertCollectionEquals(map.objects(), bo);
+    }
+
+    @Test
+    void onStartTurnShouldNotCallRefreshWhenOtherFighterIsGiven() {
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.caster()).thenReturn(caster);
+        Mockito.when(bo.refresh()).thenReturn(true);
+        map.addObject(bo);
+
+        map.onStartTurn(Mockito.mock(Fighter.class));
+        Mockito.verify(bo, Mockito.never()).refresh();
+    }
+
+    @Test
+    void onStartTurnShouldRemoveObjectIfRefreshIsFalse() {
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.caster()).thenReturn(caster);
+        Mockito.when(bo.refresh()).thenReturn(false);
+        map.addObject(bo);
+
+        map.onStartTurn(caster);
+        Mockito.verify(bo).refresh();
+        Mockito.verify(bo).disappear();
+
+        assertCount(0, map.objects());
+    }
+
+    @Test
+    void onStartTurnShouldNotCallObjectIfRemoved() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.cell()).thenReturn(map.get(123));
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.caster()).thenReturn(caster);
+        Mockito.when(bo.refresh()).thenReturn(false);
+        map.addObject(bo);
+
+        map.onStartTurn(caster);
+        Mockito.verify(bo).refresh();
+        Mockito.verify(bo).disappear();
+        Mockito.verify(bo, Mockito.never()).onStartTurnInArea(caster);
+    }
+
+    @Test
+    void removeObjectsIf() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter other = Mockito.mock(Fighter.class);
+
+        BattlefieldObject bo1 = Mockito.mock(BattlefieldObject.class);
+        BattlefieldObject bo2 = Mockito.mock(BattlefieldObject.class);
+        BattlefieldObject bo3 = Mockito.mock(BattlefieldObject.class);
+
+        Mockito.when(bo1.caster()).thenReturn(caster);
+        Mockito.when(bo2.caster()).thenReturn(other);
+        Mockito.when(bo3.caster()).thenReturn(caster);
+
+        map.addObject(bo1);
+        map.addObject(bo2);
+        map.addObject(bo3);
+
+        map.removeObjectsIf(bo -> bo.caster() == caster);
+
+        assertCollectionEquals(map.objects(), bo2);
+
+        Mockito.verify(bo1).disappear();
+        Mockito.verify(bo2, Mockito.never()).disappear();
+        Mockito.verify(bo3).disappear();
     }
 }

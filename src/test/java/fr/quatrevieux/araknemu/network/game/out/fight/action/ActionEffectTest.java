@@ -385,6 +385,24 @@ class ActionEffectTest extends FightBaseCase {
     }
 
     @Test
+    void glyphTriggered() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(145);
+
+        FightCell cell = Mockito.mock(FightCell.class);
+        Mockito.when(cell.id()).thenReturn(123);
+
+        Spell spell = Mockito.mock(Spell.class);
+        Mockito.when(spell.id()).thenReturn(200);
+        Mockito.when(spell.level()).thenReturn(3);
+
+        assertEquals("GA;307;145;200,123,0,3,0,456", ActionEffect.glyphTriggered(caster, target, cell, spell).toString());
+    }
+
+    @Test
     void packet() {
         Fighter caster = Mockito.mock(Fighter.class);
         Mockito.when(caster.id()).thenReturn(456);

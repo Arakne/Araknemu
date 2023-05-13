@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -48,6 +49,8 @@ import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
+import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
+import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.RemoveZone;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,11 +62,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FunctionalTest extends FightBaseCase {
     private SpellService service;
@@ -1175,6 +1174,71 @@ public class FunctionalTest extends FightBaseCase {
         assertInstanceOf(FighterAI.class, ((ActiveFighter) invocation).attachment(FighterAI.class));
     }
 
+    @Test
+    void addGlyph() {
+        castNormal(17, fight.map().get(169)); // Glyphe agressif
+
+        BattlefieldObject glyph = fight.map().objects().stream().findFirst().get();
+
+        assertNotNull(glyph);
+        assertEquals(169, glyph.cell().id());
+        assertEquals(fighter1, glyph.caster());
+        assertEquals(2, glyph.size());
+        requestStack.assertOne(ActionEffect.packet(fighter1, new AddZones(glyph)));
+        requestStack.clear();
+
+        fighter1.turn().stop();
+        requestStack.assertOne(new ActionEffect(307, fighter2, 1503, 169, 0, 5, 0, fighter1.id()));
+        int currentLife = fighter2.life().current();
+        assertEquals(15, 20, fighter2.life().max() - currentLife);
+        fighter2.move(fight.map().get(186)); // Move out of glyph
+        fighter2.turn().stop();
+
+        assertTrue(fight.map().objects().stream().findFirst().isPresent());
+        assertTrue(fighter1.life().isFull());
+        fighter1.turn().stop();
+
+        assertEquals(currentLife, fighter2.life().current()); // No damage
+        requestStack.clear();
+        fighter2.turn().stop();
+
+        assertTrue(fight.map().objects().stream().findFirst().isPresent());
+        fighter1.turn().stop();
+        requestStack.clear();
+        fighter2.turn().stop();
+
+        assertFalse(fight.map().objects().stream().findFirst().isPresent());
+        requestStack.assertOne("GDZ-169;2;2");
+    }
+
+    @Test
+    void glyphShouldDisappearOnCasterDie() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(221))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        Fighter caster = fight.turnList().currentFighter();
+
+        castNormal(17, fight.map().get(169)); // Glyphe agressif
+
+        BattlefieldObject glyph = fight.map().objects().stream().findFirst().get();
+
+        assertNotNull(glyph);
+        assertEquals(169, glyph.cell().id());
+        assertEquals(caster, glyph.caster());
+        assertEquals(2, glyph.size());
+        requestStack.assertOne(ActionEffect.packet(caster, new AddZones(glyph)));
+        requestStack.clear();
+
+        caster.turn().stop();
+        caster.life().kill(caster); // Die
+
+        assertFalse(fight.map().objects().stream().findFirst().isPresent());
+        requestStack.assertOne(new RemoveZone(glyph));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
@@ -1183,6 +1247,7 @@ public class FunctionalTest extends FightBaseCase {
         configurator.accept(builder);
 
         fight = builder.build(true);
+        fight.register(new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)));
 
         List<Fighter> fighters = fight.fighters();
 

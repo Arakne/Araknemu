@@ -354,6 +354,18 @@ public final class ActionEffect {
     }
 
     /**
+     * A glyph has been triggered by a fighter
+     *
+     * @param caster The caster of the glyph
+     * @param target The fight who triggered the glyph
+     * @param glyphCell The glyph cell
+     * @param spell The glyph spell
+     */
+    public static ActionEffect glyphTriggered(FighterData caster, FighterData target, FightCell glyphCell, Spell spell) {
+        return new ActionEffect(307, target, spell.id(), glyphCell.id(), 0, spell.level(), 0, caster.id());
+    }
+
+    /**
      * Send a custom packet, but queued on the caster sequencer
      *
      * @param caster Effect caster
