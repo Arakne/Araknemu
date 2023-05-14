@@ -89,6 +89,7 @@ class GlyphTest extends FightBaseCase {
         assertTrue(glyph.refresh());
         assertFalse(glyph.refresh());
         assertFalse(glyph.refresh());
+        assertFalse(glyph.refresh());
     }
 
     @Test

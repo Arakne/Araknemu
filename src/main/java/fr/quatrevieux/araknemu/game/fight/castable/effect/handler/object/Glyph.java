@@ -87,6 +87,10 @@ final class Glyph implements BattlefieldObject {
             return true;
         }
 
+        if (remainingTurns == 0) {
+            return false;
+        }
+
         return --remainingTurns > 0;
     }
 
