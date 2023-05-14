@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -291,6 +293,19 @@ class CastScopeTest extends FightBaseCase {
         }
 
         assertBetween(400, 600, count);
+    }
+
+    @Test
+    void withRandomEffectsRouletteShouldAlwaysReturnAnEffect() throws SQLException {
+        dataSet.pushFunctionalSpells();
+
+        Spell spell = container.get(SpellService.class).get(101).level(5);
+
+        for (int i = 0; i < 1000; ++i) {
+            CastScope<Fighter, FightCell> scope = FightCastScope.probable(spell, caster, caster.cell(), spell.effects());
+
+            assertCount(2, scope.effects()); // random effect + 1AP
+        }
     }
 
     @Test
