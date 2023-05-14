@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.spell.effect.area;
 
 import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Set;
 
@@ -44,5 +45,5 @@ public interface SpellEffectArea {
     /**
      * The area size
      */
-    public int size();
+    public @NonNegative int size();
 }

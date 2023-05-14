@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
@@ -288,6 +290,46 @@ class FightTurnTest extends FightBaseCase {
         assertEquals(4, buff.remainingTurns());
         assertNull(ref.get());
         assertFalse(player.fighter().states().has(5));
+    }
+
+    @Test
+    void startWhenKilledByBattlefieldObjectShouldStop() {
+        AtomicReference<TurnStarted> ref = new AtomicReference<>();
+        fight.dispatcher().add(TurnStarted.class, ref::set);
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.cell()).thenReturn(player.fighter().cell());
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.doAnswer(invocation -> {
+            player.fighter().life().kill(player.fighter());
+            return null;
+        }).when(bo).onStartTurnInArea(player.fighter());
+
+        fight.map().addObject(bo);
+
+        assertFalse(turn.start());
+        assertFalse(turn.active());
+        Mockito.verify(bo).onStartTurnInArea(player.fighter());
+        assertNull(ref.get());
+    }
+
+    @Test
+    void startShouldCallOnStartTurnInAreaOnBattleObjects() {
+        AtomicReference<TurnStarted> ref = new AtomicReference<>();
+        fight.dispatcher().add(TurnStarted.class, ref::set);
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.cell()).thenReturn(player.fighter().cell());
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+
+        fight.map().addObject(bo);
+
+        assertTrue(turn.start());
+        Mockito.verify(bo).onStartTurnInArea(player.fighter());
     }
 
     @Test

@@ -72,6 +72,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushState
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RevealInvisibleHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.BoostSpellHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MaximizeTargetEffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MinimizeCastedEffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MultiplyDamageHandler;
@@ -82,7 +83,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveT
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionOnAttackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.BoostSpellHandler;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 
 /**

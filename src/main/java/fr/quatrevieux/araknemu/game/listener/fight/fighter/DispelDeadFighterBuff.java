@@ -39,8 +39,7 @@ public final class DispelDeadFighterBuff implements Listener<FighterDie> {
 
     @Override
     public void on(FighterDie event) {
-        // @todo use Fighter on  events
-        if (removeBuffByCaster((Fighter) event.fighter())) {
+        if (removeBuffByCaster(event.fighter())) {
             synchronizeBuffs();
         }
     }

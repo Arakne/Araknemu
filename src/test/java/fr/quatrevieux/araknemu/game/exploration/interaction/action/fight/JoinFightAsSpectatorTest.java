@@ -29,9 +29,11 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
@@ -42,6 +44,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.stream.Collectors;
@@ -116,6 +119,14 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
     void success() throws InterruptedException, SQLException {
         fight.nextState();
         fight.turnList().start();
+
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.caster()).thenReturn(fight.fighters().get(0));
+        Mockito.when(bo.cell()).thenReturn(fight.map().get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.color()).thenReturn(1);
+        fight.map().addObject(bo);
+
         requestStack.clear();
 
         action.start(new ActionQueue());
@@ -132,7 +143,8 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
             new BeginFight(),
             new FighterTurnOrder(fight.turnList()),
             new TurnMiddle(fight.fighters()),
-            new StartTurn(fight.turnList().current().get())
+            new StartTurn(fight.turnList().current().get()),
+            new AddZones(bo)
         );
     }
 

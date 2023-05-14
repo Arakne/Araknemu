@@ -24,6 +24,7 @@ import fr.arakne.utils.maps.DofusMap;
 import fr.arakne.utils.maps.MapCell;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -60,7 +61,7 @@ public final class LineArea implements SpellEffectArea {
     }
 
     @Override
-    public int size() {
+    public @NonNegative int size() {
         return area.size();
     }
 
