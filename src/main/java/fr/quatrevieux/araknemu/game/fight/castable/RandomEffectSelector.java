@@ -64,6 +64,10 @@ public final class RandomEffectSelector {
             return effects;
         }
 
+        if (probableEffects.size() == 1) {
+            probabilitySum = 100;
+        }
+
         int dice = RANDOM.nextInt(probabilitySum);
 
         for (SpellEffect effect : probableEffects) {
