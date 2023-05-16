@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable;
 
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,11 +47,16 @@ public final class RandomEffectSelector {
         final List<SpellEffect> selectedEffects = new ArrayList<>(effects.size());
         final List<SpellEffect> probableEffects = new ArrayList<>();
 
+        int probabilitySum = 0;
+
         for (SpellEffect effect : effects) {
-            if (effect.probability() == 0) {
+            final int probability = effect.probability();
+
+            if (probability == 0) {
                 selectedEffects.add(effect);
             }  else {
                 probableEffects.add(effect);
+                probabilitySum += probability;
             }
         }
 
@@ -59,7 +65,11 @@ public final class RandomEffectSelector {
             return effects;
         }
 
-        int dice = RANDOM.nextInt(100);
+        if (probableEffects.size() == 1) {
+            probabilitySum = 100;
+        }
+
+        int dice = RANDOM.nextInt(Asserter.assertPositive(probabilitySum));
 
         for (SpellEffect effect : probableEffects) {
             dice -= effect.probability();

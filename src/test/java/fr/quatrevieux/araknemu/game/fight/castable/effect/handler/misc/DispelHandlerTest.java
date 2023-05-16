@@ -88,9 +88,20 @@ class DispelHandlerTest extends FightBaseCase {
 
     @Test
     void buff() {
-        FightCastScope scope = makeDebuffSpell(target.cell());
+        // cannot be debuff
+        Buff buff_wisdom = makeWisdomBuffThatCannotBeDebuff();
+        target.buffs().add(buff_wisdom);
 
-        assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
+        FightCastScope scope = makeDebuffSpell(target.cell());
+        requestStack.clear();
+        handler.buff(scope, scope.effects().get(0));
+
+        Optional<Buff> buff1 = target.buffs().stream().filter(x -> x.effect().effect() == 124).findFirst();
+        assertTrue(buff1.isPresent());
+        requestStack.assertAll(
+            "GA;132;1;2",
+            new AddBuff(buff1.get())
+        );
     }
 
     @Test

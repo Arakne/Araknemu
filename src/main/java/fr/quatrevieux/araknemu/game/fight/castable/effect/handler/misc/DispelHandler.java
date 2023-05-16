@@ -42,7 +42,7 @@ public final class DispelHandler implements EffectHandler {
 
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
-        throw new UnsupportedOperationException("Cannot dispel buffs from a buff");
+        handle(cast, effect); // Insolent Bramble use this effect with duration
     }
 
     @Override
