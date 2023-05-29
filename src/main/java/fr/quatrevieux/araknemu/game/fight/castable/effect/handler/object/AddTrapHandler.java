@@ -25,62 +25,79 @@ import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
 import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
- * Add a glyph on the target cell
- * The glyph will trigger the related spell on start turn of each fighter in its area
+ * Add a trap on the target cell
+ * The trap will trigger the related spell when a fighter enter it
  *
  * Arguments:
  * - min: spell ID
  * - max: spell level
- * - special: glyph color
+ * - special: trap color
  *
- * This effect will also take in account:
- * - The effect duration as glyph duration
- * - The effect area as glyph size
+ * Two traps cannot be on the same cell, otherwise the GA 151 (CANT_DO_INVISIBLE_OBSTACLE) is sent and the trap is not added
  *
- * Remaining turns of the glyph are decreased at the start of the caster turn.
- * So it will disappear just before the caster turn.
- *
- * @see Glyph
+ * @see Trap
  */
-public final class AddGlyphHandler implements EffectHandler {
+public final class AddTrapHandler implements EffectHandler {
     private final Fight fight;
     private final SpellService spellService;
 
-    public AddGlyphHandler(Fight fight, SpellService spellService) {
+    public AddTrapHandler(Fight fight, SpellService spellService) {
         this.fight = fight;
         this.spellService = spellService;
     }
 
     @Override
     public void handle(FightCastScope cast, BaseCastScope<Fighter, FightCell>.EffectScope effect) {
-        throw new UnsupportedOperationException("AddGlyphHandler must have a duration");
-    }
-
-    @Override
-    public void buff(FightCastScope cast, BaseCastScope<Fighter, FightCell>.EffectScope effect) {
         final Fighter caster = cast.caster();
         final SpellEffect spellEffect = effect.effect();
+        final Spell spell = cast.spell();
+        final FightCell target = cast.target();
 
-        final Glyph glyph = new Glyph(
+        // Trap can only be cast using a spell
+        if (spell == null) {
+            throw new UnsupportedOperationException("Trap effect can only be used with a spell");
+        }
+
+        if (hasTrapOnCell(target)) {
+            fight.send(ActionEffect.spellBlockedByInvisibleObstacle(caster, spell));
+            return;
+        }
+
+        final Trap trap = new Trap(
             fight,
-            cast.target(),
+            target,
             caster,
             spellEffect.area().size(),
             spellEffect.special(),
-            spellEffect.duration(),
+            spell,
             spellService
                 .get(spellEffect.min())
                 .level(Asserter.assertPositive(spellEffect.max()))
         );
 
-        fight.map().objects().add(glyph);
-        fight.send(ActionEffect.packet(caster, new AddZones(glyph)));
+        fight.map().objects().add(trap);
+        trap.sendPackets(caster.team(), caster);
+    }
+
+    @Override
+    public void buff(FightCastScope cast, BaseCastScope<Fighter, FightCell>.EffectScope effect) {
+        throw new UnsupportedOperationException("Trap effect cannot be used as buff");
+    }
+
+    /**
+     * Check if there is a trap on the given cell
+     *
+     * @param cell The cell to check
+     * @return true if there is a trap on the cell
+     */
+    private boolean hasTrapOnCell(FightCell cell) {
+        return fight.map().objects().anyMatch(o -> o.cell().equals(cell) && o instanceof Trap);
     }
 }

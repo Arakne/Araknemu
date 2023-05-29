@@ -58,7 +58,7 @@ class MoveBackApplierTest extends FightBaseCase {
         FightCell lastCell = target.cell();
         FightCell destination = fight.map().get(105);
 
-        applier.apply(caster, target, 3);
+        applier.apply(caster, caster.cell(), target, 3);
 
         requestStack.assertLast(ActionEffect.slide(caster, target, destination));
 
@@ -78,7 +78,7 @@ class MoveBackApplierTest extends FightBaseCase {
         caster = player.fighter();
         target = other.fighter();
 
-        applier.apply(caster, target, distance);
+        applier.apply(caster, caster.cell(), target, distance);
         FightCell destination = fight.map().get(168);
 
         int damage = target.life().max() - target.life().current();
@@ -109,7 +109,7 @@ class MoveBackApplierTest extends FightBaseCase {
 
         List<Fighter> enemies = new ArrayList<>(fight.team(1).fighters());
 
-        applier.apply(caster, enemies.get(0), 3);
+        applier.apply(caster, caster.cell(), enemies.get(0), 3);
 
         int damage = enemies.get(0).life().max() - enemies.get(0).life().current();
         assertBetween(27, 48, damage);
@@ -133,7 +133,7 @@ class MoveBackApplierTest extends FightBaseCase {
         List<Fighter> enemies = new ArrayList<>(fight.team(1).fighters());
 
         // Remove random damage
-        new MoveBackApplier(fight, 8, 1).apply(caster, enemies.get(0), 1);
+        new MoveBackApplier(fight, 8, 1).apply(caster, caster.cell(), enemies.get(0), 1);
 
         assertEquals(9, enemies.get(0).life().max() - enemies.get(0).life().current());
         assertEquals(4, enemies.get(1).life().max() - enemies.get(1).life().current());
@@ -153,7 +153,7 @@ class MoveBackApplierTest extends FightBaseCase {
 
         List<Fighter> enemies = new ArrayList<>(fight.team(1).fighters());
 
-        applier.apply(caster, enemies.get(0), 3);
+        applier.apply(caster, caster.cell(), enemies.get(0), 3);
 
         int damage = enemies.get(0).life().max() - enemies.get(0).life().current();
 

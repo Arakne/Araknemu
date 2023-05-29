@@ -96,7 +96,7 @@ public final class FightTurn implements Turn {
     public boolean start() {
         points = new FighterTurnPoints(fight, fighter);
 
-        fight.map().onStartTurn(fighter);
+        fight.map().objects().onStartTurn(fighter);
 
         if (
             fighter.dead()

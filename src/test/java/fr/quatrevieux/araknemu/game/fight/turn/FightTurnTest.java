@@ -307,7 +307,7 @@ class FightTurnTest extends FightBaseCase {
             return null;
         }).when(bo).onStartTurnInArea(player.fighter());
 
-        fight.map().addObject(bo);
+        fight.map().objects().add(bo);
 
         assertFalse(turn.start());
         assertFalse(turn.active());
@@ -326,7 +326,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
         Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
 
-        fight.map().addObject(bo);
+        fight.map().objects().add(bo);
 
         assertTrue(turn.start());
         Mockito.verify(bo).onStartTurnInArea(player.fighter());

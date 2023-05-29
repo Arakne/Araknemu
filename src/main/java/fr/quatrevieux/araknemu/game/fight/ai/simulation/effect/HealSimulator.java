@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
+import fr.arakne.utils.maps.BattlefieldCell;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
@@ -34,7 +35,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  */
 public final class HealSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(Characteristic.INTELLIGENCE);
         final int fixed = caster.characteristics().get(Characteristic.HEALTH_BOOST);

@@ -73,8 +73,8 @@ public final class MoveBackApplier {
      * @param target The spell target
      * @param distance The move back distance
      */
-    public void apply(Fighter caster, Fighter target, @NonNegative int distance) {
-        final Direction direction = caster.cell().coordinate().directionTo(target.cell());
+    public void apply(Fighter caster, FightCell from, Fighter target, @NonNegative int distance) {
+        final Direction direction = from.coordinate().directionTo(target.cell());
         FightCell destination = target.cell();
 
         // Check if a cell block the movement
@@ -93,8 +93,8 @@ public final class MoveBackApplier {
 
         // Fighter has moved
         if (!destination.equals(target.cell())) {
-            target.move(destination);
             fight.send(ActionEffect.slide(caster, target, destination));
+            target.move(destination);
         }
 
         if (distance > 0) {

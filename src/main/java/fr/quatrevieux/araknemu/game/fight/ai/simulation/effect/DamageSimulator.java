@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
+import fr.arakne.utils.maps.BattlefieldCell;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
@@ -44,7 +45,7 @@ public final class DamageSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(element.boost());
         final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);

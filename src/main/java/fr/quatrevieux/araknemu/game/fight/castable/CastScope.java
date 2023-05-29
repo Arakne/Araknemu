@@ -23,11 +23,11 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -43,13 +43,20 @@ public interface CastScope<F extends FighterData, C extends BattlefieldCell> {
     /**
      * Get the spell, if and only if the action is a spell
      */
-    public Optional<Spell> spell();
+    @Pure
+    public @Nullable Spell spell();
 
     /**
      * Get the caster
      */
     @Pure
     public F caster();
+
+    /**
+     * Get the cell from which the spell is cast
+     */
+    @Pure
+    public C from();
 
     /**
      * Get the targeted cell
@@ -93,9 +100,9 @@ public interface CastScope<F extends FighterData, C extends BattlefieldCell> {
      * Get list of effects to apply
      */
     @Pure
-    public List<? extends EffectScope<F>> effects();
+    public List<? extends EffectScope<F, C>> effects();
 
-    public static interface EffectScope<F extends FighterData> {
+    public static interface EffectScope<F extends FighterData, C extends BattlefieldCell> {
         /**
          * The related effect
          */
@@ -106,5 +113,10 @@ public interface CastScope<F extends FighterData, C extends BattlefieldCell> {
          * Get all targeted fighters for the current effect
          */
         public Collection<F> targets();
+
+        /**
+         * Get list of cells into the effect area
+         */
+        public Set<C> cells();
     }
 }

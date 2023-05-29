@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 
@@ -45,7 +46,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
  * with the last (i.e. longest) buff.
  *
  * @see FighterData#hidden() Check the hidden state
- * @see Fighter#setHidden(FighterData, boolean) Called by the handler for change hidden state
+ * @see Fighter#setHidden(Fighter, boolean) Called by the handler for change hidden state
  */
 public final class InvisibilityHandler implements EffectHandler, BuffHook {
     private final Fight fight;
@@ -123,7 +124,7 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
      * Does the given cast will perform direct damage or not
      */
     private boolean hasDirectDamageEffect(FightCastScope cast) {
-        for (CastScope.EffectScope<Fighter> effect : cast.effects()) {
+        for (CastScope.EffectScope<Fighter, FightCell> effect : cast.effects()) {
             final SpellEffect spellEffect = effect.effect();
 
             if (spellEffect.duration() == 0 && EffectsUtils.isDamageEffect(spellEffect.effect())) {

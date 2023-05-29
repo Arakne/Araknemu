@@ -96,7 +96,7 @@ final class Glyph implements BattlefieldObject {
 
     @Override
     public void onStartTurnInArea(Fighter fighter) {
-        final FightCastScope castScope = FightCastScope.probable(spell, caster, fighter.cell(), spell.effects());
+        final FightCastScope castScope = FightCastScope.fromCell(spell, caster, cell, fighter.cell(), spell.effects());
 
         fight.send(ActionEffect.glyphTriggered(caster, fighter, cell, spell));
         fight.effects().apply(castScope);

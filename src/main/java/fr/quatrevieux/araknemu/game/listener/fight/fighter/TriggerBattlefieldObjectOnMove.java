@@ -21,25 +21,28 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 
 /**
- * Remove all battlefield objects created by the fighter on its death
+ * Trigger battlefield objects on a fighter enter in object area
+ *
+ * @see fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject#onEnterInArea(Fighter)
  */
-public final class RemoveBattlefieldObjects implements Listener<FighterDie> {
+public final class TriggerBattlefieldObjectOnMove implements Listener<FighterMoved> {
     private final Fight fight;
 
-    public RemoveBattlefieldObjects(Fight fight) {
+    public TriggerBattlefieldObjectOnMove(Fight fight) {
         this.fight = fight;
     }
 
     @Override
-    public void on(FighterDie event) {
-        fight.map().objects().removeIf(obj -> event.fighter().equals(obj.caster()));
+    public void on(FighterMoved event) {
+        fight.map().objects().onEndMove(event.fighter());
     }
 
     @Override
-    public Class<FighterDie> event() {
-        return FighterDie.class;
+    public Class<FighterMoved> event() {
+        return FighterMoved.class;
     }
 }

@@ -38,7 +38,7 @@ public final class PerpendicularLineArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
+    public <C extends MapCell> Set<C> resolve(C target, C source) {
         final Set<C> cells = new HashSet<>(area.size() * 2 + 1);
         final Direction direction = source.coordinate().directionTo(target).orthogonal();
 

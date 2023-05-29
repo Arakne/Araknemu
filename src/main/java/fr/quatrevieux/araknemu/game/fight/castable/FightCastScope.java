@@ -29,6 +29,23 @@ import java.util.List;
  * Cast scope for actual fight
  */
 public final class FightCastScope extends BaseCastScope<Fighter, FightCell> {
+    /**
+     * @param action The performed action. Can be a spell or a weapon
+     * @param caster The spell/weapon caster
+     * @param from The cell from which the spell/weapon is casted
+     * @param target The target cell
+     * @param effects List of effects to apply
+     */
+    private FightCastScope(Castable action, Fighter caster, FightCell from, FightCell target, List<SpellEffect> effects) {
+        super(action, caster, from, target, effects);
+    }
+
+    /**
+     * @param action The performed action. Can be a spell or a weapon
+     * @param caster The spell/weapon caster
+     * @param target The target cell
+     * @param effects List of effects to apply
+     */
     private FightCastScope(Castable action, Fighter caster, FightCell target, List<SpellEffect> effects) {
         super(action, caster, target, effects);
     }
@@ -50,5 +67,15 @@ public final class FightCastScope extends BaseCastScope<Fighter, FightCell> {
      */
     public static FightCastScope probable(Castable action, Fighter caster, FightCell target, List<SpellEffect> effects) {
         return new FightCastScope(action, caster, target, RandomEffectSelector.select(effects));
+    }
+
+    /**
+     * Create a cast scope with a custom cast cell (used by trap or glyph)
+     *
+     * @see RandomEffectSelector#select(List)
+     * @see SpellEffect#probability()
+     */
+    public static FightCastScope fromCell(Castable action, Fighter caster, FightCell from, FightCell target, List<SpellEffect> effects) {
+        return new FightCastScope(action, caster, from, target, RandomEffectSelector.select(effects));
     }
 }

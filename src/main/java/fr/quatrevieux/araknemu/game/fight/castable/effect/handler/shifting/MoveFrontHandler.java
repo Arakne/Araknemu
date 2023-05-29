@@ -51,13 +51,13 @@ public final class MoveFrontHandler implements EffectHandler {
         final Fighter caster = cast.caster();
 
         for (Fighter target : effect.targets()) {
-            apply(caster, target, effect.effect().min());
+            apply(caster, cast.from(), target, effect.effect().min());
         }
     }
 
-    private void apply(FighterData caster, Fighter target, int distance) {
+    private void apply(FighterData caster, FightCell from, Fighter target, int distance) {
         final FightCell startCell = target.cell();
-        final Direction direction = startCell.coordinate().directionTo(caster.cell());
+        final Direction direction = startCell.coordinate().directionTo(from);
 
         FightCell destination = startCell;
 
@@ -77,8 +77,8 @@ public final class MoveFrontHandler implements EffectHandler {
 
         // Fighter has moved
         if (!destination.equals(startCell)) {
-            target.move(destination);
             fight.send(ActionEffect.slide(caster, target, destination));
+            target.move(destination);
         }
     }
 

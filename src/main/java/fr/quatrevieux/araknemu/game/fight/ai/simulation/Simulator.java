@@ -94,7 +94,7 @@ public final class Simulator {
 
         final CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
 
-        for (CastScope.EffectScope<FighterData> effect : scope.effects()) {
+        for (CastScope.EffectScope<FighterData, BattlefieldCell> effect : scope.effects()) {
             final EffectSimulator simulator = simulators.get(effect.effect().effect());
 
             if (simulator == null) {

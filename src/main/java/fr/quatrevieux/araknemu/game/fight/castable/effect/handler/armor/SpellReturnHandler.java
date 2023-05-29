@@ -59,11 +59,15 @@ public final class SpellReturnHandler implements EffectHandler, BuffHook {
 
     @Override
     public boolean onCastTarget(Buff buff, FightCastScope cast) {
-        if (buff.target().equals(cast.caster()) || !isReturnableCast(cast)) {
+        final Fighter caster = cast.caster();
+        final Fighter target = buff.target();
+        final Spell spell = cast.spell();
+
+        if (target.equals(caster) || spell == null || !isReturnableCast(cast)) {
             return true;
         }
 
-        if (!cast.spell().filter(spell -> checkSpellReturned(spell, buff.effect())).isPresent()) {
+        if (!checkSpellReturned(spell, buff.effect())) {
             fight.send(ActionEffect.returnSpell(buff.target(), false));
             return true;
         }

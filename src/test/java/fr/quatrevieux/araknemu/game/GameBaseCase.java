@@ -179,7 +179,7 @@ public class GameBaseCase extends DatabaseTestCase {
                 }
             }
 
-            Assertions.fail("Cannot find packet " + packet);
+            Assertions.fail("Cannot find packet " + packet + "\nAvailable packets : " + channel.getMessages());
         }
     }
 

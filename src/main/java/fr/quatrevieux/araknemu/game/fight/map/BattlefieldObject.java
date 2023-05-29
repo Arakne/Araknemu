@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.map;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -53,6 +54,14 @@ public interface BattlefieldObject {
     public int color();
 
     /**
+     * Define custom display properties for the cell where the object is
+     * This is used to define the cell object for a trap for example
+     */
+    public default UpdateCells.PropertyValue<?>[] cellsProperties() {
+        return new UpdateCells.PropertyValue[0];
+    }
+
+    /**
      * Called on new turn of the caster
      * This method is used to decrement and check the remaining turns of the object
      *
@@ -61,7 +70,7 @@ public interface BattlefieldObject {
      *
      * @return true if the object is still active, false otherwise
      *
-     * @see FightMap#onStartTurn(Fighter) Called by this method
+     * @see BattlefieldObjects#onStartTurn(Fighter) Called by this method
      * @see BattlefieldObject#disappear() Called when the object is removed from the map
      */
     public default boolean refresh() {
@@ -71,9 +80,21 @@ public interface BattlefieldObject {
     /**
      * The given fighter has started his turn in the area of the object
      *
-     * @see FightMap#onStartTurn(Fighter) Called by this method
+     * @see BattlefieldObjects#onStartTurn(Fighter) Called by this method
      */
     public default void onStartTurnInArea(Fighter fighter) {}
+
+    /**
+     * The given fighter has moved into the area of the object
+     *
+     * A move can be:
+     * - A move action
+     * - A teleportation
+     * - A push/pull effect
+     *
+     * @param fighter the fighter who moved
+     */
+    public default void onEnterInArea(Fighter fighter) {}
 
     /**
      * The object has been removed from the map
@@ -104,5 +125,34 @@ public interface BattlefieldObject {
      */
     public default boolean isOnArea(Fighter fighter) {
         return isOnArea(fighter.cell());
+    }
+
+    /**
+     * Make the object visible
+     * This method should not be called if the object is already visible
+     *
+     * @param fighter Fighter who make the object visible
+     */
+    public default void show(Fighter fighter) {}
+
+    /**
+     * Check if the current object is visible for the given fighter
+     */
+    public default boolean visible(Fighter fighter) {
+        return visible();
+    }
+
+    /**
+     * Check if the current object is visible for all (including spectators)
+     */
+    public default boolean visible() {
+        return true;
+    }
+
+    /**
+     * Check if the object should stop the movement of the given fighter when he enters the area
+     */
+    public default boolean shouldStopMovement() {
+        return false;
     }
 }

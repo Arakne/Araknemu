@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -129,6 +130,31 @@ class PlayerFighterTest extends FightBaseCase {
 
         assertSame(map.get(123), fighter.cell());
         assertSame(fighter, map.get(123).fighter());
+    }
+
+    @Test
+    void moveShouldDispatchFighterMoved() {
+        fighter.joinFight(fight, map.get(123));
+
+        AtomicReference<FighterMoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMoved.class, ref::set);
+
+        fighter.move(map.get(125));
+
+        assertSame(fighter, ref.get().fighter());
+        assertSame(map.get(125), ref.get().cell());
+    }
+
+    @Test
+    void moveShouldNotDispatchFighterMovedWhenNullCellIsGiven() {
+        fighter.joinFight(fight, map.get(123));
+
+        AtomicReference<FighterMoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMoved.class, ref::set);
+
+        fighter.move(null);
+
+        assertNull(ref.get());
     }
 
     @Test

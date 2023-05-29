@@ -21,9 +21,14 @@ package fr.quatrevieux.araknemu.game.listener.fight.spectator;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.StartWatchFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
+import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Send to new spectator all visible objects on the battlefield
@@ -39,14 +44,29 @@ public final class SendBattlefieldObjectsToSpectator implements Listener<StartWa
     public void on(StartWatchFight event) {
         final Fight fight = spectator.fight();
 
-        final AddZones.Zone[] zones = fight.map().objects()
-            .stream()
-            .map(object -> new AddZones.Zone(object.cell().id(), object.size(), object.color()))
-            .toArray(AddZones.Zone[]::new)
-        ;
+        final List<AddZones.Zone> zones = new ArrayList<>();
+        final List<UpdateCells.Data> cells = new ArrayList<>();
 
-        if (zones.length > 0) {
-            spectator.send(new AddZones(zones));
+        for (BattlefieldObject object : fight.map().objects()) {
+            if (!object.visible()) {
+                continue;
+            }
+
+            zones.add(new AddZones.Zone(object.cell().id(), object.size(), object.color()));
+
+            final UpdateCells.PropertyValue<?>[] properties = object.cellsProperties();
+
+            if (properties.length > 0) {
+                cells.add(UpdateCells.Data.fromProperties(object.cell().id(), true, properties));
+            }
+        }
+
+        if (!zones.isEmpty()) {
+            spectator.send(new AddZones(zones.toArray(new AddZones.Zone[0])));
+        }
+
+        if (!cells.isEmpty()) {
+            spectator.send(new UpdateCells(cells.toArray(new UpdateCells.Data[0])));
         }
     }
 

@@ -14,36 +14,38 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.spell.effect.area;
+package fr.quatrevieux.araknemu.game.fight.fighter.event;
 
-import fr.arakne.utils.maps.MapCell;
-import fr.quatrevieux.araknemu.data.value.EffectArea;
-import org.checkerframework.checker.index.qual.NonNegative;
-
-import java.util.Set;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
 /**
- * Resolve cells from area and target cell
+ * A fighter has moved
+ * This event is dispatched by {@link Fighter#move(FightCell)}
  */
-public interface SpellEffectArea {
-    /**
-     * Resolve the cells from an effect area
-     *
-     * @param target The target cell
-     * @param source The source cell (caster cell)
-     */
-    public <C extends MapCell> Set<C> resolve(C target, C source);
+public final class FighterMoved {
+    private final Fighter fighter;
+    private final FightCell cell;
+
+    public FighterMoved(Fighter fighter, FightCell cell) {
+        this.fighter = fighter;
+        this.cell = cell;
+    }
 
     /**
-     * The area type
+     * @return The moved fighter
      */
-    public EffectArea.Type type();
+    public Fighter fighter() {
+        return fighter;
+    }
 
     /**
-     * The area size
+     * @return The new cell
      */
-    public @NonNegative int size();
+    public FightCell cell() {
+        return cell;
+    }
 }
