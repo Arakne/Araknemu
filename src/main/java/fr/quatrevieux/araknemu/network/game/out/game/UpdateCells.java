@@ -26,6 +26,7 @@ import fr.arakne.utils.maps.serializer.DefaultMapDataSerializer;
 import fr.arakne.utils.maps.serializer.GroundCellData;
 import fr.arakne.utils.maps.serializer.InteractiveObjectData;
 import fr.arakne.utils.maps.serializer.MapDataSerializer;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
@@ -212,11 +213,11 @@ public final class UpdateCells {
         }
     }
 
-    public static final class Property<T> {
+    public static final class Property<@NonNull T> {
         private final int mask;
-        private final T defaultValue;
+        private final @NonNull T defaultValue;
 
-        private Property(int mask, T defaultValue) {
+        private Property(int mask, @NonNull T defaultValue) {
             this.mask = mask;
             this.defaultValue = defaultValue;
         }
@@ -225,7 +226,7 @@ public final class UpdateCells {
             return mask;
         }
 
-        public PropertyValue<T> set(T value) {
+        public PropertyValue<T> set(@NonNull T value) {
             return new PropertyValue<>(mask, value);
         }
 
@@ -235,11 +236,11 @@ public final class UpdateCells {
         }
     }
 
-    public static final class PropertyValue<T> {
+    public static final class PropertyValue<@NonNull T> {
         private final int mask;
-        private final T value;
+        private final @NonNull T value;
 
-        private PropertyValue(int mask, T value) {
+        private PropertyValue(int mask, @NonNull T value) {
             this.mask = mask;
             this.value = value;
         }
@@ -248,7 +249,7 @@ public final class UpdateCells {
             return mask;
         }
 
-        public T value() {
+        public @NonNull T value() {
             return value;
         }
     }
