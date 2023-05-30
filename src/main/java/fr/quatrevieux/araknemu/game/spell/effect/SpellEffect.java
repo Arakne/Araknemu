@@ -89,4 +89,14 @@ public interface SpellEffect {
      * Get the effect target
      */
     public EffectTarget target();
+
+    /**
+     * Does the current effect is from a triggered trap ?
+     *
+     * If true, {@link fr.quatrevieux.araknemu.data.constant.Characteristic#TRAP_BOOST} and {@link fr.quatrevieux.araknemu.data.constant.Characteristic#PERCENT_TRAP_BOOST}
+     * should be used to compute the final effect value
+     */
+    public default boolean trap() {
+        return false;
+    }
 }

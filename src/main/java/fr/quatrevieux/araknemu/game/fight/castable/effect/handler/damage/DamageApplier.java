@@ -166,6 +166,13 @@ public final class DamageApplier {
             .fixed(caster.characteristics().get(Characteristic.FIXED_DAMAGE))
         ;
 
+        if (effect.trap()) {
+            value
+                .fixed(caster.characteristics().get(Characteristic.TRAP_BOOST))
+                .percent(caster.characteristics().get(Characteristic.PERCENT_TRAP_BOOST))
+            ;
+        }
+
         return createDamage(caster, target, value.value());
     }
 

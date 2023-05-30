@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -157,6 +158,68 @@ class TrapTest extends FightBaseCase {
         int damage = target.life().max() - target.life().current();
 
         assertBetween(9, 15, damage);
+        assertEquals(0, fight.map().objects().stream().count());
+
+        requestStack.assertAll(
+            ActionEffect.trapTriggered(caster, target, fight.map().get(123), container.get(SpellService.class).get(65).level(3)),
+            new RemoveZone(trap),
+            new UpdateCells(UpdateCells.Data.reset(123)),
+            ActionEffect.alterLifePoints(caster, target, -damage)
+        );
+    }
+
+    @Test
+    void trapDamageShouldBeUsed() {
+        caster.characteristics().alter(Characteristic.TRAP_BOOST, 10);
+
+        requestStack.clear();
+        Trap trap = new Trap(
+            fight,
+            fight.map().get(123),
+            caster,
+            2,
+            4,
+            container.get(SpellService.class).get(65).level(3),
+            container.get(SpellService.class).get(183).level(3)
+        );
+        fight.map().objects().add(trap);
+
+        trap.onEnterInArea(target);
+
+        int damage = target.life().max() - target.life().current();
+
+        assertBetween(19, 25, damage);
+        assertEquals(0, fight.map().objects().stream().count());
+
+        requestStack.assertAll(
+            ActionEffect.trapTriggered(caster, target, fight.map().get(123), container.get(SpellService.class).get(65).level(3)),
+            new RemoveZone(trap),
+            new UpdateCells(UpdateCells.Data.reset(123)),
+            ActionEffect.alterLifePoints(caster, target, -damage)
+        );
+    }
+
+    @Test
+    void trapPercentDamageShouldBeUsed() {
+        caster.characteristics().alter(Characteristic.PERCENT_TRAP_BOOST, 150);
+
+        requestStack.clear();
+        Trap trap = new Trap(
+            fight,
+            fight.map().get(123),
+            caster,
+            2,
+            4,
+            container.get(SpellService.class).get(65).level(3),
+            container.get(SpellService.class).get(183).level(3)
+        );
+        fight.map().objects().add(trap);
+
+        trap.onEnterInArea(target);
+
+        int damage = target.life().max() - target.life().current();
+
+        assertBetween(18, 30, damage);
         assertEquals(0, fight.map().objects().stream().count());
 
         requestStack.assertAll(

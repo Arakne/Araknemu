@@ -25,12 +25,18 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.RemoveZone;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
+
+import java.util.List;
 
 /**
  * Trap object, created by {@link AddTrapHandler}
@@ -102,7 +108,7 @@ final class Trap implements BattlefieldObject {
             caster,
             cell,
             cell,
-            effectSpell.effects()
+            TrapSpellEffect.convert(effectSpell.effects())
         );
 
         fight.send(ActionEffect.trapTriggered(caster, fighter, cell, trapSpell));
@@ -151,5 +157,78 @@ final class Trap implements BattlefieldObject {
     public void sendPackets(Sender destination, Fighter caster) {
         destination.send(ActionEffect.packet(caster, new AddZones(this)));
         destination.send(ActionEffect.packet(caster, new UpdateCells(UpdateCells.Data.fromProperties(cell.id(), true, cellsProperties()))));
+    }
+
+    private static class TrapSpellEffect implements SpellEffect {
+        private final SpellEffect effect;
+
+        public TrapSpellEffect(SpellEffect effect) {
+            this.effect = effect;
+        }
+
+        @Override
+        public int effect() {
+            return effect.effect();
+        }
+
+        @Override
+        public @NonNegative int min() {
+            return effect.min();
+        }
+
+        @Override
+        public @NonNegative int max() {
+            return effect.max();
+        }
+
+        @Override
+        public int boost() {
+            return effect.boost();
+        }
+
+        @Override
+        public int special() {
+            return effect.special();
+        }
+
+        @Override
+        public @GTENegativeOne int duration() {
+            return effect.duration();
+        }
+
+        @Override
+        public @NonNegative int probability() {
+            return effect.probability();
+        }
+
+        @Override
+        public String text() {
+            return effect.text();
+        }
+
+        @Override
+        public SpellEffectArea area() {
+            return effect.area();
+        }
+
+        @Override
+        public EffectTarget target() {
+            return effect.target();
+        }
+
+        @Override
+        public boolean trap() {
+            return true;
+        }
+
+        /**
+         * Convert raw spell effects to trap spell effects
+         */
+        public static List<SpellEffect> convert(List<SpellEffect> effects) {
+            return effects.stream()
+                .map(TrapSpellEffect::new)
+                .collect(java.util.stream.Collectors.toList())
+            ;
+        }
     }
 }
