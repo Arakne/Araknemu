@@ -24,8 +24,6 @@ import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -34,13 +32,9 @@ import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * Map for the fight
@@ -49,7 +43,7 @@ public final class FightMap implements BattlefieldMap {
     private final MapTemplate template;
     private final FightCell @SameLen("this") [] cells;
     private final Decoder<FightCell> decoder;
-    private final Set<BattlefieldObject> objects = new LinkedHashSet<>();
+    private final BattlefieldObjects objects = new BattlefieldObjects();
 
     @SuppressWarnings({"argument", "method.invocation"}) // Do not resolve SameLen from template.cells()
     public FightMap(MapTemplate template) {
@@ -171,63 +165,7 @@ public final class FightMap implements BattlefieldMap {
     /**
      * @return All objects on the map
      */
-    public Collection<BattlefieldObject> objects() {
-        return Collections.unmodifiableCollection(objects);
-    }
-
-    /**
-     * Add a new object to the map
-     * Note: no event will be triggered, you must handle appearance packet yourself
-     *
-     * @param object The object to add
-     */
-    public void addObject(BattlefieldObject object) {
-        objects.add(object);
-    }
-
-    /**
-     * Remove all objects matching the predicate
-     *
-     * @param predicate Predicate lambda. Takes as parameter the battlefield object, and return true if it must be removed
-     *
-     * @see BattlefieldObject#disappear() Called when object is removed
-     */
-    public void removeObjectsIf(Predicate<BattlefieldObject> predicate) {
-        for (Iterator<BattlefieldObject> it = objects.iterator(); it.hasNext();) {
-            final BattlefieldObject object = it.next();
-
-            if (predicate.test(object)) {
-                it.remove();
-                object.disappear();
-            }
-        }
-    }
-
-    /**
-     * Apply start turn effects from objects :
-     * - check if objects owned by fighter are still valid
-     * - apply start turn effects of objects if the fighter is on area
-     *
-     * @param fighter The fighter who start his turn
-     *
-     * @see FightTurn#start() Called by this method
-     * @see BattlefieldObject#onStartTurnInArea(Fighter) To apply start turn effects
-     */
-    public void onStartTurn(Fighter fighter) {
-        for (Iterator<BattlefieldObject> it = objects.iterator(); it.hasNext();) {
-            final BattlefieldObject object = it.next();
-
-            if (fighter.equals(object.caster())) {
-                if (!object.refresh()) {
-                    it.remove();
-                    object.disappear();
-                    continue;
-                }
-            }
-
-            if (object.isOnArea(fighter)) {
-                object.onStartTurnInArea(fighter);
-            }
-        }
+    public BattlefieldObjects objects() {
+        return objects;
     }
 }

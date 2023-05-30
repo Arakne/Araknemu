@@ -47,12 +47,12 @@ public final class MoveBackHandler implements EffectHandler {
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final Fighter caster = cast.caster();
         final int distance = effect.effect().min();
-        final CoordinateCell<BattlefieldCell> casterCell = caster.cell().coordinate();
+        final CoordinateCell<BattlefieldCell> castCell = cast.from().coordinate();
 
         // Apply to most distant targets before, to ensure that they will not block mutually
         effect.targets().stream()
-            .sorted(Comparator.<FighterData>comparingInt(target -> casterCell.distance(target.cell())).reversed())
-            .forEach(target -> applier.apply(caster, target, distance))
+            .sorted(Comparator.<FighterData>comparingInt(target -> castCell.distance(target.cell())).reversed())
+            .forEach(target -> applier.apply(caster, cast.from(), target, distance))
         ;
     }
 

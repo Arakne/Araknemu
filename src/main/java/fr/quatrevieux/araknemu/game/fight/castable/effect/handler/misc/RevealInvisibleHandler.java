@@ -14,33 +14,59 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2022 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Reveal all invisible objects and fighters
  */
 public final class RevealInvisibleHandler implements EffectHandler {
+    private final Fight fight;
+
+    public RevealInvisibleHandler(Fight fight) {
+        this.fight = fight;
+    }
+
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final Fighter caster = cast.caster();
 
-        // @todo reveal traps
-        for (Fighter fighter : effect.targets()) {
+        revealFighters(caster, effect.targets());
+        revealObjects(caster, effect);
+    }
+
+    @Override
+    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
+        throw new UnsupportedOperationException("Reveal invisible effect can only be used as direct effect");
+    }
+
+    private void revealFighters(Fighter caster, Collection<Fighter> targets) {
+        for (Fighter fighter : targets) {
             if (fighter.hidden()) {
                 fighter.setHidden(caster, false);
             }
         }
     }
 
-    @Override
-    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
-        throw new UnsupportedOperationException("Reveal invisible effect can only be used as direct effect");
+    private void revealObjects(Fighter caster, FightCastScope.EffectScope effect) {
+        final Set<FightCell> cells = effect.cells();
+
+        for (BattlefieldObject object : fight.map().objects()) {
+            if (cells.contains(object.cell()) && !object.visible(caster)) {
+                object.show(caster);
+            }
+        }
     }
 }

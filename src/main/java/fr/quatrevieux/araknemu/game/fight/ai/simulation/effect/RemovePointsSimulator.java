@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
+import fr.arakne.utils.maps.BattlefieldCell;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
@@ -48,7 +49,7 @@ public final class RemovePointsSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect) {
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final int casterChance = Math.max(simulation.caster().characteristics().get(Characteristic.WISDOM) / 10, 1);
 
         int duration = effect.effect().duration();

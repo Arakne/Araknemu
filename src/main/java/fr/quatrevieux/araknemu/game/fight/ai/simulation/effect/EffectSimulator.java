@@ -19,10 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
+import fr.arakne.utils.maps.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 public interface EffectSimulator {
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData> effect);
+    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect);
 }

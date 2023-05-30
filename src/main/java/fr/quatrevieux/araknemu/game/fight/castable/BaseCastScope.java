@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,18 +42,24 @@ import java.util.stream.Collectors;
 public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> implements CastScope<F, C> {
     private final Castable action;
     private final F caster;
+    private final C from;
     private final C target;
 
     private final List<EffectScope> effects;
     private final Map<F, @Nullable F> targetMapping = new HashMap<>();
 
     protected BaseCastScope(Castable action, F caster, C target, List<SpellEffect> effects) {
+        this(action, caster, (C) caster.cell(), target, effects);
+    }
+
+    protected BaseCastScope(Castable action, F caster, C from, C target, List<SpellEffect> effects) {
         this.action = action;
         this.caster = caster;
         this.target = target;
+        this.from = from;
 
         this.effects = effects.stream()
-            .map(effect -> new EffectScope(effect, CastTargetResolver.resolveFromEffect(caster, target, action, effect)))
+            .map(effect -> new EffectScope(effect, CastTargetResolver.resolveFromEffect(caster, from, target, action, effect)))
             .collect(Collectors.toList())
         ;
 
@@ -72,11 +77,12 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
     }
 
     @Override
-    public final Optional<Spell> spell() {
+    @Pure
+    public final @Nullable Spell spell() {
         if (action instanceof Spell) {
-            return Optional.of((Spell) action);
+            return (Spell) action;
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 
@@ -84,6 +90,12 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
     @Pure
     public final F caster() {
         return caster;
+    }
+
+    @Override
+    @Pure
+    public C from() {
+        return from;
     }
 
     @Override
@@ -164,7 +176,7 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
         }
     }
 
-    public final class EffectScope implements CastScope.EffectScope<F> {
+    public final class EffectScope implements CastScope.EffectScope<F, C> {
         private final SpellEffect effect;
         private final Collection<F> targets;
 
@@ -216,6 +228,11 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
             }
 
             return Collections.emptyList();
+        }
+
+        @Override
+        public Set<C> cells() {
+            return effect.area().resolve(target, from);
         }
     }
 }

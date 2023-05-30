@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -95,6 +96,10 @@ public abstract class AbstractFighter implements Fighter {
         }
 
         this.cell = cell;
+
+        if (cell != null && fight != null) {
+            fight.dispatch(new FighterMoved(this, cell));
+        }
     }
 
     @Override

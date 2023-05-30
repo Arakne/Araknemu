@@ -62,7 +62,7 @@ public final class MoveToTargetCellHandler implements EffectHandler {
 
         decoder.nextCellByDirection(casterCell, direction)
             .map(FightCell::fighter)
-            .ifPresent(target -> applier.apply(caster, target, distance))
+            .ifPresent(target -> applier.apply(caster, cast.from(), target, distance))
         ;
     }
 

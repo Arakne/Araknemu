@@ -366,6 +366,37 @@ public final class ActionEffect {
     }
 
     /**
+     * A trap has been triggered by a fighter
+     *
+     * @param caster The caster of the trap
+     * @param target The fight who triggered the trap
+     * @param trapCell The trap cell
+     * @param spell The trap spell
+     */
+    public static ActionEffect trapTriggered(FighterData caster, FighterData target, FightCell trapCell, Spell spell) {
+        return new ActionEffect(
+            306,
+            target,
+            spell.id(),
+            trapCell.id(),
+            spell.spriteId(),
+            spell.level(),
+            0, // bInFrontOfSprite ?
+            caster.id()
+        );
+    }
+
+    /**
+     * The spell cannot be cast because of an invisible obstacle
+     *
+     * @param caster The spell caster
+     * @param spell The spell
+     */
+    public static ActionEffect spellBlockedByInvisibleObstacle(FighterData caster, Spell spell) {
+        return new ActionEffect(151, caster, spell.id());
+    }
+
+    /**
      * Send a custom packet, but queued on the caster sequencer
      *
      * @param caster Effect caster

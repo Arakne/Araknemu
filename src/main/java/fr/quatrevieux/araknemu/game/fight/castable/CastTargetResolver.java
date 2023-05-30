@@ -50,6 +50,23 @@ public final class CastTargetResolver {
      * @see fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget
      */
     public static <F extends FighterData> Collection<F> resolveFromEffect(F caster, BattlefieldCell target, Castable action, SpellEffect effect) {
+        return resolveFromEffect(caster, caster.cell(), target, action, effect);
+    }
+
+    /**
+     * Resolve targets of an effect
+     *
+     * @param caster The action caster
+     * @param from The cell from where the effect is cast
+     * @param target The target cell
+     * @param action Action to perform
+     * @param effect The effect to resolve
+     *
+     * @return List of fighters
+     *
+     * @see fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget
+     */
+    public static <F extends FighterData> Collection<F> resolveFromEffect(F caster, BattlefieldCell from, BattlefieldCell target, Castable action, SpellEffect effect) {
         if (effect.target().onlyCaster()) {
             return Collections.singleton(caster);
         }
@@ -58,19 +75,19 @@ public final class CastTargetResolver {
             return Collections.emptyList();
         }
 
-        return resolveFromEffectArea(caster, target, effect);
+        return resolveFromEffectArea(caster, from, target, effect);
     }
 
     /**
      * Perform resolution from effect target and effect area
      */
     @SuppressWarnings("cast.unsafe") // @Nullable cast cause a compiler crash on java 8
-    private static <F extends FighterData> Collection<F> resolveFromEffectArea(F caster, BattlefieldCell target, SpellEffect effect) {
+    private static <F extends FighterData> Collection<F> resolveFromEffectArea(F caster, BattlefieldCell from, BattlefieldCell target, SpellEffect effect) {
         // Use lazy instantiation and do not use stream API to optimise memory allocations
         F firstTarget = null;
         Collection<F> targets = null;
 
-        for (BattlefieldCell cell : effect.area().resolve(target, caster.cell())) {
+        for (BattlefieldCell cell : effect.area().resolve(target, from)) {
             final @Nullable F resolvedTarget = (/*@Nullable*/ F) cell.fighter();
 
             if (resolvedTarget == null || !effect.target().test(caster, resolvedTarget)) {

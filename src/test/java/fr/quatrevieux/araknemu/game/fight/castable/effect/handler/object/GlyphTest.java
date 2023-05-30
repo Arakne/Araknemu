@@ -71,6 +71,10 @@ class GlyphTest extends FightBaseCase {
         assertSame(caster, glyph.caster());
         assertEquals(2, glyph.size());
         assertEquals(4, glyph.color());
+        assertTrue(glyph.visible());
+        assertTrue(glyph.visible(caster));
+        assertEquals(0, glyph.cellsProperties().length);
+        assertFalse(glyph.shouldStopMovement());
     }
 
     @Test

@@ -171,6 +171,7 @@ import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
+import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
@@ -179,6 +180,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnBattlefieldObjectValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnEnemyValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
@@ -224,7 +226,6 @@ import fr.quatrevieux.araknemu.network.game.GamePacketConfigurator;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
-import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -608,6 +609,7 @@ public final class GameModule implements ContainerModule {
             container -> new fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory(new FightPathValidator[] {
                 new TackleValidator(),
                 new StopOnEnemyValidator(),
+                new StopOnBattlefieldObjectValidator(),
             })
         );
 

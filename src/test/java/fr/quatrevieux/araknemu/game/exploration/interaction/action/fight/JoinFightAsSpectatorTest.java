@@ -125,7 +125,9 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
         Mockito.when(bo.cell()).thenReturn(fight.map().get(123));
         Mockito.when(bo.size()).thenReturn(2);
         Mockito.when(bo.color()).thenReturn(1);
-        fight.map().addObject(bo);
+        Mockito.when(bo.visible()).thenReturn(true);
+        Mockito.when(bo.cellsProperties()).thenCallRealMethod();
+        fight.map().objects().add(bo);
 
         requestStack.clear();
 

@@ -22,20 +22,16 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
-import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-class RemoveBattlefieldObjectsTest extends FightBaseCase {
+class TriggerBattlefieldObjectOnMoveTest extends FightBaseCase {
     private Fight fight;
-    private RemoveBattlefieldObjects listener;
+    private TriggerBattlefieldObjectOnMove listener;
 
     @Override
     @BeforeEach
@@ -45,33 +41,38 @@ class RemoveBattlefieldObjectsTest extends FightBaseCase {
         fight = createFight();
         fight.nextState();
         fight.turnList().start();
-        listener = new RemoveBattlefieldObjects(fight);
+        listener = new TriggerBattlefieldObjectOnMove(fight);
 
-        fight.dispatcher().remove(CheckFightTerminated.class);
-        fight.dispatcher().remove(RemoveDeadFighter.class);
         fight.dispatcher().remove(RemoveBattlefieldObjects.class);
         requestStack.clear();
     }
 
     @Test
-    void onFighterDie() {
+    void onMove() {
         BattlefieldObject bo1 = Mockito.mock(BattlefieldObject.class);
         BattlefieldObject bo2 = Mockito.mock(BattlefieldObject.class);
-        BattlefieldObject bo3 = Mockito.mock(BattlefieldObject.class);
 
         Mockito.when(bo1.caster()).thenReturn(player.fighter());
-        Mockito.when(bo2.caster()).thenReturn(other.fighter());
-        Mockito.when(bo3.caster()).thenReturn(player.fighter());
+        Mockito.when(bo2.caster()).thenReturn(player.fighter());
+
+        Mockito.when(bo1.cell()).thenReturn(fight.map().get(137));
+        Mockito.when(bo2.cell()).thenReturn(fight.map().get(153));
+
+        Mockito.when(bo1.size()).thenReturn(1);
+        Mockito.when(bo2.size()).thenReturn(1);
+
+        Mockito.when(bo1.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo2.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo1.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        Mockito.when(bo2.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
 
         fight.map().objects().add(bo1);
         fight.map().objects().add(bo2);
-        fight.map().objects().add(bo3);
 
-        listener.on(new FighterDie(player.fighter(), player.fighter()));
+        player.fighter().move(fight.map().get(123));
+        listener.on(new FighterMoved(player.fighter(), fight.map().get(123)));
 
-        assertIterableEquals(fight.map().objects(), Collections.singletonList(bo2));
-        Mockito.verify(bo1).disappear();
-        Mockito.verify(bo2, Mockito.never()).disappear();
-        Mockito.verify(bo3).disappear();
+        Mockito.verify(bo1).onEnterInArea(player.fighter());
+        Mockito.verify(bo2, Mockito.never()).onEnterInArea(player.fighter());
     }
 }

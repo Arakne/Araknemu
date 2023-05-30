@@ -52,6 +52,8 @@ public interface Fighter extends Dispatcher, ActiveFighter {
 
     /**
      * Go to the given cell
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved Trigger when the fighter is actually moved
      */
     public void move(@Nullable FightCell cell);
 

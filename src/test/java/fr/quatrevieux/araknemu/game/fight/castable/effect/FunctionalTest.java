@@ -53,6 +53,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.RemoveZone;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
+import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -1147,6 +1148,38 @@ public class FunctionalTest extends FightBaseCase {
     }
 
     @Test
+    void revealTrap() {
+        fighter1.turn().stop();
+        castNormal(65, fight.map().get(183));
+
+        BattlefieldObject trap = fight.map().objects().stream().findFirst().get();
+
+        assertFalse(trap.visible());
+        fighter2.turn().stop();
+        requestStack.clear();
+
+        castNormal(64, fighter1.cell()); // Repérage
+
+        assertTrue(trap.visible());
+        requestStack.assertOne(ActionEffect.packet(fighter1, new AddZones(trap)));
+        requestStack.assertOne(ActionEffect.packet(fighter1, new UpdateCells(UpdateCells.Data.fromProperties(183, true, UpdateCells.LAYER_2_OBJECT_NUMBER.set(25)))));
+    }
+
+    @Test
+    void revealShouldNotShowSelfTraps() {
+        castNormal(65, fight.map().get(183));
+        BattlefieldObject trap = fight.map().objects().stream().findFirst().get();
+        assertFalse(trap.visible());
+        requestStack.clear();
+
+        castNormal(64, fighter1.cell()); // Repérage
+        assertFalse(trap.visible());
+
+        requestStack.assertNotContainsPrefix(ActionEffect.packet(fighter1, "GDZ").toString());
+        requestStack.assertNotContainsPrefix(ActionEffect.packet(fighter1, "GDC").toString());
+    }
+
+    @Test
     void invocation() throws SQLException {
         dataSet
             .pushMonsterTemplateInvocations()
@@ -1237,6 +1270,105 @@ public class FunctionalTest extends FightBaseCase {
 
         assertFalse(fight.map().objects().stream().findFirst().isPresent());
         requestStack.assertOne(new RemoveZone(glyph));
+    }
+
+    @Test
+    void trap() {
+        castNormal(65, fight.map().get(126)); // piège sournois
+
+        BattlefieldObject trap = fight.map().objects().stream().findFirst().get();
+
+        assertEquals(126, trap.cell().id());
+        assertEquals(fighter1, trap.caster());
+        assertEquals(0, trap.size());
+        requestStack.assertOne(ActionEffect.packet(fighter1, new AddZones(trap)));
+        requestStack.assertOne(ActionEffect.packet(fighter1, new UpdateCells(UpdateCells.Data.fromProperties(126, true, UpdateCells.LAYER_2_OBJECT_NUMBER.set(25)))));
+        requestStack.clear();
+
+        fighter2.move(fight.map().get(126)); // Move on trap
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+
+        assertBetween(13, 19, damage);
+        assertFalse(fight.map().objects().stream().findFirst().isPresent());
+        requestStack.assertOne(new RemoveZone(trap));
+        requestStack.assertOne(new UpdateCells(UpdateCells.Data.reset(126)));
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(126), service.get(65).level(5)));
+    }
+
+    @Test
+    void trapShouldNotBeVisibleByOtherTeam() {
+        fighter1.turn().stop(); // Cast trap by fighter2
+        requestStack.clear();
+        castNormal(65, fight.map().get(126)); // piège sournois
+
+        BattlefieldObject trap = fight.map().objects().stream().findFirst().get();
+
+        assertEquals(126, trap.cell().id());
+        assertEquals(fighter2, trap.caster());
+        assertEquals(0, trap.size());
+
+        requestStack.assertNotContainsPrefix(ActionEffect.packet(fighter2, "GDZ").toString());
+        requestStack.assertNotContainsPrefix(ActionEffect.packet(fighter2, "GDC").toString());
+    }
+
+    @Test
+    void trapChain() {
+        fighter1.move(fight.map().get(123));
+        fighter1.turn().points().addActionPoints(10);
+
+        castNormal(73, fight.map().get(152)); //répulsif
+        castNormal(73, fight.map().get(125)); //répulsif
+        castNormal(65, fight.map().get(80)); //sournois
+
+        fighter2.move(fight.map().get(138)); // Move on first trap
+
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(152), service.get(73).level(5)));
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(125), service.get(73).level(5)));
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(80), service.get(65).level(5)));
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+
+        assertBetween(13, 19, damage);
+        assertEquals(80, fighter2.cell().id());
+
+        assertEquals(0, fight.map().objects().stream().count());
+    }
+
+    @Test
+    void trapShouldNotPerformInfiniteRepulsion() {
+        fighter1.move(fight.map().get(180));
+
+        castNormal(73, fight.map().get(195)); //répulsif
+        castNormal(73, fight.map().get(139)); //répulsif
+
+        fighter2.move(fight.map().get(181)); // Move on first trap
+
+        assertEquals(181, fighter2.cell().id());
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(195), service.get(73).level(5)));
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(139), service.get(73).level(5)));
+        requestStack.assertOne(ActionEffect.slide(fighter1, fighter2, fight.map().get(153)));
+        requestStack.assertOne(ActionEffect.slide(fighter1, fighter2, fight.map().get(181)));
+
+        assertEquals(0, fight.map().objects().stream().count());
+    }
+
+    @Test
+    void areaTrapShouldApplyEffectToAllFightersInArea() {
+        fighter1.move(fight.map().get(167));
+
+        castNormal(79, fight.map().get(197)); // piège de masse
+
+        fighter2.move(fight.map().get(226)); // Move in trap area
+
+
+        int damage1 = fighter1.life().max() - fighter1.life().current();
+        int damage2 = fighter2.life().max() - fighter2.life().current();
+
+        assertBetween(13, 25, damage1);
+        assertBetween(13, 25, damage2);
+
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(197), service.get(79).level(5)));
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

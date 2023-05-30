@@ -281,4 +281,10 @@
         <property name="checks" value="ParameterNumberCheck" />
         <property name="files" value="game.fight.FightService" />
     </module>
+
+    <!-- Network classes -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="AnonInnerLength" />
+        <property name="files" value="fr.quatrevieux.araknemu.network.game.out.game.UpdateCells" />
+    </module>
 </module>

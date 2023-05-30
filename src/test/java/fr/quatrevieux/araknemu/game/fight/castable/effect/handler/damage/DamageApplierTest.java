@@ -116,6 +116,24 @@ class DamageApplierTest extends FightBaseCase {
     }
 
     @Test
+    void applyWithTrapBoost() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+
+        player.properties().characteristics().base().set(Characteristic.AGILITY, 50);
+        player.properties().characteristics().base().set(Characteristic.PERCENT_TRAP_BOOST, 25);
+        player.properties().characteristics().base().set(Characteristic.TRAP_BOOST, 10);
+
+        assertEquals(-15, applier.apply(caster, effect, target)); // Without trap boost
+
+        Mockito.when(effect.trap()).thenReturn(true);
+        assertEquals(-27, applier.apply(caster, effect, target)); // With trap boost
+    }
+
+    @Test
     void applyWithResistance() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 

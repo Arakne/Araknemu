@@ -41,7 +41,7 @@ public final class LineArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
+    public <C extends MapCell> Set<C> resolve(C target, C source) {
         if (area.size() == 0) {
             return Collections.singleton(target);
         }

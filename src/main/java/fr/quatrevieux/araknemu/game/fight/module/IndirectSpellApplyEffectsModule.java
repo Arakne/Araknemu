@@ -24,9 +24,11 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ApplySpellOnStartTurnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object.AddGlyphHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object.AddTrapHandler;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveBattlefieldObjects;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.TriggerBattlefieldObjectOnMove;
 import fr.quatrevieux.araknemu.game.listener.fight.spectator.SendBattlefieldObjectsToSpectator;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 
@@ -47,12 +49,14 @@ public final class IndirectSpellApplyEffectsModule implements FightModule {
     public void effects(EffectsHandler handler) {
         handler.register(787, new ApplySpellOnStartTurnHandler(fight, spellService));
         handler.register(401, new AddGlyphHandler(fight, spellService));
+        handler.register(400, new AddTrapHandler(fight, spellService));
     }
 
     @Override
     public Listener[] listeners() {
         return new Listener[] {
             new RemoveBattlefieldObjects(fight),
+            new TriggerBattlefieldObjectOnMove(fight),
             new Listener<SpectatorJoined>() {
                 @Override
                 public void on(SpectatorJoined event) {

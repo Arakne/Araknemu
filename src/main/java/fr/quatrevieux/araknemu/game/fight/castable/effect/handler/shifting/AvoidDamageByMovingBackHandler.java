@@ -68,7 +68,7 @@ public final class AvoidDamageByMovingBackHandler implements EffectHandler, Buff
             return true;
         }
 
-        applier.apply(cast.caster(), buff.target(), buff.effect().max());
+        applier.apply(cast.caster(), cast.from(), buff.target(), buff.effect().max());
         cast.removeTarget(buff.target());
 
         return false;

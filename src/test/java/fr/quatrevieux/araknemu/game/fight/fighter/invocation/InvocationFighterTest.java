@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
@@ -221,6 +222,31 @@ class InvocationFighterTest extends FightBaseCase {
 
         assertThrows(IllegalStateException.class, fighter::cell);
         assertFalse(fight.map().get(123).hasFighter());
+    }
+
+    @Test
+    void moveShouldDispatchFighterMoved() {
+        fighter.joinFight(fight, fight.map().get(123));
+
+        AtomicReference<FighterMoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMoved.class, ref::set);
+
+        fighter.move(fight.map().get(126));
+
+        assertSame(fighter, ref.get().fighter());
+        assertSame(fight.map().get(126), ref.get().cell());
+    }
+
+    @Test
+    void moveShouldNotDispatchFighterMovedWhenNullCellIsGiven() {
+        fighter.joinFight(fight, fight.map().get(123));
+
+        AtomicReference<FighterMoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMoved.class, ref::set);
+
+        fighter.move(null);
+
+        assertNull(ref.get());
     }
 
     @Test

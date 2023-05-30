@@ -148,7 +148,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(951, new RemoveStateHandler());
         handler.register(141, new KillHandler());
         handler.register(150, new InvisibilityHandler(fight));
-        handler.register(202, new RevealInvisibleHandler());
+        handler.register(202, new RevealInvisibleHandler(fight));
 
         handler.register(79,  new HealOrMultiplyDamageHandler());
         handler.register(105, new ReduceDamageHandler());

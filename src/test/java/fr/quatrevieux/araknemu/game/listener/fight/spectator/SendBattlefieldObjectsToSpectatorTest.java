@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.StartWatchFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
+import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -48,28 +49,44 @@ class SendBattlefieldObjectsToSpectatorTest extends FightBaseCase {
         BattlefieldObject bo1 = Mockito.mock(BattlefieldObject.class);
         BattlefieldObject bo2 = Mockito.mock(BattlefieldObject.class);
         BattlefieldObject bo3 = Mockito.mock(BattlefieldObject.class);
+        BattlefieldObject bo4 = Mockito.mock(BattlefieldObject.class);
 
         Mockito.when(bo1.caster()).thenReturn(fight.fighters().get(0));
         Mockito.when(bo2.caster()).thenReturn(fight.fighters().get(1));
         Mockito.when(bo3.caster()).thenReturn(fight.fighters().get(0));
+        Mockito.when(bo4.caster()).thenReturn(fight.fighters().get(0));
 
         Mockito.when(bo1.cell()).thenReturn(fight.map().get(123));
         Mockito.when(bo2.cell()).thenReturn(fight.map().get(220));
         Mockito.when(bo3.cell()).thenReturn(fight.map().get(150));
+        Mockito.when(bo4.cell()).thenReturn(fight.map().get(100));
+
+        Mockito.when(bo1.visible()).thenCallRealMethod();
+        Mockito.when(bo2.visible()).thenCallRealMethod();
+        Mockito.when(bo3.visible()).thenCallRealMethod();
+        Mockito.when(bo4.visible()).thenReturn(false);
+
+        Mockito.when(bo1.cellsProperties()).thenCallRealMethod();
+        Mockito.when(bo2.cellsProperties()).thenCallRealMethod();
+        Mockito.when(bo3.cellsProperties()).thenCallRealMethod();
+        Mockito.when(bo4.cellsProperties()).thenCallRealMethod();
 
         Mockito.when(bo1.size()).thenReturn(2);
         Mockito.when(bo2.size()).thenReturn(1);
         Mockito.when(bo3.size()).thenReturn(3);
+        Mockito.when(bo4.size()).thenReturn(0);
 
         Mockito.when(bo1.color()).thenReturn(1);
         Mockito.when(bo2.color()).thenReturn(2);
         Mockito.when(bo3.color()).thenReturn(3);
+        Mockito.when(bo4.color()).thenReturn(1);
 
         fight.nextState();
 
-        fight.map().addObject(bo1);
-        fight.map().addObject(bo2);
-        fight.map().addObject(bo3);
+        fight.map().objects().add(bo1);
+        fight.map().objects().add(bo2);
+        fight.map().objects().add(bo3);
+        fight.map().objects().add(bo4);
 
         SendBattlefieldObjectsToSpectator listener = new SendBattlefieldObjectsToSpectator(new Spectator(gamePlayer(), fight));
         requestStack.clear();
@@ -82,6 +99,38 @@ class SendBattlefieldObjectsToSpectatorTest extends FightBaseCase {
                 new AddZones.Zone(220, 1, 2),
                 new AddZones.Zone(150, 3, 3),
             })
+        );
+    }
+
+    @Test
+    void onStartWatchFightWithObjectsWithCustomCellData() throws SQLException {
+        BattlefieldObject bo1 = Mockito.mock(BattlefieldObject.class);
+
+        Mockito.when(bo1.caster()).thenReturn(fight.fighters().get(0));
+        Mockito.when(bo1.cell()).thenReturn(fight.map().get(123));
+        Mockito.when(bo1.visible()).thenCallRealMethod();
+        Mockito.when(bo1.cellsProperties()).thenReturn(
+            new UpdateCells.PropertyValue[] { UpdateCells.LAYER_2_OBJECT_NUMBER.set(25), UpdateCells.LINE_OF_SIGHT.set(false) }
+        );
+        Mockito.when(bo1.size()).thenReturn(2);
+        Mockito.when(bo1.color()).thenReturn(1);
+
+        fight.nextState();
+
+        fight.map().objects().add(bo1);
+
+        SendBattlefieldObjectsToSpectator listener = new SendBattlefieldObjectsToSpectator(new Spectator(gamePlayer(), fight));
+        requestStack.clear();
+
+        listener.on(new StartWatchFight());
+
+        requestStack.assertAll(
+            new AddZones(new AddZones.Zone[] {
+                new AddZones.Zone(123, 2, 1),
+            }),
+            new UpdateCells(
+                UpdateCells.Data.fromProperties(123, true, UpdateCells.LAYER_2_OBJECT_NUMBER.set(25), UpdateCells.LINE_OF_SIGHT.set(false))
+            )
         );
     }
 
