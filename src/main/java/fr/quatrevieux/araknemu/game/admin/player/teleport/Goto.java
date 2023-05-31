@@ -24,7 +24,9 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -97,7 +99,7 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
             error("The player is busy, and cannot be teleported. Use --force to force the teleportation.");
         }
 
-        final Target target = parseTarget(arguments.targets);
+        final TeleportationTarget target = parseTarget(arguments.targets);
 
         teleportToTarget(performer, target);
         performer.success("Teleport {} to {}", player.name(), target);
@@ -106,10 +108,10 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
     /**
      * Parse the target from the command arguments
      */
-    private Target parseTarget(List<String> arguments) throws AdminException {
+    private TeleportationTarget parseTarget(List<String> arguments) throws AdminException {
         final ExplorationMap currentMap = player.isExploring() ? player.exploration().map() : null;
 
-        final Target target = new Target(
+        TeleportationTarget target = new TeleportationTarget(
             currentMap != null ? currentMap : mapService.load(player.position().map()),
             player.position().cell()
         );
@@ -125,7 +127,7 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
                 }
 
                 try {
-                    resolvers.get(argument).resolve(arguments.get(argIndex), target);
+                    target = resolvers.get(argument).resolve(arguments.get(argIndex), target);
                 } catch (IllegalArgumentException e) {
                     throw new AdminException(e);
                 }
@@ -133,12 +135,10 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
                 continue;
             }
 
-            if (!autoResolve(argument, target)) {
-                error("Cannot resolve the argument or type " + argument);
-            }
+            target = autoResolve(argument, target);
         }
 
-        return target;
+        return target.ensureCellWalkable();
     }
 
     /**
@@ -147,20 +147,18 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
      * @param argument The argument to parse
      * @param target The target
      *
-     * @return true on success
+     * @throws CommandException If the argument cannot be resolved
      */
-    private boolean autoResolve(String argument, Target target) {
+    private TeleportationTarget autoResolve(String argument, TeleportationTarget target) throws CommandException {
         for (LocationResolver resolver : resolvers.values()) {
             try {
-                resolver.resolve(argument, target);
-
-                return true;
+                return resolver.resolve(argument, target);
             } catch (IllegalArgumentException e) {
                 // ignore resolve exception
             }
         }
 
-        return false;
+        throw new CommandException(name(), "Cannot resolve the argument or type " + argument);
     }
 
     /**
@@ -169,19 +167,21 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
      * @param performer Command performer
      * @param target The teleportation target
      */
-    private void teleportToTarget(AdminPerformer performer, Target target) {
+    private void teleportToTarget(AdminPerformer performer, TeleportationTarget target) {
         if (!player.isExploring()) {
             performer.info("Player is not in exploration. Define the position for the next exploration session.");
             player.setPosition(new Position(target.map().id(), target.cell()));
             return;
         }
 
-        if (player.exploration().interactions().busy()) {
+        final ExplorationPlayer exploration = player.exploration();
+
+        if (exploration.interactions().busy()) {
             performer.info("Player is busy. Stop all there interactions.");
-            player.exploration().interactions().stop();
+            exploration.interactions().stop();
         }
 
-        player.exploration().interactions().push(new ChangeMap(player.exploration(), target.map(), target.cell()));
+        target.apply(exploration);
     }
 
     /**

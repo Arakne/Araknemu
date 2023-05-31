@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -52,9 +53,9 @@ class PlayerResolverTest extends GameBaseCase {
     @Test
     void resolveNotExploring() throws Exception {
         GamePlayer player = makeOtherPlayer();
-        Target target = new Target(explorationPlayer().map(), 123);
+        TeleportationTarget target = new TeleportationTarget(explorationPlayer().map(), 123);
 
-        resolver.resolve(player.name(), target);
+        target = resolver.resolve(player.name(), target);
 
         assertEquals(123, target.cell());
         assertEquals(container.get(ExplorationMapService.class).load(10540), target.map());
@@ -63,9 +64,9 @@ class PlayerResolverTest extends GameBaseCase {
     @Test
     void resolveExploringNotOnMap() throws Exception {
         ExplorationPlayer player = makeOtherExplorationPlayer();
-        Target target = new Target(explorationPlayer().map(), 123);
+        TeleportationTarget target = new TeleportationTarget(explorationPlayer().map(), 123);
 
-        resolver.resolve(player.player().name(), target);
+        target = resolver.resolve(player.player().name(), target);
 
         assertEquals(123, target.cell());
         assertEquals(container.get(ExplorationMapService.class).load(10540), target.map());
@@ -75,9 +76,9 @@ class PlayerResolverTest extends GameBaseCase {
     void resolveExploring() throws Exception {
         ExplorationPlayer player = makeOtherExplorationPlayer();
         player.changeMap(container.get(ExplorationMapService.class).load(10340), 250);
-        Target target = new Target(explorationPlayer().map(), 123);
+        TeleportationTarget target = new TeleportationTarget(explorationPlayer().map(), 123);
 
-        resolver.resolve(player.player().name(), target);
+        target = resolver.resolve(player.player().name(), target);
 
         assertEquals(123, target.cell());
         assertEquals(container.get(ExplorationMapService.class).load(10340), target.map());
@@ -85,6 +86,6 @@ class PlayerResolverTest extends GameBaseCase {
 
     @Test
     void resolveNotFound() {
-        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("not found", new Target(null, 0)));
+        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("not found", new TeleportationTarget(null, 0)));
     }
 }

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -45,7 +46,7 @@ public final class PositionResolver implements LocationResolver {
     }
 
     @Override
-    public void resolve(String argument, Target target) {
+    public TeleportationTarget resolve(String argument, TeleportationTarget target) {
         final String[] parts = argument.split("[;,]", 2);
 
         // @todo area ?
@@ -56,7 +57,7 @@ public final class PositionResolver implements LocationResolver {
         final ExplorationMap currentMap = player.isExploring() ? player.exploration().map() : null;
 
         try {
-            target.setMap(service.find(
+            return target.withMap(service.find(
                 new Geolocation(
                     Integer.parseInt(parts[0]),
                     Integer.parseInt(parts[1])

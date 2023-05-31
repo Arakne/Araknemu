@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,9 +51,9 @@ class PositionResolverTest extends GameBaseCase {
     @Test
     void resolve() throws SQLException {
         explorationPlayer();
-        Target target = new Target(explorationPlayer().map(), 123);
+        TeleportationTarget target = new TeleportationTarget(explorationPlayer().map(), 123);
 
-        resolver.resolve("3;6", target);
+        target = resolver.resolve("3;6", target);
 
         assertEquals(123, target.cell());
         assertEquals(container.get(ExplorationMapService.class).load(10340), target.map());
@@ -61,9 +62,9 @@ class PositionResolverTest extends GameBaseCase {
     @Test
     void resolveWithComma() throws SQLException {
         explorationPlayer();
-        Target target = new Target(explorationPlayer().map(), 123);
+        TeleportationTarget target = new TeleportationTarget(explorationPlayer().map(), 123);
 
-        resolver.resolve("3,6", target);
+        target = resolver.resolve("3,6", target);
 
         assertEquals(123, target.cell());
         assertEquals(container.get(ExplorationMapService.class).load(10340), target.map());
@@ -71,9 +72,9 @@ class PositionResolverTest extends GameBaseCase {
 
     @Test
     void resolveNotExploring() throws SQLException {
-        Target target = new Target(explorationPlayer().map(), 123);
+        TeleportationTarget target = new TeleportationTarget(explorationPlayer().map(), 123);
 
-        resolver.resolve("3,6", target);
+        target = resolver.resolve("3,6", target);
 
         assertEquals(123, target.cell());
         assertEquals(container.get(ExplorationMapService.class).load(10340), target.map());
@@ -81,8 +82,8 @@ class PositionResolverTest extends GameBaseCase {
 
     @Test
     void resolveNotFound() throws SQLException {
-        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("0;0", new Target(null, 0)));
+        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("0;0", new TeleportationTarget(null, 0)));
         explorationPlayer();
-        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("0;0", new Target(null, 0)));
+        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("0;0", new TeleportationTarget(null, 0)));
     }
 }

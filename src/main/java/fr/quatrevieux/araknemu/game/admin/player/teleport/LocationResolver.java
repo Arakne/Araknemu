@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
+
 /**
  * Resolver for goto command argument
  */
@@ -34,9 +36,11 @@ public interface LocationResolver {
      * @param argument The command argument
      * @param target The location target to fill
      *
+     * @return The filled target
+     *
      * @throws IllegalArgumentException When the argument is invalid for the resolver
      */
-    public void resolve(String argument, Target target);
+    public TeleportationTarget resolve(String argument, TeleportationTarget target);
 
     /**
      * Get the resolver help
