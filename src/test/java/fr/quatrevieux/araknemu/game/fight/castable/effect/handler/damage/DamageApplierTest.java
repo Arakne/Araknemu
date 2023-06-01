@@ -116,6 +116,24 @@ class DamageApplierTest extends FightBaseCase {
     }
 
     @Test
+    void applyWithPhysicalBoost() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        player.properties().characteristics().base().set(Characteristic.AGILITY, 50);
+        player.properties().characteristics().base().set(Characteristic.PHYSICAL_DAMAGE, 10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        int value = applier.apply(caster, effect, target);
+        assertEquals(-15, value);
+
+        applier = new DamageApplier(Element.EARTH, fight);
+        value = applier.apply(caster, effect, target);
+        assertEquals(-25, value);
+    }
+
+    @Test
     void applyWithTrapBoost() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 

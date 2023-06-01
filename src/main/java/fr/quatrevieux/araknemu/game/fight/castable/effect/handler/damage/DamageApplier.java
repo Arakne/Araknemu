@@ -166,6 +166,10 @@ public final class DamageApplier {
             .fixed(caster.characteristics().get(Characteristic.FIXED_DAMAGE))
         ;
 
+        if (element.physical()) {
+            value.fixed(caster.characteristics().get(Characteristic.PHYSICAL_DAMAGE));
+        }
+
         if (effect.trap()) {
             value
                 .fixed(caster.characteristics().get(Characteristic.TRAP_BOOST))

@@ -61,6 +61,13 @@ public enum Element {
     }
 
     /**
+     * Check if this element is physical (neutral or earth)
+     */
+    public boolean physical() {
+        return this == NEUTRAL || this == EARTH;
+    }
+
+    /**
      * Extract set of elements from a bit set
      *
      * @param value The bit set
