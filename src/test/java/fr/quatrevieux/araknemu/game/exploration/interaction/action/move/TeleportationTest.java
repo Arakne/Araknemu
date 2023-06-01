@@ -17,7 +17,7 @@
  * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.exploration.interaction.map;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -32,8 +32,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TeleportationTest extends GameBaseCase {
@@ -51,9 +53,18 @@ public class TeleportationTest extends GameBaseCase {
     }
 
     @Test
+    void getters() {
+        Teleportation teleport = teleportation(10300, 321);
+
+        assertSame(player, teleport.performer());
+        assertSame(ActionType.CHANGE_POSITION, teleport.type());
+        assertArrayEquals(new Object[]{player.id(), 321}, teleport.arguments());
+    }
+
+    @Test
     void performOnSameMap() throws Exception {
         Teleportation teleport = teleportation(10300, 321);
-        player.interactions().start(teleport);
+        player.interactions().push(teleport);
 
         assertEquals(
             new Position(10300, 321),
@@ -62,11 +73,7 @@ public class TeleportationTest extends GameBaseCase {
 
         assertFalse(explorationPlayer().interactions().busy());
 
-        requestStack.assertLast(
-            new AddSprites(
-                Collections.singleton(explorationPlayer().sprite())
-            )
-        );
+        requestStack.assertLast("GA;4;"+player.id()+";"+player.id()+",321");
     }
 
     @Test
@@ -100,7 +107,7 @@ public class TeleportationTest extends GameBaseCase {
             service.load(10540),
             321
         ), 3);
-        player.interactions().start(teleportation);
+        player.interactions().push(teleportation);
 
         assertEquals(new Position(10540, 321), player.position());
 
@@ -120,11 +127,6 @@ public class TeleportationTest extends GameBaseCase {
         assertFalse(explorationPlayer().interactions().busy());
     }
 
-    @Test
-    void stopShouldDoNothing() {
-        teleportation(10300, 321).stop();
-    }
-
     private Teleportation teleportation(int mapId, int cellId) {
         return new Teleportation(player, new TeleportationTarget(
             service.load(mapId),
@@ -133,6 +135,6 @@ public class TeleportationTest extends GameBaseCase {
     }
 
     private void start(int mapId, int cellId) {
-        player.interactions().start(teleportation(mapId, cellId));
+        player.interactions().push(teleportation(mapId, cellId));
     }
 }

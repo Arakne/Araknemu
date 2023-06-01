@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.telepor
 
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellAction;
 import org.checkerframework.checker.index.qual.NonNegative;
