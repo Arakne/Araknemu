@@ -120,6 +120,11 @@ public class TeleportationTest extends GameBaseCase {
         assertFalse(explorationPlayer().interactions().busy());
     }
 
+    @Test
+    void stopShouldDoNothing() {
+        teleportation(10300, 321).stop();
+    }
+
     private Teleportation teleportation(int mapId, int cellId) {
         return new Teleportation(player, new TeleportationTarget(
             service.load(mapId),

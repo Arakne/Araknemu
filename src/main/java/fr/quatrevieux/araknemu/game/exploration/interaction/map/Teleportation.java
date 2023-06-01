@@ -47,6 +47,7 @@ public final class Teleportation implements Interaction {
     }
 
     @Override
+    @SuppressWarnings("argument") // checkerframework does not take in account that target.map() and player.map() are equal
     public @Nullable Interaction start() {
         if (target.map().equals(player.map())) {
             // teleport on same map
