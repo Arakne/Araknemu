@@ -21,10 +21,9 @@ package fr.quatrevieux.araknemu.game.listener.map;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
-import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
-
-import java.util.Collections;
+import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 /**
  * Send to all map that a player has changed map
@@ -38,11 +37,12 @@ public final class SendPlayerChangeCell implements Listener<CellChanged> {
 
     @Override
     public void on(CellChanged event) {
-        map.send(
-            new AddSprites(
-                Collections.singleton(event.player().sprite())
-            )
-        );
+        map.send(new GameActionResponse(
+            "",
+            ActionType.CHANGE_POSITION,
+            event.player().id(),
+            event.player().id() + "," + event.cell()
+        ));
     }
 
     @Override

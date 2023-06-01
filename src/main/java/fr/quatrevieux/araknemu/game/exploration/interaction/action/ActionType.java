@@ -30,6 +30,7 @@ public enum ActionType {
     NONE(0),
     MOVE(1),
     CHANGE_MAP(2),
+    CHANGE_POSITION(4),
     FIREWORK(228),
     CHALLENGE(900),
     ACCEPT_CHALLENGE(901),

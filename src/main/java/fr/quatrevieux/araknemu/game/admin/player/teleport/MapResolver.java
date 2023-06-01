@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.util.ParseUtils;
 

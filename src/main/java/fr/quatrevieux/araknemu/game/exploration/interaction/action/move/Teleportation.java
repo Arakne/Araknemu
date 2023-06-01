@@ -17,12 +17,12 @@
  * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.exploration.interaction.map;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 
 /**
  * Perform a teleportation
@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * In case of teleportation on another map, it will push a {@link ChangeMap} interaction
  * Otherwise, it will change the player cell by calling {@link ExplorationPlayer#changeCell(int)}
  */
-public final class Teleportation implements Interaction {
+public final class Teleportation implements Action {
     private final ExplorationPlayer player;
     private final TeleportationTarget target;
     private final int cinematic;
@@ -48,20 +48,28 @@ public final class Teleportation implements Interaction {
 
     @Override
     @SuppressWarnings("argument") // checkerframework does not take in account that target.map() and player.map() are equal
-    public @Nullable Interaction start() {
+    public void start(ActionQueue queue) {
         if (target.map().equals(player.map())) {
             // teleport on same map
             player.changeCell(target.cell());
         } else {
             // teleport on another map
-            player.interactions().push(new ChangeMap(player, target.map(), target.cell(), cinematic));
+            queue.push(new ChangeMap(player, target.map(), target.cell(), cinematic));
         }
-
-        return null;
     }
 
     @Override
-    public void stop() {
-        // nothing to do: this interaction is not blocking
+    public ExplorationPlayer performer() {
+        return player;
+    }
+
+    @Override
+    public ActionType type() {
+        return ActionType.CHANGE_POSITION;
+    }
+
+    @Override
+    public Object[] arguments() {
+        return new Object[] { player.id(), target.cell() };
     }
 }

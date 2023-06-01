@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;

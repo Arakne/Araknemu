@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.exploration.interaction.map;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -126,6 +126,6 @@ public final class TeleportationTarget {
      * @param player the player to teleport
      */
     public void apply(ExplorationPlayer player) {
-        player.interactions().start(new Teleportation(player, this));
+        player.interactions().push(new Teleportation(player, this));
     }
 }
