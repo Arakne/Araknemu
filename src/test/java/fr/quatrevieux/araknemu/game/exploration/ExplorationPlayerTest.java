@@ -182,11 +182,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         assertEquals(147, player.position().cell());
         assertEquals(map.get(147), player.cell());
 
-        requestStack.assertLast(
-            new AddSprites(
-                Collections.singleton(player.sprite())
-            )
-        );
+        requestStack.assertLast("GA;4;"+player.id()+";"+player.id()+",147");
     }
 
     @Test

@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.teleport;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.map.Teleportation;
-import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Teleportation;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
@@ -55,7 +55,7 @@ public final class Teleport implements Action {
 
     @Override
     public void apply(ExplorationPlayer player) {
-        player.interactions().start(new Teleportation(
+        player.interactions().push(new Teleportation(
             player,
             new TeleportationTarget(
                 service.load(position.map()),

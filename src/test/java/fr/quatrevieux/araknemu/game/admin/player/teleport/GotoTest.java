@@ -98,11 +98,7 @@ class GotoTest extends CommandTestCase {
         assertEquals(266, player.position().cell());
         assertOutput("Teleport Bob to [-4,3] (10300) at cell 266");
 
-        requestStack.assertOne(
-            new AddSprites(
-                Collections.singleton(player.sprite())
-            )
-        );
+        requestStack.assertOne("GA;4;"+player.id()+";"+player.id()+",266");
 
         requestStack.assertNotContains(GameActionResponse.class);
     }

@@ -49,10 +49,6 @@ class SendPlayerChangeCellTest extends GameBaseCase {
     void onCellChanged() throws SQLException, ContainerException {
         listener.on(new CellChanged(explorationPlayer(), 123));
 
-        requestStack.assertLast(
-            new AddSprites(
-                Collections.singleton(explorationPlayer().sprite())
-            )
-        );
+        requestStack.assertLast("GA;4;" + explorationPlayer().id() + ";" + explorationPlayer().id() + ",123");
     }
 }

@@ -59,11 +59,7 @@ class TeleportTest extends GameBaseCase {
 
         assertFalse(explorationPlayer().interactions().busy());
 
-        requestStack.assertLast(
-            new AddSprites(
-                Collections.singleton(explorationPlayer().sprite())
-            )
-        );
+        requestStack.assertLast("GA;4;"+explorationPlayer().id()+";"+explorationPlayer().id()+",321");
     }
 
     @Test
