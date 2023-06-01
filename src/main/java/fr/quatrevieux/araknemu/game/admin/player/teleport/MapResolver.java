@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.util.ParseUtils;
 
@@ -39,11 +40,11 @@ public final class MapResolver implements LocationResolver {
     }
 
     @Override
-    public void resolve(String argument, Target target) {
+    public TeleportationTarget resolve(String argument, TeleportationTarget target) {
         final int mapId = ParseUtils.parseNonNegativeInt(argument);
 
         try {
-            target.setMap(service.load(mapId));
+            return target.withMap(service.load(mapId));
         } catch (EntityNotFoundException e) {
             throw new IllegalArgumentException("The map " + argument + " cannot be found");
         }

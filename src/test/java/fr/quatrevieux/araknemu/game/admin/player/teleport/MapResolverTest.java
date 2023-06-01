@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,9 +49,9 @@ class MapResolverTest extends GameBaseCase {
 
     @Test
     void resolve() throws SQLException {
-        Target target = new Target(explorationPlayer().map(), 123);
+        TeleportationTarget target = new TeleportationTarget(explorationPlayer().map(), 123);
 
-        resolver.resolve("10340", target);
+        target = resolver.resolve("10340", target);
 
         assertEquals(123, target.cell());
         assertEquals(container.get(ExplorationMapService.class).load(10340), target.map());
@@ -58,6 +59,6 @@ class MapResolverTest extends GameBaseCase {
 
     @Test
     void resolveNotFound() {
-        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("0", new Target(null, 0)));
+        assertThrows(IllegalArgumentException.class, () -> resolver.resolve("0", new TeleportationTarget(null, 0)));
     }
 }

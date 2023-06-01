@@ -27,10 +27,13 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
+import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -94,6 +97,14 @@ class GotoTest extends CommandTestCase {
         assertEquals(10300, player.map().id());
         assertEquals(266, player.position().cell());
         assertOutput("Teleport Bob to [-4,3] (10300) at cell 266");
+
+        requestStack.assertOne(
+            new AddSprites(
+                Collections.singleton(player.sprite())
+            )
+        );
+
+        requestStack.assertNotContains(GameActionResponse.class);
     }
 
     @Test
@@ -105,6 +116,8 @@ class GotoTest extends CommandTestCase {
         assertEquals(10340, player.map().id());
         assertEquals(42, player.position().cell());
         assertOutput("Teleport Bob to [3,6] (10340) at cell 42");
+
+        requestStack.assertContains(GameActionResponse.class);
     }
 
     @Test

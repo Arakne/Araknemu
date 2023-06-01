@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.teleport;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.Teleportation;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
@@ -55,13 +55,14 @@ public final class Teleport implements Action {
 
     @Override
     public void apply(ExplorationPlayer player) {
-        final ExplorationMap map = service.load(position.map());
-
-        if (position.cell() >= map.size()) {
-            throw new IllegalArgumentException("Invalid cell for teleport target " + position);
-        }
-
-        player.interactions().push(new ChangeMap(player, map, position.cell(), cinematic));
+        player.interactions().start(new Teleportation(
+            player,
+            new TeleportationTarget(
+                service.load(position.map()),
+                position.cell()
+            ),
+            cinematic
+        ));
     }
 
     public static final class Factory implements ActionFactory {

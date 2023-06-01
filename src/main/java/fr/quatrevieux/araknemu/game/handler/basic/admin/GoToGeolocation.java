@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.basic.admin;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
+import fr.quatrevieux.araknemu.game.exploration.interaction.map.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -47,26 +47,18 @@ public final class GoToGeolocation implements PacketHandler<GameSession, AdminMo
         }
 
         final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
-        final ExplorationMap map = player.map();
-        final ExplorationMap target = service.find(
+        final ExplorationMap currentMap = player.map();
+        final ExplorationMap targetMap = service.find(
             packet.geolocation(),
-            map != null
-                ? GeolocationService.GeolocationContext.fromMap(map)
+            currentMap != null
+                ? GeolocationService.GeolocationContext.fromMap(currentMap)
                 : new GeolocationService.GeolocationContext()
         );
 
-        if (player.position().cell() < target.size() && target.get(player.position().cell()).walkable()) {
-            player.interactions().push(new ChangeMap(player, target, player.position().cell()));
-            return;
-        }
-
-        // @todo utility class for find valid cell ?
-        for (int cellId = 0; cellId < target.size(); ++cellId) {
-            if (target.get(cellId).walkable()) {
-                player.interactions().push(new ChangeMap(player, target, cellId));
-                return;
-            }
-        }
+        new TeleportationTarget(targetMap, player.cell().id())
+            .ensureCellWalkable()
+            .apply(player)
+        ;
     }
 
     @Override
