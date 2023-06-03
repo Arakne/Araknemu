@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.HealOrMultiplyDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.AlterResistanceHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReduceDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReflectDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
@@ -154,6 +155,9 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(105, new ReduceDamageHandler());
         handler.register(106, new SpellReturnHandler(fight));
         handler.register(107, new ReflectDamageHandler());
+        handler.register(172, AlterResistanceHandler.reduceMagical());
+        handler.register(183, AlterResistanceHandler.increaseMagical());
+        handler.register(184, AlterResistanceHandler.increasePhysical());
         handler.register(265, new ReduceDamageHandler());
 
         handler.register(114, new MultiplyDamageHandler());
@@ -185,6 +189,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(125, new AddVitalityHandler(fight));
         handler.register(126, new AddCharacteristicHandler(fight, Characteristic.INTELLIGENCE));
         handler.register(138, new AddCharacteristicHandler(fight, Characteristic.PERCENT_DAMAGE));
+        handler.register(142, new AddCharacteristicHandler(fight, Characteristic.PHYSICAL_DAMAGE));
         handler.register(178, new AddCharacteristicHandler(fight, Characteristic.HEALTH_BOOST));
         handler.register(182, new AddCharacteristicHandler(fight, Characteristic.MAX_SUMMONED_CREATURES));
         handler.register(220, new AddCharacteristicHandler(fight, Characteristic.COUNTER_DAMAGE));

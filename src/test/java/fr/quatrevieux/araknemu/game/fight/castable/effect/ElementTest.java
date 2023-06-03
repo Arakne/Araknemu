@@ -38,4 +38,13 @@ class ElementTest {
         assertEquals(EnumSet.of(Element.AIR, Element.NEUTRAL), Element.fromBitSet(9));
         assertSame(Element.fromBitSet(9), Element.fromBitSet(9));
     }
+
+    @Test
+    void physical() {
+        assertTrue(Element.NEUTRAL.physical());
+        assertTrue(Element.EARTH.physical());
+        assertFalse(Element.WATER.physical());
+        assertFalse(Element.AIR.physical());
+        assertFalse(Element.FIRE.physical());
+    }
 }
