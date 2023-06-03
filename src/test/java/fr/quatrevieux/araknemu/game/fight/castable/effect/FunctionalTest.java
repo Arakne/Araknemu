@@ -1371,6 +1371,37 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(197), service.get(79).level(5)));
     }
 
+    @Test
+    void addPhysicalDamage() {
+        fighter1.turn().points().addActionPoints(10);
+
+        castNormal(16, fighter1.cell()); // Science du bâton
+        castNormal(183, fighter2.cell()); // Ronce
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+        assertBetween(30, 40, damage); // +15 damage
+
+        fighter2.life().alter(fighter2, 100);
+
+        castNormal(3, fighter2.cell()); // Attaque naturelle
+
+        damage = fighter2.life().max() - fighter2.life().current();
+        assertBetween(17, 27, damage); // Boost not applied
+    }
+
+    @Test
+    void increaseResistance() {
+        castNormal(197, fighter1.cell()); // Puissance Sylvestre
+        fighter1.turn().stop();
+
+        fighter2.turn().points().addActionPoints(10);
+
+        castNormal(183, fighter1.cell()); // Ronce
+        castNormal(3, fighter1.cell()); // Attaque naturelle
+
+        assertTrue(fighter1.life().isFull());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
