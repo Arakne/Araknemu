@@ -57,7 +57,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Handle fight
@@ -75,6 +74,7 @@ public final class Fight implements Dispatcher, Sender {
     private final ScheduledExecutorService executor;
     private final Spectators spectators;
     private final ActionsFactory<Fighter> actions;
+    private final FighterList fighters;
 
     private final Lock executorLock = new ReentrantLock();
     private final EffectsHandler effects = new EffectsHandler();
@@ -94,6 +94,7 @@ public final class Fight implements Dispatcher, Sender {
         this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
+        this.fighters = new FighterList(this);
         this.actions = actions;
     }
 
@@ -132,17 +133,8 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get all fighters on the fight
      */
-    public List<Fighter> fighters() {
-        final FightTurnList turnList = this.turnList;
-        final Stream<Fighter> fighterStream = turnList != null
-            ? turnList.fighters().stream()
-            : teams.stream().flatMap(fightTeam -> fightTeam.fighters().stream())
-        ;
-
-        return fighterStream
-            .filter(Fighter::isOnFight)
-            .collect(Collectors.toList())
-        ;
+    public FighterList fighters() {
+        return fighters;
     }
 
     /**
@@ -409,6 +401,7 @@ public final class Fight implements Dispatcher, Sender {
         map.destroy();
         attachments.clear();
         spectators.clear();
+        fighters.clear();
     }
 
     /**

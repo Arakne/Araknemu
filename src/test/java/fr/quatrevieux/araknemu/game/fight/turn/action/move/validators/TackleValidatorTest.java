@@ -45,6 +45,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -369,12 +370,12 @@ class TackleValidatorTest extends FightBaseCase {
     @ParameterizedTest
     void computeTackle(int performerAgility, int enemyAgility, double escapeProbability) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         FightBuilder builder = fightBuilder()
-            .addSelf(fb -> fb.cell(185).charac(Characteristic.AGILITY, performerAgility))
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.AGILITY, performerAgility).charac(Characteristic.INTELLIGENCE, 1000))
             .addEnemy(fb -> fb.cell(170).charac(Characteristic.AGILITY, enemyAgility))
         ;
 
         fight = builder.build(true);
-        fight.start(a -> fight.fighters());
+        fight.start(new AlternateTeamFighterOrder());
 
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
@@ -383,7 +384,7 @@ class TackleValidatorTest extends FightBaseCase {
         Method method = validator.getClass().getDeclaredMethod("computeTackle", Fighter.class, FighterData.class);
         method.setAccessible(true);
 
-        assertEquals(escapeProbability, (double) method.invoke(validator, fighter, fight.fighters().get(1)), 0.01);
+        assertEquals(escapeProbability, (double) method.invoke(validator, fighter, getFighter(1)), 0.01);
     }
 
     public static Stream<Arguments> provideAgilityAndChance() {

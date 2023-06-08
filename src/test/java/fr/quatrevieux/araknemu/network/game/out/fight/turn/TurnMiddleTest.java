@@ -48,7 +48,7 @@ class TurnMiddleTest extends FightBaseCase {
 
     @Test
     void generateWithHiddenFighterShouldNotSendCell() {
-        fight.fighters().get(1).setHidden(fight.fighters().get(1), true);
+        other.fighter().setHidden(other.fighter(), true);
 
         assertEquals(
             "GTM|1;0;295;6;3;122;;295|2;0;50;6;3;-1;;50",

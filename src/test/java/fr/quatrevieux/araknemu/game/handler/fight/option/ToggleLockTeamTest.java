@@ -103,6 +103,6 @@ class ToggleLockTeamTest extends FightBaseCase {
         requestStack.assertLast(new FightOption(leader.team().id(), FightOption.Type.BLOCK_JOINER, false));
         PlayerFighter fighter = makePlayerFighter(gamePlayer());
         fight.state(PlacementState.class).joinTeam(fighter, fight.team(0));
-        assertContains(fighter, fight.fighters());
+        assertContains(fighter, fight.fighters().all());
     }
 }

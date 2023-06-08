@@ -354,6 +354,18 @@ public final class ActionEffect {
     }
 
     /**
+     * Add an invoked static creature to the fight
+     * Unlike {@link #addInvocation(FighterData, FighterData)}, the client will take this creature in account
+     * for invocations count limit
+     *
+     * @param caster Invoker
+     * @param invocation Invocation to add
+     */
+    public static ActionEffect addStaticInvocation(FighterData caster, FighterData invocation) {
+        return new ActionEffect(185, caster, "+" + invocation.sprite());
+    }
+
+    /**
      * A glyph has been triggered by a fighter
      *
      * @param caster The caster of the glyph

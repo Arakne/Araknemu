@@ -67,7 +67,7 @@ class MonsterAiFactoryTest extends FightBaseCase {
             -1,
             container.get(MonsterService.class).load(36).get(3),
             fight.team(1),
-            fight.fighters().get(0)
+            fight.team(0).leader()
         );
 
         fighter.joinFight(fight, fight.map().get(123));

@@ -98,7 +98,7 @@ class FightChannelTest extends FightBaseCase {
         Spectator spectator = new Spectator(gamePlayer(), fight);
         spectator.join();
 
-        PlayerFighter fighter = PlayerFighter.class.cast(fight.fighters().get(0));
+        PlayerFighter fighter = PlayerFighter.class.cast(fight.team(0).leader());
         GamePlayer from = fighter.player();
         from.start(fighter);
 

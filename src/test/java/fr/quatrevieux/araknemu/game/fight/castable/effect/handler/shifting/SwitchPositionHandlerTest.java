@@ -51,7 +51,7 @@ class SwitchPositionHandlerTest extends FightBaseCase {
         );
 
         PlayerFighter caster = player.fighter();
-        Fighter other = fight.fighters().get(1);
+        Fighter other = getFighter(1);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);

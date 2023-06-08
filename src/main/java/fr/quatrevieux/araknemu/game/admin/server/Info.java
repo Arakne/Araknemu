@@ -74,7 +74,7 @@ public final class Info extends AbstractCommand<Void> {
         performer.info("Online : {} sessions and {} players", gameService.sessions().size(), playerService.online().size());
         performer.info("Fights : {} fights with {} fighters",
             fightService.fights().size(),
-            fightService.fights().stream().mapToLong(fight -> fight.fighters().size()).sum()
+            fightService.fights().stream().mapToLong(fight -> fight.fighters().all().size()).sum()
         );
         performer.info(
             "RAM usage : {} / {}",

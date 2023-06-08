@@ -144,7 +144,7 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertNull(session.fighter());
-        assertFalse(fight.fighters().contains(fighter));
+        assertFalse(fight.fighters().all().contains(fighter));
     }
 
     @Test

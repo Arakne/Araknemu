@@ -65,13 +65,9 @@ class MonsterInvocationModuleTest extends FightBaseCase {
         InvocationFighter invoc2 = new InvocationFighter(-6, monsterService.load(36).get(2), player.fighter().team(), player.fighter());
         InvocationFighter invoc3 = new InvocationFighter(-7, monsterService.load(36).get(4), other.fighter().team(), other.fighter());
 
-        invoc1.joinFight(fight, fight.map().get(123));
-        invoc2.joinFight(fight, fight.map().get(124));
-        invoc3.joinFight(fight, fight.map().get(125));
-
-        fight.turnList().add(invoc1);
-        fight.turnList().add(invoc2);
-        fight.turnList().add(invoc3);
+        fight.fighters().joinTurnList(invoc1, fight.map().get(123));
+        fight.fighters().joinTurnList(invoc2, fight.map().get(124));
+        fight.fighters().joinTurnList(invoc3, fight.map().get(125));
 
         invoc1.init();
         invoc2.init();
@@ -85,14 +81,14 @@ class MonsterInvocationModuleTest extends FightBaseCase {
         assertFalse(fight.map().get(124).hasFighter());
         assertFalse(fight.turnList().fighters().contains(invoc1));
         assertFalse(fight.turnList().fighters().contains(invoc2));
-        assertFalse(fight.fighters().contains(invoc1));
-        assertFalse(fight.fighters().contains(invoc2));
+        assertFalse(fight.fighters().all().contains(invoc1));
+        assertFalse(fight.fighters().all().contains(invoc2));
 
         // Do not change invocation of other fighter
         assertFalse(invoc3.dead());
         assertTrue(fight.map().get(125).hasFighter());
         assertTrue(fight.turnList().fighters().contains(invoc3));
-        assertTrue(fight.fighters().contains(invoc3));
+        assertTrue(fight.fighters().all().contains(invoc3));
     }
 
     @Test
@@ -113,7 +109,26 @@ class MonsterInvocationModuleTest extends FightBaseCase {
         assertTrue(invoc.dead());
         assertFalse(fight.map().get(123).hasFighter());
         assertFalse(fight.turnList().fighters().contains(invoc));
-        assertFalse(fight.fighters().contains(invoc));
+        assertFalse(fight.fighters().all().contains(invoc));
+    }
+
+    @Test
+    void onFighterDieStaticInvocationShouldBeRemovedFromFight() throws Exception {
+        Fight fight = createFight(true);
+
+        fight.register(new MonsterInvocationModule(monsterService, container.get(FighterFactory.class), fight));
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        InvocationFighter invoc = new InvocationFighter(-5, monsterService.load(36).get(2), player.fighter().team(), player.fighter());
+        invoc.joinFight(fight, fight.map().get(123));
+        invoc.init();
+
+        invoc.life().kill(player.fighter());
+
+        assertTrue(invoc.dead());
+        assertFalse(fight.map().get(123).hasFighter());
+        assertFalse(fight.fighters().all().contains(invoc));
     }
 
     @Test

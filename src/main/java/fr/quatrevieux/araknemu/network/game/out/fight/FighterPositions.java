@@ -21,9 +21,7 @@ package fr.quatrevieux.araknemu.network.game.out.fight;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 /**
  * Send all fighters positions
@@ -31,23 +29,24 @@ import java.util.stream.Collectors;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L193
  */
 public final class FighterPositions {
-    private final Collection<? extends FighterData> fighters;
+    private final Iterable<? extends FighterData> fighters;
 
     public FighterPositions(FighterData fighter) {
         this(Collections.singleton(fighter));
     }
 
-    public FighterPositions(Collection<? extends FighterData> fighters) {
+    public FighterPositions(Iterable<? extends FighterData> fighters) {
         this.fighters = fighters;
     }
 
     @Override
     public String toString() {
-        return
-            "GIC|" +
-            fighters.stream()
-                .map(fighter -> fighter.id() + ";" + fighter.cell().id())
-                .collect(Collectors.joining("|"))
-            ;
+        final StringBuilder sb = new StringBuilder("GIC");
+
+        for (FighterData fighter : fighters) {
+            sb.append('|').append(fighter.id()).append(';').append(fighter.cell().id());
+        }
+
+        return sb.toString();
     }
 }

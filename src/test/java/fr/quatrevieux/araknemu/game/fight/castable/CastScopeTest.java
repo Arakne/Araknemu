@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -488,7 +489,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.fighters();
+        List<Fighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
@@ -520,7 +521,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.fighters();
+        List<Fighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
@@ -553,7 +554,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.fighters();
+        List<Fighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
@@ -586,7 +587,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.fighters();
+        List<Fighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 

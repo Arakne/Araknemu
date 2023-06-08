@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
@@ -28,7 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -73,7 +73,7 @@ public final class FightTurnList {
         final int index = fighters.indexOf(fighter);
 
         if (index == -1) {
-            throw new NoSuchElementException("Fighter " + fighter.id() + " is not found on the turn list");
+            return;
         }
 
         fighters.remove(index);
@@ -94,6 +94,8 @@ public final class FightTurnList {
 
     /**
      * Add a fighter after the current one
+     *
+     * Note: this method should not be called directly, use {@link fr.quatrevieux.araknemu.game.fight.FighterList#joinTurnList(Fighter, FightCell)} instead
      *
      * @param fighter Fighter to add
      *

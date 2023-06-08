@@ -137,11 +137,11 @@ class SendFightStateToSpectatorTest extends FightBaseCase {
         Mockito.when(effect2.min()).thenReturn(80);
         Mockito.when(effect2.duration()).thenReturn(10);
 
-        Buff buff1 = new Buff(effect1, Mockito.mock(Spell.class), fight.fighters().get(0), fight.fighters().get(0), Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(effect2, Mockito.mock(Spell.class), fight.fighters().get(0), fight.fighters().get(0), Mockito.mock(BuffHook.class));
+        Buff buff1 = new Buff(effect1, Mockito.mock(Spell.class), getFighter(0), getFighter(0), Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(effect2, Mockito.mock(Spell.class), getFighter(0), getFighter(0), Mockito.mock(BuffHook.class));
 
-        fight.fighters().get(0).buffs().add(buff1);
-        fight.fighters().get(0).buffs().add(buff2);
+        getFighter(0).buffs().add(buff1);
+        getFighter(0).buffs().add(buff2);
         requestStack.clear();
 
         listener.on(new StartWatchFight());
@@ -165,7 +165,7 @@ class SendFightStateToSpectatorTest extends FightBaseCase {
         fight.nextState();
         fight.turnList().start();
 
-        fight.fighters().get(0).setHidden(fight.fighters().get(0), true);
+        getFighter(0).setHidden(getFighter(0), true);
         requestStack.clear();
 
         listener.on(new StartWatchFight());
@@ -177,7 +177,7 @@ class SendFightStateToSpectatorTest extends FightBaseCase {
             new FighterTurnOrder(fight.turnList()),
             new TurnMiddle(fight.fighters()),
             new StartTurn(fight.turnList().current().get()),
-            ActionEffect.fighterHidden(fight.fighters().get(0), fight.fighters().get(0))
+            ActionEffect.fighterHidden(getFighter(0), getFighter(0))
         );
     }
 }

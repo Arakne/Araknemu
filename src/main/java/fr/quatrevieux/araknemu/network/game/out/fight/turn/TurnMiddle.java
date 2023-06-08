@@ -22,17 +22,15 @@ package fr.quatrevieux.araknemu.network.game.out.fight.turn;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
-import java.util.Collection;
-
 /**
  * Send fighters information between two turns
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L326
  */
 public final class TurnMiddle {
-    private final Collection<Fighter> fighters;
+    private final Iterable<Fighter> fighters;
 
-    public TurnMiddle(Collection<Fighter> fighters) {
+    public TurnMiddle(Iterable<Fighter> fighters) {
         this.fighters = fighters;
     }
 

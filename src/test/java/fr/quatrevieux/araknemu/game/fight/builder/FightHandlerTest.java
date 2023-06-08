@@ -85,7 +85,7 @@ class FightHandlerTest extends GameBaseCase {
         assertInstanceOf(ChallengeType.class, fight.type());
         assertInstanceOf(PlacementState.class, fight.state());
         assertCount(2, fight.teams());
-        assertCount(2, fight.fighters());
+        assertCount(2, fight.fighters().all());
     }
 
     @Test

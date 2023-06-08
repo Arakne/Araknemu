@@ -27,25 +27,25 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 
 /**
- * Handle monster invocation
+ * Handle invocation of a static creature
+ * Unlike {@link MonsterInvocationHandler}, the invoked monster does not appear in timeline, and cannot perform any action
  *
- * A new fighter will be created and added to fight and timeline (turn list)
+ * A new fighter will be created and added to fight but not in timeline
  *
  * Effect parameters :
  * - #1 (min) : monster id
  * - #2 (max) : grade number
  *
- * @see InvocationFighter Invoked fighter
+ * @see InvocationFighter Invoked fighter @todo change
  */
-public final class MonsterInvocationHandler implements EffectHandler {
+public final class StaticInvocationHandler implements EffectHandler {
      private final MonsterService monsterService;
      private final FighterFactory fighterFactory;
      private final Fight fight;
 
-    public MonsterInvocationHandler(MonsterService monsterService, FighterFactory fighterFactory, Fight fight) {
+    public StaticInvocationHandler(MonsterService monsterService, FighterFactory fighterFactory, Fight fight) {
         this.monsterService = monsterService;
         this.fighterFactory = fighterFactory;
         this.fight = fight;
@@ -53,11 +53,12 @@ public final class MonsterInvocationHandler implements EffectHandler {
 
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
-        handle(cast, effect);
+        throw new UnsupportedOperationException("StaticInvocationHandler cannot be used as buff");
     }
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        // @todo do not use InvocationFighter
         final Fighter invocation = fighterFactory.generate(id -> new InvocationFighter(
             id,
             monsterService.load(effect.effect().min()).get(effect.effect().max()),
@@ -65,11 +66,9 @@ public final class MonsterInvocationHandler implements EffectHandler {
             cast.caster()
         ));
 
-        fight.fighters().joinTurnList(invocation, cast.target());
-
+        fight.fighters().join(invocation, cast.target());
         invocation.init();
 
-        fight.send(ActionEffect.addInvocation(cast.caster(), invocation));
-        fight.send(ActionEffect.packet(cast.caster(), new FighterTurnOrder(fight.turnList())));
+        fight.send(ActionEffect.addStaticInvocation(cast.caster(), invocation));
     }
 }

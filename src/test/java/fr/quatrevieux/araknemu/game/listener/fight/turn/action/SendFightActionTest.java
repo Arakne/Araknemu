@@ -198,7 +198,7 @@ class SendFightActionTest extends FightBaseCase {
         fight = createPvmFight();
         listener = new SendFightAction(fight);
 
-        Fighter monster = fight.fighters().get(1);
+        Fighter monster = new ArrayList<>(fight.team(1).fighters()).get(0);
 
         monster.setHidden(monster, true);
         requestStack.clear();

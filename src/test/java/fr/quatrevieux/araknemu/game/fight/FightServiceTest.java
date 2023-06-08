@@ -135,7 +135,7 @@ class FightServiceTest extends FightBaseCase {
 
         assertTrue(service.fightsByMap(fight.map().id()).isEmpty());
         assertCount(0, fight.teams());
-        assertCount(0, fight.fighters());
+        assertCount(0, fight.fighters().all());
     }
 
     @Test

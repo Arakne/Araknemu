@@ -56,7 +56,7 @@ class LeaveOnDisconnectTest extends FightBaseCase {
     void onDisconnect() throws InterruptedException {
         listener.on(new Disconnected());
 
-        assertFalse(fight.fighters().contains(fighter));
+        assertFalse(fight.fighters().all().contains(fighter));
         requestStack.assertLast(new RemoveSprite(fighter.sprite()));
     }
 }

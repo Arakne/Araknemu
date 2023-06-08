@@ -137,11 +137,11 @@ class PlacementStateTest extends FightBaseCase {
         assertEquals(123, fighter.cell().id());
         assertEquals(fight.team(0), fighter.team());
         assertEquals(fight, fighter.fight());
-        assertEquals(321, fight.fighters().get(1).cell().id());
-        assertEquals(fight.team(1), fight.fighters().get(1).team());
-        assertEquals(fight, fight.fighters().get(1).fight());
+        assertEquals(321, fight.team(1).leader().cell().id());
+        assertEquals(fight.team(1), fight.team(1).leader().team());
+        assertEquals(fight, fight.team(1).leader().fight());
 
-        assertCount(2, fight.fighters());
+        assertCount(2, fight.fighters().all());
     }
 
     @Test
@@ -153,9 +153,9 @@ class PlacementStateTest extends FightBaseCase {
         assertNotNull(fighter.cell());
         assertEquals(fight.team(0), fighter.team());
         assertEquals(fight, fighter.fight());
-        assertNotNull(fight.fighters().get(1).cell());
-        assertEquals(fight.team(1), fight.fighters().get(1).team());
-        assertEquals(fight, fight.fighters().get(1).fight());
+        assertNotNull(fight.team(1).leader().cell());
+        assertEquals(fight.team(1), fight.team(1).leader().team());
+        assertEquals(fight, fight.team(1).leader().fight());
     }
 
     @RepeatedIfExceptionsTest
@@ -406,7 +406,7 @@ class PlacementStateTest extends FightBaseCase {
 
         assertThrows(InvalidFightStateException.class, () -> state.leave(newFighter));
         assertNull(ref.get());
-        assertContains(newFighter, fight.fighters());
+        assertContains(newFighter, fight.fighters().all());
     }
 
     @Test
@@ -422,7 +422,7 @@ class PlacementStateTest extends FightBaseCase {
 
         state.leave(newFighter);
         assertSame(newFighter, ref.get().fighter());
-        assertFalse(fight.fighters().contains(newFighter));
+        assertFalse(fight.fighters().all().contains(newFighter));
         assertFalse(newFighter.cell().hasFighter());
 
         requestStack.assertLast(new RemoveSprite(newFighter.sprite()));
@@ -441,7 +441,7 @@ class PlacementStateTest extends FightBaseCase {
 
         state.leave(fighter);
 
-        assertCount(0, fight.fighters());
+        assertCount(0, fight.fighters().all());
         assertSame(fight, ref.get().fight());
         requestStack.assertLast(new CancelFight());
     }
@@ -468,7 +468,7 @@ class PlacementStateTest extends FightBaseCase {
 
         assertThrows(InvalidFightStateException.class, () -> state.kick(newFighter));
         assertNull(ref.get());
-        assertContains(newFighter, fight.fighters());
+        assertContains(newFighter, fight.fighters().all());
     }
 
     @Test
@@ -492,7 +492,7 @@ class PlacementStateTest extends FightBaseCase {
 
         state.kick(newFighter);
         assertSame(newFighter, ref.get().fighter());
-        assertFalse(fight.fighters().contains(newFighter));
+        assertFalse(fight.fighters().all().contains(newFighter));
         assertFalse(newFighter.cell().hasFighter());
 
         requestStack.assertLast(new RemoveSprite(newFighter.sprite()));

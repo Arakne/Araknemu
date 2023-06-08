@@ -96,6 +96,7 @@ public class FightBaseCase extends GameBaseCase {
     protected GamePlayer player;
     protected GamePlayer other;
     protected ScheduledExecutorService executor;
+    private Fight lastCreatedFight;
 
     private int lastPlayerId = 5;
 
@@ -117,11 +118,12 @@ public class FightBaseCase extends GameBaseCase {
         executor.shutdownNow();
 
         super.tearDown();
+        lastCreatedFight = null;
     }
 
     public Fight createFight(boolean init) throws Exception {
         FightMap map;
-        Fight fight = new Fight(
+        Fight fight = lastCreatedFight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
             map = loadFightMap(10340),
@@ -152,7 +154,7 @@ public class FightBaseCase extends GameBaseCase {
 
     public Fight createPvmFight() throws Exception {
         FightMap map;
-        Fight fight = new Fight(
+        Fight fight = lastCreatedFight = new Fight(
             1,
             container.get(PvmType.class),
             map = loadFightMap(10340),
@@ -236,7 +238,7 @@ public class FightBaseCase extends GameBaseCase {
         GamePlayer player1 = makeSimpleGamePlayer(++lastPlayerId);
         GamePlayer player2 = makeSimpleGamePlayer(++lastPlayerId);
 
-        return container.get(FightService.class)
+        return lastCreatedFight = container.get(FightService.class)
             .handler(ChallengeBuilder.class)
             .start(builder -> builder
                 .map(map)
@@ -281,6 +283,13 @@ public class FightBaseCase extends GameBaseCase {
 
     public PlayerFighter makePlayerFighter(GamePlayer player) throws ContainerException {
         return container.get(FighterFactory.class).create(player);
+    }
+
+    /**
+     * Get a fighter by its index in the turn list.
+     */
+    public Fighter getFighter(int index) {
+        return lastCreatedFight.turnList().fighters().get(index);
     }
 
     public FightBuilder fightBuilder() {
@@ -391,7 +400,7 @@ public class FightBaseCase extends GameBaseCase {
                 fight.nextState();
             }
 
-            return fight;
+            return lastCreatedFight = fight;
         }
 
         private FightTeam.Factory buildTeam(int number, List<PlayerFighter> fighters) {

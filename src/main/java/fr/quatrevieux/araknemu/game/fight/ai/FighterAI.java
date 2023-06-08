@@ -127,7 +127,7 @@ public final class FighterAI implements Runnable, AI<Fighter> {
 
     @Override
     public Stream<? extends FighterData> fighters() {
-        return fight.fighters().stream().filter(other -> !other.dead());
+        return fight.fighters().alive();
     }
 
     @Override

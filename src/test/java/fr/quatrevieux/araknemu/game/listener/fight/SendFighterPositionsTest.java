@@ -29,6 +29,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 class SendFighterPositionsTest extends GameBaseCase {
     private Fight fight;
     private SendFighterPositions listener;
@@ -60,7 +62,7 @@ class SendFighterPositionsTest extends GameBaseCase {
 
     @Test
     void onFighterPlaceChanged() {
-        listener.on(new FighterPlaceChanged(fight.fighters().get(0)));
+        listener.on(new FighterPlaceChanged(new ArrayList<>(fight.fighters().all()).get(0)));
 
         requestStack.assertLast(new FighterPositions(fight.fighters()));
     }

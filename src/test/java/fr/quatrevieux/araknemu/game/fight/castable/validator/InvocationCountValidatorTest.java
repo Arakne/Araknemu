@@ -102,6 +102,34 @@ class InvocationCountValidatorTest extends FightBaseCase {
     }
 
     @Test
+    void shouldIgnoreStaticInvocation() {
+        Spell spell = Mockito.mock(Spell.class);
+
+        Fighter invoc1 = Mockito.mock(Fighter.class);
+        Fighter invoc2 = Mockito.mock(Fighter.class);
+        Fighter invoc3 = Mockito.mock(Fighter.class);
+        Fighter invoc4 = Mockito.mock(Fighter.class);
+
+        Mockito.when(invoc1.invoker()).thenReturn(fighter);
+        Mockito.when(invoc2.invoker()).thenReturn(fighter);
+        Mockito.when(invoc3.invoker()).thenReturn(fighter);
+        Mockito.when(invoc4.invoker()).thenReturn(fighter);
+
+        fight.fighters().join(invoc1, fight.map().get(146));
+        fight.fighters().join(invoc2, fight.map().get(146));
+        fight.fighters().join(invoc3, fight.map().get(146));
+        fight.fighters().join(invoc4, fight.map().get(146));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.effect()).thenReturn(180);
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+
+        fighter.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
+
+        assertTrue(validator.check(turn, spell, fight.map().get(123)));
+    }
+
+    @Test
     void success() {
         Spell spell = Mockito.mock(Spell.class);
 

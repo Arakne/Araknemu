@@ -21,11 +21,9 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -35,18 +33,19 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-
-import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MonsterInvocationHandlerTest extends FightBaseCase {
+class StaticInvocationHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
-    private MonsterInvocationHandler handler;
+    private StaticInvocationHandler handler;
 
     @Override
     @BeforeEach
@@ -60,7 +59,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
 
         caster = player.fighter();
 
-        handler = new MonsterInvocationHandler(container.get(MonsterService.class), container.get(FighterFactory.class), fight);
+        handler = new StaticInvocationHandler(container.get(MonsterService.class), container.get(FighterFactory.class), fight);
 
         requestStack.clear();
     }
@@ -85,15 +84,13 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
 
         assertInstanceOf(InvocationFighter.class, invoc);
         assertContains(invoc, fight.fighters().all());
-        assertContains(invoc, fight.turnList().fighters());
+        assertFalse(fight.turnList().fighters().contains(invoc));
         assertSame(caster.team(), invoc.team());
         assertEquals(1, invoc.level());
         assertEquals(36, ((InvocationFighter) invoc).monster().id());
 
         requestStack.assertAll(
-            new FighterTurnOrder(fight.turnList()),
-            new ActionEffect(181, caster, "+" + invoc.sprite()),
-            new ActionEffect(999, caster, (new FighterTurnOrder(fight.turnList())).toString())
+            new ActionEffect(185, caster, "+" + invoc.sprite())
         );
     }
 
@@ -111,15 +108,6 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
-        handler.buff(scope, scope.effects().get(0));
-
-        FighterData invoc = fight.map().get(123).fighter();
-
-        assertInstanceOf(InvocationFighter.class, invoc);
-        assertContains(invoc, fight.fighters().all());
-        assertContains(invoc, fight.turnList().fighters());
-        assertSame(caster.team(), invoc.team());
-        assertEquals(1, invoc.level());
-        assertEquals(36, ((InvocationFighter) invoc).monster().id());
+        assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
     }
 }

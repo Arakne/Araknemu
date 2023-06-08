@@ -243,29 +243,29 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        FightCastScope scope = makeCastScope(fight.fighters().get(0), spell, effect, fight.map().get(241));
+        FightCastScope scope = makeCastScope(getFighter(0), spell, effect, fight.map().get(241));
         handler.buff(scope, scope.effects().get(0));
 
-        requestStack.assertOne(ActionEffect.buff(fight.fighters().get(1).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get(), 10));
-        requestStack.assertOne(new AddBuff(fight.fighters().get(1).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get()));
-        requestStack.assertOne(ActionEffect.buff(fight.fighters().get(2).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get(), 10));
-        requestStack.assertOne(new AddBuff(fight.fighters().get(2).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get()));
-        requestStack.assertOne(ActionEffect.buff(fight.fighters().get(3).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get(), 10));
-        requestStack.assertOne(new AddBuff(fight.fighters().get(3).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get()));
+        requestStack.assertOne(ActionEffect.buff(getFighter(1).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get(), 10));
+        requestStack.assertOne(new AddBuff(getFighter(1).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get()));
+        requestStack.assertOne(ActionEffect.buff(getFighter(2).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get(), 10));
+        requestStack.assertOne(new AddBuff(getFighter(2).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get()));
+        requestStack.assertOne(ActionEffect.buff(getFighter(3).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get(), 10));
+        requestStack.assertOne(new AddBuff(getFighter(3).buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst().get()));
 
-        requestStack.assertOne(ActionEffect.buff(fight.fighters().get(0).buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst().get(), 30));
+        requestStack.assertOne(ActionEffect.buff(getFighter(0).buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst().get(), 30));
         requestStack.assertOne("GIE123;1;30;;0;;5;0");
 
-        assertEquals(30, fight.fighters().get(0).characteristics().get(Characteristic.LUCK));
-        assertEquals(-10, fight.fighters().get(1).characteristics().get(Characteristic.LUCK));
-        assertEquals(-10, fight.fighters().get(2).characteristics().get(Characteristic.LUCK));
-        assertEquals(-10, fight.fighters().get(3).characteristics().get(Characteristic.LUCK));
+        assertEquals(30, getFighter(0).characteristics().get(Characteristic.LUCK));
+        assertEquals(-10, getFighter(1).characteristics().get(Characteristic.LUCK));
+        assertEquals(-10, getFighter(2).characteristics().get(Characteristic.LUCK));
+        assertEquals(-10, getFighter(3).characteristics().get(Characteristic.LUCK));
 
         fight.fighters().forEach(fighter -> fighter.buffs().removeAll());
 
-        assertEquals(0, fight.fighters().get(0).characteristics().get(Characteristic.LUCK));
-        assertEquals(0, fight.fighters().get(1).characteristics().get(Characteristic.LUCK));
-        assertEquals(0, fight.fighters().get(2).characteristics().get(Characteristic.LUCK));
-        assertEquals(0, fight.fighters().get(3).characteristics().get(Characteristic.LUCK));
+        assertEquals(0, getFighter(0).characteristics().get(Characteristic.LUCK));
+        assertEquals(0, getFighter(1).characteristics().get(Characteristic.LUCK));
+        assertEquals(0, getFighter(2).characteristics().get(Characteristic.LUCK));
+        assertEquals(0, getFighter(3).characteristics().get(Characteristic.LUCK));
     }
 }

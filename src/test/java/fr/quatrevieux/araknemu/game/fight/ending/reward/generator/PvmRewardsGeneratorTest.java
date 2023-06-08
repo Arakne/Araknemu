@@ -72,7 +72,7 @@ class PvmRewardsGeneratorTest extends FightBaseCase {
         FightRewardsSheet sheet = generator.generate(results);
 
         assertSame(results, sheet.results());
-        assertCount(fight.fighters().size(), sheet.rewards());
+        assertCount(fight.fighters().all().size(), sheet.rewards());
         assertEquals(FightRewardsSheet.Type.NORMAL, sheet.type());
 
         assertEquals(RewardType.WINNER, sheet.rewards().get(0).type());

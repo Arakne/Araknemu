@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.listener.fight.spectator;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FighterList;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -36,7 +37,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -52,7 +52,7 @@ public final class SendFightStateToSpectator implements Listener<StartWatchFight
     @Override
     public void on(StartWatchFight event) {
         final Fight fight = spectator.fight();
-        final List<Fighter> fighters = fight.fighters();
+        final FighterList fighters = fight.fighters();
 
         spectator.send(new JoinFightAsSpectator(fight));
         spectator.send(

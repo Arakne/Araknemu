@@ -272,8 +272,9 @@ class FightTurnListTest extends FightBaseCase {
         PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
 
         turnList.start();
+        turnList.remove(third); // Do nothing
 
-        assertThrows(NoSuchElementException.class, () -> turnList.remove(third));
+        assertCount(2, turnList.fighters());
     }
 
     @Test
