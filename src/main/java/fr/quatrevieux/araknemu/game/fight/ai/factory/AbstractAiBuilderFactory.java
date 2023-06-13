@@ -22,31 +22,31 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 
 import java.util.Optional;
 
 /**
  * AiFactory implementation using a generator builder for configure the AI
  */
-public abstract class AbstractAiBuilderFactory implements AiFactory<Fighter> {
+public abstract class AbstractAiBuilderFactory implements AiFactory<PlayableFighter> {
     /**
      * Configure the AI generator
      */
-    protected void configure(GeneratorBuilder<Fighter> builder) {
+    protected void configure(GeneratorBuilder<PlayableFighter> builder) {
         // To implements if configure(GeneratorBuilder, Fighter) is not implemented
     }
 
     /**
      * Configure the AI generator
      */
-    public void configure(GeneratorBuilder<Fighter> builder, Fighter fighter) {
+    public void configure(GeneratorBuilder<PlayableFighter> builder, PlayableFighter fighter) {
         configure(builder);
     }
 
     @Override
-    public final Optional<AI<Fighter>> create(Fighter fighter) {
-        final GeneratorBuilder<Fighter> builder = new GeneratorBuilder<>();
+    public final Optional<AI<PlayableFighter>> create(PlayableFighter fighter) {
+        final GeneratorBuilder<PlayableFighter> builder = new GeneratorBuilder<>();
 
         configure(builder, fighter);
 

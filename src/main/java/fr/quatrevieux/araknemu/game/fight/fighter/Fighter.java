@@ -24,14 +24,10 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
-import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.function.Consumer;
 
 /**
  * Base fighter
@@ -79,29 +75,12 @@ public interface Fighter extends Dispatcher, ActiveFighter {
     public CastableWeapon weapon();
 
     /**
-     * Get the current fighter turn
-     *
-     * @throws FightException If it's not the turn of the current fighter
-     *
-     * @see Fighter#perform(Consumer) For perform action on fighter in a safe way (no exception)
-     */
-    public FightTurn turn();
-
-    /**
-     * Perform an action on the current active turn
-     * The action will take as parameter the current turn
-     *
-     * If it's not the turn of the fighter, this method will not call the action
-     *
-     * @param action Action to perform
-     */
-    public void perform(Consumer<FightTurn> action);
-
-    /**
      * Does the current fighter can play ?
      * Return true if it's the turn of the current fighter
      *
-     * @see Fighter#turn() Can be called if this method return true
+     * Note: this method can return true only if the fighter is an instance of {@link PlayableFighter}
+     *
+     * @see PlayableFighter#turn() Can be called if this method return true
      */
     public boolean isPlaying();
 
@@ -150,18 +129,6 @@ public interface Fighter extends Dispatcher, ActiveFighter {
      * Check if the fighter is ready for fight
      */
     public boolean ready();
-
-    /**
-     * Start to play the turn
-     *
-     * @param turn The fighter turn
-     */
-    public void play(FightTurn turn);
-
-    /**
-     * Stop the turn
-     */
-    public void stop();
 
     /**
      * Check if the fighter is on the fight (The fight is set and is on a cell)

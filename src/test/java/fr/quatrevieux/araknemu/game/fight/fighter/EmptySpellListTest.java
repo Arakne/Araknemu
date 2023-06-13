@@ -14,24 +14,36 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.turn.order;
+package fr.quatrevieux.araknemu.game.fight.fighter;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
-import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
-/**
- * Compute the fighters turn order
- */
-public interface FighterOrderStrategy {
-    /**
-     * Order the fighters from given teams
-     *
-     * @param teams The fight teams
-     */
-    public List<PlayableFighter> compute(List<FightTeam> teams);
+import static org.junit.jupiter.api.Assertions.*;
+
+class EmptySpellListTest {
+    @Test
+    void get() {
+        assertThrows(NoSuchElementException.class, () -> EmptySpellList.INSTANCE.get(0));
+    }
+
+    @Test
+    void has() {
+        assertFalse(EmptySpellList.INSTANCE.has(0));
+    }
+
+    @Test
+    void iterator() {
+        assertIterableEquals(EmptySpellList.INSTANCE, new ArrayList<>());
+    }
+
+    @Test
+    void boost() {
+        EmptySpellList.INSTANCE.boost(0, null, 0); // do nothing
+    }
 }

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.operation;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.StaticInvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
@@ -49,6 +50,13 @@ public interface FighterOperation {
      * Apply the operation to an InvocationFighter
      */
     public default void onInvocation(InvocationFighter fighter) {
+        onGenericFighter(fighter);
+    }
+
+    /**
+     * Apply the operation to an StaticInvocationFighter
+     */
+    public default void onStaticInvocation(StaticInvocationFighter fighter) {
         onGenericFighter(fighter);
     }
 

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValid
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
@@ -45,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CloseCombatTest extends FightBaseCase {
     private Fight fight;
     private FightTurn turn;
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private CloseCombat action;
 
     @Override

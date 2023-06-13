@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -59,11 +60,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class AiBaseCase extends FightBaseCase {
-    protected Fighter fighter;
+    protected PlayableFighter fighter;
     protected Fight fight;
 
     protected AbstractAiBuilderFactory actionFactory;
-    protected ActionGenerator<Fighter> action;
+    protected ActionGenerator<PlayableFighter> action;
     protected FighterAI ai;
 
     protected FightTurn turn;
@@ -94,7 +95,7 @@ public class AiBaseCase extends FightBaseCase {
         ai.start(turn = fight.turnList().current().get());
 
         if (action == null && actionFactory != null) {
-            GeneratorBuilder<Fighter> aiBuilder = new GeneratorBuilder<>();
+            GeneratorBuilder<PlayableFighter> aiBuilder = new GeneratorBuilder<>();
             actionFactory.configure(aiBuilder, fighter);
             action = aiBuilder.build();
         }

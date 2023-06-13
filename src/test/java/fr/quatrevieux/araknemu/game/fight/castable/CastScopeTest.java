@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -489,7 +490,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.turnList().fighters();
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
@@ -521,7 +522,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.turnList().fighters();
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
@@ -554,7 +555,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.turnList().fighters();
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
@@ -587,7 +588,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        List<Fighter> fighters = fight.turnList().fighters();
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 

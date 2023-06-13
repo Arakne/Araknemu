@@ -465,8 +465,7 @@ class FightTest extends GameBaseCase {
         fight.start(new AlternateTeamFighterOrder());
 
         InvocationFighter invoc = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);
-        fight.turnList().add(invoc);
-        invoc.joinFight(fight, fight.map().get(122));
+        fight.fighters().joinTurnList(invoc, fight.map().get(122));
         invoc.init();
 
         InvocationFighter notInFight = new InvocationFighter(-6, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);

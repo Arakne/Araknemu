@@ -40,8 +40,6 @@ import java.util.List;
 
 /**
  * Trap object, created by {@link AddTrapHandler}
- *
- * @todo handle trap damage bonus
  */
 final class Trap implements BattlefieldObject {
     private static final UpdateCells.PropertyValue<?>[] CELL_PROPERTIES = new UpdateCells.PropertyValue<?>[]{

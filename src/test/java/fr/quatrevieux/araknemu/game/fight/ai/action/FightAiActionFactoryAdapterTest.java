@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.proxy.ProxyBattlefield;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
@@ -38,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class FightAiActionFactoryAdapterTest extends FightBaseCase {
     private FightAiActionFactoryAdapter factory;
     private Fight fight;
-    private Fighter fighter;
+    private PlayableFighter fighter;
 
     @Override
     @BeforeEach

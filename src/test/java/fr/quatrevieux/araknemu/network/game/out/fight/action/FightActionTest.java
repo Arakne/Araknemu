@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import org.junit.jupiter.api.Test;
@@ -40,8 +41,8 @@ class FightActionTest {
                     }
 
                     @Override
-                    public Fighter performer() {
-                        Fighter fighter = Mockito.mock(Fighter.class);
+                    public PlayableFighter performer() {
+                        PlayableFighter fighter = Mockito.mock(PlayableFighter.class);
                         Mockito.when(fighter.id()).thenReturn(123);
 
                         return fighter;
@@ -83,8 +84,8 @@ class FightActionTest {
                     }
 
                     @Override
-                    public Fighter performer() {
-                        Fighter fighter = Mockito.mock(Fighter.class);
+                    public PlayableFighter performer() {
+                        PlayableFighter fighter = Mockito.mock(PlayableFighter.class);
                         Mockito.when(fighter.id()).thenReturn(123);
 
                         return fighter;

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
@@ -283,9 +284,9 @@ class FightTurnListTest extends FightBaseCase {
 
         assertSame(player.fighter(), turnList.currentFighter());
 
-        Fighter f1 = Mockito.mock(Fighter.class);
-        Fighter f2 = Mockito.mock(Fighter.class);
-        Fighter f3 = Mockito.mock(Fighter.class);
+        PlayableFighter f1 = Mockito.mock(PlayableFighter.class);
+        PlayableFighter f2 = Mockito.mock(PlayableFighter.class);
+        PlayableFighter f3 = Mockito.mock(PlayableFighter.class);
 
         turnList.add(f1);
         assertSame(player.fighter(), turnList.currentFighter());

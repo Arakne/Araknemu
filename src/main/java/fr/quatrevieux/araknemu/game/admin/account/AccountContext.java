@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.admin.account;
 
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
 import java.util.List;

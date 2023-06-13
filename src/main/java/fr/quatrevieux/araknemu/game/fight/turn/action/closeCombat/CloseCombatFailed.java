@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 
@@ -27,9 +27,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
  * Result for critical failure for weapon cast
  */
 public final class CloseCombatFailed implements ActionResult {
-    private final Fighter caster;
+    private final PlayableFighter caster;
 
-    public CloseCombatFailed(Fighter caster) {
+    public CloseCombatFailed(PlayableFighter caster) {
         this.caster = caster;
     }
 
@@ -39,7 +39,7 @@ public final class CloseCombatFailed implements ActionResult {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return caster;
     }
 

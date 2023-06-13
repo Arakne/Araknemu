@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
  * Result for critical failure for spell cast
  */
 public final class CastFailed implements ActionResult {
-    private final Fighter caster;
+    private final PlayableFighter caster;
     private final Spell spell;
 
-    public CastFailed(Fighter caster, Spell spell) {
+    public CastFailed(PlayableFighter caster, Spell spell) {
         this.caster = caster;
         this.spell = spell;
     }
@@ -42,7 +42,7 @@ public final class CastFailed implements ActionResult {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return caster;
     }
 

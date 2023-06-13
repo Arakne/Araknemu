@@ -23,7 +23,7 @@ import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -38,11 +38,11 @@ import java.util.stream.Collectors;
  * Generated actions can be applied directly to fight
  */
 public final class FightAiActionFactoryAdapter implements AiActionFactory {
-    private final Fighter fighter;
+    private final PlayableFighter fighter;
     private final Fight fight;
-    private final ActionsFactory<Fighter> actionFactory;
+    private final ActionsFactory<PlayableFighter> actionFactory;
 
-    public FightAiActionFactoryAdapter(Fighter fighter, Fight fight, ActionsFactory<Fighter> actionFactory) {
+    public FightAiActionFactoryAdapter(PlayableFighter fighter, Fight fight, ActionsFactory<PlayableFighter> actionFactory) {
         this.fighter = fighter;
         this.fight = fight;
         this.actionFactory = actionFactory;

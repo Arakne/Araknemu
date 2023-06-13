@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 
 /**
  * AI for poutch ingball or any fixed monsters
@@ -36,7 +36,7 @@ public final class Fixed extends AbstractAiBuilderFactory {
     }
 
     @Override
-    public void configure(GeneratorBuilder<Fighter> builder) {
+    public void configure(GeneratorBuilder<PlayableFighter> builder) {
         builder.attack(simulator);
     }
 }

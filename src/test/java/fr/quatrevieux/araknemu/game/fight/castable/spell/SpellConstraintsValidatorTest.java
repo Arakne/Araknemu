@@ -23,6 +23,7 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -37,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SpellConstraintsValidatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private FightTurn turn;
     private SpellConstraintsValidator validator;
 

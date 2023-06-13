@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
@@ -208,7 +209,7 @@ public class FunctionalTest extends GameBaseCase {
                     }
 
                     @Override
-                    public Fighter performer() {
+                    public PlayableFighter performer() {
                         return fighter1;
                     }
 

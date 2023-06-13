@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.arakne.utils.maps.constant.Direction;
@@ -44,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MoveTest extends FightBaseCase {
     private Fight fight;
     private FightTurn turn;
-    private Fighter fighter;
+    private PlayableFighter fighter;
 
     @Override
     @BeforeEach

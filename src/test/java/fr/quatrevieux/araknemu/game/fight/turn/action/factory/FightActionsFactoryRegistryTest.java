@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
@@ -40,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class FightActionsFactoryRegistryTest extends FightBaseCase {
     private Fight fight;
     private FightActionsFactoryRegistry factory;
-    private Fighter fighter;
+    private PlayableFighter fighter;
 
     @Override
     @BeforeEach

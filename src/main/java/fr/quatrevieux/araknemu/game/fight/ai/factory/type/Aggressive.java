@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
@@ -40,7 +41,7 @@ public final class Aggressive extends AbstractAiBuilderFactory {
     }
 
     @Override
-    public void configure(GeneratorBuilder<Fighter> builder, Fighter fighter) {
+    public void configure(GeneratorBuilder<PlayableFighter> builder, PlayableFighter fighter) {
         builder
             .boostSelf(simulator)
             .attack(simulator)

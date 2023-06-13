@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.validator;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ApCostValidatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private FightTurn turn;
     private ApCostValidator validator;
 

@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
+import fr.quatrevieux.araknemu.game.fight.fighter.EmptySpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
@@ -40,18 +40,17 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * Fighter for invoked monster
  * Its characteristics are modified by the invoker level
  */
-public final class InvocationFighter extends AbstractPlayableFighter {
+public final class StaticInvocationFighter extends AbstractFighter {
     private final int id;
     private final Monster monster;
     private final FightTeam team;
     private final BaseFighterLife life;
     private final FighterCharacteristics characteristics;
     private final MonsterFighterSprite sprite;
-    private final FighterSpellList spells;
     private final FighterData invoker;
 
     @SuppressWarnings({"assignment", "argument"})
-    public InvocationFighter(int id, Monster monster, FightTeam team, FighterData invoker) {
+    public StaticInvocationFighter(int id, Monster monster, FightTeam team, FighterData invoker) {
         this.id = id;
         this.monster = monster;
         this.team = team;
@@ -60,12 +59,11 @@ public final class InvocationFighter extends AbstractPlayableFighter {
         this.life = new BaseFighterLife(this, Math.round(monster.life() * InvocationFighterCharacteristics.modifier(invoker)));
         this.characteristics = new InvocationFighterCharacteristics(monster, this, invoker);
         this.sprite = new MonsterFighterSprite(this, monster);
-        this.spells = new BaseFighterSpellList(monster.spells());
     }
 
     @Override
     public <O extends FighterOperation> O apply(O operation) {
-        operation.onInvocation(this);
+        operation.onStaticInvocation(this);
 
         return operation;
     }
@@ -102,7 +100,7 @@ public final class InvocationFighter extends AbstractPlayableFighter {
 
     @Override
     public FighterSpellList spells() {
-        return spells;
+        return EmptySpellList.INSTANCE;
     }
 
     @Override
@@ -125,5 +123,10 @@ public final class InvocationFighter extends AbstractPlayableFighter {
      */
     public Monster monster() {
         return monster;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return false;
     }
 }

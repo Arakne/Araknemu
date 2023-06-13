@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.StaticInvocationFighter;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -38,12 +38,12 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * - #1 (min) : monster id
  * - #2 (max) : grade number
  *
- * @see InvocationFighter Invoked fighter @todo change
+ * @see StaticInvocationFighter Invoked fighter
  */
 public final class StaticInvocationHandler implements EffectHandler {
-     private final MonsterService monsterService;
-     private final FighterFactory fighterFactory;
-     private final Fight fight;
+    private final MonsterService monsterService;
+    private final FighterFactory fighterFactory;
+    private final Fight fight;
 
     public StaticInvocationHandler(MonsterService monsterService, FighterFactory fighterFactory, Fight fight) {
         this.monsterService = monsterService;
@@ -58,8 +58,7 @@ public final class StaticInvocationHandler implements EffectHandler {
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        // @todo do not use InvocationFighter
-        final Fighter invocation = fighterFactory.generate(id -> new InvocationFighter(
+        final Fighter invocation = fighterFactory.generate(id -> new StaticInvocationFighter(
             id,
             monsterService.load(effect.effect().min()).get(effect.effect().max()),
             cast.caster().team(),

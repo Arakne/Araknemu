@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -58,7 +58,7 @@ public final class MonsterInvocationHandler implements EffectHandler {
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final Fighter invocation = fighterFactory.generate(id -> new InvocationFighter(
+        final PlayableFighter invocation = fighterFactory.generate(id -> new InvocationFighter(
             id,
             monsterService.load(effect.effect().min()).get(effect.effect().max()),
             cast.caster().team(),

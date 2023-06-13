@@ -19,8 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.fight;
 
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -34,7 +36,7 @@ import java.util.stream.Stream;
 /**
  * Handle the fighters list of a fight
  */
-public final class FighterList implements Iterable<Fighter> {
+public final class FighterList implements Iterable<Fighter>, Dispatcher {
     private final Fight fight;
     private final Set<Fighter> fighters = new LinkedHashSet<>();
 
@@ -45,6 +47,15 @@ public final class FighterList implements Iterable<Fighter> {
     @Override
     public @NonNull Iterator<Fighter> iterator() {
         return fighters.iterator();
+    }
+
+    @Override
+    public void dispatch(Object event) {
+        for (Fighter fighter : fighters) {
+            if (fighter.isOnFight()) {
+                fighter.dispatch(event);
+            }
+        }
     }
 
     /**
@@ -61,7 +72,7 @@ public final class FighterList implements Iterable<Fighter> {
      * @param cell The cell where the fighter will be placed
      *
      * @see Fighter#joinFight(Fight, FightCell) Will be called by this method
-     * @see #joinTurnList(Fighter, FightCell) Call this method if you want to add the fighter to the turn list
+     * @see #joinTurnList(PlayableFighter, FightCell) Call this method if you want to add the fighter to the turn list
      */
     public void join(Fighter fighter, FightCell cell) {
         fighter.joinFight(fight, cell);
@@ -76,9 +87,9 @@ public final class FighterList implements Iterable<Fighter> {
      * @param fighter The fighter to add
      * @param cell The cell where the fighter will be placed
      *
-     * @see fr.quatrevieux.araknemu.game.fight.turn.FightTurnList#add(Fighter) Will be called by this method
+     * @see fr.quatrevieux.araknemu.game.fight.turn.FightTurnList#add(PlayableFighter) Will be called by this method
      */
-    public void joinTurnList(Fighter fighter, FightCell cell) {
+    public void joinTurnList(PlayableFighter fighter, FightCell cell) {
         join(fighter, cell);
         fight.turnList().add(fighter);
     }
@@ -94,8 +105,8 @@ public final class FighterList implements Iterable<Fighter> {
     public void leave(Fighter fighter) {
         fighters.remove(fighter);
 
-        if (fight.active()) {
-            fight.turnList().remove(fighter); // @todo discriminate active vs static fighter
+        if (fight.active() && fighter instanceof PlayableFighter) {
+            fight.turnList().remove((PlayableFighter) fighter);
         }
 
         fight.dispatch(new FighterRemoved(fighter, fight));

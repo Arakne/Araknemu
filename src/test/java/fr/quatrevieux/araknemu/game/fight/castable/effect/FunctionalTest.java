@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
@@ -518,7 +519,7 @@ public class FunctionalTest extends FightBaseCase {
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
 
-        List<Fighter> fighters = fight.turnList().fighters();
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         castNormal(440, fight.map().get(271)); // Sacrifice
         fighters.get(0).turn().stop();
@@ -559,7 +560,7 @@ public class FunctionalTest extends FightBaseCase {
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
 
-        List<Fighter> fighters = fight.turnList().fighters();
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         castNormal(440, fight.map().get(271)); // Sacrifice
         castNormal(4, fight.map().get(328)); // Renvoi de Sort
@@ -648,7 +649,7 @@ public class FunctionalTest extends FightBaseCase {
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
 
-        List<Fighter> fighters = fight.turnList().fighters();
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         castNormal(440, fight.map().get(271)); // Sacrifice
         fighters.get(0).turn().stop();
@@ -1077,10 +1078,10 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(51, fighters.get(0).spells().get(171).effects().get(0).min());
         assertEquals(53, fighters.get(0).spells().get(171).effects().get(0).max());
 
-        fighters.get(0).turn().stop();
-        fighters.get(1).turn().stop();
-        fighters.get(0).turn().stop();
-        fighters.get(1).turn().stop();
+        getFighter(0).turn().stop();
+        getFighter(1).turn().stop();
+        getFighter(0).turn().stop();
+        getFighter(1).turn().stop();
 
         castFromSpellList(171, fighters.get(1).cell()); // Flèche punitive
         damage = current - fighters.get(1).life().current();
@@ -1253,7 +1254,7 @@ public class FunctionalTest extends FightBaseCase {
             .addEnemy(fb -> fb.cell(325))
         );
 
-        Fighter caster = fight.turnList().currentFighter();
+        PlayableFighter caster = fight.turnList().currentFighter();
 
         castNormal(17, fight.map().get(169)); // Glyphe agressif
 

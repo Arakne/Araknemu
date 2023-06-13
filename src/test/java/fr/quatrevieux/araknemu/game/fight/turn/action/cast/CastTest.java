@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidat
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
@@ -51,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CastTest extends FightBaseCase {
     private Fight fight;
     private FightTurn turn;
-    private Fighter fighter;
+    private PlayableFighter fighter;
 
     @Override
     @BeforeEach

@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -42,7 +43,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FighterAITest extends FightBaseCase {
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private Fight fight;
 
     private Fighter enemy;

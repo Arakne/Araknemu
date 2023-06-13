@@ -24,19 +24,16 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
-import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * Base class for implements a fighter
@@ -53,7 +50,6 @@ public abstract class AbstractFighter implements Fighter {
     // Mutable attributes
     private @Nullable FightCell cell;
     private @MonotonicNonNull Fight fight;
-    private @Nullable FightTurn turn;
     private Direction orientation = Direction.SOUTH_EAST;
     private boolean hidden = false;
 
@@ -139,39 +135,6 @@ public abstract class AbstractFighter implements Fighter {
         this.fight = fight;
         this.cell = startCell;
         startCell.set(this);
-    }
-
-    @Override
-    public void play(FightTurn turn) {
-        this.turn = turn;
-    }
-
-    @Override
-    public void stop() {
-        turn = null;
-    }
-
-    @Override
-    public final FightTurn turn() {
-        if (turn == null) {
-            throw new FightException("It's not your turn");
-        }
-
-        return turn;
-    }
-
-    @Override
-    public final void perform(Consumer<FightTurn> action) {
-        final FightTurn turn = this.turn;
-
-        if (turn != null) {
-            action.accept(turn);
-        }
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return turn != null && turn.active();
     }
 
     @Override

@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
@@ -37,16 +37,16 @@ import java.time.Duration;
  * Use weapon / close combat attack
  */
 public final class CloseCombat implements Action {
-    private final Fighter caster;
+    private final PlayableFighter caster;
     private final FightCell target;
     private final WeaponConstraintsValidator validator;
     private final CriticalityStrategy criticalityStrategy;
 
-    public CloseCombat(Fighter caster, FightCell target) {
+    public CloseCombat(PlayableFighter caster, FightCell target) {
         this(caster, target, new WeaponConstraintsValidator(), new BaseCriticalityStrategy());
     }
 
-    public CloseCombat(Fighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
+    public CloseCombat(PlayableFighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
         this.caster = caster;
         this.target = target;
         this.validator = validator;
@@ -81,7 +81,7 @@ public final class CloseCombat implements Action {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return caster;
     }
 

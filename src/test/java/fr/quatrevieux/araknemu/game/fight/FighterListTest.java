@@ -21,15 +21,20 @@ package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -96,7 +101,7 @@ class FighterListTest extends FightBaseCase {
     void joinTurnList() throws SQLException {
         fight.nextState();
 
-        Fighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        PlayableFighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
         fighterList.joinTurnList(fighter, fight.map().get(146));
 
         assertSame(fight.map().get(146), fighter.cell());
@@ -150,7 +155,7 @@ class FighterListTest extends FightBaseCase {
         AtomicReference<FighterRemoved> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterRemoved.class, ref::set);
 
-        Fighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        PlayableFighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
         fighterList.joinTurnList(fighter, fight.map().get(146));
         assertContains(fighter, fighterList.all());
 
@@ -177,5 +182,23 @@ class FighterListTest extends FightBaseCase {
 
         assertFalse(fighterList.alive().collect(Collectors.toList()).contains(fighter));
         assertContains(fighter, fighterList.all());
+    }
+
+    @Test
+    void dispatch() {
+        class Foo {}
+        AtomicInteger ai = new AtomicInteger();
+
+        player.fighter().dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+        other.fighter().dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+
+        fight.dispatchToAll(new Foo());
+        assertEquals(2, ai.get());
+
+        other.fighter().move(null); // Remove from fight
+
+        ai.set(0);
+        fight.dispatchToAll(new Foo());
+        assertEquals(1, ai.get());
     }
 }

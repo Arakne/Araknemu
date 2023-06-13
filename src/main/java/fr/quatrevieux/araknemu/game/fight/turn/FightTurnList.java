@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
@@ -38,8 +39,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class FightTurnList {
     private final Fight fight;
 
-    private final List<Fighter> fighters;
-    private Fighter current;
+    private final List<PlayableFighter> fighters;
+    private PlayableFighter current;
     private @Nullable FightTurn turn;
     private int index;
     private final AtomicBoolean active = new AtomicBoolean(false);
@@ -58,7 +59,7 @@ public final class FightTurnList {
     /**
      * Get all fighters ordered by their turn order
      */
-    public List<Fighter> fighters() {
+    public List<PlayableFighter> fighters() {
         return fighters;
     }
 
@@ -69,7 +70,7 @@ public final class FightTurnList {
      *
      * @see TurnListChanged Event triggered after the list is updated
      */
-    public void remove(Fighter fighter) {
+    public void remove(PlayableFighter fighter) {
         final int index = fighters.indexOf(fighter);
 
         if (index == -1) {
@@ -101,7 +102,7 @@ public final class FightTurnList {
      *
      * @see TurnListChanged Event triggered after the list is updated
      */
-    public void add(Fighter fighter) {
+    public void add(PlayableFighter fighter) {
         fighters.add(index + 1, fighter);
         fight.dispatch(new TurnListChanged(this));
     }
@@ -118,7 +119,7 @@ public final class FightTurnList {
     /**
      * Get the current turn fighter
      */
-    public Fighter currentFighter() {
+    public PlayableFighter currentFighter() {
         return current;
     }
 
@@ -157,7 +158,7 @@ public final class FightTurnList {
     void next() {
         // next is called internally by turn system, and fighters if used only with active turn system
         // so fighters is always non-null
-        final List<Fighter> fighters = NullnessUtil.castNonNull(this.fighters);
+        final List<PlayableFighter> fighters = NullnessUtil.castNonNull(this.fighters);
 
         turn = null;
         fight.dispatch(new NextTurnInitiated());

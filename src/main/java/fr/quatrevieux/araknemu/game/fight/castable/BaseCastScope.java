@@ -48,6 +48,7 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
     private final List<EffectScope> effects;
     private final Map<F, @Nullable F> targetMapping = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     protected BaseCastScope(Castable action, F caster, C target, List<SpellEffect> effects) {
         this(action, caster, (C) caster.cell(), target, effects);
     }
