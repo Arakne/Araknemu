@@ -378,10 +378,26 @@ class ActionEffectTest extends FightBaseCase {
         ;
 
         Fight fight = createFight();
-        InvocationFighter fighter = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(2), fight.team(0), fight.fighters().get(0));
+        Fighter invoker = fight.team(0).leader();
+        InvocationFighter fighter = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(2), fight.team(0), invoker);
         fighter.joinFight(fight, fight.map().get(118));
 
-        assertEquals("GA;181;1;+118;1;0;-5;36;-2;1566^100;2;-1;-1;-1;0,0,0,0;60;5;3;30;0;-10;7;-45;16;16;0", ActionEffect.addInvocation(fight.fighters().get(0), fighter).toString());
+        assertEquals("GA;181;1;+118;1;0;-5;36;-2;1566^100;2;-1;-1;-1;0,0,0,0;60;5;3;30;0;-10;7;-45;16;16;0", ActionEffect.addInvocation(invoker, fighter).toString());
+    }
+
+    @Test
+    void addStaticInvocation() throws Exception {
+        dataSet
+            .pushMonsterTemplates()
+            .pushMonsterSpells()
+        ;
+
+        Fight fight = createFight();
+        Fighter invoker = fight.team(0).leader();
+        InvocationFighter fighter = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(2), fight.team(0), invoker);
+        fighter.joinFight(fight, fight.map().get(118));
+
+        assertEquals("GA;185;1;+118;1;0;-5;36;-2;1566^100;2;-1;-1;-1;0,0,0,0;60;5;3;30;0;-10;7;-45;16;16;0", ActionEffect.addStaticInvocation(invoker, fighter).toString());
     }
 
     @Test

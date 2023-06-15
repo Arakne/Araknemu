@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -120,7 +121,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         public void kick(Fighter fighter) {}
     }
 
-    class FighterStub implements Fighter {
+    class FighterStub implements PlayableFighter {
         final private int id;
         final private int init;
 
@@ -304,7 +305,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
     @Test
     void computeWithTwoFighters() {
-        List<Fighter> fighters = strategy.compute(
+        List<PlayableFighter> fighters = strategy.compute(
             Arrays.asList(
                 new TeamStub(Arrays.asList(new FighterStub(1, 100))),
                 new TeamStub(Arrays.asList(new FighterStub(2, 500)))
@@ -318,7 +319,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
     @Test
     void computeWithMultipleFightersWithOnePerTeam() {
-        List<Fighter> fighters = strategy.compute(
+        List<PlayableFighter> fighters = strategy.compute(
             Arrays.asList(
                 new TeamStub(Arrays.asList(new FighterStub(1, 100))),
                 new TeamStub(Arrays.asList(new FighterStub(2, 500))),
@@ -338,7 +339,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
     @Test
     void computeWithMultipleFightersWithTwoTeamOfSameSize() {
-        List<Fighter> fighters = strategy.compute(
+        List<PlayableFighter> fighters = strategy.compute(
             Arrays.asList(
                 new TeamStub(Arrays.asList(
                     new FighterStub(1, 100),
@@ -364,7 +365,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
     @Test
     void computeWithMultipleFightersWithTwoTeamWithDifferentSizeWillSetFighterOfBiggestTeamAtTheEnd() {
-        List<Fighter> fighters = strategy.compute(
+        List<PlayableFighter> fighters = strategy.compute(
             Arrays.asList(
                 new TeamStub(Arrays.asList(
                     new FighterStub(1, 100),

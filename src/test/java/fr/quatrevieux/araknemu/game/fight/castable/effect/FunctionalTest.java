@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
@@ -58,6 +59,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -514,18 +516,18 @@ public class FunctionalTest extends FightBaseCase {
             .build(true)
         ;
 
-        List<Fighter> fighters = fight.fighters();
-
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
 
+        List<PlayableFighter> fighters = fight.turnList().fighters();
+
         castNormal(440, fight.map().get(271)); // Sacrifice
         fighters.get(0).turn().stop();
-        fighters.get(3).turn().stop();
+        fighters.get(1).turn().stop();
 
         castNormal(440, fight.map().get(211)); // Sacrifice
-        fighters.get(1).turn().stop();
         fighters.get(2).turn().stop();
+        fighters.get(3).turn().stop();
         fighters.get(0).turn().stop();
 
         castNormal(183, fight.map().get(211)); // Simple attack
@@ -535,12 +537,12 @@ public class FunctionalTest extends FightBaseCase {
         assertBetween(10, 17, fighters.get(0).life().max() - fighters.get(0).life().current());
 
         assertEquals(211, fighters.get(0).cell().id());
-        assertEquals(328, fighters.get(1).cell().id());
-        assertEquals(271, fighters.get(2).cell().id());
+        assertEquals(328, fighters.get(2).cell().id());
+        assertEquals(271, fighters.get(3).cell().id());
 
-        requestStack.assertOne(ActionEffect.teleport(fighters.get(1), fighters.get(2), fight.map().get(271)));
-        requestStack.assertOne(ActionEffect.teleport(fighters.get(1), fighters.get(1), fight.map().get(211)));
-        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(1), fight.map().get(328)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(2), fighters.get(3), fight.map().get(271)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(2), fighters.get(2), fight.map().get(211)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(2), fight.map().get(328)));
         requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(211)));
     }
 
@@ -555,10 +557,10 @@ public class FunctionalTest extends FightBaseCase {
             .build(true)
         ;
 
-        List<Fighter> fighters = fight.fighters();
-
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
+
+        List<PlayableFighter> fighters = fight.turnList().fighters();
 
         castNormal(440, fight.map().get(271)); // Sacrifice
         castNormal(4, fight.map().get(328)); // Renvoi de Sort
@@ -567,13 +569,13 @@ public class FunctionalTest extends FightBaseCase {
         castNormal(183, fight.map().get(271)); // Simple attack
 
         assertEquals(fighters.get(0).life().max(), fighters.get(0).life().current());
-        assertEquals(fighters.get(1).life().max(), fighters.get(1).life().current());
-        assertBetween(10, 17, fighters.get(2).life().max() - fighters.get(2).life().current());
+        assertEquals(fighters.get(2).life().max(), fighters.get(2).life().current());
+        assertBetween(10, 17, fighters.get(1).life().max() - fighters.get(1).life().current());
 
         assertEquals(271, fighters.get(0).cell().id());
-        assertEquals(328, fighters.get(1).cell().id());
+        assertEquals(328, fighters.get(2).cell().id());
 
-        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(1), fight.map().get(328)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(2), fight.map().get(328)));
         requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(271)));
         requestStack.assertOne(ActionEffect.returnSpell(fighters.get(0), true));
     }
@@ -644,36 +646,36 @@ public class FunctionalTest extends FightBaseCase {
             .build(true)
         ;
 
-        List<Fighter> fighters = fight.fighters();
-
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
 
+        List<PlayableFighter> fighters = fight.turnList().fighters();
+
         castNormal(440, fight.map().get(271)); // Sacrifice
         fighters.get(0).turn().stop();
-        fighters.get(3).turn().stop();
+        fighters.get(1).turn().stop();
 
         castNormal(183, fight.map().get(256)); // Simple attack
 
-        assertTrue(fighters.get(1).life().isFull());
         assertTrue(fighters.get(2).life().isFull());
+        assertTrue(fighters.get(3).life().isFull());
 
         int damage = fighters.get(0).life().max() - fighters.get(0).life().current();
         assertBetween(16, 18, damage);
 
-        assertEquals(256, fighters.get(1).cell().id());
-        assertEquals(328, fighters.get(2).cell().id());
+        assertEquals(256, fighters.get(2).cell().id());
+        assertEquals(328, fighters.get(3).cell().id());
         assertEquals(271, fighters.get(0).cell().id());
 
         // Damage reflected to himself
         requestStack.assertOne(ActionEffect.reflectedDamage(fighters.get(0), 1));
-        requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(1), fighters.get(0), -damage + 1));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(2), fighters.get(0), -damage + 1));
         requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(0), fighters.get(0), -1));
 
         // Position switches
-        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(2), fight.map().get(328)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(3), fight.map().get(328)));
         requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(256)));
-        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(1), fight.map().get(256)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(2), fight.map().get(256)));
         requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(271)));
     }
 
@@ -1076,10 +1078,10 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(51, fighters.get(0).spells().get(171).effects().get(0).min());
         assertEquals(53, fighters.get(0).spells().get(171).effects().get(0).max());
 
-        fighters.get(0).turn().stop();
-        fighters.get(1).turn().stop();
-        fighters.get(0).turn().stop();
-        fighters.get(1).turn().stop();
+        getFighter(0).turn().stop();
+        getFighter(1).turn().stop();
+        getFighter(0).turn().stop();
+        getFighter(1).turn().stop();
 
         castFromSpellList(171, fighters.get(1).cell()); // Flèche punitive
         damage = current - fighters.get(1).life().current();
@@ -1197,7 +1199,7 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(new ActionEffect(181, fighter1, "+" + invocation.sprite()));
         requestStack.assertOne(new ActionEffect(999, fighter1, (new FighterTurnOrder(fight.turnList())).toString()));
 
-        assertTrue(fight.fighters().contains(invocation));
+        assertTrue(fight.fighters().all().contains(invocation));
         assertEquals(1, fight.turnList().fighters().indexOf(invocation));
         assertSame(fighter1.team(), invocation.team());
         assertSame(fighter1, invocation.invoker());
@@ -1252,7 +1254,7 @@ public class FunctionalTest extends FightBaseCase {
             .addEnemy(fb -> fb.cell(325))
         );
 
-        Fighter caster = fight.turnList().currentFighter();
+        PlayableFighter caster = fight.turnList().currentFighter();
 
         castNormal(17, fight.map().get(169)); // Glyphe agressif
 
@@ -1402,6 +1404,32 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(fighter1.life().isFull());
     }
 
+    @Test
+    void staticInvocation() throws SQLException {
+        dataSet.pushMonsterTemplateInvocations();
+
+        castNormal(186, fight.map().get(183)); // Arbre
+
+        Fighter invoc = fight.fighters().stream().filter(f -> fighter1.equals(f.invoker())).findFirst().get();
+
+        assertEquals(invoc, fight.map().get(183).fighter());
+        assertEquals(183, invoc.cell().id());
+        assertEquals("282", invoc.sprite().name());
+        assertTrue(fight.fighters().all().contains(invoc));
+        assertFalse(fight.turnList().fighters().contains(invoc));
+
+        requestStack.assertOne(new ActionEffect(185, fighter1, "+" + invoc.sprite()));
+
+        // Ignore invocation count limit
+        passTurns(7);
+        castNormal(186, fight.map().get(198)); // Arbre
+        assertTrue(fight.map().get(198).hasFighter());
+
+        passTurns(7);
+        castNormal(186, fight.map().get(213)); // Arbre
+        assertTrue(fight.map().get(213).hasFighter());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
@@ -1412,7 +1440,7 @@ public class FunctionalTest extends FightBaseCase {
         fight = builder.build(true);
         fight.register(new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)));
 
-        List<Fighter> fighters = fight.fighters();
+        List<Fighter> fighters = new ArrayList<>(fight.fighters().all());
 
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();

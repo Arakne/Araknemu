@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -56,18 +57,18 @@ class MonsterAiFactoryTest extends FightBaseCase {
 
     @Test
     void createSuccess() {
-        assertTrue(factory.create(fight.team(1).fighters().stream().findFirst().get()).isPresent());
+        assertTrue(factory.create((PlayableFighter) fight.team(1).fighters().stream().findFirst().get()).isPresent());
     }
 
     @Test
     void createSuccessWithInvocation() throws SQLException {
         dataSet.pushMonsterTemplateInvocations();
 
-        Fighter fighter = new InvocationFighter(
+        PlayableFighter fighter = new InvocationFighter(
             -1,
             container.get(MonsterService.class).load(36).get(3),
             fight.team(1),
-            fight.fighters().get(0)
+            fight.team(0).leader()
         );
 
         fighter.joinFight(fight, fight.map().get(123));
@@ -79,6 +80,6 @@ class MonsterAiFactoryTest extends FightBaseCase {
     void createInvalidAiType() {
         factory = new MonsterAiFactory();
 
-        assertThrows(IllegalArgumentException.class, () -> factory.create(fight.team(1).fighters().stream().findFirst().get()));
+        assertThrows(IllegalArgumentException.class, () -> factory.create((PlayableFighter) fight.team(1).fighters().stream().findFirst().get()));
     }
 }

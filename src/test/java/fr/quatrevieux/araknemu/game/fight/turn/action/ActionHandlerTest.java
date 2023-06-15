@@ -52,7 +52,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         fight = createFight();
         fight.start(new AlternateTeamFighterOrder());
-        turn = new FightTurn(fight.fighters().get(0), fight, Duration.ZERO);
+        turn = new FightTurn(getFighter(0), fight, Duration.ZERO);
         actionHandler = new ActionHandler(turn, fight);
     }
 

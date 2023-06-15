@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.path.Path;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -34,11 +34,11 @@ import java.time.Duration;
  * Move the fighter
  */
 public final class Move implements Action {
-    private final Fighter fighter;
+    private final PlayableFighter fighter;
     private final Path<FightCell> path;
     private final FightPathValidator[] validators;
 
-    public Move(Fighter fighter, Path<FightCell> path, FightPathValidator[] validators) {
+    public Move(PlayableFighter fighter, Path<FightCell> path, FightPathValidator[] validators) {
         this.fighter = fighter;
         this.path = path;
         this.validators = validators;
@@ -69,7 +69,7 @@ public final class Move implements Action {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return fighter;
     }
 

@@ -90,7 +90,7 @@ public class FunctionalFromExplorationMapTest extends FightBaseCase {
         assertFalse(other.isExploring());
         assertFalse(map.creatures().contains(explorationPlayer));
         assertTrue(other.isFighting());
-        assertContains(otherFighter, fight.fighters());
+        assertContains(otherFighter, fight.fighters().all());
         assertContains(otherFighter, fight.team(0).fighters());
 
         requestStack.assertAll(
@@ -113,7 +113,7 @@ public class FunctionalFromExplorationMapTest extends FightBaseCase {
         fight.state(PlacementState.class).leave(otherFighter);
 
         assertFalse(other.isFighting());
-        assertFalse(fight.fighters().contains(otherFighter));
+        assertFalse(fight.fighters().all().contains(otherFighter));
 
         requestStack.assertAll(
             new RemoveTeamFighters(fight.team(0), Collections.singleton(otherFighter))

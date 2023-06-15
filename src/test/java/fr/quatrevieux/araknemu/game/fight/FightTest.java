@@ -135,14 +135,14 @@ class FightTest extends GameBaseCase {
 
     @Test
     void fighters() {
-        assertCount(0, fight.fighters());
+        assertCount(0, fight.fighters().all());
 
         new PlacementState().start(fight);
 
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
+        assertIterableEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
 
         fight.start(new AlternateTeamFighterOrder());
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
+        assertIterableEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
     }
 
     @Test
@@ -375,7 +375,7 @@ class FightTest extends GameBaseCase {
 
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
-        assertCount(0, fight.fighters());
+        assertCount(0, fight.fighters().all());
         assertFalse(fight.alive());
     }
 
@@ -465,8 +465,7 @@ class FightTest extends GameBaseCase {
         fight.start(new AlternateTeamFighterOrder());
 
         InvocationFighter invoc = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);
-        fight.turnList().add(invoc);
-        invoc.joinFight(fight, fight.map().get(122));
+        fight.fighters().joinTurnList(invoc, fight.map().get(122));
         invoc.init();
 
         InvocationFighter notInFight = new InvocationFighter(-6, container.get(MonsterService.class).load(36).get(1), fighter1.team(), fighter1);

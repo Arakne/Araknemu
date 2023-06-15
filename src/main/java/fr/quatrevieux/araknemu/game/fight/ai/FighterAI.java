@@ -23,8 +23,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.FightAiActionFactoryAdapter;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -42,10 +42,10 @@ import java.util.stream.Stream;
  *       and the next action is scheduled after the last one.
  *       So the AI execution is not blocking, and executed in parallel of the turn timer.
  */
-public final class FighterAI implements Runnable, AI<Fighter> {
-    private final Fighter fighter;
+public final class FighterAI implements Runnable, AI<PlayableFighter> {
+    private final PlayableFighter fighter;
     private final Fight fight;
-    private final ActionGenerator<Fighter> generator;
+    private final ActionGenerator<PlayableFighter> generator;
     private final AIHelper helper;
 
     private @Nullable Turn turn;
@@ -57,7 +57,7 @@ public final class FighterAI implements Runnable, AI<Fighter> {
      * @param generator The action generator
      */
     @SuppressWarnings({"argument", "assignment"})
-    public FighterAI(Fighter fighter, Fight fight, ActionGenerator<Fighter> generator) {
+    public FighterAI(PlayableFighter fighter, Fight fight, ActionGenerator<PlayableFighter> generator) {
         this.fighter = fighter;
         this.fight = fight;
         this.generator = generator;
@@ -105,7 +105,7 @@ public final class FighterAI implements Runnable, AI<Fighter> {
     }
 
     @Override
-    public Fighter fighter() {
+    public PlayableFighter fighter() {
         return fighter;
     }
 
@@ -127,7 +127,7 @@ public final class FighterAI implements Runnable, AI<Fighter> {
 
     @Override
     public Stream<? extends FighterData> fighters() {
-        return fight.fighters().stream().filter(other -> !other.dead());
+        return fight.fighters().alive();
     }
 
     @Override

@@ -190,7 +190,7 @@ class GivePercentLifeHandlerTest extends FightBaseCase {
 
         fight.nextState();
 
-        caster = (PlayerFighter) fight.fighters().get(0);
+        caster = (PlayerFighter) getFighter(0);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -209,8 +209,8 @@ class GivePercentLifeHandlerTest extends FightBaseCase {
 
         requestStack.assertAll(
             ActionEffect.alterLifePoints(caster, caster, -25),
-            ActionEffect.alterLifePoints(caster, fight.fighters().get(3), 25),
-            ActionEffect.alterLifePoints(caster, fight.fighters().get(2), 25)
+            ActionEffect.alterLifePoints(caster, getFighter(3), 25),
+            ActionEffect.alterLifePoints(caster, getFighter(2), 25)
         );
     }
 

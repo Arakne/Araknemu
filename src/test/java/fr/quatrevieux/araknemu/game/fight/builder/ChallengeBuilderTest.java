@@ -67,7 +67,7 @@ class ChallengeBuilderTest extends GameBaseCase {
         assertCount(1, fight.team(0).fighters());
         assertCount(1, fight.team(1).fighters());
         assertContainsOnly(SimpleTeam.class, fight.teams());
-        assertContainsOnly(PlayerFighter.class, fight.fighters());
+        assertContainsOnly(PlayerFighter.class, fight.fighters().all());
         assertEquals(1, fight.id());
     }
 

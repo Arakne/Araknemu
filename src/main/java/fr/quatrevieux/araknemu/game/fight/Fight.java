@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
@@ -57,7 +58,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Handle fight
@@ -74,7 +74,8 @@ public final class Fight implements Dispatcher, Sender {
     private final ListenerAggregate dispatcher;
     private final ScheduledExecutorService executor;
     private final Spectators spectators;
-    private final ActionsFactory<Fighter> actions;
+    private final ActionsFactory<PlayableFighter> actions;
+    private final FighterList fighters;
 
     private final Lock executorLock = new ReentrantLock();
     private final EffectsHandler effects = new EffectsHandler();
@@ -84,7 +85,7 @@ public final class Fight implements Dispatcher, Sender {
     private volatile boolean alive = true;
 
     @SuppressWarnings({"assignment", "argument"})
-    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<Fighter> actions) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<PlayableFighter> actions) {
         this.id = id;
         this.type = type;
         this.map = map;
@@ -94,6 +95,7 @@ public final class Fight implements Dispatcher, Sender {
         this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
+        this.fighters = new FighterList(this);
         this.actions = actions;
     }
 
@@ -132,17 +134,8 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get all fighters on the fight
      */
-    public List<Fighter> fighters() {
-        final FightTurnList turnList = this.turnList;
-        final Stream<Fighter> fighterStream = turnList != null
-            ? turnList.fighters().stream()
-            : teams.stream().flatMap(fightTeam -> fightTeam.fighters().stream())
-        ;
-
-        return fighterStream
-            .filter(Fighter::isOnFight)
-            .collect(Collectors.toList())
-        ;
+    public FighterList fighters() {
+        return fighters;
     }
 
     /**
@@ -214,7 +207,7 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get available fight actions factories
      */
-    public ActionsFactory<Fighter> actions() {
+    public ActionsFactory<PlayableFighter> actions() {
         return actions;
     }
 
@@ -245,22 +238,7 @@ public final class Fight implements Dispatcher, Sender {
      * @see Fight#dispatch(Object) To dispatch on the Fight's listeners
      */
     public void dispatchToAll(Object event) {
-        if (turnList != null) {
-            for (Fighter fighter : turnList.fighters()) {
-                if (fighter.isOnFight()) {
-                    fighter.dispatch(event);
-                }
-            }
-        } else {
-            for (FightTeam team : teams) {
-                for (Fighter fighter : team.fighters()) {
-                    if (fighter.isOnFight()) {
-                        fighter.dispatch(event);
-                    }
-                }
-            }
-        }
-
+        fighters.dispatch(event);
         spectators.dispatch(event);
     }
 
@@ -409,6 +387,7 @@ public final class Fight implements Dispatcher, Sender {
         map.destroy();
         attachments.clear();
         spectators.clear();
+        fighters.clear();
     }
 
     /**

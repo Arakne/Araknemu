@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.StaticInvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
@@ -35,6 +37,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,6 +48,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -56,7 +60,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TackleValidatorTest extends FightBaseCase {
     private Fight fight;
     private FightTurn turn;
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private TackleValidator validator;
 
     @Override
@@ -166,6 +170,38 @@ class TackleValidatorTest extends FightBaseCase {
         assertEquals(6, result2.lostActionPoints());
         assertEquals(104, result2.action());
         assertEquals(185, result2.target().id());
+    }
+
+    @Test
+    void validatePathWithStaticEnnemyOnFirstStepShouldBeIgnored() throws SQLException {
+        dataSet.pushMonsterTemplateInvocations();
+
+        Path<FightCell> path = new Path<FightCell>(
+            fight.map().decoder(),
+            Arrays.asList(
+                new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
+                new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(213), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(227), Direction.NORTH_WEST)
+            )
+        );
+
+        StaticInvocationFighter invoc = new StaticInvocationFighter(
+            -50,
+            container.get(MonsterService.class).load(282).get(5),
+            other.fighter().team(),
+            other.fighter()
+        );
+        fight.fighters().join(invoc, fight.map().get(170));
+        invoc.init();
+        invoc.characteristics().alter(Characteristic.AGILITY, 500);
+
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
+
+        MoveResult result = new MoveSuccess(fighter, path);
+        MoveResult result2 = validator.validate(move, result);
+
+        assertSame(result, result2);
     }
 
     @Test
@@ -369,12 +405,12 @@ class TackleValidatorTest extends FightBaseCase {
     @ParameterizedTest
     void computeTackle(int performerAgility, int enemyAgility, double escapeProbability) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         FightBuilder builder = fightBuilder()
-            .addSelf(fb -> fb.cell(185).charac(Characteristic.AGILITY, performerAgility))
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.AGILITY, performerAgility).charac(Characteristic.INTELLIGENCE, 1000))
             .addEnemy(fb -> fb.cell(170).charac(Characteristic.AGILITY, enemyAgility))
         ;
 
         fight = builder.build(true);
-        fight.start(a -> fight.fighters());
+        fight.start(new AlternateTeamFighterOrder());
 
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
@@ -383,7 +419,7 @@ class TackleValidatorTest extends FightBaseCase {
         Method method = validator.getClass().getDeclaredMethod("computeTackle", Fighter.class, FighterData.class);
         method.setAccessible(true);
 
-        assertEquals(escapeProbability, (double) method.invoke(validator, fighter, fight.fighters().get(1)), 0.01);
+        assertEquals(escapeProbability, (double) method.invoke(validator, fighter, getFighter(1)), 0.01);
     }
 
     public static Stream<Arguments> provideAgilityAndChance() {

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
@@ -39,17 +40,17 @@ import java.time.Duration;
  * Cast a spell
  */
 public final class Cast implements Action {
-    private final Fighter caster;
+    private final PlayableFighter caster;
     private final Spell spell;
     private final FightCell target;
     private final CastConstraintValidator<Spell> validator;
     private final CriticalityStrategy criticalityStrategy;
 
-    public Cast(Fighter caster, Spell spell, FightCell target) {
+    public Cast(PlayableFighter caster, Spell spell, FightCell target) {
         this(caster, spell, target, new SpellConstraintsValidator(), new BaseCriticalityStrategy());
     }
 
-    public Cast(Fighter caster, Spell spell, FightCell target, CastConstraintValidator<Spell> validator, CriticalityStrategy criticalityStrategy) {
+    public Cast(PlayableFighter caster, Spell spell, FightCell target, CastConstraintValidator<Spell> validator, CriticalityStrategy criticalityStrategy) {
         this.caster = caster;
         this.spell = spell;
         this.target = target;
@@ -90,7 +91,7 @@ public final class Cast implements Action {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return caster;
     }
 

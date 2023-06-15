@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.StartWatchFight;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,15 +47,17 @@ class SendBattlefieldObjectsToSpectatorTest extends FightBaseCase {
 
     @Test
     void onStartWatchFightWithObjects() throws SQLException {
+        fight.nextState();
+
         BattlefieldObject bo1 = Mockito.mock(BattlefieldObject.class);
         BattlefieldObject bo2 = Mockito.mock(BattlefieldObject.class);
         BattlefieldObject bo3 = Mockito.mock(BattlefieldObject.class);
         BattlefieldObject bo4 = Mockito.mock(BattlefieldObject.class);
 
-        Mockito.when(bo1.caster()).thenReturn(fight.fighters().get(0));
-        Mockito.when(bo2.caster()).thenReturn(fight.fighters().get(1));
-        Mockito.when(bo3.caster()).thenReturn(fight.fighters().get(0));
-        Mockito.when(bo4.caster()).thenReturn(fight.fighters().get(0));
+        Mockito.when(bo1.caster()).thenReturn(getFighter(0));
+        Mockito.when(bo2.caster()).thenReturn(getFighter(1));
+        Mockito.when(bo3.caster()).thenReturn(getFighter(0));
+        Mockito.when(bo4.caster()).thenReturn(getFighter(0));
 
         Mockito.when(bo1.cell()).thenReturn(fight.map().get(123));
         Mockito.when(bo2.cell()).thenReturn(fight.map().get(220));
@@ -81,8 +84,6 @@ class SendBattlefieldObjectsToSpectatorTest extends FightBaseCase {
         Mockito.when(bo3.color()).thenReturn(3);
         Mockito.when(bo4.color()).thenReturn(1);
 
-        fight.nextState();
-
         fight.map().objects().add(bo1);
         fight.map().objects().add(bo2);
         fight.map().objects().add(bo3);
@@ -104,9 +105,11 @@ class SendBattlefieldObjectsToSpectatorTest extends FightBaseCase {
 
     @Test
     void onStartWatchFightWithObjectsWithCustomCellData() throws SQLException {
+        fight.nextState();
+
         BattlefieldObject bo1 = Mockito.mock(BattlefieldObject.class);
 
-        Mockito.when(bo1.caster()).thenReturn(fight.fighters().get(0));
+        Mockito.when(bo1.caster()).thenReturn(fight.team(0).leader());
         Mockito.when(bo1.cell()).thenReturn(fight.map().get(123));
         Mockito.when(bo1.visible()).thenCallRealMethod();
         Mockito.when(bo1.cellsProperties()).thenReturn(
@@ -114,8 +117,6 @@ class SendBattlefieldObjectsToSpectatorTest extends FightBaseCase {
         );
         Mockito.when(bo1.size()).thenReturn(2);
         Mockito.when(bo1.color()).thenReturn(1);
-
-        fight.nextState();
 
         fight.map().objects().add(bo1);
 

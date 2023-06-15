@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint.player;
 
-import fr.quatrevieux.araknemu.data.living.constraint.ConstraintBuilder;
 import fr.quatrevieux.araknemu.data.living.constraint.AbstractConstraintBuilderFactory;
+import fr.quatrevieux.araknemu.data.living.constraint.ConstraintBuilder;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;

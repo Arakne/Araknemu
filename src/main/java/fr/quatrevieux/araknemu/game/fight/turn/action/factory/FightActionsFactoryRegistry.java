@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastActionFactory;
@@ -32,14 +32,14 @@ import java.util.Map;
 /**
  * Registry of all fight actions factories
  */
-public final class FightActionsFactoryRegistry implements ActionsFactory<Fighter> {
-    private final CastActionFactory<Fighter> castFactory;
-    private final FightActionFactory<Fighter> closeCombatFactory;
-    private final MoveActionFactory<Fighter> moveFactory;
+public final class FightActionsFactoryRegistry implements ActionsFactory<PlayableFighter> {
+    private final CastActionFactory<PlayableFighter> castFactory;
+    private final FightActionFactory<PlayableFighter> closeCombatFactory;
+    private final MoveActionFactory<PlayableFighter> moveFactory;
 
-    private final Map<ActionType, FightActionFactory<Fighter>> factories = new EnumMap<>(ActionType.class);
+    private final Map<ActionType, FightActionFactory<PlayableFighter>> factories = new EnumMap<>(ActionType.class);
 
-    public FightActionsFactoryRegistry(MoveActionFactory<Fighter> moveFactory, CastActionFactory<Fighter> castFactory, FightActionFactory<Fighter> closeCombatFactory) {
+    public FightActionsFactoryRegistry(MoveActionFactory<PlayableFighter> moveFactory, CastActionFactory<PlayableFighter> castFactory, FightActionFactory<PlayableFighter> closeCombatFactory) {
         this.moveFactory = moveFactory;
         this.castFactory = castFactory;
         this.closeCombatFactory = closeCombatFactory;
@@ -50,7 +50,7 @@ public final class FightActionsFactoryRegistry implements ActionsFactory<Fighter
     }
 
     @Override
-    public Action create(Fighter fighter, ActionType action, String[] arguments) {
+    public Action create(PlayableFighter fighter, ActionType action, String[] arguments) {
         if (!factories.containsKey(action)) {
             throw new FightException("Fight action " + action + " not found");
         }
@@ -59,21 +59,21 @@ public final class FightActionsFactoryRegistry implements ActionsFactory<Fighter
     }
 
     @Override
-    public CastActionFactory<Fighter> cast() {
+    public CastActionFactory<PlayableFighter> cast() {
         return castFactory;
     }
 
     @Override
-    public FightActionFactory<Fighter> closeCombat() {
+    public FightActionFactory<PlayableFighter> closeCombat() {
         return closeCombatFactory;
     }
 
     @Override
-    public MoveActionFactory<Fighter> move() {
+    public MoveActionFactory<PlayableFighter> move() {
         return moveFactory;
     }
 
-    private void register(FightActionFactory<Fighter> factory) {
+    private void register(FightActionFactory<PlayableFighter> factory) {
         factories.put(factory.type(), factory);
     }
 }

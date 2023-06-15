@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
@@ -37,12 +37,12 @@ import java.util.List;
  */
 public final class CastSuccess implements ActionResult {
     private final Cast action;
-    private final Fighter caster;
+    private final PlayableFighter caster;
     private final Spell spell;
     private final FightCell target;
     private final boolean critical;
 
-    public CastSuccess(Cast action, Fighter caster, Spell spell, FightCell target, boolean critical) {
+    public CastSuccess(Cast action, PlayableFighter caster, Spell spell, FightCell target, boolean critical) {
         this.action = action;
         this.caster = caster;
         this.spell = spell;
@@ -56,7 +56,7 @@ public final class CastSuccess implements ActionResult {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return caster;
     }
 

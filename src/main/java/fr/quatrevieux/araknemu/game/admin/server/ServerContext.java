@@ -20,8 +20,8 @@
 package fr.quatrevieux.araknemu.game.admin.server;
 
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
 import java.util.List;

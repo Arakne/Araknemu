@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -35,7 +36,7 @@ class PredicatesTest extends AiBaseCase {
             .addEnemy(b -> b.cell(135))
         );
 
-        assertTrue(Predicates.<Fighter>hasEnemyInRange().test(ai));
+        assertTrue(Predicates.<PlayableFighter>hasEnemyInRange().test(ai));
     }
 
     @Test
@@ -48,7 +49,7 @@ class PredicatesTest extends AiBaseCase {
 
         removeSpell(3);
 
-        assertFalse(Predicates.<Fighter>hasEnemyInRange().test(ai));
+        assertFalse(Predicates.<PlayableFighter>hasEnemyInRange().test(ai));
     }
 
     @Test
@@ -58,7 +59,7 @@ class PredicatesTest extends AiBaseCase {
             .addEnemy(b -> b.cell(256))
         );
 
-        assertFalse(Predicates.<Fighter>hasEnemyInRange().test(ai));
+        assertFalse(Predicates.<PlayableFighter>hasEnemyInRange().test(ai));
     }
 
     @Test
@@ -69,7 +70,7 @@ class PredicatesTest extends AiBaseCase {
             .addAlly(b -> b.cell(125))
         );
 
-        assertTrue(Predicates.<Fighter>hasAllies().test(ai));
+        assertTrue(Predicates.<PlayableFighter>hasAllies().test(ai));
 
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))
@@ -78,14 +79,14 @@ class PredicatesTest extends AiBaseCase {
             .addAlly(b -> b.cell(125))
         );
 
-        assertTrue(Predicates.<Fighter>hasAllies().test(ai));
+        assertTrue(Predicates.<PlayableFighter>hasAllies().test(ai));
 
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))
             .addEnemy(b -> b.cell(135))
         );
 
-        assertFalse(Predicates.<Fighter>hasAllies().test(ai));
+        assertFalse(Predicates.<PlayableFighter>hasAllies().test(ai));
     }
 
     @Test
@@ -95,8 +96,8 @@ class PredicatesTest extends AiBaseCase {
             .addEnemy(b -> b.cell(256))
         );
 
-        assertFalse(Predicates.<Fighter>hasLessThanPercentLife(10).test(ai));
-        assertTrue(Predicates.<Fighter>hasLessThanPercentLife(50).test(ai));
-        assertTrue(Predicates.<Fighter>hasLessThanPercentLife(51).test(ai));
+        assertFalse(Predicates.<PlayableFighter>hasLessThanPercentLife(10).test(ai));
+        assertTrue(Predicates.<PlayableFighter>hasLessThanPercentLife(50).test(ai));
+        assertTrue(Predicates.<PlayableFighter>hasLessThanPercentLife(51).test(ai));
     }
 }

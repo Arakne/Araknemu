@@ -20,24 +20,27 @@
 package fr.quatrevieux.araknemu.game.fight.ai.factory;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Chain AI factories
  */
-public final class ChainAiFactory implements AiFactory<Fighter> {
-    private final AiFactory<Fighter>[] factories;
+public final class ChainAiFactory implements AiFactory<PlayableFighter> {
+    private final List<AiFactory<PlayableFighter>> factories;
 
-    public ChainAiFactory(AiFactory<Fighter>... factories) {
-        this.factories = factories;
+    @SafeVarargs
+    public ChainAiFactory(AiFactory<PlayableFighter>... factories) {
+        this.factories = Arrays.asList(factories);
     }
 
     @Override
-    public Optional<AI<Fighter>> create(Fighter fighter) {
-        for (AiFactory<Fighter> factory : factories) {
-            final Optional<AI<Fighter>> ai = factory.create(fighter);
+    public Optional<AI<PlayableFighter>> create(PlayableFighter fighter) {
+        for (AiFactory<PlayableFighter> factory : factories) {
+            final Optional<AI<PlayableFighter>> ai = factory.create(fighter);
 
             if (ai.isPresent()) {
                 return ai;

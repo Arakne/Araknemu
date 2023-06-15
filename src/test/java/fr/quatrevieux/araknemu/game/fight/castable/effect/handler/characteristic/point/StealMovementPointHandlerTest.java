@@ -271,20 +271,20 @@ class StealMovementPointHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        FightCastScope scope = makeCastScope(fight.fighters().get(0), spell, effect, fight.map().get(150));
+        FightCastScope scope = makeCastScope(getFighter(0), spell, effect, fight.map().get(150));
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff0 = fight.fighters().get(0).buffs().stream().filter(b -> b.effect().effect() == 128).findFirst();
-        Optional<Buff> buff1 = fight.fighters().get(1).buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
-        Optional<Buff> buff2 = fight.fighters().get(2).buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<Buff> buff0 = getFighter(0).buffs().stream().filter(b -> b.effect().effect() == 128).findFirst();
+        Optional<Buff> buff1 = getFighter(1).buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<Buff> buff2 = getFighter(2).buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         assertTrue(buff0.isPresent());
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
 
-        assertEquals(9, fight.fighters().get(0).characteristics().get(Characteristic.MOVEMENT_POINT));
-        assertEquals(0, fight.fighters().get(1).characteristics().get(Characteristic.MOVEMENT_POINT));
-        assertEquals(0, fight.fighters().get(2).characteristics().get(Characteristic.MOVEMENT_POINT));
+        assertEquals(9, getFighter(0).characteristics().get(Characteristic.MOVEMENT_POINT));
+        assertEquals(0, getFighter(1).characteristics().get(Characteristic.MOVEMENT_POINT));
+        assertEquals(0, getFighter(2).characteristics().get(Characteristic.MOVEMENT_POINT));
     }
 
     @Test

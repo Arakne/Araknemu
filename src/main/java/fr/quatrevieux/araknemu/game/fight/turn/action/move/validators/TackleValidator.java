@@ -25,6 +25,7 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
@@ -54,7 +55,7 @@ public final class TackleValidator implements FightPathValidator {
 
     @Override
     public MoveResult validate(Move move, MoveResult result) {
-        final Fighter performer = move.performer();
+        final PlayableFighter performer = move.performer();
 
         // Ignore tackle if he has at least on of those states
         if (performer.states().hasOne(ignoredStates)) {
@@ -72,6 +73,7 @@ public final class TackleValidator implements FightPathValidator {
             escapeProbability *= decoder.nextCellByDirection(currentCell, direction)
                 .map(FightCell::fighter)
                 .filter(fighter -> !fighter.team().equals(performer.team()))
+                .filter(fighter -> fighter instanceof PlayableFighter)
                 .filter(fighter -> !fighter.states().hasOne(ignoredStates))
                 .map(adjacentEnemy -> computeTackle(performer, adjacentEnemy))
                 .orElse(1d)

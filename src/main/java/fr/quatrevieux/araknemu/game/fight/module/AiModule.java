@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
@@ -31,9 +32,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
  * Fight module for enable AI
  */
 public final class AiModule implements FightModule {
-    private final AiFactory factory;
+    private final AiFactory<PlayableFighter> factory;
 
-    public AiModule(AiFactory factory) {
+    public AiModule(AiFactory<PlayableFighter> factory) {
         this.factory = factory;
     }
 
@@ -43,7 +44,11 @@ public final class AiModule implements FightModule {
             new Listener<FighterInitialized>() {
                 @Override
                 public void on(FighterInitialized event) {
-                    init(event.fighter());
+                    final Fighter fighter = event.fighter();
+
+                    if (fighter instanceof PlayableFighter) {
+                        init((PlayableFighter) fighter);
+                    }
                 }
 
                 @Override
@@ -68,7 +73,7 @@ public final class AiModule implements FightModule {
     /**
      * Initialize the AI for the fighter (if supported)
      */
-    private void init(Fighter fighter) {
+    private void init(PlayableFighter fighter) {
         factory.create(fighter).ifPresent(fighter::attach);
     }
 

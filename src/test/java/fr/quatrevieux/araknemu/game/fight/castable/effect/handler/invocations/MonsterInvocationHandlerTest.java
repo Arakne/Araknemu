@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -28,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -56,6 +59,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         dataSet.pushMonsterTemplateInvocations().pushMonsterSpellsInvocations().pushRewardItems();
 
         fight = createFight();
+        fight.register(new AiModule(container.get(AiFactory.class)));
         fight.nextState();
 
         caster = player.fighter();
@@ -81,14 +85,15 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         handler.handle(scope, scope.effects().get(0));
 
-        FighterData invoc = fight.map().get(123).fighter();
+        Fighter invoc = fight.map().get(123).fighter();
 
         assertInstanceOf(InvocationFighter.class, invoc);
-        assertContains(invoc, fight.fighters());
+        assertContains(invoc, fight.fighters().all());
         assertContains(invoc, fight.turnList().fighters());
         assertSame(caster.team(), invoc.team());
         assertEquals(1, invoc.level());
         assertEquals(36, ((InvocationFighter) invoc).monster().id());
+        assertInstanceOf(FighterAI.class, invoc.attachment(FighterAI.class));
 
         requestStack.assertAll(
             new FighterTurnOrder(fight.turnList()),
@@ -116,7 +121,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         FighterData invoc = fight.map().get(123).fighter();
 
         assertInstanceOf(InvocationFighter.class, invoc);
-        assertContains(invoc, fight.fighters());
+        assertContains(invoc, fight.fighters().all());
         assertContains(invoc, fight.turnList().fighters());
         assertSame(caster.team(), invoc.team());
         assertEquals(1, invoc.level());

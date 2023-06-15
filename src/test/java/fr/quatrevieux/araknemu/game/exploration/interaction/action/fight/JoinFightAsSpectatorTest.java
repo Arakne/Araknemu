@@ -121,7 +121,7 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
         fight.turnList().start();
 
         BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
-        Mockito.when(bo.caster()).thenReturn(fight.fighters().get(0));
+        Mockito.when(bo.caster()).thenReturn(getFighter(0));
         Mockito.when(bo.cell()).thenReturn(fight.map().get(123));
         Mockito.when(bo.size()).thenReturn(2);
         Mockito.when(bo.color()).thenReturn(1);

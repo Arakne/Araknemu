@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
@@ -33,14 +33,14 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * A path can be truncated due to enemies on path, which will also result to a MoveSuccess result
  */
 public final class MoveSuccess implements MoveResult {
-    private final Fighter performer;
+    private final PlayableFighter performer;
     private final Path<FightCell> path;
 
     /**
      * @param performer The current fighter which perform the action
      * @param path The new path
      */
-    public MoveSuccess(Fighter performer, Path<FightCell> path) {
+    public MoveSuccess(PlayableFighter performer, Path<FightCell> path) {
         this.performer = performer;
         this.path = path;
     }
@@ -66,7 +66,7 @@ public final class MoveSuccess implements MoveResult {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return performer;
     }
 

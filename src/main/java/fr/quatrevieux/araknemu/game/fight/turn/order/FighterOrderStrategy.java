@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.order;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 
 import java.util.List;
@@ -33,5 +33,5 @@ public interface FighterOrderStrategy {
      *
      * @param teams The fight teams
      */
-    public List<Fighter> compute(List<FightTeam> teams);
+    public List<PlayableFighter> compute(List<FightTeam> teams);
 }

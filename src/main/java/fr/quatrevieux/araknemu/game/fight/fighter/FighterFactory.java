@@ -47,12 +47,12 @@ public interface FighterFactory {
      * Generate a fighter with a unique ID
      * The generated ID will be a negative integer
      */
-    public Fighter generate(FighterGenerator generator);
+    public <F extends Fighter> F generate(FighterGenerator<F> generator);
 
-    public static interface FighterGenerator {
+    public static interface FighterGenerator<F extends Fighter> {
         /**
          * Create a fighter with a generated ID
          */
-        public Fighter create(int id);
+        public F create(int id);
     }
 }

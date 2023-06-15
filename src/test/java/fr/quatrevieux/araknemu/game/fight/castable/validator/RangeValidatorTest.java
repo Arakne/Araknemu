@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -38,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RangeValidatorTest  extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private FightTurn turn;
     private RangeValidator validator;
 

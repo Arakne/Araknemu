@@ -70,8 +70,8 @@ class LeaveFightTest extends FightBaseCase {
         handler.handle(session, new LeaveFightRequest());
 
         assertFalse(gamePlayer().isFighting());
-        assertFalse(fight.fighters().contains(fighter));
-        assertCount(2, fight.fighters());
+        assertFalse(fight.fighters().all().contains(fighter));
+        assertCount(2, fight.fighters().all());
         requestStack.assertLast(new CancelFight());
     }
 
@@ -89,7 +89,7 @@ class LeaveFightTest extends FightBaseCase {
 
         assertFalse(gamePlayer().isFighting());
         assertFalse(other.isFighting());
-        assertCount(0, fight.fighters());
+        assertCount(0, fight.fighters().all());
         assertTrue(container.get(FightService.class).fightsByMap(map.id()).isEmpty());
 
         requestStack.assertLast(new CancelFight());
@@ -109,10 +109,10 @@ class LeaveFightTest extends FightBaseCase {
         handler.handle(session, new LeaveFightRequest());
 
         assertFalse(gamePlayer().isFighting());
-        assertFalse(fight.fighters().contains(fighter));
+        assertFalse(fight.fighters().all().contains(fighter));
         assertTrue(fight.active());
         assertTrue(fighter.dead());
-        assertCount(2, fight.fighters());
+        assertCount(2, fight.fighters().all());
         assertCount(2, fight.turnList().fighters());
         assertFalse(fight.turnList().fighters().contains(fighter));
         requestStack.assertLast(new CancelFight());

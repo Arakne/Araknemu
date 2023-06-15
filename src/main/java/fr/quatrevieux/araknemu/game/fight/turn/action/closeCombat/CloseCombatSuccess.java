@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
@@ -35,12 +35,12 @@ import java.util.List;
  * Result for successfully weapon cast
  */
 public final class CloseCombatSuccess implements ActionResult {
-    private final Fighter caster;
+    private final PlayableFighter caster;
     private final CastableWeapon weapon;
     private final FightCell target;
     private final boolean critical;
 
-    public CloseCombatSuccess(Fighter caster, CastableWeapon weapon, FightCell target, boolean critical) {
+    public CloseCombatSuccess(PlayableFighter caster, CastableWeapon weapon, FightCell target, boolean critical) {
         this.caster = caster;
         this.weapon = weapon;
         this.target = target;
@@ -53,7 +53,7 @@ public final class CloseCombatSuccess implements ActionResult {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return caster;
     }
 

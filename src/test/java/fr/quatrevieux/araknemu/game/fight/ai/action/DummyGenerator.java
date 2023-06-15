@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -53,7 +54,7 @@ public class DummyGenerator implements ActionGenerator {
                         }
 
                         @Override
-                        public Fighter performer() {
+                        public PlayableFighter performer() {
                             return null;
                         }
 

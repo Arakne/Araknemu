@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -40,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InvocationCountValidatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private FightTurn turn;
     private InvocationCountValidator validator;
 
@@ -61,7 +62,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
     @Test
     void maxInvocReached() {
         Spell spell = Mockito.mock(Spell.class);
-        Fighter invoc = Mockito.mock(Fighter.class);
+        PlayableFighter invoc = Mockito.mock(PlayableFighter.class);
         Mockito.when(invoc.invoker()).thenReturn(fighter);
         fight.turnList().add(invoc);
 
@@ -79,7 +80,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
     @Test
     void maxInvocReachedWithMultipleInvoc() {
         Spell spell = Mockito.mock(Spell.class);
-        Fighter invoc = Mockito.mock(Fighter.class);
+        PlayableFighter invoc = Mockito.mock(PlayableFighter.class);
         Mockito.when(invoc.invoker()).thenReturn(fighter);
 
         // Add 4 invoc
@@ -102,6 +103,34 @@ class InvocationCountValidatorTest extends FightBaseCase {
     }
 
     @Test
+    void shouldIgnoreStaticInvocation() {
+        Spell spell = Mockito.mock(Spell.class);
+
+        Fighter invoc1 = Mockito.mock(Fighter.class);
+        Fighter invoc2 = Mockito.mock(Fighter.class);
+        Fighter invoc3 = Mockito.mock(Fighter.class);
+        Fighter invoc4 = Mockito.mock(Fighter.class);
+
+        Mockito.when(invoc1.invoker()).thenReturn(fighter);
+        Mockito.when(invoc2.invoker()).thenReturn(fighter);
+        Mockito.when(invoc3.invoker()).thenReturn(fighter);
+        Mockito.when(invoc4.invoker()).thenReturn(fighter);
+
+        fight.fighters().join(invoc1, fight.map().get(146));
+        fight.fighters().join(invoc2, fight.map().get(146));
+        fight.fighters().join(invoc3, fight.map().get(146));
+        fight.fighters().join(invoc4, fight.map().get(146));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.effect()).thenReturn(180);
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+
+        fighter.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
+
+        assertTrue(validator.check(turn, spell, fight.map().get(123)));
+    }
+
+    @Test
     void success() {
         Spell spell = Mockito.mock(Spell.class);
 
@@ -111,7 +140,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
 
     @Test
     void successWithMultipleInvoc() {Spell spell = Mockito.mock(Spell.class);
-        Fighter invoc = Mockito.mock(Fighter.class);
+        PlayableFighter invoc = Mockito.mock(PlayableFighter.class);
         Mockito.when(invoc.invoker()).thenReturn(fighter);
         fight.turnList().add(invoc);
 
@@ -128,7 +157,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
     @Test
     void ignoreNotInvocationSpell() {
         Spell spell = Mockito.mock(Spell.class);
-        Fighter invoc = Mockito.mock(Fighter.class);
+        PlayableFighter invoc = Mockito.mock(PlayableFighter.class);
         Mockito.when(invoc.invoker()).thenReturn(fighter);
         fight.turnList().add(invoc);
 

@@ -22,13 +22,12 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
@@ -46,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Fighter for a player
  */
-public final class PlayerFighter extends AbstractFighter implements Fighter, PlayerSessionScope {
+public final class PlayerFighter extends AbstractPlayableFighter implements PlayerSessionScope {
     private final GamePlayer player;
     private final PlayerFighterProperties properties;
     private final PlayerFighterSprite sprite;

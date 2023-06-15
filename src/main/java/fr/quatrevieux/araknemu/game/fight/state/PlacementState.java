@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.state;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FighterList;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
@@ -29,7 +30,6 @@ import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.event.FighterAdded;
 import fr.quatrevieux.araknemu.game.fight.event.FighterPlaceChanged;
-import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
@@ -289,8 +289,10 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     @RequiresNonNull("fight")
     @SuppressWarnings("dereference.of.nullable") // cellsGenerators.get(fighter.team()) cannot be null
     private void addFighters(Collection<Fighter> fighters) {
+        final FighterList fightersList = fight.fighters();
+
         for (Fighter fighter : fighters) {
-            fighter.joinFight(fight, NullnessUtil.castNonNull(cellsGenerators).get(fighter.team()).next());
+            fightersList.join(fighter, NullnessUtil.castNonNull(cellsGenerators).get(fighter.team()).next());
         }
 
         for (Fighter fighter : fighters) {
@@ -307,8 +309,8 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      */
     @RequiresNonNull("fight")
     private void removeFighter(Fighter fighter) {
+        fight.fighters().leave(fighter);
         fighter.dispatch(new FightLeaved());
-        fight.dispatch(new FighterRemoved(fighter, fight));
     }
 
     /**

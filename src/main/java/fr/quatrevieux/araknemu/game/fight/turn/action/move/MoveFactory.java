@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.path.Path;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathV
 /**
  * Factory for move action
  */
-public final class MoveFactory implements MoveActionFactory<Fighter> {
+public final class MoveFactory implements MoveActionFactory<PlayableFighter> {
     private final FightPathValidator[] validators;
 
     public MoveFactory(FightPathValidator[] validators) {
@@ -37,7 +37,7 @@ public final class MoveFactory implements MoveActionFactory<Fighter> {
     }
 
     @Override
-    public Action create(Fighter fighter, String[] arguments) {
+    public Action create(PlayableFighter fighter, String[] arguments) {
         if (arguments.length < 1) {
             throw new IllegalArgumentException("Invalid move arguments");
         }
@@ -51,7 +51,7 @@ public final class MoveFactory implements MoveActionFactory<Fighter> {
     }
 
     @Override
-    public Move create(Fighter performer, Path<FightCell> path) {
+    public Move create(PlayableFighter performer, Path<FightCell> path) {
         return new Move(performer, path, validators);
     }
 }

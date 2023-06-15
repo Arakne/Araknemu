@@ -139,9 +139,9 @@ class MonsterGroupTest extends GameBaseCase {
         assertFalse(map.creatures().contains(group));
         assertFalse(map.creatures().contains(player));
 
-        assertCount(5, fight.fighters());
-        assertContainsType(MonsterFighter.class, fight.fighters());
-        assertContains(player.player().fighter(), fight.fighters());
+        assertCount(5, fight.fighters().all());
+        assertContainsType(MonsterFighter.class, fight.fighters().all());
+        assertContains(player.player().fighter(), fight.fighters().all());
         assertInstanceOf(PvmType.class, fight.type());
     }
 

@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
@@ -33,14 +33,14 @@ import java.util.Collections;
  * He'll lose all its MP, and some AP
  */
 public final class MoveFailed implements MoveResult {
-    private final Fighter performer;
+    private final PlayableFighter performer;
     private final int lostActionPoints;
 
     /**
      * @param performer The current fighter
      * @param lostActionPoints Number of lost action points
      */
-    public MoveFailed(Fighter performer, int lostActionPoints) {
+    public MoveFailed(PlayableFighter performer, int lostActionPoints) {
         this.performer = performer;
         this.lostActionPoints = lostActionPoints;
     }
@@ -74,7 +74,7 @@ public final class MoveFailed implements MoveResult {
     }
 
     @Override
-    public Fighter performer() {
+    public PlayableFighter performer() {
         return performer;
     }
 

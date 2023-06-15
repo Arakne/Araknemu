@@ -56,7 +56,7 @@ class KickFighterTest extends FightBaseCase {
         requestStack.clear();
         handlePacket(new KickFighterRequest(teammate.id()));
 
-        assertTrue(fight.fighters().contains(teammate));
+        assertTrue(fight.fighters().all().contains(teammate));
         requestStack.assertLast(Error.cantDoDuringFight());
     }
 
@@ -68,7 +68,7 @@ class KickFighterTest extends FightBaseCase {
 
         handlePacket(new KickFighterRequest(enemy.id()));
 
-        assertTrue(fight.fighters().contains(enemy));
+        assertTrue(fight.fighters().all().contains(enemy));
         requestStack.assertLast(new Noop());
     }
 
@@ -91,7 +91,7 @@ class KickFighterTest extends FightBaseCase {
         handlePacket(new KickFighterRequest(me.id()));
 
         requestStack.assertLast(new Noop());
-        assertTrue(fight.fighters().contains(me));
+        assertTrue(fight.fighters().all().contains(me));
     }
 
     @RepeatedIfExceptionsTest
@@ -102,7 +102,7 @@ class KickFighterTest extends FightBaseCase {
 
         handlePacket(new KickFighterRequest(teammate.id()));
 
-        assertFalse(fight.fighters().contains(teammate));
+        assertFalse(fight.fighters().all().contains(teammate));
         requestStack.assertLast(new RemoveSprite(teammate.sprite()));
     }
 
@@ -113,12 +113,12 @@ class KickFighterTest extends FightBaseCase {
 
         fight.state(PlacementState.class).joinTeam(me, fight.team(0));
 
-        PlayerFighter otherFighter = (PlayerFighter) fight.fighters().get(0);
+        PlayerFighter otherFighter = (PlayerFighter) fight.team(0).leader();
         GameSession otherSession = accessors.session(otherFighter);
         otherSession.setFighter(otherFighter);
         new KickFighter().handle(otherSession, new KickFighterRequest(me.id()));
 
         requestStack.assertLast(new CancelFight());
-        assertFalse(fight.fighters().contains(me));
+        assertFalse(fight.fighters().all().contains(me));
     }
 }

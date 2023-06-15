@@ -26,6 +26,7 @@ import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
@@ -198,7 +199,7 @@ class SendFightActionTest extends FightBaseCase {
         fight = createPvmFight();
         listener = new SendFightAction(fight);
 
-        Fighter monster = fight.fighters().get(1);
+        PlayableFighter monster = (PlayableFighter) new ArrayList<>(fight.team(1).fighters()).get(0);
 
         monster.setHidden(monster, true);
         requestStack.clear();

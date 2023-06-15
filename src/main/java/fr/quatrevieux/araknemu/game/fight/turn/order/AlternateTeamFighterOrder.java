@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.order;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
@@ -34,9 +35,9 @@ import java.util.Queue;
  */
 public final class AlternateTeamFighterOrder implements FighterOrderStrategy {
     @Override
-    public List<Fighter> compute(List<FightTeam> teams) {
-        final List<Queue<Fighter>> fightersByTeam = computeTeamsOrder(teams);
-        final List<Fighter> orderedFighters = new ArrayList<>();
+    public List<PlayableFighter> compute(List<FightTeam> teams) {
+        final List<Queue<PlayableFighter>> fightersByTeam = computeTeamsOrder(teams);
+        final List<PlayableFighter> orderedFighters = new ArrayList<>();
 
         boolean hasChanges;
 
@@ -44,7 +45,7 @@ public final class AlternateTeamFighterOrder implements FighterOrderStrategy {
             hasChanges = false;
 
             // Poll the next fighter on each teams
-            for (Queue<Fighter> fighters : fightersByTeam) {
+            for (Queue<PlayableFighter> fighters : fightersByTeam) {
                 if (!fighters.isEmpty()) {
                     orderedFighters.add(fighters.remove());
                     hasChanges = true;
@@ -55,17 +56,21 @@ public final class AlternateTeamFighterOrder implements FighterOrderStrategy {
         return orderedFighters;
     }
 
-    private List<Queue<Fighter>> computeTeamsOrder(List<FightTeam> teams) {
-        final List<Queue<Fighter>> fightersByTeam = new ArrayList<>();
+    private List<Queue<PlayableFighter>> computeTeamsOrder(List<FightTeam> teams) {
+        final List<Queue<PlayableFighter>> fightersByTeam = new ArrayList<>();
 
         for (FightTeam team : teams) {
             // Sort team fighters by their initiative desc
-            final Queue<Fighter> fighters = new PriorityQueue<>(
+            final Queue<PlayableFighter> fighters = new PriorityQueue<>(
                 Asserter.castPositive(team.fighters().size()),
                 (f1, f2) -> f2.characteristics().initiative() - f1.characteristics().initiative()
             );
 
-            fighters.addAll(team.fighters());
+            for (Fighter fighter : team.fighters()) {
+                if (fighter instanceof PlayableFighter) {
+                    fighters.add((PlayableFighter) fighter);
+                }
+            }
 
             fightersByTeam.add(fighters);
         }

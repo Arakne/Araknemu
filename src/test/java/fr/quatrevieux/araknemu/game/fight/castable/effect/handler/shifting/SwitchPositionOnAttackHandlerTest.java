@@ -156,8 +156,8 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(player.fighter(), spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
-        assertTrue(fight.fighters().get(1).buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
-        assertTrue(fight.fighters().get(2).buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
+        assertTrue(getFighter(1).buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
+        assertTrue(getFighter(2).buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
     }
 
     @Test

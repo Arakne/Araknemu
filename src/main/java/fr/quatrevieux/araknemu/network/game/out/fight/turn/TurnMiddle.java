@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.network.game.out.fight.turn;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-
-import java.util.Collection;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 /**
  * Send fighters information between two turns
@@ -30,9 +30,9 @@ import java.util.Collection;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L326
  */
 public final class TurnMiddle {
-    private final Collection<Fighter> fighters;
+    private final Iterable<Fighter> fighters;
 
-    public TurnMiddle(Collection<Fighter> fighters) {
+    public TurnMiddle(Iterable<Fighter> fighters) {
         this.fighters = fighters;
     }
 
@@ -52,8 +52,10 @@ public final class TurnMiddle {
             final int movementPoints;
 
             if (fighter.isPlaying()) {
-                actionPoints = fighter.turn().points().actionPoints();
-                movementPoints = fighter.turn().points().movementPoints();
+                final FightTurn turn = ((PlayableFighter) fighter).turn();
+
+                actionPoints = turn.points().actionPoints();
+                movementPoints = turn.points().movementPoints();
             } else {
                 actionPoints = fighter.characteristics().get(Characteristic.ACTION_POINT);
                 movementPoints = fighter.characteristics().get(Characteristic.MOVEMENT_POINT);

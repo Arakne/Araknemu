@@ -22,9 +22,12 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move.validators;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.StaticInvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
@@ -32,6 +35,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StopOnEnemyValidatorTest extends FightBaseCase {
     private Fight fight;
     private FightTurn turn;
-    private Fighter fighter;
+    private PlayableFighter fighter;
     private StopOnEnemyValidator validator;
 
     @Override
@@ -106,6 +110,37 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
         assertEquals(3, result2.path().size());
         assertEquals(2, result2.lostMovementPoints());
         assertEquals(213, result2.target().id());
+    }
+
+    @Test
+    void validatePathWithEnnemyNotPlayableShouldBeIgnored() throws SQLException {
+        dataSet.pushMonsterTemplateInvocations();
+
+        Path<FightCell> path = new Path<FightCell>(
+            fight.map().decoder(),
+            Arrays.asList(
+                new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
+                new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(213), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(227), Direction.NORTH_WEST)
+            )
+        );
+
+        StaticInvocationFighter invoc = new StaticInvocationFighter(
+            -50,
+            container.get(MonsterService.class).load(282).get(5),
+            other.fighter().team(),
+            other.fighter()
+        );
+        fight.fighters().join(invoc, fight.map().get(198));
+        invoc.init();
+
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
+
+        MoveResult result = new MoveSuccess(fighter, path);
+        MoveResult result2 = validator.validate(move, result);
+
+        assertSame(result, result2);
     }
 
     @Test

@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 /**
@@ -34,7 +34,7 @@ public interface ActionResult {
     /**
      * The action performer
      */
-    public Fighter performer();
+    public PlayableFighter performer();
 
     /**
      * The action arguments

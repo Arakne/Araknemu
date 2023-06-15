@@ -45,6 +45,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
+import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
@@ -191,7 +192,7 @@ class ActiveStateTest extends GameBaseCase {
 
         assertTrue(other.dead());
         assertFalse(fight.active());
-        assertContains(other, fight.fighters());
+        assertContains(other, fight.fighters().all());
 
         requestStack.assertLast(ActionEffect.fighterDie(other, other));
     }
@@ -204,7 +205,7 @@ class ActiveStateTest extends GameBaseCase {
         state.leave(other);
 
         assertFalse(other.dead());
-        assertContains(other, fight.fighters());
+        assertContains(other, fight.fighters().all());
     }
 
     @Test
@@ -223,12 +224,13 @@ class ActiveStateTest extends GameBaseCase {
         assertFalse(mutineer.cell().hasFighter());
         assertTrue(mutineer.dead());
         assertFalse(fight.team(0).fighters().contains(mutineer));
-        assertFalse(fight.fighters().contains(mutineer));
+        assertFalse(fight.fighters().all().contains(mutineer));
         assertFalse(fight.turnList().fighters().contains(mutineer));
 
         requestStack.assertAll(
             ActionEffect.fighterDie(mutineer, mutineer),
-            new FighterTurnOrder(fight.turnList())
+            new FighterTurnOrder(fight.turnList()),
+            new RemoveSprite(mutineer.sprite())
         );
     }
 
