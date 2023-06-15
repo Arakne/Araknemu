@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move.validators;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.PathStep;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
@@ -49,6 +50,7 @@ public final class StopOnEnemyValidator implements FightPathValidator {
                     decoder.nextCellByDirection(step.cell(), direction)
                         .map(FightCell::fighter)
                         .filter(fighter -> !fighter.team().equals(move.performer().team()))
+                        .filter(fighter -> fighter instanceof PlayableFighter)
                         .isPresent()
                 ) {
                     // Truncate the path until the current cell (index + 1 because the argument is a size)
