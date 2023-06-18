@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
@@ -159,7 +160,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         public void move(FightCell cell) {}
 
         @Override
-        public Sprite sprite() {
+        public FighterSprite sprite() {
             return null;
         }
 

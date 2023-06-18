@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2022 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
@@ -22,55 +22,52 @@ package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.EmptySpellList;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
-import fr.quatrevieux.araknemu.game.monster.Monster;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * Fighter for invoked monster
- * Its characteristics are modified by the invoker level
+ * Create a double of a fighter as invocation
+ * The double will inherit the characteristics of the invoker, but not the spells
  */
-public final class StaticInvocationFighter extends AbstractFighter {
+public final class DoubleFighter extends AbstractPlayableFighter {
     private final int id;
-    private final Monster monster;
+    private final Fighter invoker;
     private final FightTeam team;
     private final BaseFighterLife life;
     private final FighterCharacteristics characteristics;
-    private final MonsterFighterSprite sprite;
-    private final FighterData invoker;
+    private final FighterSprite sprite;
 
     @SuppressWarnings({"assignment", "argument"})
-    public StaticInvocationFighter(int id, Monster monster, FightTeam team, FighterData invoker) {
+    public DoubleFighter(int id, Fighter invoker) {
         this.id = id;
-        this.monster = monster;
-        this.team = team;
         this.invoker = invoker;
+        this.team = invoker.team();
 
-        this.life = new BaseFighterLife(this, Math.round(monster.life() * InvocationFighterCharacteristics.modifier(invoker)));
-        this.characteristics = new InvocationFighterCharacteristics(monster, this, invoker);
-        this.sprite = new MonsterFighterSprite(this, monster);
+        this.life = new BaseFighterLife(this, invoker.life().current(), invoker.life().max());
+        this.characteristics = new DoubleFighterCharacteristics(this, invoker);
+        this.sprite = invoker.sprite().withFighter(this);
     }
 
     @Override
     public <O extends FighterOperation> O apply(O operation) {
-        operation.onStaticInvocation(this);
+        operation.onDouble(this);
 
         return operation;
     }
 
     @Override
     public @Positive int level() {
-        return monster.level();
+        return invoker.level();
     }
 
     @Override
@@ -116,17 +113,5 @@ public final class StaticInvocationFighter extends AbstractFighter {
     @Override
     public @NonNull FighterData invoker() {
         return invoker;
-    }
-
-    /**
-     * Get the invoked monster
-     */
-    public Monster monster() {
-        return monster;
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return false;
     }
 }

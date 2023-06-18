@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
@@ -146,6 +147,9 @@ public interface Fighter extends Dispatcher, ActiveFighter {
      * @return The given operation
      */
     public <O extends FighterOperation> O apply(O operation);
+
+    @Override
+    public FighterSprite sprite();
 
     /**
      * Check if the fighter is the team leader

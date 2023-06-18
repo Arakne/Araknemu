@@ -21,8 +21,10 @@ package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -286,7 +288,7 @@ class ActionEffectTest extends FightBaseCase {
         Fighter caster = Mockito.mock(Fighter.class);
         Fighter target = Mockito.mock(Fighter.class);
 
-        Sprite sprite = Mockito.mock(Sprite.class);
+        FighterSprite sprite = Mockito.mock(FighterSprite.class);
 
         Mockito.when(caster.id()).thenReturn(456);
         Mockito.when(target.id()).thenReturn(123);
@@ -301,7 +303,7 @@ class ActionEffectTest extends FightBaseCase {
         Fighter caster = Mockito.mock(Fighter.class);
         Fighter target = Mockito.mock(Fighter.class);
 
-        Sprite sprite = Mockito.mock(Sprite.class);
+        FighterSprite sprite = Mockito.mock(FighterSprite.class);
 
         Mockito.when(caster.id()).thenReturn(456);
         Mockito.when(target.id()).thenReturn(123);
@@ -383,6 +385,21 @@ class ActionEffectTest extends FightBaseCase {
         fighter.joinFight(fight, fight.map().get(118));
 
         assertEquals("GA;181;1;+118;1;0;-5;36;-2;1566^100;2;-1;-1;-1;0,0,0,0;60;5;3;30;0;-10;7;-45;16;16;0", ActionEffect.addInvocation(invoker, fighter).toString());
+    }
+
+    @Test
+    void addDouble() throws Exception {
+        dataSet
+            .pushMonsterTemplates()
+            .pushMonsterSpells()
+        ;
+
+        Fight fight = createFight();
+        Fighter invoker = fight.team(0).leader();
+        DoubleFighter fighter = new DoubleFighter(-5, invoker);
+        fighter.joinFight(fight, fight.map().get(118));
+
+        assertEquals("GA;180;1;+118;1;0;-5;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;0;0;0;;", ActionEffect.addDouble(invoker, fighter).toString());
     }
 
     @Test

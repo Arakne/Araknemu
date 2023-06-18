@@ -14,25 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
+import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 /**
- * Try to move near the selected enemy
+ * Try to block the nearest enemy of the invoker
+ * If the invoker is hidden, this generator will act like {@link MoveNearEnemy}
+ *
+ * @param <F> the fighter type
  */
-public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
+public final class BlockNearestEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
     private final ActionGenerator<F> moveGenerator;
 
-    public MoveNearEnemy() {
-        this.moveGenerator = new MoveNearFighter<>(AI::enemy);
+    @SuppressWarnings("methodref.receiver.bound")
+    public BlockNearestEnemy() {
+        moveGenerator = new MoveNearFighter<>(this::resolve);
     }
 
     @Override
@@ -43,5 +51,23 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
     @Override
     public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         return moveGenerator.generate(ai, actions);
+    }
+
+    private Optional<? extends FighterData> resolve(AI<F> ai) {
+        final FighterData invoker = ai.fighter().invoker();
+
+        if (invoker == null || invoker.hidden()) {
+            return ai.enemy();
+        }
+
+        final CoordinateCell<BattlefieldCell> currentCell = invoker.cell().coordinate();
+
+        return ai.helper().enemies().stream()
+            .filter(fighter -> !fighter.hidden())
+            .min(Comparator
+                .<FighterData>comparingInt(f -> currentCell.distance(f.cell()))
+                .thenComparingInt(f -> f.life().current())
+            )
+        ;
     }
 }

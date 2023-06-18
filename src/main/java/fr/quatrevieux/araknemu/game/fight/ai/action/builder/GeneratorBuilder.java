@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.builder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.BlockNearestEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
@@ -276,6 +277,17 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      */
     public final GeneratorBuilder<F> moveNearEnemy() {
         return add(new MoveNearEnemy<>());
+    }
+
+    /**
+     * Try to move to the nearest enemy of the invoker
+     *
+     * @return The builder instance
+     *
+     * @see BlockNearestEnemy The used action generator
+     */
+    public final GeneratorBuilder<F> blockNearestEnemy() {
+        return add(new BlockNearestEnemy<>());
     }
 
     /**

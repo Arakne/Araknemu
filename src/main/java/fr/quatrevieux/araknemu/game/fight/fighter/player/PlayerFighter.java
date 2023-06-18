@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
@@ -36,7 +37,6 @@ import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.boost.DispatcherSpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
-import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -86,7 +86,7 @@ public final class PlayerFighter extends AbstractPlayableFighter implements Play
     }
 
     @Override
-    public Sprite sprite() {
+    public FighterSprite sprite() {
         return sprite;
     }
 

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
@@ -32,7 +33,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
-import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -67,7 +67,7 @@ public final class MonsterFighter extends AbstractPlayableFighter {
     }
 
     @Override
-    public Sprite sprite() {
+    public FighterSprite sprite() {
         return sprite;
     }
 

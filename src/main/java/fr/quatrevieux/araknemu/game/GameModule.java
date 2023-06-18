@@ -133,8 +133,10 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.DoubleAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Blocking;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Fixed;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
@@ -895,7 +897,8 @@ public final class GameModule implements ContainerModule {
         configurator.persist(
             AiFactory.class,
             container -> new ChainAiFactory(
-                container.get(MonsterAiFactory.class)
+                container.get(MonsterAiFactory.class),
+                container.get(DoubleAiFactory.class)
             )
         );
 
@@ -984,9 +987,15 @@ public final class GameModule implements ContainerModule {
                 factory.register("SUPPORT", new Support(simulator));
                 factory.register("TACTICAL", new Tactical(simulator));
                 factory.register("FIXED", new Fixed(simulator));
+                factory.register("BLOCKING", new Blocking());
 
                 return factory;
             }
+        );
+
+        configurator.persist(
+            DoubleAiFactory.class,
+            container -> new DoubleAiFactory(new Blocking())
         );
 
         configurator.persist(ExchangeFactory.class, container -> new DefaultExchangeFactory(

@@ -20,13 +20,16 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
 import fr.arakne.utils.value.Interval;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -48,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MonsterFighterSpriteTest extends FightBaseCase {
     private MonsterFighterSprite sprite;
     private MonsterFighter fighter;
+    private Fight fight;
 
     @Override
     @BeforeEach
@@ -84,7 +88,7 @@ class MonsterFighterSpriteTest extends FightBaseCase {
         fighter = (MonsterFighter) team.fighters().stream().findFirst().get();
         sprite = new MonsterFighterSprite(fighter, service.load(31).all().get(2));
 
-        Fight fight = createFight();
+        fight = createFight();
         fighter.joinFight(fight, fight.map().get(123));
     }
 
@@ -113,5 +117,24 @@ class MonsterFighterSpriteTest extends FightBaseCase {
         assertEquals(Sprite.Type.MONSTER, sprite.type());
         assertEquals("31", sprite.name());
         assertEquals(1563, sprite.gfxId());
+    }
+
+    @Test
+    void withFighter() {
+        DoubleFighter other = new DoubleFighter(-5, fighter);
+        other.move(fight.map().get(321));
+        other.setOrientation(Direction.NORTH_WEST);
+        other.characteristics().alter(Characteristic.ACTION_POINT, 10);
+
+        FighterSprite sprite = this.sprite.withFighter(other);
+
+        assertEquals(-5, sprite.id());
+        assertEquals(321, sprite.cell());
+        assertEquals(Sprite.Type.MONSTER, sprite.type());
+        assertEquals("31", sprite.name());
+        assertEquals(Direction.NORTH_WEST, sprite.orientation());
+        assertEquals(1563, sprite.gfxId());
+
+        assertEquals("321;5;0;-5;31;-2;1563^100;3;-1;-1;-1;0,0,0,0;20;14;2;3;7;7;-7;-7;7;5;1", sprite.toString());
     }
 }
