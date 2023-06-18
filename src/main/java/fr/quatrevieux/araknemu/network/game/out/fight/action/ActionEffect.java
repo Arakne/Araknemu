@@ -354,6 +354,16 @@ public final class ActionEffect {
     }
 
     /**
+     * Add a new double invocation to the fight
+     *
+     * @param caster Invoker
+     * @param invocation Invocation to add
+     */
+    public static ActionEffect addDouble(FighterData caster, FighterData invocation) {
+        return new ActionEffect(180, caster, "+" + invocation.sprite());
+    }
+
+    /**
      * Add an invoked static creature to the fight
      * Unlike {@link #addInvocation(FighterData, FighterData)}, the client will take this creature in account
      * for invocations count limit

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.builder;
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.BlockNearestEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
@@ -170,6 +171,11 @@ class GeneratorBuilderTest extends TestCase {
     @Test
     void debuff() {
         assertInstanceOf(Debuff.class, builder.debuff(simulator).build());
+    }
+
+    @Test
+    void blockNearestEnemy() {
+        assertInstanceOf(BlockNearestEnemy.class, builder.blockNearestEnemy().build());
     }
 
     private void assertActions(ActionGenerator<Fighter> action, Class<? extends ActionGenerator> ...types) throws NoSuchFieldException, IllegalAccessException {

@@ -26,11 +26,13 @@ import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
@@ -55,6 +57,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.RemoveZone;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -1430,6 +1433,30 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(fight.map().get(213).hasFighter());
     }
 
+    @Test
+    void doubleInvoc() {
+        castNormal(74, fight.map().get(199)); // Double
+
+        assertTrue(fight.map().get(199).hasFighter());
+        assertInstanceOf(DoubleFighter.class, fight.map().get(199).fighter());
+
+        Fighter invoc = fight.map().get(199).fighter();
+
+        assertEquals(invoc.life().current(), fighter1.life().current());
+        assertEquals(invoc.life().max(), fighter1.life().max());
+        assertTrue(fight.turnList().fighters().contains(invoc));
+
+        requestStack.assertOne(new ActionEffect(180, fighter1, "+" + invoc.sprite()));
+        requestStack.assertOne(ActionEffect.packet(fighter1, new FighterTurnOrder(fight.turnList())));
+
+        invoc.attach(FighterAI.class, null); // Remove AI, to ensure it doesn't play
+
+        passTurns(9); // spell cooldown
+
+        assertThrows(FightException.class, () -> castNormal(74, fight.map().get(200)));
+        requestStack.assertLast(Error.cantCastMaxSummonedCreaturesReached(1));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
@@ -1450,8 +1477,9 @@ public class FunctionalTest extends FightBaseCase {
 
     private void passTurns(int number) {
         for (; number > 0; --number) {
-            fighter1.turn().stop();
-            fighter2.turn().stop();
+            for (PlayableFighter fighter : fight.turnList().fighters()) {
+                fighter.turn().stop();
+            }
         }
     }
 

@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,6 +87,27 @@ public class AiBaseCase extends FightBaseCase {
         fight.nextState();
 
         fight.turnList().start();
+
+        while (fight.turnList().currentFighter() != fighter) {
+            fight.turnList().current().get().stop();
+        }
+
+        ai = new FighterAI(fighter, fight, new DummyGenerator());
+        ai.start(turn = fight.turnList().current().get());
+
+        if (action == null && actionFactory != null) {
+            GeneratorBuilder<PlayableFighter> aiBuilder = new GeneratorBuilder<>();
+            actionFactory.configure(aiBuilder, fighter);
+            action = aiBuilder.build();
+        }
+
+        if (action != null) {
+            action.initialize(ai);
+        }
+    }
+
+    public void configureFighterAi(PlayableFighter fighter) {
+        this.fighter = fighter;
 
         while (fight.turnList().currentFighter() != fighter) {
             fight.turnList().current().get().stop();

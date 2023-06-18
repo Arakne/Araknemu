@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.monster.Monster;
-import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
 /**
  * Sprite for monster
@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L520
  */
-public final class MonsterFighterSprite implements Sprite {
+public final class MonsterFighterSprite implements FighterSprite {
     private final Fighter fighter;
     private final Monster monster;
 
@@ -96,5 +96,10 @@ public final class MonsterFighterSprite implements Sprite {
             fighter.characteristics().get(Characteristic.RESISTANCE_MOVEMENT_POINT) + ";" +
             fighter.team().number()
         ;
+    }
+
+    @Override
+    public FighterSprite withFighter(Fighter fighter) {
+        return new MonsterFighterSprite(fighter, monster);
     }
 }

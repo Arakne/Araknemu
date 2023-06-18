@@ -21,21 +21,22 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
-import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
 /**
- * Sprite for fighter
+ * Sprite for player fighter
  *
  * The sprite type ID MUST be the class id
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L764
  */
-public final class PlayerFighterSprite implements Sprite {
-    private final PlayerFighter fighter;
+public final class PlayerFighterSprite implements FighterSprite {
+    private final Fighter fighter;
     private final SpriteInfo spriteInfo;
 
-    public PlayerFighterSprite(PlayerFighter fighter, SpriteInfo spriteInfo) {
+    public PlayerFighterSprite(Fighter fighter, SpriteInfo spriteInfo) {
         this.fighter = fighter;
         this.spriteInfo = spriteInfo;
     }
@@ -81,7 +82,7 @@ public final class PlayerFighterSprite implements Sprite {
             spriteInfo.race().ordinal() + ";" +
             spriteInfo.gfxId() + "^" + spriteInfo.size() + ";" +
             spriteInfo.gender().ordinal() + ";" +
-            fighter.properties().experience().level() + ";" +
+            fighter.level() + ";" +
             "0,0,0,0;" + // @todo alignment
             spriteInfo.colors().toHexString(";") + ";" +
             spriteInfo.accessories() + ";" +
@@ -98,5 +99,10 @@ public final class PlayerFighterSprite implements Sprite {
             fighter.team().number() + ";" +
             ";" // @todo mount
         ;
+    }
+
+    @Override
+    public FighterSprite withFighter(Fighter fighter) {
+        return new PlayerFighterSprite(fighter, spriteInfo);
     }
 }

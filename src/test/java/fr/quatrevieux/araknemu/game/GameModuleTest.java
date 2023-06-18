@@ -68,6 +68,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.DoubleAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
@@ -162,6 +163,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(ChallengeType.class, container.get(ChallengeType.class));
         assertInstanceOf(ChainAiFactory.class, container.get(AiFactory.class));
         assertInstanceOf(MonsterAiFactory.class, container.get(MonsterAiFactory.class));
+        assertInstanceOf(DoubleAiFactory.class, container.get(DoubleAiFactory.class));
         assertInstanceOf(ActivityService.class, container.get(ActivityService.class));
         assertInstanceOf(DefaultExchangeFactory.class, container.get(ExchangeFactory.class));
         assertInstanceOf(BankService.class, container.get(BankService.class));

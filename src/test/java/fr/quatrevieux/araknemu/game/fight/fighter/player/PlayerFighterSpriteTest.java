@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.FighterSprite;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -40,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PlayerFighterSpriteTest extends FightBaseCase {
     private PlayerFighterSprite sprite;
     private PlayerFighter fighter;
+    private FightMap map;
 
     @Override
     @BeforeEach
@@ -48,7 +51,7 @@ class PlayerFighterSpriteTest extends FightBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
-        FightMap map = container.get(FightService.class).map(
+        map = container.get(FightService.class).map(
             container.get(ExplorationMapService.class).load(10340)
         );
 
@@ -108,5 +111,27 @@ class PlayerFighterSpriteTest extends FightBaseCase {
         assertEquals("Bob", sprite.name());
         assertEquals(Direction.SOUTH_EAST, sprite.orientation());
         assertEquals(10, sprite.gfxId());
+    }
+
+    @Test
+    void withFighter() {
+        DoubleFighter other = new DoubleFighter(-5, fighter);
+        other.move(map.get(123));
+        other.setOrientation(Direction.NORTH_WEST);
+        other.characteristics().alter(Characteristic.ACTION_POINT, 10);
+
+        FighterSprite sprite = this.sprite.withFighter(other);
+
+        assertEquals(-5, sprite.id());
+        assertEquals(123, sprite.cell());
+        assertEquals(Sprite.Type.PLAYER, sprite.type());
+        assertEquals("Bob", sprite.name());
+        assertEquals(Direction.NORTH_WEST, sprite.orientation());
+        assertEquals(10, sprite.gfxId());
+
+        assertEquals(
+            "123;5;0;-5;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;16;3;0;0;0;0;0;0;0;0;;",
+            sprite.toString()
+        );
     }
 }
