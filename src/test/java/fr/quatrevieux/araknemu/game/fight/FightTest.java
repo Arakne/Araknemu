@@ -37,9 +37,15 @@ import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
-import fr.quatrevieux.araknemu.game.fight.state.*;
+import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
+import fr.quatrevieux.araknemu.game.fight.state.FinishState;
+import fr.quatrevieux.araknemu.game.fight.state.InitialiseState;
+import fr.quatrevieux.araknemu.game.fight.state.NullState;
+import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
@@ -61,13 +67,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FightTest extends GameBaseCase {
     private Fight fight;
@@ -105,7 +116,7 @@ class FightTest extends GameBaseCase {
             ),
             logger = Mockito.mock(Logger.class),
             executor = ExecutorFactory.createSingleThread(),
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
     }
 
@@ -130,7 +141,7 @@ class FightTest extends GameBaseCase {
         assertFalse(fight.active());
         assertTrue(fight.alive());
         assertInstanceOf(Spectators.class, fight.spectators());
-        assertSame(container.get(FightActionsFactoryRegistry.class), fight.actions());
+        assertInstanceOf(FightActionsFactoryRegistry.class, fight.actions());
     }
 
     @Test

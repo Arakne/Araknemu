@@ -29,7 +29,6 @@ import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.event.CharacterCreated;
-import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SetDefaultPositionSpellBookTest extends GameBaseCase {
     private SetDefaultPositionSpellBook listener;

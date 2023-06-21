@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathException;
@@ -31,14 +32,13 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StopOnTriggerTest extends GameBaseCase {
     private StopOnTrigger validator;

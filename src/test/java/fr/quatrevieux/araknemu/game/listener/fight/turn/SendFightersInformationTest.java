@@ -26,8 +26,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendFightersInformationTest extends FightBaseCase {
     private Fight fight;
     private SendFightersInformation listener;

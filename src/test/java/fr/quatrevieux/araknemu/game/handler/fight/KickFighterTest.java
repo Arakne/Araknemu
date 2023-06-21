@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.KickFighterRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
@@ -36,9 +35,9 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KickFighterTest extends FightBaseCase {
     @Test

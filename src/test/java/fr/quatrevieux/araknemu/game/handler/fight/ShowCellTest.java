@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.ShowCellRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ShowCellTest extends FightBaseCase {
     @Test

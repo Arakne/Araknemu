@@ -22,7 +22,8 @@ package fr.quatrevieux.araknemu.network.game.out.info;
 import fr.arakne.utils.value.Interval;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ErrorTest {
     @Test

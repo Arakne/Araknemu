@@ -23,8 +23,8 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.spell.event.SpellLearned;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellLearned;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

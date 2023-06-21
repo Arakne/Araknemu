@@ -19,7 +19,10 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
-import fr.quatrevieux.araknemu.core.network.parser.*;
+import fr.quatrevieux.araknemu.core.network.parser.AggregatePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
@@ -31,7 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RealmPacketParserMiddlewareTest {
     @Test

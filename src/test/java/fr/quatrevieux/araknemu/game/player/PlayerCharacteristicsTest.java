@@ -20,20 +20,20 @@
 package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.player.characteristic.ComputedCharacteristics;
-import fr.quatrevieux.araknemu.game.player.characteristic.MutableComputedCharacteristics;
-import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.player.characteristic.ComputedCharacteristics;
+import fr.quatrevieux.araknemu.game.player.characteristic.MutableComputedCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
+import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BeltSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;

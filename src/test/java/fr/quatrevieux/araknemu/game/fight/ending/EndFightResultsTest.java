@@ -29,7 +29,7 @@ import org.mockito.Mockito;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class EndFightResultsTest extends FightBaseCase {
     private Fight fight;

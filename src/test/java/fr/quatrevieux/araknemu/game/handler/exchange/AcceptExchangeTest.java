@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeReady;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeAccepted;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;

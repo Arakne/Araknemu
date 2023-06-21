@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.world.creature;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SpriteTest {
     @Test

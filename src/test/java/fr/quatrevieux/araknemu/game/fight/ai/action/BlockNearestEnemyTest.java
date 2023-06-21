@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BlockNearestEnemyTest extends AiBaseCase {
     @Override

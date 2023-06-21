@@ -21,11 +21,16 @@ package fr.quatrevieux.araknemu.game.spell.effect;
 
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.spell.effect.area.*;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CrossArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.LineArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.PerpendicularLineArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.RingArea;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class SpellEffectServiceTest extends GameBaseCase {
     private SpellEffectService service;

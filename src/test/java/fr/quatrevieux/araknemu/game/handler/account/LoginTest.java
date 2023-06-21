@@ -19,16 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.TokenService;
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
-import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenSuccess;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LoginTest extends GameBaseCase {
     private Login handler;

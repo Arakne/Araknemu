@@ -21,7 +21,8 @@ package fr.quatrevieux.araknemu.data.living.constraint;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EntityCheckTest {
     class Entity {

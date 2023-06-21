@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MoveSpellTest extends GameBaseCase {
     private MoveSpell handler;

@@ -19,18 +19,22 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlNpcRepositoryTest extends GameBaseCase {
     private SqlNpcRepository repository;

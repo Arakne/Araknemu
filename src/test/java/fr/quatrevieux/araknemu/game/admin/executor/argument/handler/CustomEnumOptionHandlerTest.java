@@ -28,14 +28,11 @@ import fr.quatrevieux.araknemu.game.admin.executor.argument.AnnotationHydrator;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import java.time.Duration;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CustomEnumOptionHandlerTest extends TestCase {
     static class Arguments {

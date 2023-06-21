@@ -24,7 +24,8 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SimpleNameGeneratorTest extends GameBaseCase {
     private SimpleNameGenerator generator;

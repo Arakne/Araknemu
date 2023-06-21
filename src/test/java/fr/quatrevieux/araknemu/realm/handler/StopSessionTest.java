@@ -19,13 +19,13 @@
 
 package fr.quatrevieux.araknemu.realm.handler;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
-import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.host.HostService;

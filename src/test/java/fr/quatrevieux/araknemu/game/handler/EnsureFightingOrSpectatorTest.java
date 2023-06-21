@@ -32,7 +32,8 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EnsureFightingOrSpectatorTest extends FightBaseCase {
     @Test

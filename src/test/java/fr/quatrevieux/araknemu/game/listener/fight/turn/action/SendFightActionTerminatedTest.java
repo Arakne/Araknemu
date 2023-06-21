@@ -19,21 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.listener.fight.turn.action;
 
-import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminated;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FinishFightAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.util.Arrays;
 
 class SendFightActionTerminatedTest extends FightBaseCase {

@@ -29,15 +29,14 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.account.event.CharacterCreationStarted;
-import fr.quatrevieux.araknemu.game.listener.player.chat.AddChatChannels;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AddChatChannelsTest extends GameBaseCase {
     private AddChatChannels listener;

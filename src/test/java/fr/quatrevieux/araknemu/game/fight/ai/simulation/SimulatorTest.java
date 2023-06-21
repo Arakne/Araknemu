@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SimulatorTest extends FightBaseCase {
     private Simulator simulator;

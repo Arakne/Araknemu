@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SendFightStartedTest extends GameBaseCase {
     private SendFightStarted listener;

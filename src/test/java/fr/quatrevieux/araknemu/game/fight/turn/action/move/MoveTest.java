@@ -19,28 +19,29 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
-import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnEnemyValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MoveTest extends FightBaseCase {
     private Fight fight;

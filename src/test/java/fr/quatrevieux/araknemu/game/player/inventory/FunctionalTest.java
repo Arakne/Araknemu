@@ -40,7 +40,13 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
-import fr.quatrevieux.araknemu.network.game.out.object.*;
+import fr.quatrevieux.araknemu.network.game.out.object.AddItem;
+import fr.quatrevieux.araknemu.network.game.out.object.DestroyItem;
+import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
+import fr.quatrevieux.araknemu.network.game.out.object.ItemPosition;
+import fr.quatrevieux.araknemu.network.game.out.object.ItemQuantity;
+import fr.quatrevieux.araknemu.network.game.out.object.SpriteAccessories;
+import fr.quatrevieux.araknemu.network.game.out.object.UpdateItemSet;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +56,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FunctionalTest extends FightBaseCase {
     private PlayerInventory inventory;

@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.network.game.in;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class PingTest {
     @Test

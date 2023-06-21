@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.listener.map.monster;
 
-import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -30,7 +29,8 @@ import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LaunchMonsterFightTest extends GameBaseCase {
     private LaunchMonsterFight listener;

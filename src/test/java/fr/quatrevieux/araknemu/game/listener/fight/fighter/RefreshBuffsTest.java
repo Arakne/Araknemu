@@ -34,7 +34,7 @@ import org.mockito.Mockito;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RefreshBuffsTest extends FightBaseCase {
     private Fight fight;

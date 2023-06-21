@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import org.junit.jupiter.api.Test;
 

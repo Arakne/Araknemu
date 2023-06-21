@@ -29,8 +29,6 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendSpriteRestrictionsTest extends GameBaseCase {
     private SendSpriteRestrictions listener;
 

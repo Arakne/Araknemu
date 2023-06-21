@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.StartWatchFight;
-import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import org.junit.jupiter.api.BeforeEach;

@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.exploration.exchange.player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
-import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -38,7 +37,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerExchangePartyTest extends GameBaseCase {
     private ExplorationPlayer player;

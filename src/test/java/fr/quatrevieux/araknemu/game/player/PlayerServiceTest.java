@@ -43,9 +43,15 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.GameSaved;
 import fr.quatrevieux.araknemu.game.event.SavingGame;
 import fr.quatrevieux.araknemu.game.event.ShutdownScheduled;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
-import fr.quatrevieux.araknemu.game.listener.player.*;
+import fr.quatrevieux.araknemu.game.listener.player.ComputeLifePoints;
+import fr.quatrevieux.araknemu.game.listener.player.InitializeRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.RestoreLifePointsOnLevelUp;
+import fr.quatrevieux.araknemu.game.listener.player.SavePlayer;
+import fr.quatrevieux.araknemu.game.listener.player.SendLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.player.SendRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.SendStats;
+import fr.quatrevieux.araknemu.game.listener.player.StartTutorial;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
@@ -63,7 +69,11 @@ import java.time.Duration;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerServiceTest extends GameBaseCase {
     private PlayerService service;

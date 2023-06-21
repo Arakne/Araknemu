@@ -36,7 +36,9 @@ import org.kohsuke.args4j.Argument;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DefaultCommandExecutorTest extends GameBaseCase {
     private DefaultCommandExecutor executor;

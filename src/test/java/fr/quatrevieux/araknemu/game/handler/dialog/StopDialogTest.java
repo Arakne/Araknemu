@@ -19,17 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler.dialog;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogLeaved;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StopDialogTest extends GameBaseCase {
     private ExplorationPlayer player;

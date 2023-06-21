@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
@@ -29,7 +28,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class PlayerFighterCharacteristicsTest extends FightBaseCase {
     private PlayerCharacteristics baseCharacteristics;

@@ -26,8 +26,6 @@ import fr.quatrevieux.araknemu.network.game.out.basic.ServerTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendDateAndTimeTest extends GameBaseCase {
     private SendDateAndTime handler;
 

@@ -20,13 +20,8 @@
 package fr.quatrevieux.araknemu.game.admin.exception;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
-import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
-import fr.quatrevieux.araknemu.game.admin.LogType;
-import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

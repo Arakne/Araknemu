@@ -23,8 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
-import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
-import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

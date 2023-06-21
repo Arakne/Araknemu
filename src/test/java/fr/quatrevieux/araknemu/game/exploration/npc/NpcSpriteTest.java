@@ -19,13 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.exploration.npc;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

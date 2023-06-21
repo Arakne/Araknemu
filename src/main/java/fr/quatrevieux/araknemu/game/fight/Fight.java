@@ -85,7 +85,7 @@ public final class Fight implements Dispatcher, Sender {
     private volatile boolean alive = true;
 
     @SuppressWarnings({"assignment", "argument"})
-    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<PlayableFighter> actions) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory.Factory<PlayableFighter> actions) {
         this.id = id;
         this.type = type;
         this.map = map;
@@ -96,7 +96,7 @@ public final class Fight implements Dispatcher, Sender {
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
         this.fighters = new FighterList(this);
-        this.actions = actions;
+        this.actions = actions.createForFight(this);
     }
 
     /**

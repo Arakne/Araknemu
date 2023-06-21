@@ -23,12 +23,10 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Collections;
 
 class SendPlayerChangeCellTest extends GameBaseCase {
     private SendPlayerChangeCell listener;

@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.item.effect.mapping;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EffectToUseMappingTest extends GameBaseCase {
     private EffectToUseMapping mapping;

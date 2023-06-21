@@ -25,8 +25,6 @@ import fr.quatrevieux.araknemu.network.game.out.account.RegionalVersion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendRegionalVersionTest extends GameBaseCase {
     private SendRegionalVersion handler;
 

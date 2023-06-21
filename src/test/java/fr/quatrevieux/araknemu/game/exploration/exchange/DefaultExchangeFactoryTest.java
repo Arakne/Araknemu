@@ -34,7 +34,7 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DefaultExchangeFactoryTest extends GameBaseCase {
     private DefaultExchangeFactory factory;

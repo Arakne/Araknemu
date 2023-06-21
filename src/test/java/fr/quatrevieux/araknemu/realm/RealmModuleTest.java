@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
@@ -42,7 +43,6 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
-import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;

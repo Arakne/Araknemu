@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.formatter;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OutputBuilderTest {
     @Test

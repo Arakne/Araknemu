@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object.AddTrapHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -45,7 +44,9 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RevealInvisibleHandlerTest extends FightBaseCase {
     private Fight fight;

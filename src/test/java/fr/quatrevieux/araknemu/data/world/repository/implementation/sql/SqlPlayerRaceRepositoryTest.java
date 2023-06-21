@@ -20,8 +20,8 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.value.constant.Race;
-import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -35,7 +35,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlPlayerRaceRepositoryTest extends GameBaseCase {
     private SqlPlayerRaceRepository repository;

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
@@ -39,7 +40,6 @@ import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentServic
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +51,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BaseFighterLifeTest extends FightBaseCase {
     private BaseFighterLife life;

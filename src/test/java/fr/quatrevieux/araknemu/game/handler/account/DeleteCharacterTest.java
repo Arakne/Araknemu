@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -27,7 +28,6 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
-import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterDeleted;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
@@ -36,7 +36,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DeleteCharacterTest extends GameBaseCase {
     private DeleteCharacter handler;

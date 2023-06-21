@@ -19,20 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.player.inventory.accessory;
 
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessory;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.NullAccessory;
-import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InventoryAccessoriesTest extends GameBaseCase {
     private InventoryAccessories accessories;

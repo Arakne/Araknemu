@@ -22,12 +22,12 @@ package fr.quatrevieux.araknemu.game.listener.player.inventory;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
-import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
+import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,8 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class UpdateStuffStatsTest extends GameBaseCase {
     private UpdateStuffStats listener;

@@ -20,13 +20,13 @@
 package fr.quatrevieux.araknemu.game.player;
 
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.characteristic.BaseCharacteristics;
+import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
@@ -35,7 +35,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class BaseCharacteristicsTest extends GameBaseCase {
     private Player player;

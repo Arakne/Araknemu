@@ -25,10 +25,10 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.exchange.BankExchangeParty;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BankTest extends GameBaseCase {
     private Bank bank;

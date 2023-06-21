@@ -29,8 +29,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendFightTurnStoppedTest extends FightBaseCase {
     private Fight fight;
     private SendFightTurnStopped listener;

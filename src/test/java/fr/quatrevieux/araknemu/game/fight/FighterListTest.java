@@ -23,9 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
-import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

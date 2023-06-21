@@ -19,10 +19,8 @@
 
 package fr.quatrevieux.araknemu.network.game.out.object;
 
-import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UpdateItemSetTest extends GameBaseCase {
     private ItemService service;

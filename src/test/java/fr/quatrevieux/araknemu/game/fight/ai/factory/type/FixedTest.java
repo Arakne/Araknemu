@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

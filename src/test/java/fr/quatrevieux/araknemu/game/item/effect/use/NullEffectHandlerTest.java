@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.item.effect.use;
 import fr.quatrevieux.araknemu._test.TestCase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NullEffectHandlerTest extends TestCase {
     @Test

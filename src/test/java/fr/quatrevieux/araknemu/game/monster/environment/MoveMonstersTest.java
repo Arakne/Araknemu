@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.monster.environment;
 
 import fr.arakne.utils.maps.constant.Direction;
-import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
@@ -42,7 +41,9 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class MoveMonstersTest extends GameBaseCase {
     private MoveMonsters task;

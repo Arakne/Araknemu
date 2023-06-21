@@ -21,7 +21,9 @@ package fr.quatrevieux.araknemu.network.game.in.object;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ObjectUseRequestTest {
     @Test

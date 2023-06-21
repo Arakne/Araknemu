@@ -34,7 +34,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlAccountRepositoryTest extends DatabaseTestCase {
     private fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository;

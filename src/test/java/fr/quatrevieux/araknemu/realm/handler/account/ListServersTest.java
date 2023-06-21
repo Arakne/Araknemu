@@ -39,8 +39,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ListServersTest extends RealmBaseCase {
     private ListServers handler;
 

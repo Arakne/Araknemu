@@ -27,8 +27,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendStateTest extends FightBaseCase {
     private Fight fight;
     private SendState listener;

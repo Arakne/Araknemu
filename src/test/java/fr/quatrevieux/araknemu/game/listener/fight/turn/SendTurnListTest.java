@@ -27,8 +27,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendTurnListTest extends FightBaseCase {
     private Fight fight;
     private SendTurnList listener;

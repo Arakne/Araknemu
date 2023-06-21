@@ -27,7 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ActiveFightSubscriberTest extends FightBaseCase {
     class MyListener implements Listener<FighterChangePlace> {

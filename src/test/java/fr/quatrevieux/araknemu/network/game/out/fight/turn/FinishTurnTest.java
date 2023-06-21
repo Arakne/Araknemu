@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FinishTurnTest extends FightBaseCase {
     private Fight fight;

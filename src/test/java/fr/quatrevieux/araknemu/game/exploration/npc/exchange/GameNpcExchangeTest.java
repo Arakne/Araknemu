@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchange
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.exchange.Exchange;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
@@ -40,7 +39,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GameNpcExchangeTest extends GameBaseCase {
     private GameNpcExchange exchange;

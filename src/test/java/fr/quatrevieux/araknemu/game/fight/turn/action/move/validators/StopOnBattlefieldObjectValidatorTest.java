@@ -24,7 +24,6 @@ import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -41,7 +40,9 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class StopOnBattlefieldObjectValidatorTest extends FightBaseCase {
     private Fight fight;

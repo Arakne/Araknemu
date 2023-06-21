@@ -77,6 +77,7 @@ import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
@@ -182,7 +183,8 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(CastFactory.class, container.get(CastFactory.class));
         assertInstanceOf(CloseCombatFactory.class, container.get(CloseCombatFactory.class));
         assertInstanceOf(BaseCriticalityStrategy.class, container.get(CriticalityStrategy.class));
-        assertInstanceOf(FightActionsFactoryRegistry.class, container.get(FightActionsFactoryRegistry.class));
+        assertInstanceOf(ActionsFactory.Factory.class, container.get(ActionsFactory.Factory.class));
+        assertInstanceOf(FightActionsFactoryRegistry.class, container.get(ActionsFactory.Factory.class).createForFight(null));
         assertInstanceOf(FightService.FightFactory.class, container.get(FightService.FightFactory.class));
 
         assertSame(

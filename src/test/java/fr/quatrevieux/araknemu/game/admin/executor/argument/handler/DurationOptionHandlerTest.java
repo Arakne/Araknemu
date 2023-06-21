@@ -32,7 +32,8 @@ import org.kohsuke.args4j.CmdLineException;
 import java.time.Duration;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DurationOptionHandlerTest extends TestCase {
     static class Arguments {

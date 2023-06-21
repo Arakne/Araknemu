@@ -34,7 +34,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;

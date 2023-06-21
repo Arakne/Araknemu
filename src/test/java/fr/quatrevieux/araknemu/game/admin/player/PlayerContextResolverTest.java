@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
@@ -42,7 +42,6 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PlayerContextResolverTest extends GameBaseCase {
     private PlayerContextResolver resolver;

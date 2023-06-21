@@ -23,14 +23,16 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.item.effect.special.AddSpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.special.NullEffectHandler;
+import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class SpecialEffectTest extends GameBaseCase {
     @Test

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.builder;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -30,7 +31,6 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -38,16 +38,12 @@ import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentServic
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
-import fr.arakne.utils.maps.constant.Direction;
-import fr.quatrevieux.araknemu.util.ExecutorFactory;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

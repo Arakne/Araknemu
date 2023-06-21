@@ -20,13 +20,13 @@
 package fr.quatrevieux.araknemu.game.player.experience;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.experience.event.PlayerLevelUp;
 import fr.quatrevieux.araknemu.game.player.experience.event.PlayerXpChanged;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.account.NewPlayerLevel;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +36,10 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GamePlayerExperienceTest extends GameBaseCase {
     private GamePlayerExperience gamePlayerExperience;

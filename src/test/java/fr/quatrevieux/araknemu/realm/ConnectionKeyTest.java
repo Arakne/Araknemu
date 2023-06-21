@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.realm;
 import fr.arakne.utils.encoding.PasswordEncoder;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ConnectionKeyTest {
     @Test

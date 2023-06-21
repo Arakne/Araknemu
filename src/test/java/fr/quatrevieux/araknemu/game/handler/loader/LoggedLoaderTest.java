@@ -20,9 +20,13 @@
 package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
-import fr.quatrevieux.araknemu.network.game.in.account.*;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
+import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
+import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
+import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
+import fr.quatrevieux.araknemu.network.game.in.account.ClientUid;
+import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

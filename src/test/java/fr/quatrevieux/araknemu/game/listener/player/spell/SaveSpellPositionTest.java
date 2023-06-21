@@ -23,12 +23,12 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.spell.event.SpellMoved;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellMoved;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SaveSpellPositionTest extends GameBaseCase {
     private SaveSpellPosition listener;

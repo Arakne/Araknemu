@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
@@ -50,7 +49,11 @@ class FightActionsFactoryRegistryTest extends FightBaseCase {
 
         fight = createFight();
         fighter = player.fighter();
-        factory = container.get(FightActionsFactoryRegistry.class);
+        factory = new FightActionsFactoryRegistry(
+            container.get(fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class),
+            container.get(CastFactory.class),
+            container.get(CloseCombatFactory.class)
+        );
     }
 
     @Test

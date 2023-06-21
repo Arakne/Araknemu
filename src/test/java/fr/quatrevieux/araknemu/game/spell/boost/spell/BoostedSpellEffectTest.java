@@ -25,11 +25,9 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.boost.MapSpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
-import fr.quatrevieux.araknemu.game.spell.boost.spell.BoostedSpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellTemplateEffectAdapter;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
-import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +35,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BoostedSpellEffectTest extends GameBaseCase {
     private Map<SpellsBoosts.Modifier, Integer> map;

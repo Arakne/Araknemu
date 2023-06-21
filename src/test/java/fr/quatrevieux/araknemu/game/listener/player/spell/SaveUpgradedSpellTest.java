@@ -24,15 +24,15 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SaveUpgradedSpellTest extends GameBaseCase {
     private SaveUpgradedSpell listener;

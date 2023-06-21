@@ -50,7 +50,7 @@ import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
@@ -140,7 +140,7 @@ public class FightBaseCase extends GameBaseCase {
             ),
             container.get(Logger.class),
             executor,
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
 
         fight.register(new StatesModule(fight));
@@ -171,7 +171,7 @@ public class FightBaseCase extends GameBaseCase {
             ),
             container.get(Logger.class),
             executor,
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
 
         fight.register(new StatesModule(fight));
@@ -379,7 +379,7 @@ public class FightBaseCase extends GameBaseCase {
                 states,
                 container.get(Logger.class),
                 executor,
-                container.get(FightActionsFactoryRegistry.class)
+                container.get(ActionsFactory.Factory.class)
             );
 
             fight.register(new StatesModule(fight));

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
@@ -29,7 +30,6 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,9 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ValidateOverweightTest extends GameBaseCase {
     private ValidateOverweight validator;

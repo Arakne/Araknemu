@@ -24,7 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultTeamOptionsTest extends FightBaseCase {
     private DefaultTeamOptions options;

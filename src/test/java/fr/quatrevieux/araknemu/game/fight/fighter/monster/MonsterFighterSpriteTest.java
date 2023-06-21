@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -38,7 +39,6 @@ import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MonsterFighterSpriteTest extends FightBaseCase {
     private MonsterFighterSprite sprite;

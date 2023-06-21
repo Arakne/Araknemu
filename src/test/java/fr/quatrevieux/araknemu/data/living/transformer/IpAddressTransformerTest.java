@@ -22,7 +22,8 @@ package fr.quatrevieux.araknemu.data.living.transformer;
 import inet.ipaddr.IPAddressString;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class IpAddressTransformerTest {
     private IpAddressTransformer transformer = new IpAddressTransformer();

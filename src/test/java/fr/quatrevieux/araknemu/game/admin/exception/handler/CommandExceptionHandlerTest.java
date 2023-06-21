@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.admin.exception.handler;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
@@ -29,8 +28,6 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CommandExceptionHandlerTest extends CommandTestCase {
     private CommandExceptionHandler handler;

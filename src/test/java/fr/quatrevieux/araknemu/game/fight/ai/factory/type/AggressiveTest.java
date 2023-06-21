@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;

@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.Test;

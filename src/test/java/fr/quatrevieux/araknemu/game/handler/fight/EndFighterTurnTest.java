@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
@@ -32,7 +31,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EndFighterTurnTest extends FightBaseCase {
     private EndFighterTurn handler;
