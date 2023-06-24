@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.listener.map;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import org.junit.jupiter.api.BeforeEach;

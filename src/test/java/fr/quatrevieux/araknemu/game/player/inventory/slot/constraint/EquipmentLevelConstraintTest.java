@@ -27,7 +27,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class EquipmentLevelConstraintTest extends GameBaseCase {
     private EquipmentLevelConstraint constraint;

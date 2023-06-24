@@ -27,9 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 import java.time.Duration;
 
@@ -42,10 +40,6 @@ public final class CloseCombat implements Action {
     private final WeaponConstraintsValidator validator;
     private final CriticalityStrategy criticalityStrategy;
 
-    public CloseCombat(PlayableFighter caster, FightCell target) {
-        this(caster, target, new WeaponConstraintsValidator(), new BaseCriticalityStrategy());
-    }
-
     public CloseCombat(PlayableFighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
         this.caster = caster;
         this.target = target;
@@ -55,7 +49,7 @@ public final class CloseCombat implements Action {
 
     @Override
     public boolean validate(Turn turn) {
-        final Error error = validator.validate(turn, caster.weapon(), target);
+        final Object error = validator.validate(turn, caster.weapon(), target);
 
         if (error != null) {
             caster.apply(new SendPacket(error));

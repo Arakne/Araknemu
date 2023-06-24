@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorLeaved;
 import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
-import fr.quatrevieux.araknemu.game.fight.team.event.AllowSpectatorChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.listener.fight.SendBlockSpectatorsOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.fight.spectator.SendSpectatorHasJoined;
@@ -35,7 +34,10 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpectatorsTest extends FightBaseCase {
     @Test

@@ -37,9 +37,17 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
-import fr.quatrevieux.araknemu.game.listener.fight.SendJoinTeamOptionChangedMessage;
-import fr.quatrevieux.araknemu.game.listener.map.*;
-import fr.quatrevieux.araknemu.game.listener.map.fight.*;
+import fr.quatrevieux.araknemu.game.listener.map.SendCreatureMove;
+import fr.quatrevieux.araknemu.game.listener.map.SendNewSprite;
+import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeCell;
+import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeOrientation;
+import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRemoved;
+import fr.quatrevieux.araknemu.game.listener.map.fight.HideFightOnStart;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendCancelledFight;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendFightsCount;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterAdded;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterRemoved;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamOptionChanged;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
@@ -52,7 +60,11 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExplorationMapServiceTest extends FightBaseCase {
     private ExplorationMapService service;

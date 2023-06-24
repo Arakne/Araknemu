@@ -20,10 +20,8 @@
 package fr.quatrevieux.araknemu.game.fight.state;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.event.FighterAdded;
@@ -36,7 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
@@ -64,11 +62,16 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlacementStateTest extends FightBaseCase {
     private Fight fight;
@@ -97,7 +100,7 @@ class PlacementStateTest extends FightBaseCase {
             ),
             container.get(Logger.class),
             ExecutorFactory.createSingleThread(),
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
     }
 
@@ -180,7 +183,7 @@ class PlacementStateTest extends FightBaseCase {
             ),
             container.get(Logger.class),
             ExecutorFactory.createSingleThread(),
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
 
         state.start(fight);
@@ -211,7 +214,7 @@ class PlacementStateTest extends FightBaseCase {
             ),
             container.get(Logger.class),
             ExecutorFactory.createSingleThread(),
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
 
         state.start(fight);
@@ -247,7 +250,7 @@ class PlacementStateTest extends FightBaseCase {
             ),
             container.get(Logger.class),
             ExecutorFactory.createSingleThread(),
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
 
         state.start(fight);

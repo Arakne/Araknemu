@@ -21,11 +21,10 @@ package fr.quatrevieux.araknemu.game.listener.player.spell;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.spell.UpdateSpell;

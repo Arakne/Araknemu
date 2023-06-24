@@ -30,7 +30,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LaunchedSpellsModuleTest extends FightBaseCase {
     @Test
@@ -58,7 +59,7 @@ class LaunchedSpellsModuleTest extends FightBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(6),
             player.fighter().cell(),
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {

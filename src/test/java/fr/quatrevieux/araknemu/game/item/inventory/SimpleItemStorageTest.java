@@ -27,11 +27,11 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.item.type.Resource;
-import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
-import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -41,7 +41,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimpleItemStorageTest extends TestCase {
     class Entry implements ItemEntry {

@@ -20,12 +20,9 @@
 package fr.quatrevieux.araknemu.game.handler.fight.option;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.fight.JoinFight;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.fight.JoinFightAsSpectator;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
@@ -33,11 +30,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.option.BlockSpectatorRequest;
-import fr.quatrevieux.araknemu.network.game.in.fight.option.LockTeamRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FightOption;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;

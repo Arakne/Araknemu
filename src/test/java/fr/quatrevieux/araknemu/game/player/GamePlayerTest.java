@@ -23,7 +23,6 @@ import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
@@ -55,7 +54,12 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GamePlayerTest extends GameBaseCase {
     private GamePlayer player;
@@ -177,7 +181,7 @@ class GamePlayerTest extends GameBaseCase {
     void spectator() {
         assertFalse(player.isSpectator());
 
-        Spectator spectator = new Spectator(player, new Fight(0, null, null, Collections.emptyList(), null, null, null, null));
+        Spectator spectator = new Spectator(player, new Fight(0, null, null, Collections.emptyList(), null, null, null, f -> null));
 
         player.start(spectator);
 

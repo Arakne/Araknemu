@@ -27,18 +27,15 @@ import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HelpTest extends CommandTestCase {

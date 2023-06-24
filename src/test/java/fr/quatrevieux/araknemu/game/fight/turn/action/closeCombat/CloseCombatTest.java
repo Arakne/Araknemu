@@ -25,12 +25,12 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -41,7 +41,12 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CloseCombatTest extends FightBaseCase {
     private Fight fight;
@@ -71,7 +76,9 @@ class CloseCombatTest extends FightBaseCase {
     void values() {
         action = new CloseCombat(
             fighter,
-            fight.map().get(186)
+            fight.map().get(186),
+            new WeaponConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         assertSame(fighter, action.performer());
@@ -83,7 +90,9 @@ class CloseCombatTest extends FightBaseCase {
     void validateNoWeapon() {
         action = new CloseCombat(
             fighter,
-            fight.map().get(186)
+            fight.map().get(186),
+            new WeaponConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         assertThrows(FightException.class, () -> action.validate(turn));
@@ -94,7 +103,9 @@ class CloseCombatTest extends FightBaseCase {
     void validateNotEnoughAp() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
-            fight.map().get(186)
+            fight.map().get(186),
+            new WeaponConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         equipWeapon(player);
@@ -109,7 +120,9 @@ class CloseCombatTest extends FightBaseCase {
     void validateInvalidTargetCell() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
-            fight.map().get(0)
+            fight.map().get(0),
+            new WeaponConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         equipWeapon(player);
@@ -123,7 +136,9 @@ class CloseCombatTest extends FightBaseCase {
     void validateSuccess() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
-            fight.map().get(186)
+            fight.map().get(186),
+            new WeaponConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         equipWeapon(player);
@@ -136,7 +151,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(),
+            new WeaponConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -162,7 +177,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(),
+            new WeaponConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -190,7 +205,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(),
+            new WeaponConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -218,7 +233,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(),
+            new WeaponConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -247,7 +262,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(),
+            new WeaponConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -276,7 +291,9 @@ class CloseCombatTest extends FightBaseCase {
     void failed() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
-            fight.map().get(186)
+            fight.map().get(186),
+            new WeaponConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         equipWeapon(player);
@@ -296,7 +313,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(),
+            new WeaponConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }

@@ -22,12 +22,14 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -44,13 +46,18 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AddTrapHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
     private AddTrapHandler handler;
+    private Turn turn;
 
     @Override
     @BeforeEach
@@ -67,6 +74,7 @@ class AddTrapHandlerTest extends FightBaseCase {
         target = other.fighter();
 
         target.move(fight.map().get(123));
+        turn = caster.turn();
 
         handler = new AddTrapHandler(fight, container.get(SpellService.class));
         dataSet.pushFunctionalSpells();
@@ -137,35 +145,6 @@ class AddTrapHandlerTest extends FightBaseCase {
     }
 
     @Test
-    void handleCannotAddTwoTrapOnSameCell() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-        Spell spell = Mockito.mock(Spell.class);
-        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
-
-        Mockito.when(effect.effect()).thenReturn(401);
-        Mockito.when(effect.min()).thenReturn(183);
-        Mockito.when(effect.max()).thenReturn(2);
-        Mockito.when(effect.special()).thenReturn(4);
-        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 3)));
-        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
-        Mockito.when(spell.constraints()).thenReturn(constraints);
-        Mockito.when(spell.id()).thenReturn(120);
-        Mockito.when(constraints.freeCell()).thenReturn(false);
-
-        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(124));
-
-        // Add trap
-        handler.handle(scope, scope.effects().get(0));
-        assertEquals(1, fight.map().objects().stream().filter(o -> o.caster().equals(caster)).count());
-        requestStack.clear();
-
-        // Effect is ignored
-        handler.handle(scope, scope.effects().get(0));
-        assertEquals(1, fight.map().objects().stream().filter(o -> o.caster().equals(caster)).count());
-        requestStack.assertLast("GA;151;1;120");
-    }
-
-    @Test
     void handleWithoutSpellIsUnsupported() throws SQLException {
         dataSet
             .pushItemTemplates()
@@ -188,5 +167,48 @@ class AddTrapHandlerTest extends FightBaseCase {
 
         Optional<BattlefieldObject> found = fight.map().objects().stream().filter(o -> o.caster().equals(caster)).findFirst();
         assertFalse(found.isPresent());
+    }
+
+    @Test
+    void checkOnFreeCell() {
+        Spell spell = Mockito.mock(Spell.class);
+
+        assertTrue(handler.check(turn, spell, fight.map().get(124)));
+        assertNull(handler.validate(turn, spell, fight.map().get(124)));
+    }
+
+    @Test
+    void checkWithObjectNotATrapOnCell() {
+        Spell spell = Mockito.mock(Spell.class);
+        BattlefieldObject object = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(object.cell()).thenReturn(fight.map().get(124));
+
+        fight.map().objects().add(object);
+
+        assertTrue(handler.check(turn, spell, fight.map().get(124)));
+        assertNull(handler.validate(turn, spell, fight.map().get(124)));
+    }
+
+    @Test
+    void checkWithTrapOnCell() {
+        Spell spell = Mockito.mock(Spell.class);
+        Mockito.when(spell.id()).thenReturn(120);
+
+        Trap object = new Trap(fight, fight.map().get(124), caster, 1, 4, spell, spell);
+
+        fight.map().objects().add(object);
+
+        assertFalse(handler.check(turn, spell, fight.map().get(124)));
+        assertEquals(
+            ActionEffect.spellBlockedByInvisibleObstacle(caster, spell).toString(),
+            handler.validate(turn, spell, fight.map().get(124)).toString()
+        );
+    }
+
+    @Test
+    void validateNotASpellShouldThrowException() {
+        Castable spell = Mockito.mock(Castable.class);
+
+        assertThrows(UnsupportedOperationException.class, () -> handler.validate(turn, spell, fight.map().get(124)));
     }
 }

@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable;
 
-import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -40,7 +39,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;

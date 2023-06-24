@@ -20,13 +20,13 @@
 package fr.quatrevieux.araknemu.game.player.experience;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.listener.player.RebuildLifePointsOnLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendPlayerXp;
@@ -38,7 +38,9 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerExperienceServiceTest extends GameBaseCase {
     private PlayerExperienceService service;

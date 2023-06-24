@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
@@ -32,7 +32,10 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlMonsterTemplateRepositoryTest extends GameBaseCase {
     private SqlMonsterTemplateRepository repository;

@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.account;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CharacterCreationErrorTest {
     @Test

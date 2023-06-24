@@ -43,10 +43,11 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JoinFightTest extends FightBaseCase {
     private Fight fight;

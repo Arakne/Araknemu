@@ -34,7 +34,8 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KickTest extends CommandTestCase {
     private int id = 1000;

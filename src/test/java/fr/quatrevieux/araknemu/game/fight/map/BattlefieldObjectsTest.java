@@ -19,8 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
-import fr.arakne.utils.maps.constant.Direction;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -30,13 +28,10 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BattlefieldObjectsTest extends GameBaseCase {

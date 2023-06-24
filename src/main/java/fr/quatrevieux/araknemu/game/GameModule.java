@@ -180,6 +180,7 @@ import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnBattlefieldObjectValidator;
@@ -616,27 +617,17 @@ public final class GameModule implements ContainerModule {
         );
 
         configurator.persist(
-            CastFactory.class,
-            container -> new CastFactory(
-                new SpellConstraintsValidator(),
-                container.get(CriticalityStrategy.class)
-            )
-        );
-
-        configurator.persist(
-            CloseCombatFactory.class,
-            container -> new CloseCombatFactory(
-                new WeaponConstraintsValidator(),
-                container.get(CriticalityStrategy.class)
-            )
-        );
-
-        configurator.persist(
-            FightActionsFactoryRegistry.class,
-            container -> new FightActionsFactoryRegistry(
+            ActionsFactory.Factory.class,
+            container -> fight -> new FightActionsFactoryRegistry(
                 container.get(fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class),
-                container.get(CastFactory.class),
-                container.get(CloseCombatFactory.class)
+                new CastFactory(
+                    new SpellConstraintsValidator(fight),
+                    container.get(CriticalityStrategy.class)
+                ),
+                new CloseCombatFactory(
+                    new WeaponConstraintsValidator(fight),
+                    container.get(CriticalityStrategy.class)
+                )
             )
         );
 
@@ -650,7 +641,7 @@ public final class GameModule implements ContainerModule {
                 statesFlow,
                 container.get(Logger.class), // @todo fight logger
                 executor,
-                container.get(FightActionsFactoryRegistry.class)
+                container.get(ActionsFactory.Factory.class)
             )
         );
 

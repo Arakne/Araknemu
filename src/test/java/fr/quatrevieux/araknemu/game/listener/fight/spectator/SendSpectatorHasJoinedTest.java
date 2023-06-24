@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.listener.fight.spectator;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

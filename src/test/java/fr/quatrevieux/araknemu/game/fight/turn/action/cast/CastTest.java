@@ -25,13 +25,13 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -75,7 +75,9 @@ class CastTest extends FightBaseCase {
         Cast cast = new Cast(
             fighter,
             fighter.spells().get(3),
-            fight.map().get(186)
+            fight.map().get(186),
+            new SpellConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         assertSame(fighter, cast.performer());
@@ -85,7 +87,7 @@ class CastTest extends FightBaseCase {
 
     @Test
     void validateBadCell() {
-        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(0));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(0), new SpellConstraintsValidator(fight), new BaseCriticalityStrategy());
 
         assertFalse(cast.validate(turn));
         requestStack.assertLast(Error.cantCastCellNotAvailable());
@@ -95,7 +97,7 @@ class CastTest extends FightBaseCase {
     void validateNotEnoughAp() {
         turn.points().useActionPoints(5);
 
-        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(0));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(0), new SpellConstraintsValidator(fight), new BaseCriticalityStrategy());
 
         assertFalse(cast.validate(turn));
         requestStack.assertLast(Error.cantCastNotEnoughActionPoints(1, 5));
@@ -105,7 +107,7 @@ class CastTest extends FightBaseCase {
     void validateBadState() {
         fighter.states().push(19);
 
-        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(123));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(123), new SpellConstraintsValidator(fight), new BaseCriticalityStrategy());
 
         assertFalse(cast.validate(turn));
         requestStack.assertLast(Error.cantCastBadState());
@@ -113,7 +115,7 @@ class CastTest extends FightBaseCase {
 
     @Test
     void validateSuccess() {
-        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(186));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(186), new SpellConstraintsValidator(fight), new BaseCriticalityStrategy());
 
         assertTrue(cast.validate(turn));
     }
@@ -257,7 +259,9 @@ class CastTest extends FightBaseCase {
         Cast cast = new Cast(
             fighter,
             fighter.spells().get(3),
-            fight.map().get(186)
+            fight.map().get(186),
+            new SpellConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         );
 
         assertEquals(Duration.ofMillis(500), cast.duration());

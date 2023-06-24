@@ -21,16 +21,15 @@ package fr.quatrevieux.araknemu.game.fight.module;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshStates;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendState;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StatesModuleTest extends FightBaseCase {
     @Test

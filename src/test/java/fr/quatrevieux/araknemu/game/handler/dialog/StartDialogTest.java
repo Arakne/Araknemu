@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler.dialog;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -26,9 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
-import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogCreated;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogQuestion;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +35,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StartDialogTest extends GameBaseCase {
     private ExplorationPlayer player;

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.SessionIdle;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
 import fr.quatrevieux.araknemu.game.handler.SendPong;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
@@ -30,7 +31,6 @@ import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
 import fr.quatrevieux.araknemu.network.game.in.QuickPing;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

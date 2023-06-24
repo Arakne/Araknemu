@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.game;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameCreatedTest {
     @Test

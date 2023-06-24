@@ -27,7 +27,9 @@ import org.mockito.Mockito;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ActionQueueTest extends GameBaseCase {
     private ActionQueue queue;

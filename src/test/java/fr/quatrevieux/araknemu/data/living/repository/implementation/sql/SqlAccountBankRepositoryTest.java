@@ -28,7 +28,10 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlAccountBankRepositoryTest extends DatabaseTestCase {
     private fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository repository;

@@ -24,7 +24,11 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SpellTemplateLevelTransformerTest extends TestCase {
     private SpellTemplateLevelTransformer transformer = new SpellTemplateLevelTransformer(new EffectAreaTransformer());

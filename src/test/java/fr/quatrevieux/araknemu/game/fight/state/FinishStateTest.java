@@ -22,20 +22,21 @@ package fr.quatrevieux.araknemu.game.fight.state;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.FightEnd;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FinishStateTest extends FightBaseCase {
     private Fight fight;

@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight;
 
-import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.arakne.utils.value.Interval;
@@ -30,9 +30,9 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -51,11 +51,15 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.arakne.utils.maps.constant.Direction;
-import fr.quatrevieux.araknemu.network.game.out.fight.*;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.FightEnd;
+import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
+import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
+import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
@@ -67,10 +71,15 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Arrays;
 import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -271,7 +280,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertLast(
             new FightAction(
                 new CastSuccess(
-                    new Cast(null, null, null),
+                    new Cast(null, null, null, null, null),
                     player.fighter(),
                     player.fighter().spells().get(3),
                     other.fighter().cell(),
@@ -296,7 +305,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertLast(
             new FightAction(
                 new CastSuccess(
-                    new Cast(null, null, null),
+                    null,
                     other.fighter(),
                     other.fighter().spells().get(3),
                     player.fighter().cell(),
@@ -327,7 +336,7 @@ public class FunctionalTest extends GameBaseCase {
             new CloseCombat(
                 other.fighter(),
                 player.fighter().cell(),
-                new WeaponConstraintsValidator(),
+                new WeaponConstraintsValidator(fight),
                 new CriticalityStrategy() {
                     public int hitRate(ActiveFighter fighter, int base) { return 0; }
                     public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -424,7 +433,9 @@ public class FunctionalTest extends GameBaseCase {
         currentTurn.perform(new Cast(
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
-            target
+            target,
+            new SpellConstraintsValidator(fight),
+            new BaseCriticalityStrategy()
         ));
     }
 
@@ -435,7 +446,7 @@ public class FunctionalTest extends GameBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
@@ -454,7 +465,7 @@ public class FunctionalTest extends GameBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -471,7 +482,7 @@ public class FunctionalTest extends GameBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }

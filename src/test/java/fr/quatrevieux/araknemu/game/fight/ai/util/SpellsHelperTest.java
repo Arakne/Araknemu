@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.Test;
@@ -96,8 +95,8 @@ class SpellsHelperTest extends AiBaseCase {
             .addEnemy(b -> b.cell(125))
         );
 
-        assertNotNull(helper().caster(new SpellConstraintsValidator()));
-        assertNotSame(helper().caster(new SpellConstraintsValidator()), helper().caster(new SpellConstraintsValidator()));
+        assertNotNull(helper().caster(new SpellConstraintsValidator(fight)));
+        assertNotSame(helper().caster(new SpellConstraintsValidator(fight)), helper().caster(new SpellConstraintsValidator(fight)));
     }
 
     private SpellsHelper helper() {

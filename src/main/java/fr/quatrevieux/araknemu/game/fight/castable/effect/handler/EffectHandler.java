@@ -19,12 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler;
 
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Handle a fight effect
  */
-public interface EffectHandler {
+public interface EffectHandler extends CastConstraintValidator<Castable> {
     /**
      * Handle the effect on the target
      */
@@ -37,4 +42,14 @@ public interface EffectHandler {
      * @param effect The effect to apply
      */
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect);
+
+    @Override
+    public default boolean check(Turn turn, Castable castable, BattlefieldCell target) {
+        return true;
+    }
+
+    @Override
+    public default @Nullable Object validate(Turn turn, Castable castable, BattlefieldCell target) {
+        return null;
+    }
 }

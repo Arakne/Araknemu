@@ -22,9 +22,8 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 import fr.quatrevieux.araknemu._test.TestCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FightPlacesTransformerTest extends TestCase {
     private FightPlacesTransformer transformer = new FightPlacesTransformer();

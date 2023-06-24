@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
-import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
@@ -29,10 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 import java.time.Duration;
 
@@ -46,10 +43,6 @@ public final class Cast implements Action {
     private final CastConstraintValidator<Spell> validator;
     private final CriticalityStrategy criticalityStrategy;
 
-    public Cast(PlayableFighter caster, Spell spell, FightCell target) {
-        this(caster, spell, target, new SpellConstraintsValidator(), new BaseCriticalityStrategy());
-    }
-
     public Cast(PlayableFighter caster, Spell spell, FightCell target, CastConstraintValidator<Spell> validator, CriticalityStrategy criticalityStrategy) {
         this.caster = caster;
         this.spell = spell;
@@ -60,7 +53,7 @@ public final class Cast implements Action {
 
     @Override
     public boolean validate(Turn turn) {
-        final Error error = validator.validate(turn, spell, target);
+        final Object error = validator.validate(turn, spell, target);
 
         if (error != null) {
             caster.apply(new SendPacket(error));

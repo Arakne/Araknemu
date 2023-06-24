@@ -245,6 +245,6 @@ class FightServiceTest extends FightBaseCase {
         assertEquals(1, fight.id());
         assertInstanceOf(ChallengeType.class, fight.type());
         assertEquals(10340, fight.map().id());
-        assertEquals(container.get(FightActionsFactoryRegistry.class), fight.actions());
+        assertInstanceOf(FightActionsFactoryRegistry.class, fight.actions());
     }
 }

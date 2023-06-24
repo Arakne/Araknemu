@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
@@ -31,7 +30,7 @@ import org.mockito.Mockito;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class RemoveBattlefieldObjectsTest extends FightBaseCase {
     private Fight fight;

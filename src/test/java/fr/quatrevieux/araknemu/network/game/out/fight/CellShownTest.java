@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CellShownTest {
     @Test

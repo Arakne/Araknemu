@@ -19,12 +19,14 @@
 
 package fr.quatrevieux.araknemu.network.game.in.exchange;
 
-import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExchangeRequestTest {
     private ExchangeRequest.Parser parser;

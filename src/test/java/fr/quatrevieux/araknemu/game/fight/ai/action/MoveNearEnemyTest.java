@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

@@ -19,13 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.exploration;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
-import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
+import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.OrientationChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
@@ -35,20 +37,19 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import fr.arakne.utils.maps.constant.Direction;
-import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExplorationPlayerTest extends GameBaseCase {
     private ExplorationPlayer player;

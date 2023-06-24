@@ -27,7 +27,13 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
-import fr.quatrevieux.araknemu.network.realm.out.*;
+import fr.quatrevieux.araknemu.network.realm.out.BadVersion;
+import fr.quatrevieux.araknemu.network.realm.out.Community;
+import fr.quatrevieux.araknemu.network.realm.out.GMLevel;
+import fr.quatrevieux.araknemu.network.realm.out.LoginError;
+import fr.quatrevieux.araknemu.network.realm.out.Pseudo;
+import fr.quatrevieux.araknemu.network.realm.out.Question;
+import fr.quatrevieux.araknemu.network.realm.out.SelectServerPlain;
 import inet.ipaddr.IPAddressString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +42,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AuthenticationProtocolTest extends RealmBaseCase {
     private Account account;

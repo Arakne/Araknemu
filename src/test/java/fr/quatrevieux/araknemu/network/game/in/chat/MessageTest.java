@@ -19,12 +19,14 @@
 
 package fr.quatrevieux.araknemu.network.game.in.chat;
 
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MessageTest {
     private Message.Parser parser;

@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.castable.validator;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -47,7 +46,7 @@ public interface CastConstraintValidator<C extends Castable> {
      * @param castable The action to cast
      * @param target The target cell
      *
-     * @return The error if constraint failed, or null
+     * @return The error packet if constraint failed, or null. Must be a stringable object.
      */
-    public @Nullable Error validate(Turn turn, C castable, BattlefieldCell target);
+    public @Nullable Object validate(Turn turn, C castable, BattlefieldCell target);
 }

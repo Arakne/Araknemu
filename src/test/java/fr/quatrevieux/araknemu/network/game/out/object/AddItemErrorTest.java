@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.network.game.out.object;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AddItemErrorTest {
     @Test

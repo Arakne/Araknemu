@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -58,4 +59,13 @@ public interface ActionsFactory<@NonNull F extends @NonNull ActiveFighter> {
      * Get the factory for move action
      */
     public MoveActionFactory<F> move();
+
+    public static interface Factory<@NonNull F extends @NonNull ActiveFighter> {
+        /**
+         * Create the actions factory for the given fight
+         *
+         * @param fight The fight
+         */
+        public ActionsFactory<F> createForFight(Fight fight);
+    }
 }

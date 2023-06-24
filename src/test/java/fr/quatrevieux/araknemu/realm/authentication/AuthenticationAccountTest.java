@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.realm.authentication;
 
-import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
@@ -33,7 +33,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AuthenticationAccountTest extends RealmBaseCase {
     private AuthenticationService service;

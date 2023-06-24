@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

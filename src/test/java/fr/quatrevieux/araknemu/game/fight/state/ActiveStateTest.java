@@ -24,19 +24,31 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.DispelDeadFighterBuff;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterHidden;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterMaxLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterVisible;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStarted;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStopped;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightersInformation;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendTurnList;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedActionPoints;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -55,11 +67,14 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ActiveStateTest extends GameBaseCase {
     private ActiveState state;
@@ -94,7 +109,7 @@ class ActiveStateTest extends GameBaseCase {
             ),
             container.get(Logger.class),
             executor = ExecutorFactory.createSingleThread(),
-            container.get(FightActionsFactoryRegistry.class)
+            container.get(ActionsFactory.Factory.class)
         );
 
         fight.nextState();

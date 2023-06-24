@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidat
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
@@ -68,7 +68,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FunctionalTest extends FightBaseCase {
     private SpellService service;
@@ -181,7 +187,7 @@ public class FunctionalTest extends FightBaseCase {
 
         requestStack.assertAll(
             "GAS1",
-            new FightAction(new CastSuccess(new Cast(null, null, null), fighter1, spell, fighter2.cell(), false)),
+            new FightAction(new CastSuccess(null, fighter1, spell, fighter2.cell(), false)),
             ActionEffect.usedActionPoints(fighter1, 4),
             ActionEffect.alterLifePoints(fighter1, fighter2, -damage),
             "GAF0|1"
@@ -1213,6 +1219,24 @@ public class FunctionalTest extends FightBaseCase {
     }
 
     @Test
+    void invocationLimit() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        castNormal(35, fight.map().get(199)); // Invocation de Bouftou
+        assertTrue(fight.map().get(199).hasFighter());
+        fight.map().get(199).fighter().attach(FighterAI.class, null); // Remove AI, to ensure it doesn't play
+
+        passTurns(3); // spell cooldown
+
+        assertThrows(FightException.class, () -> castNormal(35, fight.map().get(200)));
+        requestStack.assertLast(Error.cantCastMaxSummonedCreaturesReached(1));
+        assertFalse(fight.map().get(200).hasFighter());
+    }
+
+    @Test
     void addGlyph() {
         castNormal(17, fight.map().get(169)); // Glyphe agressif
 
@@ -1288,6 +1312,11 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(0, trap.size());
         requestStack.assertOne(ActionEffect.packet(fighter1, new AddZones(trap)));
         requestStack.assertOne(ActionEffect.packet(fighter1, new UpdateCells(UpdateCells.Data.fromProperties(126, true, UpdateCells.LAYER_2_OBJECT_NUMBER.set(25)))));
+        requestStack.clear();
+
+        assertThrows(FightException.class, () -> castNormal(65, fight.map().get(126))); // Already a trap
+        requestStack.assertLast(ActionEffect.spellBlockedByInvisibleObstacle(fighter1, service.get(65).level(5)));
+        assertEquals(1, fight.map().objects().stream().count());
         requestStack.clear();
 
         fighter2.move(fight.map().get(126)); // Move on trap
@@ -1491,7 +1520,7 @@ public class FunctionalTest extends FightBaseCase {
             currentTurn.fighter(),
             spell,
             target,
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
@@ -1515,7 +1544,7 @@ public class FunctionalTest extends FightBaseCase {
             currentTurn.fighter(),
             spell,
             target,
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
@@ -1539,7 +1568,7 @@ public class FunctionalTest extends FightBaseCase {
             currentTurn.fighter(),
             spell,
             target,
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
 
             // Ensure critical hit
             new CriticalityStrategy() {

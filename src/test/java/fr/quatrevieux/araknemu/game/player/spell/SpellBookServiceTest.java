@@ -20,13 +20,20 @@
 package fr.quatrevieux.araknemu.game.player.spell;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.player.spell.*;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveLearnedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveSpellPosition;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveUpgradedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendAllSpellBoosts;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendLearnedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendSpellBoost;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendSpellList;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendUpgradedSpell;
 import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
@@ -38,7 +45,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpellBookServiceTest extends GameBaseCase {
     private SpellBookService service;

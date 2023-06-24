@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EffectAreaTransformerTest {
     private EffectAreaTransformer transformer = new EffectAreaTransformer();

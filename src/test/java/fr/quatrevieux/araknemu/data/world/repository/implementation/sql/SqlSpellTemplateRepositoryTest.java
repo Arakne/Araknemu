@@ -19,15 +19,19 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.SpellTemplateLevelTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlSpellTemplateRepositoryTest extends GameBaseCase {
     private SqlSpellTemplateRepository repository;

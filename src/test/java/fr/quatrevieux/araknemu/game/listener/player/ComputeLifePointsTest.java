@@ -21,12 +21,12 @@ package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComputeLifePointsTest extends GameBaseCase {
     private GamePlayer player;

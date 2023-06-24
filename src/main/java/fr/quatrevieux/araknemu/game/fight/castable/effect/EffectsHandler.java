@@ -20,11 +20,17 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,8 +40,40 @@ import java.util.Set;
 /**
  * Handle fight effects
  */
-public final class EffectsHandler {
+public final class EffectsHandler implements CastConstraintValidator<Castable> {
     private final Map<Integer, EffectHandler> handlers = new HashMap<>();
+
+    @Override
+    public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
+        for (SpellEffect effect : castable.effects()) {
+            final EffectHandler handler = handlers.get(effect.effect());
+
+            if (handler != null) {
+                if (!handler.check(turn, castable, target)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public @Nullable Object validate(Turn turn, Castable castable, BattlefieldCell target) {
+        for (SpellEffect effect : castable.effects()) {
+            final EffectHandler handler = handlers.get(effect.effect());
+
+            if (handler != null) {
+                final Object error = handler.validate(turn, castable, target);
+
+                if (error != null) {
+                    return error;
+                }
+            }
+        }
+
+        return null;
+    }
 
     public void register(int effectId, EffectHandler applier) {
         handlers.put(effectId, applier);

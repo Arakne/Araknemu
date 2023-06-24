@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.ChallengeActionsFactories;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.fight.FightActionsFactories;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
@@ -27,13 +27,10 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.MoveFact
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;

@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler.emote;
 
+import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
-import fr.arakne.utils.maps.constant.Direction;
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.emote.PlayerOrientation;

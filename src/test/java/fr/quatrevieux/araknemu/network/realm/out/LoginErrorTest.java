@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.network.realm.out;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LoginErrorTest {
     @Test

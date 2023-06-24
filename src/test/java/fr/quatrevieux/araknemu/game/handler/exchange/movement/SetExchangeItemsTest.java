@@ -19,18 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange.movement;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.local.LocalExchangeObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SetExchangeItemsTest extends GameBaseCase {
     private ExplorationPlayer player;

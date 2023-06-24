@@ -25,7 +25,8 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharac
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ComputedCharacteristicsTest {
     @Test

@@ -20,8 +20,8 @@
 package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.network.game.out.area.SubAreaList;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;

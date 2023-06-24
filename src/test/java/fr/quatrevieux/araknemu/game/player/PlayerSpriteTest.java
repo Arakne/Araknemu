@@ -19,21 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.Restrictions;
-import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
-import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PlayerSpriteTest extends GameBaseCase {
     @Override

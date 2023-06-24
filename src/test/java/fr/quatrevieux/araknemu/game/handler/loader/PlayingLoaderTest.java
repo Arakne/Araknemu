@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -30,7 +31,6 @@ import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

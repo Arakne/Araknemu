@@ -21,7 +21,8 @@ package fr.quatrevieux.araknemu.network.game.in.account;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AskCharacterListTest {
     @Test

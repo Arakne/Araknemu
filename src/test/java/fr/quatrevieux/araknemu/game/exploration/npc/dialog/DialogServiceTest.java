@@ -38,7 +38,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class DialogServiceTest extends GameBaseCase {
     private DialogService service;

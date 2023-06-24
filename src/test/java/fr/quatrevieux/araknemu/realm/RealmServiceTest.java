@@ -23,9 +23,6 @@ import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.InitializableService;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.util.DummyServer;
-import fr.quatrevieux.araknemu.game.GameService;
-import fr.quatrevieux.araknemu.game.PreloadableService;
-import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,8 +30,6 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RealmServiceTest extends RealmBaseCase {
     @Test

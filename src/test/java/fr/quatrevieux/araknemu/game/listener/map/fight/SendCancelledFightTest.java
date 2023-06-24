@@ -30,8 +30,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendCancelledFightTest extends FightBaseCase {
     private Fight fight;
     private ExplorationMap map;

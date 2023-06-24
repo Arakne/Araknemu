@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.maps.constant.CellMovement;
 import fr.arakne.utils.value.Dimensions;
-import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.FightPlacesTransformer;
@@ -33,10 +33,13 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlMapTemplateRepositoryTest extends GameBaseCase {
     private SqlMapTemplateRepository repository;

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.exploration.npc;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
@@ -36,7 +37,6 @@ import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
-import fr.arakne.utils.maps.constant.Direction;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,8 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NpcServiceTest extends GameBaseCase {
     private NpcService service;

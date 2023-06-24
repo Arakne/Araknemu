@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.account;
 
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
-import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessory;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.NullAccessory;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CharacterAccessoriesTest extends TestCase {
     @Test

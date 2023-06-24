@@ -22,13 +22,17 @@ package fr.quatrevieux.araknemu.realm.handler.account;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
-import fr.quatrevieux.araknemu.network.realm.out.*;
+import fr.quatrevieux.araknemu.network.realm.out.Community;
+import fr.quatrevieux.araknemu.network.realm.out.GMLevel;
+import fr.quatrevieux.araknemu.network.realm.out.LoginError;
+import fr.quatrevieux.araknemu.network.realm.out.Pseudo;
+import fr.quatrevieux.araknemu.network.realm.out.Question;
 import fr.quatrevieux.araknemu.realm.ConnectionKeyTest;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
@@ -42,7 +46,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AuthenticateTest extends RealmBaseCase {
     private Authenticate handler;

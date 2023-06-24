@@ -32,7 +32,7 @@ import org.kohsuke.args4j.CmdLineException;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IpAddressStringHandlerTest extends TestCase {
     static class Arguments {

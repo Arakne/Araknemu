@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.monster.group;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
@@ -40,7 +41,6 @@ import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -50,7 +50,9 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class MonsterGroupTest extends GameBaseCase {
     private MonsterGroup group;

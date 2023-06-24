@@ -27,12 +27,11 @@ import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.AnnotationHydrator;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.CmdLineException;
 
-import java.time.Duration;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ConcatRestOfArgumentsHandlerTest extends TestCase {
     static class Arguments {

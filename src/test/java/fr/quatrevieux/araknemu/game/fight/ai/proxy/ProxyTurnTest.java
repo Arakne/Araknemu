@@ -24,7 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProxyTurnTest extends AiBaseCase {
     @Test

@@ -22,15 +22,19 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.PlayerFighterCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyLeaveReward;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.LeaveOnDisconnect;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFightLeaved;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendSpellBoosted;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendStats;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.StopFightSession;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -41,7 +45,9 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultFighterFactoryTest extends FightBaseCase {
     private DefaultFighterFactory factory;

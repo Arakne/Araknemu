@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathException;
@@ -26,18 +27,23 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.*;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidationException;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MoveTest extends GameBaseCase {
     private ExplorationPlayer player;

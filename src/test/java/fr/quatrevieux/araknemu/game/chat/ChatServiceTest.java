@@ -21,15 +21,15 @@ package fr.quatrevieux.araknemu.game.chat;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
 import fr.quatrevieux.araknemu.game.chat.channel.GlobalChannel;
 import fr.quatrevieux.araknemu.game.chat.channel.MapChannel;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.listener.player.chat.AddChatChannels;
 import fr.quatrevieux.araknemu.game.listener.player.chat.InitializeChat;
 import fr.quatrevieux.araknemu.game.listener.player.chat.MessageReceived;
-import fr.quatrevieux.araknemu.game.listener.player.chat.AddChatChannels;
 import fr.quatrevieux.araknemu.game.listener.player.chat.PrivateMessageReceived;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -40,7 +40,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChatServiceTest extends GameBaseCase {
     private ChatService service;

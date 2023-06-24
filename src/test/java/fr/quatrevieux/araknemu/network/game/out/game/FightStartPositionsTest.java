@@ -21,25 +21,9 @@ package fr.quatrevieux.araknemu.network.game.out.game;
 
 import fr.arakne.utils.maps.DofusMap;
 import fr.arakne.utils.maps.MapCell;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import org.checkerframework.checker.index.qual.LessThanUnknown;
-import org.checkerframework.checker.index.qual.LowerBoundUnknown;
-import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.SameLenUnknown;
-import org.checkerframework.checker.index.qual.SearchIndexUnknown;
-import org.checkerframework.checker.index.qual.SubstringIndexUnknown;
-import org.checkerframework.checker.index.qual.UpperBoundUnknown;
-import org.checkerframework.checker.initialization.qual.Initialized;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
-import org.checkerframework.common.value.qual.UnknownVal;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FightStartPositionsTest {
     @Test

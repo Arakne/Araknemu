@@ -20,14 +20,14 @@
 package fr.quatrevieux.araknemu.game.event;
 
 import fr.quatrevieux.araknemu.core.event.SimpleListener;
-import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class SimpleListenerTest {
     @Test

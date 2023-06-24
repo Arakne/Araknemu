@@ -21,11 +21,8 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
-import fr.quatrevieux.araknemu.game.account.AccountService;
-import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +31,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlBanishmentRepositoryTest extends RealmBaseCase {
     private SqlBanishmentRepository repository;

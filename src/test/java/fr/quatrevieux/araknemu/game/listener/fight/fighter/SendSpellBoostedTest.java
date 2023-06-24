@@ -19,17 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.player.spell.event.SpellBoostChanged;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
-import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SendSpellBoostedTest extends FightBaseCase {
     private SendSpellBoosted listener;

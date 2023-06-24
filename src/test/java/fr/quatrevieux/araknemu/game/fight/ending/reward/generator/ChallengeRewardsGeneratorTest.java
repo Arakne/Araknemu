@@ -22,11 +22,11 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.generator;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ChallengeRewardsGeneratorTest extends FightBaseCase {
     private Fight fight;

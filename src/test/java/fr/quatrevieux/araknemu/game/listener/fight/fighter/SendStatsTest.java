@@ -26,8 +26,6 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendStatsTest extends FightBaseCase {
     private SendStats listener;
 

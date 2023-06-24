@@ -19,15 +19,15 @@
 
 package fr.quatrevieux.araknemu.network.game.out.emote;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PlayerOrientationTest extends GameBaseCase {
     @Test

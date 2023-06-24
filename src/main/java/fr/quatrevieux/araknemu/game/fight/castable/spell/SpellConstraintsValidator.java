@@ -19,10 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.spell;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ConstraintsAggregateValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.InvocationCountValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.EffectHandlersValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.LineLaunchValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.LineOfSightValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.RangeValidator;
@@ -32,7 +33,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -42,7 +42,7 @@ public final class SpellConstraintsValidator implements CastConstraintValidator<
     private final CastConstraintValidator<Spell> validator;
 
     @SuppressWarnings("unchecked")
-    public SpellConstraintsValidator() {
+    public SpellConstraintsValidator(Fight fight) {
         this(new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
@@ -51,7 +51,7 @@ public final class SpellConstraintsValidator implements CastConstraintValidator<
             new RangeValidator(),
             new SpellLaunchValidator(),
             new LineOfSightValidator(),
-            new InvocationCountValidator(), // @todo instantiate from injection module instead with effect ids
+            new EffectHandlersValidator(fight),
         });
     }
 
@@ -65,7 +65,7 @@ public final class SpellConstraintsValidator implements CastConstraintValidator<
     }
 
     @Override
-    public @Nullable Error validate(Turn turn, Spell spell, BattlefieldCell target) {
+    public @Nullable Object validate(Turn turn, Spell spell, BattlefieldCell target) {
         return validator.validate(turn, spell, target);
     }
 }

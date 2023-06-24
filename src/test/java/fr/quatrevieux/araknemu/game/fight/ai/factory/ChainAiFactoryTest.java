@@ -21,9 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory;
 
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

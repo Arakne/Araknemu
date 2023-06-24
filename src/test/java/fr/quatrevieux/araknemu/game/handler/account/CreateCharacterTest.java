@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.account;
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
@@ -30,7 +31,6 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
-import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreated;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreationError;
@@ -41,7 +41,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class CreateCharacterTest extends GameBaseCase {
     private CreateCharacter handler;
