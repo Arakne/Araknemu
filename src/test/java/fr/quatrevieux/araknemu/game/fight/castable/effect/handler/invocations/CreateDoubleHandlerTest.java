@@ -27,9 +27,11 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -37,18 +39,26 @@ import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.Duration;
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CreateDoubleHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private CreateDoubleHandler handler;
+    private FightTurn turn;
 
     @Override
     @BeforeEach
@@ -60,6 +70,8 @@ class CreateDoubleHandlerTest extends FightBaseCase {
         fight.nextState();
 
         caster = player.fighter();
+        turn = new FightTurn(caster, fight, Duration.ofSeconds(30));
+        turn.start();
 
         handler = new CreateDoubleHandler(container.get(FighterFactory.class), fight);
 
@@ -128,5 +140,100 @@ class CreateDoubleHandlerTest extends FightBaseCase {
 
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
         assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
+    }
+
+    @Test
+    void maxInvocReached() {
+        Spell spell = Mockito.mock(Spell.class);
+        PlayableFighter invoc = Mockito.mock(PlayableFighter.class);
+        Mockito.when(invoc.invoker()).thenReturn(caster);
+        fight.turnList().add(invoc);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.effect()).thenReturn(180);
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+
+        assertFalse(handler.check(turn, spell, fight.map().get(123)));
+        assertEquals(
+            new Error(203, 1).toString(),
+            handler.validate(turn, spell, fight.map().get(123)).toString()
+        );
+    }
+
+    @Test
+    void maxInvocReachedWithMultipleInvoc() {
+        Spell spell = Mockito.mock(Spell.class);
+        PlayableFighter invoc = Mockito.mock(PlayableFighter.class);
+        Mockito.when(invoc.invoker()).thenReturn(caster);
+
+        // Add 4 invoc
+        fight.turnList().add(invoc);
+        fight.turnList().add(invoc);
+        fight.turnList().add(invoc);
+        fight.turnList().add(invoc);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.effect()).thenReturn(180);
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+
+        caster.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
+
+        assertFalse(handler.check(turn, spell, fight.map().get(123)));
+        assertEquals(
+            new Error(203, 4).toString(),
+            handler.validate(turn, spell, fight.map().get(123)).toString()
+        );
+    }
+
+    @Test
+    void shouldIgnoreStaticInvocation() {
+        Spell spell = Mockito.mock(Spell.class);
+
+        Fighter invoc1 = Mockito.mock(Fighter.class);
+        Fighter invoc2 = Mockito.mock(Fighter.class);
+        Fighter invoc3 = Mockito.mock(Fighter.class);
+        Fighter invoc4 = Mockito.mock(Fighter.class);
+
+        Mockito.when(invoc1.invoker()).thenReturn(caster);
+        Mockito.when(invoc2.invoker()).thenReturn(caster);
+        Mockito.when(invoc3.invoker()).thenReturn(caster);
+        Mockito.when(invoc4.invoker()).thenReturn(caster);
+
+        fight.fighters().join(invoc1, fight.map().get(146));
+        fight.fighters().join(invoc2, fight.map().get(146));
+        fight.fighters().join(invoc3, fight.map().get(146));
+        fight.fighters().join(invoc4, fight.map().get(146));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.effect()).thenReturn(180);
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+
+        caster.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
+
+        assertTrue(handler.check(turn, spell, fight.map().get(123)));
+    }
+
+    @Test
+    void success() {
+        Spell spell = Mockito.mock(Spell.class);
+
+        assertTrue(handler.check(turn, spell, fight.map().get(123)));
+        assertNull(handler.validate(turn, spell, fight.map().get(123)));
+    }
+
+    @Test
+    void successWithMultipleInvoc() {Spell spell = Mockito.mock(Spell.class);
+        PlayableFighter invoc = Mockito.mock(PlayableFighter.class);
+        Mockito.when(invoc.invoker()).thenReturn(caster);
+        fight.turnList().add(invoc);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.effect()).thenReturn(180);
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+
+        caster.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
+
+        assertTrue(handler.check(turn, spell, fight.map().get(123)));
+        assertNull(handler.validate(turn, spell, fight.map().get(123)));
     }
 }

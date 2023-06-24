@@ -25,8 +25,12 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -38,9 +42,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.Duration;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EffectsHandlerTest extends FightBaseCase {
@@ -267,5 +275,55 @@ class EffectsHandlerTest extends FightBaseCase {
 
         Mockito.verify(hook).onCastTarget(buff, cast);
         Mockito.verify(hook2).onCastTarget(buff2, cast);
+    }
+
+    @Test
+    void checkSuccess() {
+        EffectHandler handler = Mockito.mock(EffectHandler.class);
+        PlayerFighter fighter = player.fighter();
+        FightTurn turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
+        turn.start();
+
+        this.handler.register(1000, handler);
+
+        Mockito.when(handler.check(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(handler.validate(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
+
+        Spell spell = Mockito.mock(Spell.class);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+        Mockito.when(effect.effect()).thenReturn(1000);
+
+        assertTrue(this.handler.check(turn, spell, fighter.cell()));
+        assertNull(this.handler.validate(turn, spell, fighter.cell()));
+
+        Mockito.verify(handler).check(turn, spell, fighter.cell());
+        Mockito.verify(handler).validate(turn, spell, fighter.cell());
+    }
+
+    @Test
+    void checkFailed() {
+        EffectHandler handler = Mockito.mock(EffectHandler.class);
+        PlayerFighter fighter = player.fighter();
+        FightTurn turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
+        turn.start();
+
+        this.handler.register(1000, handler);
+
+        Mockito.when(handler.check(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        Mockito.when(handler.validate(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("My error");
+
+        Spell spell = Mockito.mock(Spell.class);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
+        Mockito.when(effect.effect()).thenReturn(1000);
+
+        assertFalse(this.handler.check(turn, spell, fighter.cell()));
+        assertEquals("My error", handler.validate(turn, spell, fighter.cell()));
+
+        Mockito.verify(handler).check(turn, spell, fighter.cell());
+        Mockito.verify(handler).validate(turn, spell, fighter.cell());
     }
 }

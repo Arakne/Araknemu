@@ -51,7 +51,7 @@ class SpellCasterTest extends AiBaseCase {
         fight.turnList().start();
         ai.start(fight.turnList().current().get());
 
-        caster = new SpellCaster(ai, ai.helper(), new SpellConstraintsValidator());
+        caster = new SpellCaster(ai, ai.helper(), new SpellConstraintsValidator(fight));
     }
 
     @Test
@@ -61,7 +61,7 @@ class SpellCasterTest extends AiBaseCase {
             .addEnemy(b -> b.cell(125))
         );
 
-        caster = new SpellCaster(ai, ai.helper(), new SpellConstraintsValidator());
+        caster = new SpellCaster(ai, ai.helper(), new SpellConstraintsValidator(fight));
 
         assertTrue(caster.simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 3 && simulation.target().id() == 125));
         assertTrue(caster.simulate(container.get(Simulator.class)).anyMatch(simulation -> simulation.spell().id() == 6 && simulation.target().id() == 123));

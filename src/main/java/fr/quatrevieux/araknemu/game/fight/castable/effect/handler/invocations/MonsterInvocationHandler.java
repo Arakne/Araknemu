@@ -21,13 +21,13 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 
 /**
  * Handle monster invocation
@@ -40,15 +40,13 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
  *
  * @see InvocationFighter Invoked fighter
  */
-public final class MonsterInvocationHandler implements EffectHandler {
+public final class MonsterInvocationHandler extends AbstractInvocationHandler {
      private final MonsterService monsterService;
-     private final FighterFactory fighterFactory;
-     private final Fight fight;
 
     public MonsterInvocationHandler(MonsterService monsterService, FighterFactory fighterFactory, Fight fight) {
+        super(fighterFactory, fight);
+
         this.monsterService = monsterService;
-        this.fighterFactory = fighterFactory;
-        this.fight = fight;
     }
 
     @Override
@@ -57,19 +55,17 @@ public final class MonsterInvocationHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final PlayableFighter invocation = fighterFactory.generate(id -> new InvocationFighter(
+    protected PlayableFighter createInvocation(int id, Fighter invoker, SpellEffect effect) {
+        return new InvocationFighter(
             id,
-            monsterService.load(effect.effect().min()).get(effect.effect().max()),
-            cast.caster().team(),
-            cast.caster()
-        ));
+            monsterService.load(effect.min()).get(effect.max()),
+            invoker.team(),
+            invoker
+        );
+    }
 
-        fight.fighters().joinTurnList(invocation, cast.target());
-
-        invocation.init();
-
-        fight.send(ActionEffect.addInvocation(cast.caster(), invocation));
-        fight.send(ActionEffect.packet(cast.caster(), new FighterTurnOrder(fight.turnList())));
+    @Override
+    protected ActionEffect createPacket(Fighter invoker, PlayableFighter invocation) {
+        return ActionEffect.addInvocation(invoker, invocation);
     }
 }

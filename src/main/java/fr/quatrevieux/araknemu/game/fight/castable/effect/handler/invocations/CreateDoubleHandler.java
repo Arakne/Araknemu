@@ -20,14 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 
 /**
  * Create a double of the caster
@@ -35,34 +33,18 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
  *
  * @see DoubleFighter
  */
-public final class CreateDoubleHandler implements EffectHandler {
-     private final FighterFactory fighterFactory;
-     private final Fight fight;
-
+public final class CreateDoubleHandler extends AbstractInvocationHandler {
     public CreateDoubleHandler(FighterFactory fighterFactory, Fight fight) {
-        this.fighterFactory = fighterFactory;
-        this.fight = fight;
+        super(fighterFactory, fight);
     }
 
     @Override
-    public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
-        throw new UnsupportedOperationException("CreateDoubleHandler cannot be used as buff");
+    protected PlayableFighter createInvocation(int id, Fighter invoker, SpellEffect effect) {
+        return new DoubleFighter(id, invoker);
     }
 
     @Override
-    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final Fighter caster = cast.caster();
-
-        final PlayableFighter invocation = fighterFactory.generate(id -> new DoubleFighter(
-            id,
-            cast.caster()
-        ));
-
-        fight.fighters().joinTurnList(invocation, cast.target());
-
-        invocation.init();
-
-        fight.send(ActionEffect.addDouble(caster, invocation));
-        fight.send(ActionEffect.packet(cast.caster(), new FighterTurnOrder(fight.turnList())));
+    protected ActionEffect createPacket(Fighter invoker, PlayableFighter invocation) {
+        return ActionEffect.addDouble(invoker, invocation);
     }
 }

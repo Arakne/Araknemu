@@ -14,47 +14,39 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Aggregates of constraints
+ * Validate the cast by delegating validation to the current action effect handlers
+ *
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler
+ * @see Fight#effects()
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler#check(Turn, Castable, BattlefieldCell)
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler#validate(Turn, Castable, BattlefieldCell)
  */
-public final class ConstraintsAggregateValidator<T extends Castable> implements CastConstraintValidator<T> {
-    private final CastConstraintValidator<? super T>[] validators;
+public final class EffectHandlersValidator implements CastConstraintValidator<Castable> {
+    private final Fight fight;
 
-    public ConstraintsAggregateValidator(CastConstraintValidator<? super T>[] validators) {
-        this.validators = validators;
+    public EffectHandlersValidator(Fight fight) {
+        this.fight = fight;
     }
 
     @Override
-    public boolean check(Turn turn, T castable, BattlefieldCell target) {
-        for (CastConstraintValidator<? super T> validator : validators) {
-            if (!validator.check(turn, castable, target)) {
-                return false;
-            }
-        }
-
-        return true;
+    public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
+        return fight.effects().check(turn, castable, target);
     }
 
     @Override
-    public @Nullable Object validate(Turn turn, T action, BattlefieldCell target) {
-        for (CastConstraintValidator<? super T> validator : validators) {
-            final Object error = validator.validate(turn, action, target);
-
-            if (error != null) {
-                return error;
-            }
-        }
-
-        return null;
+    public @Nullable Object validate(Turn turn, Castable castable, BattlefieldCell target) {
+        return fight.effects().validate(turn, castable, target);
     }
 }

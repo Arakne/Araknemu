@@ -61,7 +61,7 @@ class WeaponConstraintsValidatorTest extends FightBaseCase {
 
         fighter.move(fight.map().get(235));
 
-        validator = new WeaponConstraintsValidator();
+        validator = new WeaponConstraintsValidator(fight);
     }
 
     @Test

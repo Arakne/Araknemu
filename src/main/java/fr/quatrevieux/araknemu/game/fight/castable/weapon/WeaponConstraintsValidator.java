@@ -19,16 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.weapon;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ConstraintsAggregateValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.EffectHandlersValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.LineOfSightValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.RangeValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.StatesValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -38,13 +39,14 @@ public final class WeaponConstraintsValidator implements CastConstraintValidator
     private final CastConstraintValidator<CastableWeapon> validator;
 
     @SuppressWarnings("unchecked")
-    public WeaponConstraintsValidator() {
+    public WeaponConstraintsValidator(Fight fight) {
         this(new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
             new StatesValidator(),
             new RangeValidator(),
             new LineOfSightValidator(),
+            new EffectHandlersValidator(fight),
         });
     }
 
@@ -58,7 +60,7 @@ public final class WeaponConstraintsValidator implements CastConstraintValidator
     }
 
     @Override
-    public @Nullable Error validate(Turn turn, CastableWeapon weapon, BattlefieldCell target) {
+    public @Nullable Object validate(Turn turn, CastableWeapon weapon, BattlefieldCell target) {
         return validator.validate(turn, weapon, target);
     }
 }

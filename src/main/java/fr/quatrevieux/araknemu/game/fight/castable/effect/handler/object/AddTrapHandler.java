@@ -21,15 +21,19 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.BaseCastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Add a trap on the target cell
@@ -65,11 +69,6 @@ public final class AddTrapHandler implements EffectHandler {
             throw new UnsupportedOperationException("Trap effect can only be used with a spell");
         }
 
-        if (hasTrapOnCell(target)) {
-            fight.send(ActionEffect.spellBlockedByInvisibleObstacle(caster, spell));
-            return;
-        }
-
         final Trap trap = new Trap(
             fight,
             target,
@@ -97,7 +96,21 @@ public final class AddTrapHandler implements EffectHandler {
      * @param cell The cell to check
      * @return true if there is a trap on the cell
      */
-    private boolean hasTrapOnCell(FightCell cell) {
+    private boolean hasTrapOnCell(BattlefieldCell cell) {
         return fight.map().objects().anyMatch(o -> o.cell().equals(cell) && o instanceof Trap);
+    }
+
+    @Override
+    public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
+        return !hasTrapOnCell(target);
+    }
+
+    @Override
+    public @Nullable ActionEffect validate(Turn turn, Castable castable, BattlefieldCell target) {
+        if (!(castable instanceof Spell)) {
+            throw new UnsupportedOperationException("Trap effect can only be used with a spell");
+        }
+
+        return check(turn, castable, target) ? null : ActionEffect.spellBlockedByInvisibleObstacle(turn.fighter(), (Spell) castable);
     }
 }

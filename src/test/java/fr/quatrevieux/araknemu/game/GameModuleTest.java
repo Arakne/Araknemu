@@ -180,8 +180,6 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(SavingService.class, container.get(SavingService.class));
         assertInstanceOf(DefaultSpectatorFactory.class, container.get(SpectatorFactory.class));
         assertInstanceOf(MoveFactory.class, container.get(MoveFactory.class));
-        assertInstanceOf(CastFactory.class, container.get(CastFactory.class));
-        assertInstanceOf(CloseCombatFactory.class, container.get(CloseCombatFactory.class));
         assertInstanceOf(BaseCriticalityStrategy.class, container.get(CriticalityStrategy.class));
         assertInstanceOf(ActionsFactory.Factory.class, container.get(ActionsFactory.Factory.class));
         assertInstanceOf(FightActionsFactoryRegistry.class, container.get(ActionsFactory.Factory.class).createForFight(null));

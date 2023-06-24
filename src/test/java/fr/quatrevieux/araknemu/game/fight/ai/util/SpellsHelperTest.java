@@ -95,8 +95,8 @@ class SpellsHelperTest extends AiBaseCase {
             .addEnemy(b -> b.cell(125))
         );
 
-        assertNotNull(helper().caster(new SpellConstraintsValidator()));
-        assertNotSame(helper().caster(new SpellConstraintsValidator()), helper().caster(new SpellConstraintsValidator()));
+        assertNotNull(helper().caster(new SpellConstraintsValidator(fight)));
+        assertNotSame(helper().caster(new SpellConstraintsValidator(fight)), helper().caster(new SpellConstraintsValidator(fight)));
     }
 
     private SpellsHelper helper() {

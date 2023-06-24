@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
@@ -32,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,8 +53,14 @@ class FightActionsFactoryRegistryTest extends FightBaseCase {
         fighter = player.fighter();
         factory = new FightActionsFactoryRegistry(
             container.get(fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class),
-            container.get(CastFactory.class),
-            container.get(CloseCombatFactory.class)
+            new CastFactory(
+                new SpellConstraintsValidator(fight),
+                container.get(CriticalityStrategy.class)
+            ),
+            new CloseCombatFactory(
+                new WeaponConstraintsValidator(fight),
+                container.get(CriticalityStrategy.class)
+            )
         );
     }
 

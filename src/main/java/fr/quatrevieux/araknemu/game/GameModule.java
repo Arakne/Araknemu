@@ -617,27 +617,17 @@ public final class GameModule implements ContainerModule {
         );
 
         configurator.persist(
-            CastFactory.class,
-            container -> new CastFactory(
-                new SpellConstraintsValidator(),
-                container.get(CriticalityStrategy.class)
-            )
-        );
-
-        configurator.persist(
-            CloseCombatFactory.class,
-            container -> new CloseCombatFactory(
-                new WeaponConstraintsValidator(),
-                container.get(CriticalityStrategy.class)
-            )
-        );
-
-        configurator.persist(
             ActionsFactory.Factory.class,
             container -> fight -> new FightActionsFactoryRegistry(
                 container.get(fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class),
-                container.get(CastFactory.class),
-                container.get(CloseCombatFactory.class)
+                new CastFactory(
+                    new SpellConstraintsValidator(fight),
+                    container.get(CriticalityStrategy.class)
+                ),
+                new CloseCombatFactory(
+                    new WeaponConstraintsValidator(fight),
+                    container.get(CriticalityStrategy.class)
+                )
             )
         );
 

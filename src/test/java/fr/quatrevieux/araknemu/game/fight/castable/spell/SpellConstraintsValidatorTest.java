@@ -56,7 +56,7 @@ class SpellConstraintsValidatorTest extends FightBaseCase {
 
         fighter.move(fight.map().get(185));
 
-        validator = new SpellConstraintsValidator();
+        validator = new SpellConstraintsValidator(fight);
     }
 
     @Test

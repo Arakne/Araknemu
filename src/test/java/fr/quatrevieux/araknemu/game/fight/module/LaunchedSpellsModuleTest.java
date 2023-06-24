@@ -59,7 +59,7 @@ class LaunchedSpellsModuleTest extends FightBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(6),
             player.fighter().cell(),
-            new SpellConstraintsValidator(),
+            new SpellConstraintsValidator(fight),
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
