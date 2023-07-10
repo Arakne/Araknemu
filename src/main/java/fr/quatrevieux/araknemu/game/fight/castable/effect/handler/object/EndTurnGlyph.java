@@ -27,9 +27,9 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
- * Glyph object, created by {@link AddGlyphHandler}
+ * Glyph object which is triggered at end of turn, created by {@link AddEndTurnGlyphHandler}
  */
-final class Glyph extends AbstractGlyph {
+final class EndTurnGlyph extends AbstractGlyph {
     /**
      * @param fight The current fight
      * @param cell The cell where the glyph is
@@ -39,12 +39,12 @@ final class Glyph extends AbstractGlyph {
      * @param remainingTurns The remaining turns of the glyph. -1 for infinite.
      * @param spell The spell that is applied when a fighter is on the glyph at the start of his turn
      */
-    public Glyph(Fight fight, FightCell cell, Fighter caster, @NonNegative int size, int color, @GTENegativeOne int remainingTurns, Spell spell) {
+    public EndTurnGlyph(Fight fight, FightCell cell, Fighter caster, @NonNegative int size, int color, @GTENegativeOne int remainingTurns, Spell spell) {
         super(fight, cell, caster, size, color, remainingTurns, spell);
     }
 
     @Override
-    public void onStartTurnInArea(Fighter fighter) {
+    public void onEndTurnInArea(Fighter fighter) {
         trigger(fighter);
     }
 }

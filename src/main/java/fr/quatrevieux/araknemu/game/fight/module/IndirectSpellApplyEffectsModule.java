@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ApplySpellOnStartTurnHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object.AddEndTurnGlyphHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object.AddGlyphHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.object.AddTrapHandler;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
@@ -48,8 +49,9 @@ public final class IndirectSpellApplyEffectsModule implements FightModule {
     @Override
     public void effects(EffectsHandler handler) {
         handler.register(787, new ApplySpellOnStartTurnHandler(fight, spellService));
-        handler.register(401, new AddGlyphHandler(fight, spellService));
         handler.register(400, new AddTrapHandler(fight, spellService));
+        handler.register(401, new AddGlyphHandler(fight, spellService));
+        handler.register(402, new AddEndTurnGlyphHandler(fight, spellService));
     }
 
     @Override

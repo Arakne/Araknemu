@@ -85,6 +85,13 @@ public interface BattlefieldObject {
     public default void onStartTurnInArea(Fighter fighter) {}
 
     /**
+     * The given fighter has ended his turn in the area of the object
+     *
+     * @see BattlefieldObjects#onEndTurn(Fighter) Called by this method
+     */
+    public default void onEndTurnInArea(Fighter fighter) {}
+
+    /**
      * The given fighter has moved into the area of the object
      *
      * A move can be:

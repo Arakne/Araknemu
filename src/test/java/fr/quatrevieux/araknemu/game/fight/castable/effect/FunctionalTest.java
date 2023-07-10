@@ -1277,6 +1277,36 @@ public class FunctionalTest extends FightBaseCase {
     }
 
     @Test
+    void endTurnGlyph() {
+        castNormal(476, 1, fighter2.cell()); // Blyphe
+
+        BattlefieldObject glyph = fight.map().objects().stream().findFirst().get();
+
+        assertNotNull(glyph);
+        assertEquals(170, glyph.cell().id());
+        assertEquals(fighter1, glyph.caster());
+        assertEquals(0, glyph.size());
+        requestStack.assertOne(ActionEffect.packet(fighter1, new AddZones(glyph)));
+        requestStack.clear();
+
+        fighter1.turn().stop();
+        fighter2.turn().stop();
+        requestStack.assertOne(new ActionEffect(307, fighter2, 349, 170, 0, 4, 0, fighter1.id()));
+        int currentLife = fighter2.life().current();
+        assertEquals(11, 20, fighter2.life().max() - currentLife);
+
+        assertTrue(fight.map().objects().stream().findFirst().isPresent());
+        assertTrue(fighter1.life().isFull());
+        fighter1.turn().stop();
+
+        fighter2.move(fight.map().get(186)); // Move out of glyph
+        fighter2.turn().stop();
+        assertEquals(currentLife, fighter2.life().current()); // No damage
+        assertFalse(fight.map().objects().stream().findFirst().isPresent());
+        requestStack.assertOne("GDZ-170;0;0");
+    }
+
+    @Test
     void glyphShouldDisappearOnCasterDie() {
         List<Fighter> fighters = configureFight(builder -> builder
             .addSelf(fb -> fb.cell(185).charac(Characteristic.INTELLIGENCE, 100))
@@ -1653,8 +1683,12 @@ public class FunctionalTest extends FightBaseCase {
     }
 
     private Spell castNormal(int spellId, FightCell target) {
+        return castNormal(spellId, 5, target);
+    }
+
+    private Spell castNormal(int spellId, int level, FightCell target) {
         FightTurn currentTurn = fight.turnList().current().get();
-        Spell spell = service.get(spellId).level(5);
+        Spell spell = service.get(spellId).level(level);
 
         currentTurn.perform(new Cast(
             currentTurn.fighter(),
