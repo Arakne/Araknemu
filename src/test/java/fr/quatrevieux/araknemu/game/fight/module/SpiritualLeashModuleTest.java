@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.module;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.StaticInvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -130,6 +132,30 @@ class SpiritualLeashModuleTest extends FightBaseCase {
 
         assertFalse(module.hasDeadFighter(player.fighter().team()));
         assertNull(module.getLastDeadFighter(player.fighter().team()));
+    }
+
+    @Test
+    void shouldIgnoreStaticCreature() throws SQLException {
+        dataSet
+            .pushMonsterSpellsInvocations()
+            .pushMonsterTemplateInvocations()
+        ;
+
+        StaticInvocationFighter fighter = new StaticInvocationFighter(
+            -42,
+            container.get(MonsterService.class).load(282).get(5),
+            player.fighter().team(),
+            player.fighter()
+        );
+        fight.fighters().join(fighter, fight.map().get(124));
+        fighter.init();
+
+        fighter.life().kill(fighter);
+
+        assertFalse(module.hasDeadFighter(player.fighter().team()));
+        assertNull(module.getLastDeadFighter(player.fighter().team()));
+
+        fight.fighters().leave(fighter); // should not throw any exception
     }
 
     @Test

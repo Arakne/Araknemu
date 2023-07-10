@@ -120,6 +120,24 @@ class InvokeLastDeadFighterHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void handleWithoutDeadFighterShouldIgnore() throws SQLException {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.min()).thenReturn(25);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(true);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(123));
+        handler.handle(scope, scope.effects().get(0));
+
+        requestStack.assertEmpty();
+    }
+
+    @Test
     void handleShouldGiveAtLeast1LifePoint() throws SQLException {
         PlayerFighter dead = makePlayerFighter(makeSimpleGamePlayer(40));
         dead.setTeam(player.fighter().team());
