@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
@@ -82,6 +83,15 @@ public final class PlayerFighterLife implements FighterLife {
         }
 
         delegate.kill(caster);
+    }
+
+    @Override
+    public void resuscitate(Fighter caster, @Positive int value) {
+        if (delegate == null) {
+            throw new IllegalStateException("PlayerFighterLife must be initialized");
+        }
+
+        delegate.resuscitate(caster, value);
     }
 
     /**

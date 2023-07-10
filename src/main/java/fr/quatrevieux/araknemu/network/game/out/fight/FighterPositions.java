@@ -44,7 +44,9 @@ public final class FighterPositions {
         final StringBuilder sb = new StringBuilder("GIC");
 
         for (FighterData fighter : fighters) {
-            sb.append('|').append(fighter.id()).append(';').append(fighter.cell().id());
+            if (!fighter.dead()) {
+                sb.append('|').append(fighter.id()).append(';').append(fighter.cell().id());
+            }
         }
 
         return sb.toString();

@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Create a double of a fighter as invocation
@@ -41,7 +42,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public final class DoubleFighter extends AbstractPlayableFighter {
     private final int id;
-    private final Fighter invoker;
     private final FightTeam team;
     private final BaseFighterLife life;
     private final FighterCharacteristics characteristics;
@@ -50,12 +50,13 @@ public final class DoubleFighter extends AbstractPlayableFighter {
     @SuppressWarnings({"assignment", "argument"})
     public DoubleFighter(int id, Fighter invoker) {
         this.id = id;
-        this.invoker = invoker;
         this.team = invoker.team();
 
         this.life = new BaseFighterLife(this, invoker.life().current(), invoker.life().max());
         this.characteristics = new DoubleFighterCharacteristics(this, invoker);
         this.sprite = invoker.sprite().withFighter(this);
+
+        setInvoker(invoker);
     }
 
     @Override
@@ -67,7 +68,7 @@ public final class DoubleFighter extends AbstractPlayableFighter {
 
     @Override
     public @Positive int level() {
-        return invoker.level();
+        return invoker().level();
     }
 
     @Override
@@ -111,7 +112,12 @@ public final class DoubleFighter extends AbstractPlayableFighter {
     }
 
     @Override
+    public boolean invoked() {
+        return true;
+    }
+
+    @Override
     public @NonNull FighterData invoker() {
-        return invoker;
+        return NullnessUtil.castNonNull(super.invoker());
     }
 }

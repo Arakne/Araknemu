@@ -141,4 +141,9 @@ public final class ProxyPassiveFighter implements FighterData {
     public @Nullable FighterData invoker() {
         return fighter.invoker();
     }
+
+    @Override
+    public boolean invoked() {
+        return fighter.invoked();
+    }
 }

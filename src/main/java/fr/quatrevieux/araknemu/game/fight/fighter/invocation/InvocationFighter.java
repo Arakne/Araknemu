@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
@@ -35,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Fighter for invoked monster
@@ -48,19 +50,19 @@ public final class InvocationFighter extends AbstractPlayableFighter {
     private final FighterCharacteristics characteristics;
     private final MonsterFighterSprite sprite;
     private final FighterSpellList spells;
-    private final FighterData invoker;
 
     @SuppressWarnings({"assignment", "argument"})
-    public InvocationFighter(int id, Monster monster, FightTeam team, FighterData invoker) {
+    public InvocationFighter(int id, Monster monster, FightTeam team, Fighter invoker) {
         this.id = id;
         this.monster = monster;
         this.team = team;
-        this.invoker = invoker;
 
         this.life = new BaseFighterLife(this, Math.round(monster.life() * InvocationFighterCharacteristics.modifier(invoker)));
         this.characteristics = new InvocationFighterCharacteristics(monster, this, invoker);
         this.sprite = new MonsterFighterSprite(this, monster);
         this.spells = new BaseFighterSpellList(monster.spells());
+
+        setInvoker(invoker);
     }
 
     @Override
@@ -117,7 +119,12 @@ public final class InvocationFighter extends AbstractPlayableFighter {
 
     @Override
     public @NonNull FighterData invoker() {
-        return invoker;
+        return NullnessUtil.castNonNull(super.invoker());
+    }
+
+    @Override
+    public boolean invoked() {
+        return true;
     }
 
     /**

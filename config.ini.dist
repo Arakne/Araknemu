@@ -100,7 +100,7 @@ game.dbname = araknemu
 ; > The listened port for game server. Default 5555
 ;server.port = 5555
 ; > Get the server IP address. Default 127.0.0.1
-;server.port = 127.0.0.1
+;server.ip = 127.0.0.1
 
 
 ; Antispam & other

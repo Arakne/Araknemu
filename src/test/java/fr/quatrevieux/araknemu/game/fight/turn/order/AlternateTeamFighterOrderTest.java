@@ -301,6 +301,15 @@ class AlternateTeamFighterOrderTest extends TestCase {
             return null;
         }
 
+        @Override
+        public boolean invoked() {
+            return false;
+        }
+
+        @Override
+        public void setInvoker(Fighter invoker) {
+
+        }
     }
 
     @Test

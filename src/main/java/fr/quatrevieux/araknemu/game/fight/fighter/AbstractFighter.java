@@ -52,6 +52,7 @@ public abstract class AbstractFighter implements Fighter {
     private @MonotonicNonNull Fight fight;
     private Direction orientation = Direction.SOUTH_EAST;
     private boolean hidden = false;
+    private @Nullable Fighter invoker = null;
 
     @Override
     public void init() {
@@ -149,7 +150,7 @@ public abstract class AbstractFighter implements Fighter {
 
     @Override
     public final boolean isOnFight() {
-        return fight != null && cell != null;
+        return fight != null;
     }
 
     @Override
@@ -168,6 +169,16 @@ public abstract class AbstractFighter implements Fighter {
         if (fight != null) {
             fight.dispatch(hidden ? new FighterHidden(this, caster) : new FighterVisible(this, caster));
         }
+    }
+
+    @Override
+    public final void setInvoker(Fighter invoker) {
+        this.invoker = invoker;
+    }
+
+    @Override
+    public @Nullable FighterData invoker() {
+        return invoker;
     }
 
     @Override

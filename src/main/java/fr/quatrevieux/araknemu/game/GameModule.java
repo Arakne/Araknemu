@@ -175,6 +175,7 @@ import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
+import fr.quatrevieux.araknemu.game.fight.module.SpiritualLeashModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
@@ -666,7 +667,8 @@ public final class GameModule implements ContainerModule {
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class)),
-                    fight -> new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight)
+                    fight -> new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight),
+                    SpiritualLeashModule::new
                 ),
                 container.get(FightService.FightFactory.class),
                 container.get(GameConfiguration.class).fight()

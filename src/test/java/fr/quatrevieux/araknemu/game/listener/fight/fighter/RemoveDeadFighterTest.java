@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,17 +52,21 @@ class RemoveDeadFighterTest extends FightBaseCase {
 
     @Test
     void onFighterDieNotCurrentTurn() {
+        FightCell cell = other.fighter().cell();
         listener.on(new FighterDie(other.fighter(), other.fighter()));
 
-        assertFalse(other.fighter().cell().hasFighter());
+        assertFalse(cell.hasFighter());
+        assertThrows(IllegalStateException.class, () -> other.fighter().cell());
     }
 
     @Test
     void onFighterDieCurrentTurn() {
+        FightCell cell = player.fighter().cell();
+
         player.fighter().life().alter(player.fighter(), -1000);
         listener.on(new FighterDie(player.fighter(), player.fighter()));
 
-        assertFalse(player.fighter().cell().hasFighter());
+        assertFalse(cell.hasFighter());
         assertThrows(FightException.class, () -> player.fighter().turn());
         assertFalse(fight.turnList().current().get().active());
     }

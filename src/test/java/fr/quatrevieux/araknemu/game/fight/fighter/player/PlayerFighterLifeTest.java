@@ -78,6 +78,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertThrows(IllegalStateException.class, () -> life.alter(fighter, -10));
         assertThrows(IllegalStateException.class, () -> life.kill(fighter));
         assertThrows(IllegalStateException.class, () -> life.alterMax(fighter, 10));
+        assertThrows(IllegalStateException.class, () -> life.resuscitate(fighter, 10));
     }
 
     @Test
@@ -248,5 +249,19 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertSame(caster, ref.get().caster());
         assertSame(fighter, ref.get().fighter());
         assertTrue(life.dead());
+    }
+
+    @Test
+    void resuscitate() throws SQLException {
+        life.init();
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        life.kill(caster);
+        life.resuscitate(caster, 50);
+
+        assertEquals(50, life.current());
+        assertEquals(gamePlayer().properties().life().max(), life.max());
+        assertFalse(life.dead());
     }
 }

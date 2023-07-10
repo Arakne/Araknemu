@@ -45,7 +45,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' verify
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: target/site/jacoco/jacoco.xml

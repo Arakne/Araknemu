@@ -132,7 +132,7 @@ public interface Fighter extends Dispatcher, ActiveFighter {
     public boolean ready();
 
     /**
-     * Check if the fighter is on the fight (The fight is set and is on a cell)
+     * Check if the fighter is on the fight (i.e. The fight is set)
      */
     public boolean isOnFight();
 
@@ -157,4 +157,16 @@ public interface Fighter extends Dispatcher, ActiveFighter {
     public default boolean isTeamLeader() {
         return equals(team().leader());
     }
+
+    /**
+     * Change the invoker of the fighter
+     * So, {@code fighter.setInvoker(other); fighter.invoker() == other} will be true
+     *
+     * Note: the return value of {@link #invoked()} should not change after this method call
+     *
+     * @param invoker The new invoker
+     *
+     * @see #invoker() For get the invoker
+     */
+    public void setInvoker(Fighter invoker);
 }

@@ -36,8 +36,10 @@ import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.DispelDeadFighterBuff;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.KillInvocationsOnInvokerDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadInvocationFromTurnList;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterHidden;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
@@ -153,6 +155,8 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFighterMaxLifeChanged.class));
         assertTrue(fight.dispatcher().has(SendFighterVisible.class));
         assertTrue(fight.dispatcher().has(SendFighterHidden.class));
+        assertTrue(fight.dispatcher().has(RemoveDeadInvocationFromTurnList.class));
+        assertTrue(fight.dispatcher().has(KillInvocationsOnInvokerDie.class));
 
         Thread.sleep(210); // Wait for start turn
 
@@ -188,6 +192,8 @@ class ActiveStateTest extends GameBaseCase {
         assertFalse(fight.dispatcher().has(SendFighterMaxLifeChanged.class));
         assertFalse(fight.dispatcher().has(SendFighterVisible.class));
         assertFalse(fight.dispatcher().has(SendFighterHidden.class));
+        assertFalse(fight.dispatcher().has(RemoveDeadInvocationFromTurnList.class));
+        assertFalse(fight.dispatcher().has(KillInvocationsOnInvokerDie.class));
 
         assertFalse(fight.turnList().current().isPresent());
         assertFalse(fight.active());
@@ -236,7 +242,7 @@ class ActiveStateTest extends GameBaseCase {
         state.leave(mutineer);
 
         assertTrue(fight.active());
-        assertFalse(mutineer.cell().hasFighter());
+        assertFalse(fight.map().get(222).hasFighter());
         assertTrue(mutineer.dead());
         assertFalse(fight.team(0).fighters().contains(mutineer));
         assertFalse(fight.fighters().all().contains(mutineer));

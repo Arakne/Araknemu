@@ -67,9 +67,9 @@
             <version>0.5.4</version>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.1.4</version>
         </dependency>
         <dependency>
             <groupId>org.xerial</groupId>
@@ -99,12 +99,12 @@
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-            <version>3.21.2</version> <!-- TODO property -->
+            <version>3.34.0</version> <!-- TODO property -->
         </dependency>
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-util</artifactId>
-            <version>3.21.2</version>
+            <version>3.34.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.errorprone</groupId>

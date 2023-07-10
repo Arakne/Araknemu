@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
@@ -40,7 +39,6 @@ import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Fighter for a player
@@ -196,7 +194,8 @@ public final class PlayerFighter extends AbstractPlayableFighter implements Play
         fight().dispatch(new FighterReadyStateChanged(this));
     }
 
-    public @Nullable FighterData invoker() {
-        return null;
+    @Override
+    public boolean invoked() {
+        return false;
     }
 }

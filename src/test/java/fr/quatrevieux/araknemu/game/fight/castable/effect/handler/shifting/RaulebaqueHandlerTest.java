@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RaulebaqueHandlerTest extends FightBaseCase {
@@ -143,7 +144,8 @@ class RaulebaqueHandlerTest extends FightBaseCase {
         requestStack.assertLast(new FighterPositions(fight.fighters()));
 
         assertEquals(123, caster.cell().id());
-        assertEquals(124, other.fighter().cell().id());
+        assertThrows(IllegalStateException.class, other.fighter()::cell);
+        assertFalse(fight.map().get(124).hasFighter());
     }
 
     @Test
