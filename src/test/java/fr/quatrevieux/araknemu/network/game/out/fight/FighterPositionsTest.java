@@ -19,21 +19,18 @@
 
 package fr.quatrevieux.araknemu.network.game.out.fight;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FighterPositionsTest extends GameBaseCase {
+class FighterPositionsTest extends FightBaseCase {
     private List<Fighter> fighters;
 
     @Override
@@ -47,23 +44,29 @@ class FighterPositionsTest extends GameBaseCase {
             .pushAreas()
         ;
 
-        fighters = Arrays.asList(
-            new PlayerFighter(gamePlayer(true)),
-            new PlayerFighter(makeOtherPlayer())
-        );
+        Fight fight = createFight(true);
+        fight.nextState();
 
-        FightMap map = container.get(FightService.class).map(
-            container.get(ExplorationMapService.class).load(10340)
-        );
+        fighters = new ArrayList<>(fight.fighters().all());
 
-        fighters.get(0).move(map.get(123));
-        fighters.get(1).move(map.get(321));
+        fighters.get(0).move(fight.map().get(123));
+        fighters.get(1).move(fight.map().get(321));
     }
 
     @Test
     void generate() {
         assertEquals(
             "GIC|" + fighters.get(0).id() + ";123|" + fighters.get(1).id() + ";321",
+            new FighterPositions(fighters).toString()
+        );
+    }
+
+    @Test
+    void generateShouldFilterDeadFighters() {
+        fighters.get(1).life().kill(fighters.get(1));
+
+        assertEquals(
+            "GIC|" + fighters.get(0).id() + ";123",
             new FighterPositions(fighters).toString()
         );
     }

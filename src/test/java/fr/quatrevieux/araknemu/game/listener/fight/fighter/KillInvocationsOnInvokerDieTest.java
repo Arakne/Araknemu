@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2022 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.module;
+package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MonsterInvocationModuleTest extends FightBaseCase {
+class KillInvocationsOnInvokerDieTest extends FightBaseCase {
     private MonsterService monsterService;
 
     @Override
@@ -58,9 +58,10 @@ class MonsterInvocationModuleTest extends FightBaseCase {
 
         Fight fight = builder.build(true);
 
-        fight.register(new MonsterInvocationModule(monsterService, container.get(FighterFactory.class), fight));
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
+
+        KillInvocationsOnInvokerDie listener = new KillInvocationsOnInvokerDie(fight);
 
         InvocationFighter invoc1 = new InvocationFighter(-5, monsterService.load(36).get(2), player.fighter().team(), player.fighter());
         InvocationFighter invoc2 = new InvocationFighter(-6, monsterService.load(36).get(2), player.fighter().team(), player.fighter());
@@ -74,7 +75,7 @@ class MonsterInvocationModuleTest extends FightBaseCase {
         invoc2.init();
         invoc3.init();
 
-        player.fighter().life().kill(player.fighter());
+        listener.on(new FighterDie(player.fighter(), player.fighter()));
 
         assertTrue(invoc1.dead());
         assertTrue(invoc2.dead());
@@ -90,61 +91,5 @@ class MonsterInvocationModuleTest extends FightBaseCase {
         assertTrue(fight.map().get(125).hasFighter());
         assertTrue(fight.turnList().fighters().contains(invoc3));
         assertTrue(fight.fighters().all().contains(invoc3));
-    }
-
-    @Test
-    void onFighterDieInvocationShouldBeRemovedFromTurnList() throws Exception {
-        Fight fight = createFight(true);
-
-        fight.register(new MonsterInvocationModule(monsterService, container.get(FighterFactory.class), fight));
-        fight.state(PlacementState.class).startFight();
-        fight.turnList().start();
-
-        InvocationFighter invoc = new InvocationFighter(-5, monsterService.load(36).get(2), player.fighter().team(), player.fighter());
-        invoc.joinFight(fight, fight.map().get(123));
-        fight.turnList().add(invoc);
-        invoc.init();
-
-        invoc.life().kill(player.fighter());
-
-        assertTrue(invoc.dead());
-        assertFalse(fight.map().get(123).hasFighter());
-        assertFalse(fight.turnList().fighters().contains(invoc));
-        assertFalse(fight.fighters().all().contains(invoc));
-    }
-
-    @Test
-    void onFighterDieStaticInvocationShouldBeRemovedFromFight() throws Exception {
-        Fight fight = createFight(true);
-
-        fight.register(new MonsterInvocationModule(monsterService, container.get(FighterFactory.class), fight));
-        fight.state(PlacementState.class).startFight();
-        fight.turnList().start();
-
-        InvocationFighter invoc = new InvocationFighter(-5, monsterService.load(36).get(2), player.fighter().team(), player.fighter());
-        invoc.joinFight(fight, fight.map().get(123));
-        invoc.init();
-
-        invoc.life().kill(player.fighter());
-
-        assertTrue(invoc.dead());
-        assertFalse(fight.map().get(123).hasFighter());
-        assertFalse(fight.fighters().all().contains(invoc));
-    }
-
-    @Test
-    void onFighterDieWithEndFightShouldNotCauseConcurrentModification() throws Exception {
-        Fight fight = createFight(true);
-
-        fight.register(new MonsterInvocationModule(monsterService, container.get(FighterFactory.class), fight));
-        fight.state(PlacementState.class).startFight();
-        fight.turnList().start();
-
-        InvocationFighter invoc = new InvocationFighter(-5, monsterService.load(36).get(2), player.fighter().team(), player.fighter());
-        invoc.joinFight(fight, fight.map().get(123));
-        fight.turnList().add(invoc);
-        invoc.init();
-
-        player.fighter().life().kill(player.fighter());
     }
 }

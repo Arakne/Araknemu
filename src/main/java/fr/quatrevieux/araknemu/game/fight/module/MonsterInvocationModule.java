@@ -25,13 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.CreateDoubleHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.MonsterInvocationHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.StaticInvocationHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Module for enable invocation effects
@@ -59,33 +54,6 @@ public final class MonsterInvocationModule implements FightModule {
 
     @Override
     public Listener[] listeners() {
-        return new Listener[] {
-            new Listener<FighterDie>() {
-                @Override
-                public void on(FighterDie event) {
-                    // Remove all invocations of the fighter
-                    // Make a copy to ensure that no concurrent modification occur
-                    final List<Fighter> invocations = fight.fighters().stream()
-                        .filter(fighter -> event.fighter().equals(fighter.invoker()))
-                        .collect(Collectors.toList())
-                    ;
-
-                    if (!invocations.isEmpty()) {
-                        // Kill all invocations asynchronously
-                        fight.execute(() -> invocations.forEach(fighter -> fighter.life().kill(event.caster())));
-                    }
-
-                    // If the creature is an invocation, delete from turn list
-                    if (event.fighter().invoked()) {
-                        fight.fighters().leave(event.fighter());
-                    }
-                }
-
-                @Override
-                public Class<FighterDie> event() {
-                    return FighterDie.class;
-                }
-            },
-        };
+        return new Listener[0];
     }
 }

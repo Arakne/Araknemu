@@ -31,8 +31,10 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.DispelDeadFighterBuff;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.KillInvocationsOnInvokerDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadInvocationFromTurnList;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterHidden;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
@@ -107,6 +109,8 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
             new RefreshBuffs(),
             new SendFighterHidden(fight),
             new SendFighterVisible(fight),
+            new RemoveDeadInvocationFromTurnList(fight),
+            new KillInvocationsOnInvokerDie(fight),
         };
     }
 

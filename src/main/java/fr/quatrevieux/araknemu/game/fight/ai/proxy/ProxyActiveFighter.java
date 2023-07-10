@@ -176,4 +176,9 @@ public final class ProxyActiveFighter implements ActiveFighter {
     public @Nullable FighterData invoker() {
         return fighter.invoker();
     }
+
+    @Override
+    public boolean invoked() {
+        return fighter.invoked();
+    }
 }

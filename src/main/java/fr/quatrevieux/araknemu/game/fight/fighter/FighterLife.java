@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.world.creature.Life;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Handle the fighter life
@@ -58,4 +59,14 @@ public interface FighterLife extends Life {
      * Kill the fighter
      */
     public void kill(Fighter caster);
+
+    /**
+     * Resuscitate the fighter
+     *
+     * If the fighter is already alive, this method will do nothing
+     *
+     * @param caster The fighter who try to resuscitate the current one
+     * @param value The new life points value. This value will be bounded to the max life points.
+     */
+    public void resuscitate(Fighter caster, @Positive int value);
 }

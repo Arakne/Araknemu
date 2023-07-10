@@ -19,14 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -50,10 +47,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 abstract class AbstractInvocationHandler implements EffectHandler {
     private final FighterFactory fighterFactory;
     private final Fight fight;
+    private final InvocationCountValidator validator;
 
     public AbstractInvocationHandler(FighterFactory fighterFactory, Fight fight) {
         this.fighterFactory = fighterFactory;
         this.fight = fight;
+        this.validator = new InvocationCountValidator(fight);
     }
 
     @Override
@@ -79,24 +78,13 @@ abstract class AbstractInvocationHandler implements EffectHandler {
 
     protected abstract ActionEffect createPacket(Fighter invoker, PlayableFighter invocation);
 
-    private int max(FighterData fighter) {
-        return fighter.characteristics().get(Characteristic.MAX_SUMMONED_CREATURES);
-    }
-
     @Override
     public final boolean check(Turn turn, Castable castable, BattlefieldCell target) {
-        final ActiveFighter fighter = turn.fighter();
-        final int max = max(fighter);
-        final int actual = (int) fight.turnList().fighters().stream() // Iterate only on active fighters (i.e. in turn list)
-            .filter(other -> fighter.equals(other.invoker()))
-            .count()
-        ;
-
-        return max > actual;
+        return validator.check(turn, castable, target);
     }
 
     @Override
     public final @Nullable Error validate(Turn turn, Castable castable, BattlefieldCell target) {
-        return check(turn, castable, target) ? null : Error.cantCastMaxSummonedCreaturesReached(max(turn.fighter()));
+        return validator.validate(turn, castable, target);
     }
 }

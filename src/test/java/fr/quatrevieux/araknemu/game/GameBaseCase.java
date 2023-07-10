@@ -209,6 +209,12 @@ public class GameBaseCase extends DatabaseTestCase {
 
             Assertions.fail("Cannot find packet " + packet + "\nAvailable packets : " + channel.getMessages());
         }
+
+        public void dump() {
+            for (Object message : channel.getMessages()) {
+                System.out.println("[" + message.getClass().getSimpleName() + "] " + message);
+            }
+        }
     }
 
     static public class ConnectorModule implements ContainerModule {

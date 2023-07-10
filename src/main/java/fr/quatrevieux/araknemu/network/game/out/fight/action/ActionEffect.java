@@ -23,7 +23,10 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
 
 /**
  * Effect of a fight action
@@ -373,6 +376,35 @@ public final class ActionEffect {
      */
     public static ActionEffect addStaticInvocation(FighterData caster, FighterData invocation) {
         return new ActionEffect(185, caster, "+" + invocation.sprite());
+    }
+
+    /**
+     * Add a fighter to the fight
+     * This packet should be used in case of resurrection, to ensure that the client will take this fighter in account
+     *
+     * The sent packet is different if the fighter is an invocation or not
+     *
+     * @param caster The caster of the spell
+     * @param fighter The fighter to add
+     */
+    public static ActionEffect addFighter(FighterData caster, FighterData fighter) {
+        if (fighter.invoked()) {
+            return new ActionEffect(147, caster, "+" + fighter.sprite());
+        } else {
+            return ActionEffect.packet(caster, new AddSprites(Collections.singletonList(fighter.sprite())));
+        }
+    }
+
+    /**
+     * Resurrect a fighter as an invocation
+     *
+     * Note: the client will not add the fighter to the fight, you should use {@link #addFighter(FighterData, FighterData)}
+     *
+     * @param caster The caster of the spell
+     * @param fighter The resurrected fighter
+     */
+    public static ActionEffect invokeDeadFighter(FighterData caster, FighterData fighter) {
+        return new ActionEffect(780, caster, "+" + fighter.sprite().toString());
     }
 
     /**

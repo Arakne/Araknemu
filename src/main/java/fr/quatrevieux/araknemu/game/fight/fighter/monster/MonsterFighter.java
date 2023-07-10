@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
@@ -34,7 +33,6 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import org.checkerframework.checker.index.qual.Positive;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Fighter for a monster
@@ -130,7 +128,7 @@ public final class MonsterFighter extends AbstractPlayableFighter {
     }
 
     @Override
-    public @Nullable FighterData invoker() {
-        return null;
+    public boolean invoked() {
+        return false;
     }
 }

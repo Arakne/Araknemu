@@ -14,35 +14,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 /**
- * Remove the dead fighter from fight
+ * Remove active invocations from turn list when they die
  */
-public final class RemoveDeadFighter implements Listener<FighterDie> {
+public final class RemoveDeadInvocationFromTurnList implements Listener<FighterDie> {
     private final Fight fight;
 
-    public RemoveDeadFighter(Fight fight) {
+    public RemoveDeadInvocationFromTurnList(Fight fight) {
         this.fight = fight;
     }
 
     @Override
     public void on(FighterDie event) {
-        event.fighter().move(null);
+        final Fighter fighter = event.fighter();
 
-        // Stop turn if it's the playing fighter
-        fight.turnList().current()
-            .filter(turn -> turn.fighter().equals(event.fighter()))
-            .ifPresent(FightTurn::stop)
-        ;
+        if (fighter.invoked() && fighter instanceof PlayableFighter) {
+            fight.turnList().remove((PlayableFighter) fighter);
+        }
     }
 
     @Override

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Handle life points for fighters
@@ -112,5 +113,15 @@ public final class BaseFighterLife implements FighterLife {
         current = 0;
         dead = true;
         fighter.fight().dispatch(new FighterDie(fighter, caster));
+    }
+
+    @Override
+    public void resuscitate(Fighter caster, @Positive int value) {
+        if (!dead) {
+            return;
+        }
+
+        current = Math.min(value, max);
+        dead = false;
     }
 }

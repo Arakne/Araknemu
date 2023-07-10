@@ -339,4 +339,35 @@ class BaseFighterLifeTest extends FightBaseCase {
 
         assertNull(ref.get());
     }
+
+    @Test
+    void resuscitateNotDeadShouldDoNothing() {
+        life.resuscitate(fighter, 10);
+
+        assertEquals(100, life.current());
+        assertEquals(100, life.max());
+        assertFalse(life.dead());
+    }
+
+    @Test
+    void resuscitateSuccessShouldSetCurrentLife() {
+        life.kill(fighter);
+
+        life.resuscitate(fighter, 10);
+
+        assertEquals(10, life.current());
+        assertEquals(100, life.max());
+        assertFalse(life.dead());
+    }
+
+    @Test
+    void resuscitateWithHigherThanMaxLifeShouldBeBoundedToMax() {
+        life.kill(fighter);
+
+        life.resuscitate(fighter, 10000);
+
+        assertEquals(100, life.current());
+        assertEquals(100, life.max());
+        assertFalse(life.dead());
+    }
 }

@@ -48,6 +48,6 @@ public final class MySQLDriver implements Driver {
     }
 
     private String jdbcUrl() {
-        return "jdbc:mysql://" + configuration.host() + "/" + configuration.dbname() + "?useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true";
+        return "jdbc:mariadb://" + configuration.host() + "/" + configuration.dbname() + "?useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true";
     }
 }

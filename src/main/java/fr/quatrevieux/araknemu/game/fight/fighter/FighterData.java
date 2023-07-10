@@ -100,9 +100,10 @@ public interface FighterData extends Creature<BattlefieldCell> {
 
     /**
      * Does the current fighter is an invocation ?
-     * This is equivalent with {@code fighter.invoker() != null}
+     * If this value is true, {@link #invoker()} will return a non null value
+     *
+     * Note: the fighter may have an invoker (i.e. {@link #invoker()} is not null) but this value is false.
+     *       in this case, the fighter has not been invoked initially but has been summoned by another fighter (e.g. spiritual leash)
      */
-    public default boolean invoked() {
-        return invoker() != null;
-    }
+    public boolean invoked();
 }

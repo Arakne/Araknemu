@@ -249,4 +249,18 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertSame(fighter, ref.get().fighter());
         assertTrue(life.dead());
     }
+
+    @Test
+    void resuscitate() throws SQLException {
+        life.init();
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        life.kill(caster);
+        life.resuscitate(caster, 50);
+
+        assertEquals(50, life.current());
+        assertEquals(gamePlayer().properties().life().max(), life.max());
+        assertFalse(life.dead());
+    }
 }

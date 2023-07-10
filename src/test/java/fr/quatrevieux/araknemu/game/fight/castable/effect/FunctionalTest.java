@@ -41,6 +41,7 @@ import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
+import fr.quatrevieux.araknemu.game.fight.module.SpiritualLeashModule;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
@@ -56,6 +57,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones;
 import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.RemoveZone;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
+import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,6 +98,7 @@ public class FunctionalTest extends FightBaseCase {
         fight.register(new CommonEffectsModule(fight));
         fight.register(new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)));
         fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
+        fight.register(new SpiritualLeashModule(fight));
         fight.register(new AiModule(container.get(AiFactory.class)));
 
         fighter1 = player.fighter();
@@ -1484,6 +1487,143 @@ public class FunctionalTest extends FightBaseCase {
 
         assertThrows(FightException.class, () -> castNormal(74, fight.map().get(200)));
         requestStack.assertLast(Error.cantCastMaxSummonedCreaturesReached(1));
+    }
+
+    @Test
+    void invocLastDeadFighterWithPlayerFighter() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(221))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new SpiritualLeashModule(fight));
+
+        Fighter ally = fight.map().get(221).fighter();
+        ally.life().kill(ally);
+        requestStack.clear();
+
+        castNormal(420, fight.map().get(200)); // Laisse spirituelle
+
+        assertFalse(ally.dead());
+        assertEquals(50, ally.life().current());
+        assertEquals(200, ally.cell().id());
+        assertSame(ally, fight.map().get(200).fighter());
+        assertSame(player.fighter(), ally.invoker());
+
+        requestStack.assertOne(new ActionEffect(780, fighter1, "+" + ally.sprite()));
+        requestStack.assertOne(ActionEffect.packet(fighter1, new AddSprites(Collections.singletonList(ally.sprite()))));
+    }
+
+    @Test
+    void invocLastDeadFighterWithInvocation() throws SQLException {
+        fighter1.turn().points().addActionPoints(10);
+
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        castNormal(35, fight.map().get(199)); // Invocation de Bouftou
+
+        Fighter invoc = fight.map().get(199).fighter();
+        invoc.life().kill(invoc);
+        requestStack.clear();
+
+        castNormal(420, fight.map().get(200)); // Laisse spirituelle
+
+        assertFalse(invoc.dead());
+        assertEquals(52, invoc.life().current());
+        assertEquals(200, invoc.cell().id());
+        assertSame(invoc, fight.map().get(200).fighter());
+        assertTrue(fight.turnList().fighters().contains(invoc));
+        assertSame(player.fighter(), invoc.invoker());
+
+        requestStack.assertOne(new ActionEffect(780, fighter1, "+" + invoc.sprite()));
+        requestStack.assertOne(new ActionEffect(147, fighter1, "+" + invoc.sprite()));
+    }
+
+    @Test
+    void invocLastDeadFighterShouldBeKilledWhenInvokerDie() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(221))
+            .addAlly(fb -> fb.cell(199))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new SpiritualLeashModule(fight));
+        fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
+
+        Fighter ally = fight.map().get(221).fighter();
+        ally.life().kill(ally);
+
+        castNormal(420, fight.map().get(200)); // Laisse spirituelle
+        assertFalse(ally.dead());
+
+        player.fighter().life().kill(player.fighter()); // Kill invoker
+
+        assertTrue(ally.dead());
+        assertFalse(fight.map().get(200).hasFighter());
+    }
+
+    @Test
+    void invocLastDeadFighterShouldPrioritizePlayerFighter() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(221))
+            .addAlly(fb -> fb.cell(199))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        player.fighter().turn().points().addActionPoints(10);
+
+        fight.register(new SpiritualLeashModule(fight));
+        fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
+
+        castNormal(35, fight.map().get(200)); // Invocation de Bouftou
+
+        Fighter ally = fight.map().get(221).fighter();
+        Fighter invoc = fight.map().get(200).fighter();
+
+        ally.life().kill(ally);
+        invoc.life().kill(invoc);
+        requestStack.clear();
+
+        castNormal(420, fight.map().get(200)); // Laisse spirituelle
+
+        assertFalse(ally.dead());
+        assertTrue(invoc.dead());
+        assertSame(ally, fight.map().get(200).fighter());
+    }
+
+    @Test
+    void invocLastDeadFighterShouldIgnoreLeaveFighter() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(221))
+            .addAlly(fb -> fb.cell(199))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new SpiritualLeashModule(fight));
+        fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
+
+        Fighter ally = fight.map().get(221).fighter();
+        ally.life().kill(ally);
+        fight.fighters().leave(ally);
+        requestStack.clear();
+
+        assertThrows(FightException.class, () -> castNormal(420, fight.map().get(200))); // Laisse spirituelle
+
+        assertTrue(ally.dead());
+        assertFalse(fight.map().get(200).hasFighter());
+        requestStack.assertOne(Error.cantCast());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

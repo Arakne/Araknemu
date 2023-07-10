@@ -20,12 +20,14 @@
 package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -182,7 +184,7 @@ class FighterListTest extends FightBaseCase {
     }
 
     @Test
-    void dispatch() {
+    void dispatch() throws NoSuchFieldException, IllegalAccessException {
         class Foo {}
         AtomicInteger ai = new AtomicInteger();
 
@@ -192,7 +194,9 @@ class FighterListTest extends FightBaseCase {
         fight.dispatchToAll(new Foo());
         assertEquals(2, ai.get());
 
-        other.fighter().move(null); // Remove from fight
+        Field field = AbstractFighter.class.getDeclaredField("fight");
+        field.setAccessible(true);
+        field.set(other.fighter(), null); // Remove from fight
 
         ai.set(0);
         fight.dispatchToAll(new Foo());

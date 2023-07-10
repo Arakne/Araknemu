@@ -417,6 +417,37 @@ class ActionEffectTest extends FightBaseCase {
     }
 
     @Test
+    void addFighterInvocation() throws Exception {
+        dataSet
+            .pushMonsterTemplates()
+            .pushMonsterSpells()
+        ;
+
+        Fight fight = createFight();
+        Fighter invoker = fight.team(0).leader();
+        InvocationFighter fighter = new InvocationFighter(-5, container.get(MonsterService.class).load(36).get(2), fight.team(0), invoker);
+        fighter.joinFight(fight, fight.map().get(118));
+
+        assertEquals("GA;147;1;+118;1;0;-5;36;-2;1566^100;2;-1;-1;-1;0,0,0,0;60;5;3;30;0;-10;7;-45;16;16;0", ActionEffect.addFighter(invoker, fighter).toString());
+    }
+
+    @Test
+    void addFighterPlayerFighter() throws Exception {
+        Fight fight = createFight();
+        Fighter fighter = fight.team(0).leader();
+
+        assertEquals("GA;999;1;GM|+122;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;0;0;0;;", ActionEffect.addFighter(fighter, fighter).toString());
+    }
+
+    @Test
+    void invokeDeadFighter() throws Exception {
+        Fight fight = createFight();
+        Fighter fighter = fight.team(0).leader();
+
+        assertEquals("GA;780;1;+122;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;0;0;0;;", ActionEffect.invokeDeadFighter(fighter, fighter).toString());
+    }
+
+    @Test
     void glyphTriggered() {
         Fighter caster = Mockito.mock(Fighter.class);
         Mockito.when(caster.id()).thenReturn(456);
