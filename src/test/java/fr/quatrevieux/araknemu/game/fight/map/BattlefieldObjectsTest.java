@@ -164,6 +164,38 @@ class BattlefieldObjectsTest extends GameBaseCase {
     }
 
     @Test
+    void onEndTurnShouldCallObjectIfFighterInArea() {
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        objects.add(bo);
+
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.cell()).thenReturn(map.get(124));
+
+        objects.onEndTurn(fighter);
+        Mockito.verify(bo).onEndTurnInArea(fighter);
+    }
+
+    @Test
+    void onEndTurnShouldNotCallObjectIfFighterOutOfArea() {
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        objects.add(bo);
+
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.cell()).thenReturn(map.get(170));
+
+        objects.onEndTurn(fighter);
+        Mockito.verify(bo, Mockito.never()).onEndTurnInArea(fighter);
+    }
+
+    @Test
     void removeObjectsIf() {
         Fighter caster = Mockito.mock(Fighter.class);
         Fighter other = Mockito.mock(Fighter.class);

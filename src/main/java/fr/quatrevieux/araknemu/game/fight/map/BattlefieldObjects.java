@@ -138,6 +138,23 @@ public final class BattlefieldObjects implements Iterable<BattlefieldObject> {
     }
 
     /**
+     * Apply end turn effects from objects if the fighter is on area
+     *
+     * @param fighter The fighter who end his turn
+     *
+     * @see BattlefieldObject#onEndTurnInArea(Fighter) To apply end turn effects
+     */
+    public void onEndTurn(Fighter fighter) {
+        for (Iterator<BattlefieldObject> it = iterator(); it.hasNext();) {
+            final BattlefieldObject object = it.next();
+
+            if (object.isOnArea(fighter)) {
+                object.onEndTurnInArea(fighter);
+            }
+        }
+    }
+
+    /**
      * Apply object effects when the fighter enters the object area after a move
      *
      * @param fighter The fighter who moved
