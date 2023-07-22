@@ -89,6 +89,11 @@ public final class UnwalkableFightCell implements FightCell {
     }
 
     @Override
+    public void removeFighter(Fighter fighter) {
+        // do nothing
+    }
+
+    @Override
     public int hashCode() {
         return id;
     }

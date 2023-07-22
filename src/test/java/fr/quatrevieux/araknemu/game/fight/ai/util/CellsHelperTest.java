@@ -20,10 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.arakne.utils.maps.MapCell;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -48,6 +50,25 @@ class CellsHelperTest extends AiBaseCase {
     void pathfinder() {
         assertNotNull(helper().pathfinder());
         assertNotSame(helper().pathfinder(), helper().pathfinder());
+    }
+
+    @Test
+    void adjacentPathSuccess() {
+        assertTrue(helper().adjacentPath().isPresent());
+        assertEquals(123, helper().adjacentPath().get().get(0).cell().id());
+        assertEquals(Direction.SOUTH_EAST, helper().adjacentPath().get().get(0).direction());
+        assertEquals(138, helper().adjacentPath().get().get(1).cell().id());
+        assertEquals(Direction.SOUTH_EAST, helper().adjacentPath().get().get(1).direction());
+    }
+
+    @Test
+    void adjacentFail() {
+        CellsHelper helper = helper();
+
+        player.fighter().move(fight.map().get(384));
+        fight.map().get(125).fighter().move(fight.map().get(370));
+
+        assertFalse(helper.adjacentPath().isPresent());
     }
 
     private CellsHelper helper() {

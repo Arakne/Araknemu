@@ -170,6 +170,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmXpP
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
+import fr.quatrevieux.araknemu.game.fight.module.CarryingModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
@@ -668,7 +669,8 @@ public final class GameModule implements ContainerModule {
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class)),
                     fight -> new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight),
-                    SpiritualLeashModule::new
+                    SpiritualLeashModule::new,
+                    CarryingModule::new
                 ),
                 container.get(FightService.FightFactory.class),
                 container.get(GameConfiguration.class).fight()

@@ -38,6 +38,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
+import fr.quatrevieux.araknemu.game.fight.module.CarryingModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
@@ -74,6 +75,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -1654,6 +1656,185 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(ally.dead());
         assertFalse(fight.map().get(200).hasFighter());
         requestStack.assertOne(Error.cantCast());
+    }
+
+    @Test
+    void carry() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(298).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(284))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new CarryingModule(fight));
+
+        castNormal(693, fight.map().get(284)); // Karcham
+
+        Fighter caster = fighters.get(0);
+        Fighter target = fighters.get(1);
+
+        assertTrue(caster.states().has(3));
+        assertTrue(target.states().has(8));
+
+        assertSame(caster.cell(), target.cell());
+        assertSame(caster, caster.cell().fighter());
+        assertFalse(fight.map().get(284).hasFighter());
+
+        requestStack.assertOne(new ActionEffect(50, caster, target.id()));
+
+        // Carrier move, target should follow
+        caster.move(fight.map().get(211));
+        assertSame(caster, fight.map().get(211).fighter());
+        assertSame(caster.cell(), target.cell());
+
+        // Carried move, carry effect should be removed
+        target.move(fight.map().get(181));
+        assertSame(target, fight.map().get(181).fighter());
+        assertSame(target.cell(), fight.map().get(181));
+        assertSame(caster.cell(), fight.map().get(211));
+        assertFalse(caster.states().has(3));
+        assertFalse(target.states().has(8));
+        caster.move(fight.map().get(212));
+        assertNotSame(caster.cell(), target.cell());
+    }
+
+    @Test
+    void carryOnCarriedDieShouldStopEffect() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(298).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(284))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new CarryingModule(fight));
+
+        castNormal(693, fight.map().get(284)); // Karcham
+
+        Fighter caster = fighters.get(0);
+        Fighter target = fighters.get(1);
+
+        assertTrue(caster.states().has(3));
+        assertTrue(target.states().has(8));
+
+        target.life().kill(target);
+
+        assertFalse(caster.states().has(3));
+        assertFalse(target.states().has(8));
+    }
+
+    @Test
+    void carryOnCarrierDieShouldStopEffect() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(298).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(284))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new CarryingModule(fight));
+
+        castNormal(693, fight.map().get(284)); // Karcham
+
+        Fighter caster = fighters.get(0);
+        Fighter target = fighters.get(1);
+
+        assertTrue(caster.states().has(3));
+        assertTrue(target.states().has(8));
+
+        caster.life().kill(caster);
+
+        assertFalse(caster.states().has(3));
+        assertFalse(target.states().has(8));
+
+        assertSame(target, fight.map().get(298).fighter());
+    }
+
+    @Test
+    void throwCarried() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(298).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(284))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new CarryingModule(fight));
+
+        castNormal(693, fight.map().get(284)); // Karcham
+
+        Fighter caster = fighters.get(0);
+        Fighter target = fighters.get(1);
+
+        assertTrue(caster.states().has(3));
+        assertTrue(target.states().has(8));
+        assertSame(caster.cell(), target.cell());
+        assertSame(caster, caster.cell().fighter());
+        assertFalse(fight.map().get(284).hasFighter());
+
+        castNormal(696, fight.map().get(256)); // Chamrak
+
+        assertSame(caster, fight.map().get(298).fighter());
+        assertSame(target.cell(), fight.map().get(256));
+        assertSame(target, fight.map().get(256).fighter());
+        assertFalse(caster.states().has(3));
+        assertFalse(target.states().has(8));
+
+        requestStack.assertOne(new ActionEffect(51, caster, 256));
+    }
+
+    @Test
+    void throwShouldTriggerTrap() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(298).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(284))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new CarryingModule(fight));
+
+        Fighter caster = fighters.get(0);
+        Fighter target = fighters.get(1);
+
+
+        castNormal(65, fight.map().get(256)); // Piège sournois
+        castNormal(693, fight.map().get(284)); // Karcham
+
+        BattlefieldObject trap = fight.map().objects().stream().findFirst().get();
+        castNormal(696, fight.map().get(256)); // Chamrak
+
+        int damage = target.life().max() - target.life().current();
+
+        assertBetween(13, 19, damage);
+        assertFalse(fight.map().objects().stream().findFirst().isPresent());
+        requestStack.assertOne(new RemoveZone(trap));
+        requestStack.assertOne(new UpdateCells(UpdateCells.Data.reset(256)));
+        requestStack.assertOne(ActionEffect.trapTriggered(caster, target, fight.map().get(256), service.get(65).level(5)));
+    }
+
+    @Test
+    void carrierShouldTakeSpellEffectsInPlaceOfCarried() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(298).charac(Characteristic.INTELLIGENCE, 100))
+            .addAlly(fb -> fb.cell(284))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        fight.register(new CarryingModule(fight));
+
+        castNormal(693, fight.map().get(284)); // Karcham
+
+        Fighter caster = fighters.get(0);
+        Fighter target = fighters.get(1);
+
+        assertTrue(caster.states().has(3));
+        assertTrue(target.states().has(8));
+
+        fight.turnList().current().ifPresent(FightTurn::stop);
+
+        requestStack.clear();
+
+        castNormal(223, fight.map().get(284)); // Météorite
+
+        assertTrue(target.life().isFull());
+        assertBetween(11, 40, caster.life().max() - caster.life().current());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

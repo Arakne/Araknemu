@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.path.Path;
+import fr.arakne.utils.maps.path.PathStep;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -85,6 +87,38 @@ public final class CellsHelper {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .filter(BattlefieldCell::walkableIgnoreFighter)
+        ;
+    }
+
+    /**
+     * Create a path to an adjacent cell of the current fighter cell
+     *
+     * Adjacent cells are cells directly accessible through the four restricted directions (i.e. {@link Direction#restrictedDirections()})
+     * The cell must be walkable
+     * If no adjacent cell is walkable, an empty optional is returned
+     *
+     * The resulting path is a path of 2 steps, the first step is the current cell and the second is the target cell
+     * For each step, the direction is actual direction to the target cell
+     *
+     * @return The path if found wrapped in an optional
+     */
+    public Optional<Path<BattlefieldCell>> adjacentPath() {
+        final Decoder<BattlefieldCell> decoder = decoder();
+        final BattlefieldCell currentCell = ai.fighter().cell();
+
+        return Arrays.stream(Direction.restrictedDirections())
+            .map(
+                direction -> decoder
+                    .nextCellByDirection(currentCell, direction)
+                    .filter(BattlefieldCell::walkable)
+                    .map(target -> new Path<>(decoder, Arrays.asList(
+                        new PathStep<>(currentCell, direction),
+                        new PathStep<>(target, direction)
+                    )))
+            )
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findFirst()
         ;
     }
 

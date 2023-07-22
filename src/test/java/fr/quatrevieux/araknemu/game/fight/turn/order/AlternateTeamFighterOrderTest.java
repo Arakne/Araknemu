@@ -42,6 +42,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.TeamOptions;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -284,6 +285,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
         @Override
         public void attach(Object key, Object value) {
 
+        }
+
+        @Override
+        public void setCell(@Nullable FightCell cell) {
+
+        }
+
+        @Override
+        public @Nullable Object detach(Object key) {
+            return null;
         }
 
         @Override

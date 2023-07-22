@@ -83,9 +83,22 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
+    public void setCell(@Nullable FightCell cell) {
+        final FightCell lastCell = this.cell;
+
+        if (lastCell != null) {
+            lastCell.removeFighter(this);
+        }
+
+        this.cell = cell;
+    }
+
+    @Override
     public final void move(@Nullable FightCell cell) {
-        if (this.cell != null) {
-            this.cell.removeFighter();
+        final FightCell lastCell = this.cell;
+
+        if (lastCell != null) {
+            lastCell.removeFighter(this);
         }
 
         if (cell != null) {
@@ -141,6 +154,11 @@ public abstract class AbstractFighter implements Fighter {
     @Override
     public final void attach(Object key, Object value) {
         attachments.put(key, value);
+    }
+
+    @Override
+    public @Nullable Object detach(Object key) {
+        return attachments.remove(key);
     }
 
     @Override

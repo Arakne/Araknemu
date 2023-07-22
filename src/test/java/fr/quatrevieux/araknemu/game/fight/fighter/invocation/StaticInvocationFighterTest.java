@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -117,11 +118,16 @@ class StaticInvocationFighterTest extends FightBaseCase {
     void attachments() {
         fighter.attach("key", 42);
         assertSame(42, fighter.attachment("key"));
+        assertSame(42, fighter.detach("key"));
+        assertNull(fighter.detach(LaunchedSpells.class));
+        assertNull(fighter.attachment("key"));
 
         LaunchedSpells launchedSpells = new LaunchedSpells();
 
         fighter.attach(launchedSpells);
         assertSame(launchedSpells, fighter.attachment(LaunchedSpells.class));
+        assertSame(launchedSpells, fighter.detach(LaunchedSpells.class));
+        assertNull(fighter.attachment(LaunchedSpells.class));
     }
 
     @Test
@@ -246,6 +252,27 @@ class StaticInvocationFighterTest extends FightBaseCase {
         fighter.move(null);
 
         assertNull(ref.get());
+    }
+
+    @Test
+    void setCell() {
+        FightMap map = fight.map();
+        fighter.joinFight(fight, map.get(123));
+
+        AtomicReference<FighterMoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMoved.class, ref::set);
+
+        fighter.setCell(map.get(124));
+
+        assertSame(map.get(124), fighter.cell());
+        assertFalse(map.get(124).hasFighter());
+        assertFalse(map.get(123).hasFighter());
+        assertNull(ref.get());
+
+        fighter.move(null);
+        fighter.setCell(map.get(125));
+
+        assertSame(map.get(125), fighter.cell());
     }
 
     @Test
