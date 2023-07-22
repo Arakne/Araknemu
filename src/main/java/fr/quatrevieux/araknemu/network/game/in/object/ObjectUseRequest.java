@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.dataflow.qual.Pure;
@@ -71,7 +72,10 @@ public final class ObjectUseRequest implements Packet {
     public static final class Parser implements SinglePacketParser<ObjectUseRequest> {
         @Override
         public ObjectUseRequest parse(String input) throws ParsePacketException {
-            final PacketTokenizer tokenizer = tokenize(input, '|');
+            final PacketTokenizer tokenizer = tokenize(
+                StringUtils.stripEnd(input, "|"), // Packet may end with | in case of self usage
+                '|'
+            );
 
             final int objectId = tokenizer.nextInt();
 
