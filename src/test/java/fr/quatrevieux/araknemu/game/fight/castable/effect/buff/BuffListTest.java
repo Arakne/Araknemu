@@ -141,6 +141,23 @@ class BuffListTest extends FightBaseCase {
     }
 
     @Test
+    void addWhenTurnIsActiveShouldIncrementRemainingTurnsWithADurationOfZero() {
+        fight.nextState();
+        fight.turnList().start();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        BuffHook hook = Mockito.mock(BuffHook.class);
+
+        Mockito.when(effect.duration()).thenReturn(0);
+
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook);
+
+        list.add(buff);
+
+        assertEquals(1, buff.remainingTurns());
+    }
+
+    @Test
     void onStartTurnWithoutBuff() {
         assertTrue(list.onStartTurn());
     }

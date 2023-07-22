@@ -108,7 +108,7 @@ public final class Buff {
      * Increment remaining turns
      * Use this method when a self-buff is added
      */
-    void incrementRemainingTurns() {
+    public void incrementRemainingTurns() {
         if (remainingTurns != -1) {
             ++remainingTurns;
         }
