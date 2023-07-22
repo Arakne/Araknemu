@@ -32,6 +32,11 @@ class ObjectUseRequestTest {
 
         assertEquals(123, request.objectId());
         assertFalse(request.isTarget());
+
+        request = new ObjectUseRequest.Parser().parse("123|");
+
+        assertEquals(123, request.objectId());
+        assertFalse(request.isTarget());
     }
 
     @Test
