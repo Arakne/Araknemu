@@ -79,12 +79,22 @@ class AddVitalityNotDispellableHandlerTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.effect()).thenReturn(123);
+        Mockito.when(effect.min()).thenReturn(50);
+        Mockito.when(effect.max()).thenReturn(60);
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
-        assertThrows(UnsupportedOperationException.class, () -> handler.handle(scope, scope.effects().get(0)));
+        handler.handle(scope, scope.effects().get(0));
+
+        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+
+        assertTrue(buff1.isPresent());
+        assertBetween(50, 60, buff1.get().effect().min());
+        assertEquals(1, buff1.get().remainingTurns());
+        assertFalse(buff1.get().canBeDispelled());
     }
 
     @Test

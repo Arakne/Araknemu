@@ -46,7 +46,7 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        throw new UnsupportedOperationException("Alter characteristic effect must be used as a buff");
+        buff(cast, effect);
     }
 
     @Override

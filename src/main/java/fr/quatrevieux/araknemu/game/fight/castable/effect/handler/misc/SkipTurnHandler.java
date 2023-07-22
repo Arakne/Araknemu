@@ -39,7 +39,13 @@ public final class SkipTurnHandler implements EffectHandler, BuffHook {
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        buff(cast, effect);
+        for (Fighter target : effect.targets()) {
+            final Buff buff = new Buff(effect.effect(), cast.action(), cast.caster(), target, this);
+
+            // The duration must be at least 1 to ensure that the next turn will be skipped
+            buff.incrementRemainingTurns();
+            target.buffs().add(buff);
+        }
     }
 
     @Override

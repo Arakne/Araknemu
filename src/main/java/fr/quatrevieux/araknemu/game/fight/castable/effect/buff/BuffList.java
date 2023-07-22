@@ -59,17 +59,19 @@ public final class BuffList implements Iterable<Buff>, Buffs {
 
     @Override
     public void add(Buff buff) {
+        final boolean isPlayingFighter = fighter.isPlaying();
+
         buffs.add(buff);
         buff.hook().onBuffStarted(buff);
 
-        if (buff.remainingTurns() == 0) {
+        if (buff.remainingTurns() == 0 && !isPlayingFighter) {
             buff.incrementRemainingTurns();
         }
 
         fighter.fight().send(new AddBuff(buff));
 
         // Add one turn when it's the turn of the current fighter
-        if (fighter.isPlaying()) {
+        if (isPlayingFighter) {
             buff.incrementRemainingTurns();
         }
     }

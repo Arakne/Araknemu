@@ -152,6 +152,35 @@ class ApplySpellOnStartTurnHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void handleOnSelfShouldBeConsideredAsBuff() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(787);
+        Mockito.when(effect.min()).thenReturn(183);
+        Mockito.when(effect.max()).thenReturn(1);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(0);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.handle(scope, scope.effects().get(0));
+
+        Optional<Buff> found = caster.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+
+        assertTrue(found.isPresent());
+        assertEquals(caster, found.get().caster());
+        assertEquals(caster, found.get().target());
+        assertEquals(effect, found.get().effect());
+        assertEquals(spell, found.get().action());
+        assertEquals(handler, found.get().hook());
+        assertEquals(2, found.get().remainingTurns());
+    }
+
+    @Test
     void startTurnShouldApplySpell() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
