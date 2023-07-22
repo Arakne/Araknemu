@@ -48,6 +48,16 @@ public interface Fighter extends Dispatcher, ActiveFighter {
     public FightCell cell();
 
     /**
+     * Change the fighter cell
+     *
+     * Unlike {@link #move(FightCell)}, this method will not trigger any event nor set the fighter on the new cell
+     * Do not use this method if you don't know what you are doing. For move the fighter, use {@link #move(FightCell)}
+     *
+     * If the fighter is already on a cell, it will be removed from it
+     */
+    public void setCell(@Nullable FightCell cell);
+
+    /**
      * Go to the given cell
      *
      * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved Trigger when the fighter is actually moved
@@ -94,6 +104,28 @@ public interface Fighter extends Dispatcher, ActiveFighter {
      * @see Fighter#attachment(Object) For get the attachment
      */
     public void attach(Object key, Object value);
+
+    /**
+     * Remove an attachment and get its last value
+     *
+     * @param key The attachment key
+     *
+     * @return The last attachment value, or null if not found
+     */
+    public @Nullable Object detach(Object key);
+
+    /**
+     * Remove an attachment by its type and get its last value
+     *
+     * @param type The attachment type
+     *
+     * @return The last attachment value, or null if not found
+     *
+     * @param <T> The attachment type
+     */
+    public default <T> @Nullable T detach(Class<T> type) {
+        return type.cast(detach((Object) type));
+    }
 
     /**
      * Attach an object by its class

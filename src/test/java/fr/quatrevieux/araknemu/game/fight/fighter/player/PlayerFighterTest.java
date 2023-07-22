@@ -180,6 +180,26 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
+    void setCell() {
+        fighter.joinFight(fight, map.get(123));
+
+        AtomicReference<FighterMoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMoved.class, ref::set);
+
+        fighter.setCell(map.get(124));
+
+        assertSame(map.get(124), fighter.cell());
+        assertFalse(map.get(124).hasFighter());
+        assertFalse(map.get(123).hasFighter());
+        assertNull(ref.get());
+
+        fighter.move(null);
+        fighter.setCell(map.get(125));
+
+        assertSame(map.get(125), fighter.cell());
+    }
+
+    @Test
     void send() {
         fighter.send("test");
 
@@ -311,11 +331,16 @@ class PlayerFighterTest extends FightBaseCase {
     void attachments() {
         fighter.attach("key", 42);
         assertSame(42, fighter.attachment("key"));
+        assertSame(42, fighter.detach("key"));
+        assertNull(fighter.detach(LaunchedSpells.class));
+        assertNull(fighter.attachment("key"));
 
         LaunchedSpells launchedSpells = new LaunchedSpells();
 
         fighter.attach(launchedSpells);
         assertSame(launchedSpells, fighter.attachment(LaunchedSpells.class));
+        assertSame(launchedSpells, fighter.detach(LaunchedSpells.class));
+        assertNull(fighter.attachment(LaunchedSpells.class));
     }
 
     @Test

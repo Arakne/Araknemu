@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
+import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -40,6 +41,18 @@ public interface FightCell extends BattlefieldCell {
 
     /**
      * Remove the fighter on the cell
+     *
+     * @throws FightMapException if there is no fighter on the cell
      */
     public void removeFighter();
+
+    /**
+     * Remove the fighter on the cell if it's the given fighter
+     * If the cell has no fighter, or if the fighter is not the given fighter, this method will do nothing
+     *
+     * So unlike {@link #removeFighter()}, this method will not throw any exception
+     *
+     * @param fighter The fighter to remove
+     */
+    public void removeFighter(Fighter fighter);
 }

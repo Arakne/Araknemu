@@ -86,6 +86,7 @@ class UnwalkableFightCellTest extends GameBaseCase {
         UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells()[0], 0);
 
         assertThrows(FightMapException.class, () -> cell.removeFighter());
+        cell.removeFighter(Mockito.mock(Fighter.class)); //should not throw
     }
 
     @Test

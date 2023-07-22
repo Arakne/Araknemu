@@ -31,6 +31,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -89,6 +90,7 @@ class WalkableFightCellTest extends GameBaseCase {
     @Test
     void removeFighterNotSet() {
         assertThrows(FightMapException.class, () -> cell.removeFighter());
+        cell.removeFighter(Mockito.mock(Fighter.class)); // should not throw
     }
 
     @Test
@@ -99,6 +101,25 @@ class WalkableFightCellTest extends GameBaseCase {
         cell.removeFighter();
 
         assertFalse(cell.hasFighter());
+    }
+
+    @Test
+    void removeFighterNotMatching() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        cell.set(fighter);
+
+        cell.removeFighter(Mockito.mock(Fighter.class));
+
+        assertSame(fighter, cell.fighter());
+    }
+
+    @Test
+    void removeFighterMatching() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        cell.set(fighter);
+
+        cell.removeFighter(fighter);
+        assertNull(cell.fighter());
     }
 
     @Test

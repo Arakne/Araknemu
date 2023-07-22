@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
+import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
@@ -36,6 +37,7 @@ import java.util.function.Function;
 
 /**
  * Try to move near the selected fighter
+ * If the current fighter is carried by the target one, it will try to move on an adjacent cell
  */
 public final class MoveNearFighter<F extends ActiveFighter> implements ActionGenerator<F> {
     private @MonotonicNonNull Pathfinder<BattlefieldCell> pathfinder;
@@ -62,14 +64,13 @@ public final class MoveNearFighter<F extends ActiveFighter> implements ActionGen
             return Optional.empty();
         }
 
-        final int movementPoints = helper.movementPoints();
         final BattlefieldCell currentCell = ai.fighter().cell();
 
         return fighterResolver.apply(ai)
-            .map(enemy -> NullnessUtil.castNonNull(pathfinder).findPath(currentCell, enemy.cell()).truncate(movementPoints + 1))
+            .flatMap(target -> generatePath(target, ai))
             .map(path -> path.keepWhile(step -> step.cell().equals(currentCell) || step.cell().walkable())) // Truncate path to first unwalkable cell (may occur if the enemy cell is inaccessible or if other fighters block the path)
             .filter(path -> path.size() > 1)
-            .map(path -> actions.move(path))
+            .map(actions::move)
         ;
     }
 
@@ -94,5 +95,21 @@ public final class MoveNearFighter<F extends ActiveFighter> implements ActionGen
         // Add a cost of 3 for each enemy around the cell
         // This cost corresponds to the detour cost + 1
         return 1 + Asserter.castNonNegative(3 * (int) NullnessUtil.castNonNull(helper).enemies().adjacent(cell).count());
+    }
+
+    private Optional<Path<BattlefieldCell>> generatePath(FighterData target, AI<F> ai) {
+        final int movementPoints = NullnessUtil.castNonNull(helper).movementPoints();
+        final BattlefieldCell currentCell = ai.fighter().cell();
+        final BattlefieldCell targetCell = target.cell();
+
+        // The current fighter is not carried by the target fighter,
+        // so the path is the path to the target
+        if (!currentCell.equals(targetCell)) {
+            return Optional.of(NullnessUtil.castNonNull(pathfinder).findPath(currentCell, target.cell()).truncate(movementPoints + 1));
+        }
+
+        // The current fighter is carried by the target fighter
+        // So we need to find a free adjacent cell
+        return NullnessUtil.castNonNull(helper).cells().adjacentPath();
     }
 }

@@ -99,6 +99,13 @@ public final class WalkableFightCell implements FightCell {
     }
 
     @Override
+    public void removeFighter(Fighter fighter) {
+        if (fighter.equals(this.fighter)) {
+            this.fighter = null;
+        }
+    }
+
+    @Override
     public int hashCode() {
         return id;
     }

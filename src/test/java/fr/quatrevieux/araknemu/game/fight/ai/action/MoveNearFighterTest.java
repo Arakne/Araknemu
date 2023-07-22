@@ -52,6 +52,37 @@ class MoveNearFighterTest extends AiBaseCase {
     }
 
     @Test
+    void shouldMoveToAdjacentCellWhenCarriedByTarget() {
+        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(222).fighter()));
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addAlly(builder -> builder.cell(222))
+            .addEnemy(builder -> builder.cell(126))
+        );
+
+        fighter.setCell(fight.map().get(222));
+
+        generateAndPerformMove();
+        assertEquals(236, fighter.cell().id());
+        assertEquals(2, turn.points().movementPoints());
+    }
+
+    @Test
+    void failedWhenCarriedButNoAvailableAdjacentCell() {
+        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(222).fighter()));
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addAlly(builder -> builder.cell(222))
+            .addEnemy(builder -> builder.cell(236))
+            .addEnemy(builder -> builder.cell(207))
+        );
+
+        fighter.setCell(fight.map().get(222));
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
     void withAllyOnPathShouldBeCircumvented() {
         action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(181).fighter()));
         configureFight(fb -> fb
