@@ -61,11 +61,13 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +78,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -1835,6 +1838,63 @@ public class FunctionalTest extends FightBaseCase {
 
         assertTrue(target.life().isFull());
         assertBetween(11, 40, caster.life().max() - caster.life().current());
+    }
+
+    @Test
+    void killAndReplaceWithInvocation() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(298).charac(Characteristic.INTELLIGENCE, 100))
+            .addEnemy(fb -> fb.cell(284))
+            .addEnemy(fb -> fb.cell(325))
+        );
+        fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
+        requestStack.clear();
+
+        Fighter caster = fighters.get(0);
+        Fighter target = fighters.get(1);
+
+        castNormal(780, fight.map().get(284)); // Fauche
+
+        assertTrue(target.life().dead());
+        InvocationFighter invoc = (InvocationFighter) fight.map().get(284).fighter();
+
+        assertSame(caster, invoc.invoker());
+        assertTrue(invoc.invoked());
+        assertTrue(fight.turnList().fighters().contains(invoc));
+        assertContains(invoc.monster().id(), Arrays.asList(788, 789, 790));
+    }
+
+    @Test
+    void killAndReplaceWithInvocationWhenInvocationLimitIsReachShouldOnlyKillTarget() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(182).charac(Characteristic.INTELLIGENCE, 100))
+            .addEnemy(fb -> fb.cell(196))
+            .addEnemy(fb -> fb.cell(167))
+            .addEnemy(fb -> fb.cell(168))
+            .addEnemy(fb -> fb.cell(197))
+        );
+        fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
+        requestStack.clear();
+
+        fight.turnList().current().ifPresent(turn -> turn.points().addActionPoints(10));
+
+        castNormal(780, fight.map().get(196)); // Fauche
+        assertTrue(fighters.get(1).life().dead());
+        assertInstanceOf(InvocationFighter.class, fight.map().get(196).fighter());
+
+        castNormal(780, fight.map().get(167)); // Fauche
+        assertTrue(fighters.get(1).life().dead());
+        assertNull(fight.map().get(167).fighter());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

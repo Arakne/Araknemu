@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.CreateDoubleHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.KillAndReplaceByInvocationHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.MonsterInvocationHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.StaticInvocationHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
@@ -48,6 +49,7 @@ public final class MonsterInvocationModule implements FightModule {
     public void effects(EffectsHandler handler) {
         handler.register(180, new CreateDoubleHandler(fighterFactory, fight));
         handler.register(181, new MonsterInvocationHandler(monsterService, fighterFactory, fight));
+        handler.register(405, new KillAndReplaceByInvocationHandler(monsterService, fighterFactory, fight));
 
         handler.register(185, new StaticInvocationHandler(monsterService, fighterFactory, fight));
     }

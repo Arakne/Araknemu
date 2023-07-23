@@ -81,6 +81,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
         Mockito.when(effect.effect()).thenReturn(180);
         Mockito.when(spell.effects()).thenReturn(Collections.singletonList(effect));
 
+        assertFalse(validator.check(caster));
         assertFalse(validator.check(turn, spell, fight.map().get(123)));
         assertEquals(
             new Error(203, 1).toString(),
@@ -106,6 +107,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
 
         caster.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
 
+        assertFalse(validator.check(caster));
         assertFalse(validator.check(turn, spell, fight.map().get(123)));
         assertEquals(
             new Error(203, 4).toString(),
@@ -138,6 +140,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
 
         caster.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
 
+        assertTrue(validator.check(caster));
         assertTrue(validator.check(turn, spell, fight.map().get(123)));
     }
 
@@ -145,6 +148,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
     void success() {
         Spell spell = Mockito.mock(Spell.class);
 
+        assertTrue(validator.check(caster));
         assertTrue(validator.check(turn, spell, fight.map().get(123)));
         assertNull(validator.validate(turn, spell, fight.map().get(123)));
     }
@@ -161,6 +165,7 @@ class InvocationCountValidatorTest extends FightBaseCase {
 
         caster.characteristics().alter(Characteristic.MAX_SUMMONED_CREATURES, 3);
 
+        assertTrue(validator.check(caster));
         assertTrue(validator.check(turn, spell, fight.map().get(123)));
         assertNull(validator.validate(turn, spell, fight.map().get(123)));
     }
