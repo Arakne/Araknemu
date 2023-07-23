@@ -45,9 +45,14 @@ public final class InvocationCountValidator implements CastConstraintValidator<C
         return fighter.characteristics().get(Characteristic.MAX_SUMMONED_CREATURES);
     }
 
-    @Override
-    public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
-        final ActiveFighter fighter = turn.fighter();
+    /**
+     * Check if the invoker can summon another creature
+     *
+     * @param fighter the invoker
+     *
+     * @return true if the invoker can summon another creature, false otherwise
+     */
+    public boolean check(ActiveFighter fighter) {
         final int max = max(fighter);
         final int actual = (int) fight.turnList().fighters().stream() // Iterate only on active fighters (i.e. in turn list)
             .filter(other -> fighter.equals(other.invoker()))
@@ -55,6 +60,11 @@ public final class InvocationCountValidator implements CastConstraintValidator<C
         ;
 
         return max > actual;
+    }
+
+    @Override
+    public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
+        return check(turn.fighter());
     }
 
     @Override
