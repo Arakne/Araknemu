@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -73,12 +74,13 @@ class CastScopeTest extends FightBaseCase {
         FightCell target = Mockito.mock(FightCell.class);
         Castable action = Mockito.mock(Castable.class);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(action, caster, target, Collections.emptyList());
+        FightCastScope scope = FightCastScope.simple(action, caster, target, Collections.emptyList());
 
         assertSame(caster, scope.caster());
         assertSame(target, scope.target());
         assertSame(action, scope.action());
         assertSame(caster.cell(), scope.from());
+        assertFalse(scope.indirect());
     }
 
     @Test
@@ -88,12 +90,13 @@ class CastScopeTest extends FightBaseCase {
         FightCell from = Mockito.mock(FightCell.class);
         Castable action = Mockito.mock(Castable.class);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.fromCell(action, caster, from, target, Collections.emptyList());
+        FightCastScope scope = FightCastScope.fromCell(action, caster, from, target, Collections.emptyList());
 
         assertSame(caster, scope.caster());
         assertSame(target, scope.target());
         assertSame(action, scope.action());
         assertSame(from, scope.from());
+        assertTrue(scope.indirect());
     }
 
     @Test
@@ -179,9 +182,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.fromCell(spell, caster, fight.map().get(227), fight.map().get(167), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.fromCell(spell, caster, fight.map().get(227), fight.map().get(167), Collections.singletonList(effect));
 
         assertCount(1, scope.effects());
+        assertTrue(scope.indirect());
         assertIterableEquals(Arrays.asList(
             fight.map().get(137),
             fight.map().get(152),

@@ -1897,6 +1897,20 @@ public class FunctionalTest extends FightBaseCase {
         assertNull(fight.map().get(167).fighter());
     }
 
+    /**
+     * See #301 : Trap caster should not be revealed when trap is triggered
+     */
+    @Test
+    void trapDamageShouldNotRevealTrapCaster() {
+        castNormal(72, fighter1.cell()); // Invisibilité
+        castNormal(65, fight.map().get(126)); // piège sournois
+
+        fighter2.move(fight.map().get(126)); // Move on trap
+        requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(126), service.get(65).level(5)));
+
+        assertTrue(fighter1.hidden());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
