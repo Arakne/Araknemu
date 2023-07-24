@@ -29,6 +29,8 @@ import java.util.List;
  * Cast scope for actual fight
  */
 public final class FightCastScope extends BaseCastScope<Fighter, FightCell> {
+    private final boolean indirect;
+
     /**
      * @param action The performed action. Can be a spell or a weapon
      * @param caster The spell/weapon caster
@@ -38,6 +40,8 @@ public final class FightCastScope extends BaseCastScope<Fighter, FightCell> {
      */
     private FightCastScope(Castable action, Fighter caster, FightCell from, FightCell target, List<SpellEffect> effects) {
         super(action, caster, from, target, effects);
+
+        this.indirect = true;
     }
 
     /**
@@ -48,6 +52,16 @@ public final class FightCastScope extends BaseCastScope<Fighter, FightCell> {
      */
     private FightCastScope(Castable action, Fighter caster, FightCell target, List<SpellEffect> effects) {
         super(action, caster, target, effects);
+
+        this.indirect = false;
+    }
+
+    /**
+     * Does the cast has been initiated indirectly ?
+     * An indirect cast is a cast that is not initiated by the caster (e.g. a trap or glyph)
+     */
+    public boolean indirect() {
+        return indirect;
     }
 
     /**

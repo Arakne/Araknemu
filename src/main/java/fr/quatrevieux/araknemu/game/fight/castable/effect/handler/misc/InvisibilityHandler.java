@@ -88,6 +88,11 @@ public final class InvisibilityHandler implements EffectHandler, BuffHook {
 
     @Override
     public void onCast(Buff buff, FightCastScope cast) {
+        // #301: do not show cell nor reveal caster if the cast is indirect (e.g. glyph, trap)
+        if (cast.indirect()) {
+            return;
+        }
+
         final Fighter target = buff.target();
 
         if (!target.hidden()) {

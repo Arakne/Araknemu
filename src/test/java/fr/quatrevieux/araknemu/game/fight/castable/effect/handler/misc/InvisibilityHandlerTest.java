@@ -199,6 +199,40 @@ class InvisibilityHandlerTest extends FightBaseCase {
         requestStack.assertOne(new ActionEffect(150, target, target.id(), 0));
     }
 
+    // See #301: do not show cell nor reveal caster if the cast is indirect (e.g. glyph, trap)
+    @Test
+    void onCastIndirectAttackShouldNotMakeFighterVisible() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.special()).thenReturn(1234);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = FightCastScope.fromCell(spell, caster, target.cell(), target.cell(), Collections.singletonList(effect));
+        handler.buff(scope, scope.effects().get(0));
+
+        assertTrue(target.hidden());
+        requestStack.assertOne(new ActionEffect(150, caster, target.id(), 1));
+
+        SpellEffect attackEffect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(attackEffect.area()).thenReturn(new CellArea());
+        Mockito.when(attackEffect.effect()).thenReturn(97);
+        Mockito.when(attackEffect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+
+        FightCastScope attackScope = FightCastScope.fromCell(spell, caster, target.cell(), target.cell(), Collections.singletonList(attackEffect));
+        target.buffs().onCast(attackScope);
+
+        assertTrue(target.hidden());
+        requestStack.assertNotContainsPrefix(new FighterPositions(Collections.singleton(target)).toString());
+        requestStack.assertNotContainsPrefix(new ActionEffect(150, target, target.id(), 0).toString());
+    }
+
     @Test
     void onCastPoisonShouldShowCasterCell() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
