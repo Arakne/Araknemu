@@ -1911,6 +1911,54 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(fighter1.hidden());
     }
 
+    /**
+     * See #304: Do not trigger map objects on dead fighter
+     */
+    @Test
+    void dieOnMapObjectOnCurrentTurn() throws InterruptedException {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(166).charac(Characteristic.INTELLIGENCE, 100).charac(Characteristic.ACTION_POINT, 2))
+            .addEnemy(fb -> fb.cell(241).maxLife(10).currentLife(10))
+            .addEnemy(fb -> fb.cell(256).maxLife(10).currentLife(10))
+        );
+
+        castNormal(65, fight.map().get(211)); // Piège Sournois
+        castNormal(65, fight.map().get(226)); // Piège Sournois
+
+        fight.turnList().current().ifPresent(FightTurn::stop);
+
+        Fighter fighter = fight.turnList().currentFighter();
+
+        fighter.move(fight.map().get(226)); // Move on trap
+        assertTrue(fighter.life().dead());
+        assertFalse(fighter.isPlaying());
+        Thread.sleep(2000); // Wait for die animation
+        assertNotSame(fighter, fight.turnList().currentFighter());
+    }
+
+    /**
+     * See #304: Do not trigger map objects on dead fighter
+     */
+    @Test
+    void dieOnGlyph() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(166).charac(Characteristic.INTELLIGENCE, 100).charac(Characteristic.ACTION_POINT, 2))
+            .addEnemy(fb -> fb.cell(241).maxLife(10).currentLife(10).charac(Characteristic.INTELLIGENCE, 50))
+            .addEnemy(fb -> fb.cell(256).maxLife(10).currentLife(10))
+        );
+
+        castNormal(17, fight.map().get(226)); // Glyphe agressif
+        castNormal(65, fight.map().get(226)); // Piège Sournois
+
+        fight.turnList().current().ifPresent(FightTurn::stop);
+
+        Fighter fighter = fighters.get(1);
+
+        assertTrue(fighter.life().dead());
+        assertFalse(fighter.isPlaying());
+        assertNotSame(fighter, fight.turnList().currentFighter());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
