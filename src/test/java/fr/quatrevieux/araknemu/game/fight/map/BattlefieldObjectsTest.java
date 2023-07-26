@@ -80,6 +80,23 @@ class BattlefieldObjectsTest extends GameBaseCase {
     }
 
     @Test
+    void onStartTurnShouldNotCallObjectIfFighterIsDead() {
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        objects.add(bo);
+
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.cell()).thenReturn(map.get(124));
+        Mockito.when(fighter.dead()).thenReturn(true);
+
+        objects.onStartTurn(fighter);
+        Mockito.verify(bo, Mockito.never()).onStartTurnInArea(fighter);
+    }
+
+    @Test
     void onStartTurnShouldNotCallObjectIfFighterOutOfArea() {
         BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
         Mockito.when(bo.cell()).thenReturn(map.get(123));
@@ -177,6 +194,23 @@ class BattlefieldObjectsTest extends GameBaseCase {
 
         objects.onEndTurn(fighter);
         Mockito.verify(bo).onEndTurnInArea(fighter);
+    }
+
+    @Test
+    void onEndTurnShouldNotCallObjectIfFighterIsDead() {
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.cell()).thenReturn(map.get(123));
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        objects.add(bo);
+
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.cell()).thenReturn(map.get(124));
+        Mockito.when(fighter.dead()).thenReturn(true);
+
+        objects.onEndTurn(fighter);
+        Mockito.verify(bo, Mockito.never()).onEndTurnInArea(fighter);
     }
 
     @Test

@@ -131,7 +131,9 @@ public final class BattlefieldObjects implements Iterable<BattlefieldObject> {
                 }
             }
 
-            if (object.isOnArea(fighter)) {
+            // Only living fighters on area can trigger objects
+            // Note: does not break the loop to allow refreshing objects
+            if (!fighter.dead() && object.isOnArea(fighter)) {
                 object.onStartTurnInArea(fighter);
             }
         }
@@ -145,8 +147,11 @@ public final class BattlefieldObjects implements Iterable<BattlefieldObject> {
      * @see BattlefieldObject#onEndTurnInArea(Fighter) To apply end turn effects
      */
     public void onEndTurn(Fighter fighter) {
-        for (Iterator<BattlefieldObject> it = iterator(); it.hasNext();) {
-            final BattlefieldObject object = it.next();
+        for (BattlefieldObject object : this) {
+            // Fighter is dead, stop triggering objects
+            if (fighter.dead()) {
+                break;
+            }
 
             if (object.isOnArea(fighter)) {
                 object.onEndTurnInArea(fighter);

@@ -373,6 +373,25 @@ class FightTurnTest extends FightBaseCase {
     }
 
     @Test
+    void stopWhenDeadShouldNotCallEndTurnEffectOnBattlefieldObjects() {
+        BattlefieldObject bo = Mockito.mock(BattlefieldObject.class);
+        Mockito.when(bo.size()).thenReturn(2);
+        Mockito.when(bo.cell()).thenReturn(player.fighter().cell());
+        Mockito.when(bo.isOnArea(Mockito.any(FightCell.class))).thenCallRealMethod();
+        Mockito.when(bo.isOnArea(Mockito.any(Fighter.class))).thenCallRealMethod();
+
+        fight.map().objects().add(bo);
+
+        assertTrue(turn.start());
+        Mockito.verify(bo).onStartTurnInArea(player.fighter());
+
+        player.fighter().life().kill(player.fighter());
+
+        turn.stop();
+        Mockito.verify(bo, Mockito.never()).onEndTurnInArea(player.fighter());
+    }
+
+    @Test
     void laterNoPendingAction() {
         Runnable runnable = Mockito.mock(Runnable.class);
 
