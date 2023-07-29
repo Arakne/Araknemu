@@ -54,6 +54,18 @@ class AttackTest extends AiBaseCase {
     }
 
     @Test
+    void shouldSkipIfAllEnemiesAreInvisible() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        other.fighter().setHidden(other.fighter(), true);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
     void shouldKillEnemyWhenLowLife() {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))

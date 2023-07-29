@@ -60,6 +60,11 @@ public final class Attack<F extends ActiveFighter> implements ActionGenerator<F>
 
     @Override
     public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+        // Optimisation: Does not attack if there is no enemy
+        if (!ai.enemy().isPresent()) {
+            return Optional.empty();
+        }
+
         return generator.generate(ai, actions);
     }
 
