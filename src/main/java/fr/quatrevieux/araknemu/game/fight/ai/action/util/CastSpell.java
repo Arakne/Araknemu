@@ -50,7 +50,7 @@ public final class CastSpell<F extends ActiveFighter> implements ActionGenerator
     public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
         final AIHelper helper = ai.helper();
 
-        if (!helper.canCast() || !ai.enemy().isPresent()) {
+        if (!helper.canCast()) {
             return Optional.empty();
         }
 

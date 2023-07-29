@@ -52,6 +52,20 @@ class BoostTest extends AiBaseCase {
     }
 
     @Test
+    void successWithAllEnemiesInvisible() {
+        action = Boost.self(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122).spell(126, 5))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        other.fighter().setHidden(other.fighter(), true);
+
+        assertCast(126, 122);
+    }
+
+    @Test
     void notEnoughAP() {
         action = Boost.self(container.get(Simulator.class));
 

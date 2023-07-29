@@ -52,6 +52,18 @@ class DebuffTest extends AiBaseCase {
     }
 
     @Test
+    void shouldSkipIfAllEnemiesAreInvisible() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(312).spell(81))
+            .addEnemy(builder -> builder.player(other).cell(270))
+        );
+
+        other.fighter().setHidden(other.fighter(), true);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
     void allowSelfDebuffIfLessThanEnemies() {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(307).spell(168))
