@@ -41,12 +41,12 @@ public final class MonsterAiFactory implements AiFactory<PlayableFighter> {
     }
 
     @Override
-    public Optional<AI<PlayableFighter>> create(PlayableFighter fighter) {
+    public Optional<AI> create(PlayableFighter fighter) {
         return fighter.apply(new ResolveAi()).get();
     }
 
     class ResolveAi implements FighterOperation {
-        private @MonotonicNonNull AI<PlayableFighter> ai;
+        private @MonotonicNonNull AI ai;
 
         @Override
         public void onMonster(MonsterFighter fighter) {
@@ -58,7 +58,7 @@ public final class MonsterAiFactory implements AiFactory<PlayableFighter> {
             resolve(fighter, fighter.monster().ai());
         }
 
-        public Optional<AI<PlayableFighter>> get() {
+        public Optional<AI> get() {
             return Optional.ofNullable(ai);
         }
 

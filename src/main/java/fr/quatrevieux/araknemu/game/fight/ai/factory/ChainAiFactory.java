@@ -38,9 +38,9 @@ public final class ChainAiFactory implements AiFactory<PlayableFighter> {
     }
 
     @Override
-    public Optional<AI<PlayableFighter>> create(PlayableFighter fighter) {
+    public Optional<AI> create(PlayableFighter fighter) {
         for (AiFactory<PlayableFighter> factory : factories) {
-            final Optional<AI<PlayableFighter>> ai = factory.create(fighter);
+            final Optional<AI> ai = factory.create(fighter);
 
             if (ai.isPresent()) {
                 return ai;

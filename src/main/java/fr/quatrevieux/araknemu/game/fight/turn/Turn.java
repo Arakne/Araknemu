@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 /**
  * Fighter turn
  */
-public interface Turn {
+public interface Turn<A extends Action> {
     /**
      * Get the current fighter
      */
@@ -42,7 +42,7 @@ public interface Turn {
      *
      * @param action The action to perform
      */
-    public void perform(Action action) throws FightException;
+    public void perform(A action) throws FightException;
 
     /**
      * Execute the action when the current is terminated

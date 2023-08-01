@@ -26,8 +26,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -42,13 +43,13 @@ import java.util.stream.Stream;
  *       and the next action is scheduled after the last one.
  *       So the AI execution is not blocking, and executed in parallel of the turn timer.
  */
-public final class FighterAI implements Runnable, AI<PlayableFighter> {
+public final class FighterAI implements Runnable, AI {
     private final PlayableFighter fighter;
     private final Fight fight;
-    private final ActionGenerator<PlayableFighter> generator;
+    private final ActionGenerator generator;
     private final AIHelper helper;
 
-    private @Nullable Turn turn;
+    private @Nullable FightTurn turn;
 
     /**
      * Creates the AI
@@ -57,15 +58,20 @@ public final class FighterAI implements Runnable, AI<PlayableFighter> {
      * @param generator The action generator
      */
     @SuppressWarnings({"argument", "assignment"})
-    public FighterAI(PlayableFighter fighter, Fight fight, ActionGenerator<PlayableFighter> generator) {
+    public FighterAI(PlayableFighter fighter, Fight fight, ActionGenerator generator) {
         this.fighter = fighter;
         this.fight = fight;
         this.generator = generator;
         this.helper = new AIHelper(this);
     }
 
-    @Override
-    public void start(Turn turn) {
+    /**
+     * Start the AI
+     * The AI will be pushed into the fight to be executed
+     *
+     * @param turn The current turn
+     */
+    public void start(FightTurn turn) {
         this.turn = turn;
 
         generator.initialize(this);
@@ -78,14 +84,14 @@ public final class FighterAI implements Runnable, AI<PlayableFighter> {
             throw new IllegalStateException("AI#start() must be called before run()");
         }
 
-        final Turn currentTurn = turn;
+        final Turn<FightAction> currentTurn = turn;
 
         if (!currentTurn.active()) {
             turn = null;
             return;
         }
 
-        final Optional<Action> action = generator.generate(
+        final Optional<FightAction> action = generator.generate(
             this,
             new FightAiActionFactoryAdapter(
                 fighter,
@@ -115,8 +121,8 @@ public final class FighterAI implements Runnable, AI<PlayableFighter> {
     }
 
     @Override
-    public @NonNull Turn turn() {
-        final Turn turn = this.turn;
+    public @NonNull FightTurn turn() {
+        final FightTurn turn = this.turn;
 
         if (turn == null) {
             throw new IllegalStateException("AI must be started");

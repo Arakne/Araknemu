@@ -27,7 +27,6 @@ import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -49,7 +48,7 @@ import java.util.function.ToDoubleFunction;
  * - Try to find the path
  * - If a path is found, and can be performed by the current number of MPs, return the move action
  */
-public final class Movement<F extends ActiveFighter> implements ActionGenerator<F> {
+public final class Movement implements ActionGenerator {
     private final ToDoubleFunction<CoordinateCell<BattlefieldCell>> scoreFunction;
     private final Predicate<ScoredCell> filter;
 
@@ -67,12 +66,12 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         this.pathfinder = new Decoder<>(ai.map()).pathfinder();
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         final Pathfinder<BattlefieldCell> pathfinder = NullnessUtil.castNonNull(this.pathfinder);
         final int movementPoints = ai.turn().points().movementPoints();
         final List<ScoredCell> selectedCells = selectCells(ai, movementPoints);
@@ -112,7 +111,7 @@ public final class Movement<F extends ActiveFighter> implements ActionGenerator<
     /**
      * Select all reachable cells for movement
      */
-    private List<ScoredCell> selectCells(AI<F> ai, int movementPoints) {
+    private List<ScoredCell> selectCells(AI ai, int movementPoints) {
         final CoordinateCell<BattlefieldCell> currentCell = ai.fighter().cell().coordinate();
         final List<ScoredCell> selectedCells = new ArrayList<>();
 

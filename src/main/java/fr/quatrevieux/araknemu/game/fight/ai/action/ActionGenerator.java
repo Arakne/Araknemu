@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -28,12 +27,12 @@ import java.util.Optional;
 /**
  * Generates actions for the AI
  */
-public interface ActionGenerator<F extends ActiveFighter> {
+public interface ActionGenerator {
     /**
      * Initialize the action generator when turn starts
      * This method must be called before {@link ActionGenerator#generate(AI, AiActionFactory)}
      */
-    public void initialize(AI<F> ai);
+    public void initialize(AI ai);
 
     /**
      * Try to generate an action
@@ -41,5 +40,5 @@ public interface ActionGenerator<F extends ActiveFighter> {
      * If the action cannot be generated (not enough points, or not available), an empty optional is returned
      * Return an empty optional will execute the next action on the AI, or stop the turn if there is no valid actions
      */
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions);
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions);
 }

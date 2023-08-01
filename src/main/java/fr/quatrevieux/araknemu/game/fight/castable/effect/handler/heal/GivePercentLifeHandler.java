@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Heal fighters by giving its own life, in percent of current life
@@ -36,7 +35,7 @@ public final class GivePercentLifeHandler implements EffectHandler {
 
         caster.life().alter(caster, -heal);
 
-        for (FighterData target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             if (!target.equals(caster)) {
                 target.life().alter(caster, heal);
             }

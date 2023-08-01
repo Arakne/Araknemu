@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -37,23 +36,23 @@ import java.util.Optional;
  * and check all spells on all available cells.
  * The best effective cell and cast is selected.
  */
-public final class MoveToBoost<F extends ActiveFighter> implements ActionGenerator<F> {
-    private final MoveToCast<F> generator;
-    private final Boost<F> action;
+public final class MoveToBoost implements ActionGenerator {
+    private final MoveToCast generator;
+    private final Boost action;
 
     public MoveToBoost(Simulator simulator) {
         action = Boost.allies(simulator);
-        generator = new MoveToCast<>(simulator, action, new MoveToCast.BestTargetStrategy<>());
+        generator = new MoveToCast(simulator, action, new MoveToCast.BestTargetStrategy());
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         action.initialize(ai);
         generator.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return generator.generate(ai, actions);
     }
 }

@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -36,25 +35,25 @@ import java.util.function.Predicate;
  *
  * @see ConditionalGenerator For build a conditional generator
  */
-public final class ConditionalGenerator<F extends ActiveFighter> implements ActionGenerator<F> {
-    private final Predicate<AI<F>> condition;
-    private final ActionGenerator<F> success;
-    private final ActionGenerator<F> otherwise;
+public final class ConditionalGenerator implements ActionGenerator {
+    private final Predicate<AI> condition;
+    private final ActionGenerator success;
+    private final ActionGenerator otherwise;
 
-    public ConditionalGenerator(Predicate<AI<F>> condition, ActionGenerator<F> success, ActionGenerator<F> otherwise) {
+    public ConditionalGenerator(Predicate<AI> condition, ActionGenerator success, ActionGenerator otherwise) {
         this.condition = condition;
         this.success = success;
         this.otherwise = otherwise;
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         success.initialize(ai);
         otherwise.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return condition.test(ai) ? success.generate(ai, actions) : otherwise.generate(ai, actions);
     }
 }

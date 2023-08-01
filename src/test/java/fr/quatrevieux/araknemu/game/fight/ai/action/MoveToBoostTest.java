@@ -36,7 +36,7 @@ class MoveToBoostTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        action = new MoveToBoost<>(container.get(Simulator.class));
+        action = new MoveToBoost(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
     }
 

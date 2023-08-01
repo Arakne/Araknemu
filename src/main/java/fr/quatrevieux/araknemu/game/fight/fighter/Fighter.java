@@ -47,6 +47,14 @@ public interface Fighter extends Dispatcher, ActiveFighter {
     @Override
     public FightCell cell();
 
+    @Override
+    public FighterLife life();
+
+    @Override
+    public default boolean dead() {
+        return life().dead();
+    }
+
     /**
      * Change the fighter cell
      *
@@ -138,7 +146,9 @@ public interface Fighter extends Dispatcher, ActiveFighter {
         attach(value.getClass(), value);
     }
 
-    @Override
+    /**
+     * Get the related fight
+     */
     public Fight fight();
 
     @Override

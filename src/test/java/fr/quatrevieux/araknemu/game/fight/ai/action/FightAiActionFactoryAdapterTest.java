@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.proxy.ProxyBattlefield;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
@@ -78,7 +79,7 @@ class FightAiActionFactoryAdapterTest extends FightBaseCase {
 
     @Test
     void move() {
-        Action action = factory.move(
+        FightAction action = factory.move(
             new Decoder<>(fight.map()).decode("aaJbbF", fight.map().get(35))
         );
 
@@ -92,7 +93,7 @@ class FightAiActionFactoryAdapterTest extends FightBaseCase {
         ProxyBattlefield aiMap = new ProxyBattlefield(fight.map());
         aiMap = aiMap.modify(modifier -> {}); // Force creation of proxy cells
 
-        Action action = factory.move(
+        FightAction action = factory.move(
             new Decoder<>(aiMap).decode("aaJbbF", aiMap.get(35))
         );
 

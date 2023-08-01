@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
@@ -37,12 +37,12 @@ import java.util.stream.Collectors;
  * Implementation of {@link AiActionFactory} which provide bridge with actual fight actions factory
  * Generated actions can be applied directly to fight
  */
-public final class FightAiActionFactoryAdapter implements AiActionFactory {
+public final class FightAiActionFactoryAdapter implements AiActionFactory<FightAction> {
     private final PlayableFighter fighter;
     private final Fight fight;
-    private final ActionsFactory<PlayableFighter> actionFactory;
+    private final ActionsFactory actionFactory;
 
-    public FightAiActionFactoryAdapter(PlayableFighter fighter, Fight fight, ActionsFactory<PlayableFighter> actionFactory) {
+    public FightAiActionFactoryAdapter(PlayableFighter fighter, Fight fight, ActionsFactory actionFactory) {
         this.fighter = fighter;
         this.fight = fight;
         this.actionFactory = actionFactory;
@@ -50,13 +50,13 @@ public final class FightAiActionFactoryAdapter implements AiActionFactory {
 
     @Override
     @SuppressWarnings("argument") // Cell ID is valid
-    public Action cast(Spell spell, BattlefieldCell target) {
+    public FightAction cast(Spell spell, BattlefieldCell target) {
         return actionFactory.cast().create(fighter, spell, fight.map().get(target.id()));
     }
 
     @Override
     @SuppressWarnings("argument") // Cell ID is valid
-    public Action move(Path<BattlefieldCell> path) {
+    public FightAction move(Path<BattlefieldCell> path) {
         // Recreate path with actual fight cell
         final FightMap map = fight.map();
         final Path<FightCell> actualPath = new Path<>(

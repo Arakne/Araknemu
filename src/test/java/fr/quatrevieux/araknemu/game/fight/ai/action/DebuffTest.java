@@ -38,7 +38,7 @@ class DebuffTest extends AiBaseCase {
         super.setUp();
 
         dataSet.pushFunctionalSpells();
-        action = new Debuff<>(container.get(Simulator.class));
+        action = new Debuff(container.get(Simulator.class));
     }
 
     @Test

@@ -23,9 +23,9 @@ import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 
 import java.time.Duration;
@@ -33,7 +33,7 @@ import java.time.Duration;
 /**
  * Move the fighter
  */
-public final class Move implements Action {
+public final class Move implements FightAction {
     private final PlayableFighter fighter;
     private final Path<FightCell> path;
     private final FightPathValidator[] validators;

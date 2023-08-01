@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -34,8 +33,8 @@ import java.util.Optional;
  * Select spells causing damage on enemies
  * All cells are tested for select the most effective target for each spells
  */
-public final class Attack<F extends ActiveFighter> implements ActionGenerator<F>, CastSpell.SimulationSelector {
-    private final CastSpell<F> generator;
+public final class Attack implements ActionGenerator, CastSpell.SimulationSelector {
+    private final CastSpell generator;
     private final SuicideStrategy suicideStrategy;
 
     private double averageEnemyLifePoints = 0;
@@ -47,19 +46,19 @@ public final class Attack<F extends ActiveFighter> implements ActionGenerator<F>
 
     @SuppressWarnings({"assignment", "argument"})
     public Attack(Simulator simulator, SuicideStrategy suicideStrategy) {
-        this.generator = new CastSpell<>(simulator, this);
+        this.generator = new CastSpell(simulator, this);
         this.suicideStrategy = suicideStrategy;
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         generator.initialize(ai);
         averageEnemyLifePoints = ai.helper().enemies().stream().mapToInt(fighter -> fighter.life().max()).average().orElse(0);
         enemiesCount = ai.helper().enemies().count();
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         // Optimisation: Does not attack if there is no enemy
         if (!ai.enemy().isPresent()) {
             return Optional.empty();

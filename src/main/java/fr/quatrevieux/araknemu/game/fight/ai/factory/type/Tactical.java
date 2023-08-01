@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.Predicates;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 
 /**
  * AI between {@link Runaway} and {@link Aggressive}
@@ -41,7 +40,7 @@ public final class Tactical extends AbstractAiBuilderFactory {
     }
 
     @Override
-    public void configure(GeneratorBuilder<PlayableFighter> builder) {
+    public void configure(GeneratorBuilder builder) {
         builder
             .boostSelf(simulator)
             .attackFromBestCell(simulator)

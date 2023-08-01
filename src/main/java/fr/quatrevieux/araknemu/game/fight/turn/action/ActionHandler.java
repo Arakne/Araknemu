@@ -52,7 +52,7 @@ public final class ActionHandler {
      *
      * @return true if the action is successfully started, or false is cannot start the action
      */
-    public boolean start(Action action) {
+    public boolean start(FightAction action) {
         if (pending != null) {
             return false;
         }

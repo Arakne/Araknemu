@@ -40,46 +40,6 @@ public class DummyGenerator implements ActionGenerator {
         return Optional.of(
             new Action() {
                 @Override
-                public boolean validate(Turn turn) {
-                    return true;
-                }
-
-                @Override
-                public ActionResult start() {
-                    return new ActionResult() {
-                        @Override
-                        public int action() {
-                            return 0;
-                        }
-
-                        @Override
-                        public PlayableFighter performer() {
-                            return null;
-                        }
-
-                        @Override
-                        public Object[] arguments() {
-                            return new Object[0];
-                        }
-
-                        @Override
-                        public boolean success() {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean secret() {
-                            return false;
-                        }
-
-                        @Override
-                        public void apply(FightTurn turn) {
-
-                        }
-                    };
-                }
-
-                @Override
                 public Fighter performer() {
                     return null;
                 }

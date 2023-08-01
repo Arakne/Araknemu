@@ -23,9 +23,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 import java.time.Duration;
@@ -33,7 +33,7 @@ import java.time.Duration;
 /**
  * Fake action to perform when an invalid spell is required
  */
-public final class SpellNotFound implements Action {
+public final class SpellNotFound implements FightAction {
     private final PlayableFighter caster;
 
     public SpellNotFound(PlayableFighter caster) {

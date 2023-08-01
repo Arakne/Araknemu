@@ -45,7 +45,7 @@ public final class Support extends AbstractAiBuilderFactory {
     }
 
     @Override
-    public void configure(GeneratorBuilder<PlayableFighter> builder, PlayableFighter fighter) {
+    public void configure(GeneratorBuilder builder, PlayableFighter fighter) {
         builder.when(Predicates.hasAllies(), cb -> cb
             .success(sb -> sb
                 .moveToBoost(simulator)

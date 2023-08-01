@@ -38,6 +38,7 @@ import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
@@ -62,11 +63,11 @@ public class AiBaseCase extends FightBaseCase {
     protected Fight fight;
 
     protected AbstractAiBuilderFactory actionFactory;
-    protected ActionGenerator<PlayableFighter> action;
+    protected ActionGenerator action;
     protected FighterAI ai;
 
     protected FightTurn turn;
-    protected Action lastAction;
+    protected FightAction lastAction;
 
     public void configureFight(Consumer<FightBuilder> configurator) {
         if (fight != null) {
@@ -93,7 +94,7 @@ public class AiBaseCase extends FightBaseCase {
         ai.start(turn = fight.turnList().current().get());
 
         if (action == null && actionFactory != null) {
-            GeneratorBuilder<PlayableFighter> aiBuilder = new GeneratorBuilder<>();
+            GeneratorBuilder aiBuilder = new GeneratorBuilder();
             actionFactory.configure(aiBuilder, fighter);
             action = aiBuilder.build();
         }
@@ -114,7 +115,7 @@ public class AiBaseCase extends FightBaseCase {
         ai.start(turn = fight.turnList().current().get());
 
         if (action == null && actionFactory != null) {
-            GeneratorBuilder<PlayableFighter> aiBuilder = new GeneratorBuilder<>();
+            GeneratorBuilder aiBuilder = new GeneratorBuilder();
             actionFactory.configure(aiBuilder, fighter);
             action = aiBuilder.build();
         }
@@ -124,9 +125,9 @@ public class AiBaseCase extends FightBaseCase {
         }
     }
 
-    public Optional<Action> generateAction() {
+    public Optional<FightAction> generateAction() {
         lastAction = null;
-        final Optional<Action> generated = action.generate(ai, new FightAiActionFactoryAdapter(ai.fighter(), fight, fight.actions()));
+        final Optional<FightAction> generated = action.generate(ai, new FightAiActionFactoryAdapter(ai.fighter(), fight, fight.actions()));
 
         generated.ifPresent(a -> lastAction = a);
 
@@ -134,7 +135,7 @@ public class AiBaseCase extends FightBaseCase {
     }
 
     public <T> T generateAndValidateAction(Class<T> type) {
-        Optional<Action> result = generateAction();
+        Optional<FightAction> result = generateAction();
 
         assertTrue(result.isPresent());
         assertInstanceOf(type, result.get());

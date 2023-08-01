@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 
 import java.time.Duration;
@@ -34,7 +34,7 @@ import java.time.Duration;
 /**
  * Use weapon / close combat attack
  */
-public final class CloseCombat implements Action {
+public final class CloseCombat implements FightAction {
     private final PlayableFighter caster;
     private final FightCell target;
     private final WeaponConstraintsValidator validator;

@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellsHelper;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
@@ -41,11 +40,11 @@ import java.util.stream.Collectors;
 /**
  * Try to teleport near enemy
  */
-public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
+public final class TeleportNearEnemy implements ActionGenerator {
     private List<Spell> teleportSpells = Collections.emptyList();
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         final SpellsHelper helper = ai.helper().spells();
 
         teleportSpells = helper
@@ -56,7 +55,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         if (teleportSpells.isEmpty()) {
             return Optional.empty();
         }
@@ -159,7 +158,7 @@ public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionG
          * Get the best cast action
          * May returns an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
          */
-        public Optional<Action> action(AiActionFactory actions) {
+        public <A extends Action> Optional<A> action(AiActionFactory<A> actions) {
             if (spell == null || cell == null) {
                 return Optional.empty();
             }

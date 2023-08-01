@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
@@ -141,14 +142,14 @@ class FightTurnTest extends FightBaseCase {
 
     @Test
     void performNotActive() {
-        assertThrows(FightException.class, () -> turn.perform(Mockito.mock(Action.class)));
+        assertThrows(FightException.class, () -> turn.perform(Mockito.mock(FightAction.class)));
     }
 
     @Test
     void performInvalidAction() {
         turn.start();
 
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         Mockito.when(action.validate(turn)).thenReturn(false);
 
         assertThrows(FightException.class, () -> turn.perform(action));
@@ -158,7 +159,7 @@ class FightTurnTest extends FightBaseCase {
     void performSuccess() {
         turn.start();
 
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -177,7 +178,7 @@ class FightTurnTest extends FightBaseCase {
         turn.fighter().life().alter(turn.fighter(), -1000);
         assertTrue(turn.fighter().dead());
 
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         Mockito.when(action.validate(turn)).thenReturn(false);
 
         assertThrows(FightException.class, () -> turn.perform(action));
@@ -187,7 +188,7 @@ class FightTurnTest extends FightBaseCase {
     void terminate() {
         turn.start();
 
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -208,7 +209,7 @@ class FightTurnTest extends FightBaseCase {
         AtomicReference<TurnStopped> ref = new AtomicReference<>();
         fight.dispatcher().add(TurnStopped.class, ref::set);
 
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -402,7 +403,7 @@ class FightTurnTest extends FightBaseCase {
 
     @Test
     void laterWithPendingAction() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);

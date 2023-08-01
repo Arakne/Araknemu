@@ -32,13 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class MoveNearFighterTest extends AiBaseCase {
     @Test
     void generateNotInitialized() {
-        action = new MoveNearFighter<>(AI::enemy);
+        action = new MoveNearFighter(AI::enemy);
         assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(AiActionFactory.class)).isPresent());
     }
 
     @Test
     void success() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(222).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(222).fighter()));
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))
             .addEnemy(builder -> builder.cell(125))
@@ -53,7 +53,7 @@ class MoveNearFighterTest extends AiBaseCase {
 
     @Test
     void shouldMoveToAdjacentCellWhenCarriedByTarget() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(222).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(222).fighter()));
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))
             .addAlly(builder -> builder.cell(222))
@@ -69,7 +69,7 @@ class MoveNearFighterTest extends AiBaseCase {
 
     @Test
     void failedWhenCarriedButNoAvailableAdjacentCell() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(222).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(222).fighter()));
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))
             .addAlly(builder -> builder.cell(222))
@@ -84,7 +84,7 @@ class MoveNearFighterTest extends AiBaseCase {
 
     @Test
     void withAllyOnPathShouldBeCircumvented() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(181).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(181).fighter()));
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(151))
             .addAlly(builder -> builder.cell(166))
@@ -99,7 +99,7 @@ class MoveNearFighterTest extends AiBaseCase {
 
     @Test
     void whenAllyBlockAccess() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(341).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(341).fighter()));
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(211))
             .addAlly(builder -> builder.cell(284))
@@ -115,7 +115,7 @@ class MoveNearFighterTest extends AiBaseCase {
     // See: https://github.com/Arakne/Araknemu/issues/94
     @Test
     void notAccessibleCellShouldTruncateToNearestCell() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(69).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(69).fighter()));
         configureFight(fb -> fb
             .map(10342)
             .addSelf(builder -> builder.cell(155))
@@ -130,7 +130,7 @@ class MoveNearFighterTest extends AiBaseCase {
 
     @Test
     void noMP() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(125).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(125).fighter()));
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))
             .addEnemy(builder -> builder.cell(125))
@@ -143,7 +143,7 @@ class MoveNearFighterTest extends AiBaseCase {
 
     @Test
     void onAdjacentCell() {
-        action = new MoveNearFighter<>(ai -> Optional.of(fight.map().get(125).fighter()));
+        action = new MoveNearFighter(ai -> Optional.of(fight.map().get(125).fighter()));
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(110))
             .addEnemy(builder -> builder.cell(125))
@@ -154,7 +154,7 @@ class MoveNearFighterTest extends AiBaseCase {
 
     @Test
     void noAvailableTarget() {
-        action = new MoveNearFighter<>(ai -> Optional.empty());
+        action = new MoveNearFighter(ai -> Optional.empty());
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(90))
             .addEnemy(builder -> builder.cell(125))

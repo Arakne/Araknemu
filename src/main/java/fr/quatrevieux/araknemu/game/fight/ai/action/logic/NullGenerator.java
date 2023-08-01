@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -30,24 +29,23 @@ import java.util.Optional;
 /**
  * A No-op generator
  */
-public final class NullGenerator<F extends ActiveFighter> implements ActionGenerator<F> {
-    public static final NullGenerator<ActiveFighter> INSTANCE = new NullGenerator<>();
+public final class NullGenerator implements ActionGenerator {
+    public static final NullGenerator INSTANCE = new NullGenerator();
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         // No-op
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return Optional.empty();
     }
 
     /**
      * Get the instance of the null generator
      */
-    @SuppressWarnings("unchecked")
-    public static <F extends ActiveFighter> NullGenerator<F> get() {
-        return (NullGenerator<F>) INSTANCE;
+    public static NullGenerator get() {
+        return INSTANCE;
     }
 }

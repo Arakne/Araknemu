@@ -29,7 +29,6 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
@@ -74,7 +73,7 @@ public final class Fight implements Dispatcher, Sender {
     private final ListenerAggregate dispatcher;
     private final ScheduledExecutorService executor;
     private final Spectators spectators;
-    private final ActionsFactory<PlayableFighter> actions;
+    private final ActionsFactory actions;
     private final FighterList fighters;
 
     private final Lock executorLock = new ReentrantLock();
@@ -85,7 +84,7 @@ public final class Fight implements Dispatcher, Sender {
     private volatile boolean alive = true;
 
     @SuppressWarnings({"assignment", "argument"})
-    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory.Factory<PlayableFighter> actions) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory.Factory actions) {
         this.id = id;
         this.type = type;
         this.map = map;
@@ -207,7 +206,7 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get available fight actions factories
      */
-    public ActionsFactory<PlayableFighter> actions() {
+    public ActionsFactory actions() {
         return actions;
     }
 

@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
-import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import fr.quatrevieux.araknemu.game.world.creature.Life;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -50,7 +50,7 @@ public interface FighterData extends Creature<BattlefieldCell> {
     /**
      * Get the fighter life
      */
-    public FighterLife life();
+    public Life life();
 
     /**
      * Get the current buffs
@@ -73,12 +73,6 @@ public interface FighterData extends Creature<BattlefieldCell> {
     public Team<? extends FighterData> team();
 
     /**
-     * Get the related fight
-     * @todo interface
-     */
-    public Fight fight();
-
-    /**
      * Check the hidden state of the fighter
      * If true, cell must not be sent to other fighters, movement actions must be hidden
      * and AI should ignore fighter position
@@ -88,9 +82,7 @@ public interface FighterData extends Creature<BattlefieldCell> {
     /**
      * Check if the player is dead
      */
-    public default boolean dead() {
-        return life().dead();
-    }
+    public boolean dead();
 
     /**
      * Get the invoker fighter

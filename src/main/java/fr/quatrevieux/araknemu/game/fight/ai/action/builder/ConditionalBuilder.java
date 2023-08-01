@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.builder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -33,15 +32,15 @@ import java.util.function.Predicate;
  * @see ConditionalGenerator The built generator
  * @see GeneratorBuilder#when(Predicate, Consumer) For get the conditional builder
  */
-public final class ConditionalBuilder<F extends ActiveFighter> {
-    private final Predicate<AI<F>> condition;
-    private final GeneratorBuilder<F> success;
-    private final GeneratorBuilder<F> otherwise;
+public final class ConditionalBuilder {
+    private final Predicate<AI> condition;
+    private final GeneratorBuilder success;
+    private final GeneratorBuilder otherwise;
 
-    public ConditionalBuilder(Predicate<AI<F>> condition) {
+    public ConditionalBuilder(Predicate<AI> condition) {
         this.condition = condition;
-        this.success = new GeneratorBuilder<>();
-        this.otherwise = new GeneratorBuilder<>();
+        this.success = new GeneratorBuilder();
+        this.otherwise = new GeneratorBuilder();
     }
 
     /**
@@ -60,7 +59,7 @@ public final class ConditionalBuilder<F extends ActiveFighter> {
      *
      * @return The builder instance
      */
-    public ConditionalBuilder<F> success(Consumer<GeneratorBuilder<F>> configurator) {
+    public ConditionalBuilder success(Consumer<GeneratorBuilder> configurator) {
         configurator.accept(success);
 
         return this;
@@ -80,7 +79,7 @@ public final class ConditionalBuilder<F extends ActiveFighter> {
      *
      * @return The builder instance
      */
-    public ConditionalBuilder<F> success(ActionGenerator<F> generator) {
+    public ConditionalBuilder success(ActionGenerator generator) {
         success.add(generator);
 
         return this;
@@ -102,7 +101,7 @@ public final class ConditionalBuilder<F extends ActiveFighter> {
      *
      * @return The builder instance
      */
-    public ConditionalBuilder<F> otherwise(Consumer<GeneratorBuilder<F>> configurator) {
+    public ConditionalBuilder otherwise(Consumer<GeneratorBuilder> configurator) {
         configurator.accept(otherwise);
 
         return this;
@@ -122,7 +121,7 @@ public final class ConditionalBuilder<F extends ActiveFighter> {
      *
      * @return The builder instance
      */
-    public ConditionalBuilder<F> otherwise(ActionGenerator<F> generator) {
+    public ConditionalBuilder otherwise(ActionGenerator generator) {
         otherwise.add(generator);
 
         return this;
@@ -131,7 +130,7 @@ public final class ConditionalBuilder<F extends ActiveFighter> {
     /**
      * Build the {@link ConditionalGenerator} object
      */
-    public ActionGenerator<F> build() {
-        return new ConditionalGenerator<>(condition, success.build(), otherwise.build());
+    public ActionGenerator build() {
+        return new ConditionalGenerator(condition, success.build(), otherwise.build());
     }
 }

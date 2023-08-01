@@ -36,7 +36,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,12 +47,12 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class GeneratorBuilderTest extends TestCase {
-    private GeneratorBuilder<Fighter> builder;
+    private GeneratorBuilder builder;
     private Simulator simulator;
 
     @BeforeEach
     void setUp() {
-        builder = new GeneratorBuilder<>();
+        builder = new GeneratorBuilder();
         simulator = new Simulator(new BaseCriticalityStrategy());
     }
 
@@ -64,18 +63,18 @@ class GeneratorBuilderTest extends TestCase {
 
     @Test
     void buildSingleAction() {
-        ActionGenerator<Fighter> generator = Mockito.mock(ActionGenerator.class);
+        ActionGenerator generator = Mockito.mock(ActionGenerator.class);
 
         assertSame(generator, builder.add(generator).build());
     }
 
     @Test
     void buildMultiple() throws NoSuchFieldException, IllegalAccessException {
-        ActionGenerator<Fighter> g1 = Mockito.mock(ActionGenerator.class);
-        ActionGenerator<Fighter> g2 = Mockito.mock(ActionGenerator.class);
-        ActionGenerator<Fighter> g3 = Mockito.mock(ActionGenerator.class);
+        ActionGenerator g1 = Mockito.mock(ActionGenerator.class);
+        ActionGenerator g2 = Mockito.mock(ActionGenerator.class);
+        ActionGenerator g3 = Mockito.mock(ActionGenerator.class);
 
-        ActionGenerator<Fighter> built = builder.add(g1).add(g2).add(g3).build();
+        ActionGenerator built = builder.add(g1).add(g2).add(g3).build();
 
         assertInstanceOf(GeneratorAggregate.class, built);
 
@@ -87,10 +86,10 @@ class GeneratorBuilderTest extends TestCase {
 
     @Test
     void when() throws NoSuchFieldException, IllegalAccessException {
-        ActionGenerator<Fighter> gs = Mockito.mock(ActionGenerator.class);
-        ActionGenerator<Fighter> go = Mockito.mock(ActionGenerator.class);
+        ActionGenerator gs = Mockito.mock(ActionGenerator.class);
+        ActionGenerator go = Mockito.mock(ActionGenerator.class);
 
-        ActionGenerator<Fighter> built = builder.when(ai -> true, cb -> cb.success(gs).otherwise(go)).build();
+        ActionGenerator built = builder.when(ai -> true, cb -> cb.success(gs).otherwise(go)).build();
 
         assertInstanceOf(ConditionalGenerator.class, built);
 
@@ -178,7 +177,7 @@ class GeneratorBuilderTest extends TestCase {
         assertInstanceOf(BlockNearestEnemy.class, builder.blockNearestEnemy().build());
     }
 
-    private void assertActions(ActionGenerator<Fighter> action, Class<? extends ActionGenerator> ...types) throws NoSuchFieldException, IllegalAccessException {
+    private void assertActions(ActionGenerator action, Class<? extends ActionGenerator> ...types) throws NoSuchFieldException, IllegalAccessException {
         assertInstanceOf(GeneratorAggregate.class, action);
 
         Field actions = GeneratorAggregate.class.getDeclaredField("generators");
