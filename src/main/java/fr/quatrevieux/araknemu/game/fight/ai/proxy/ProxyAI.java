@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -37,8 +37,8 @@ import java.util.stream.Stream;
  *
  * Note: this object is immutable : any change will result to a creation of a new instance
  */
-public final class ProxyAI implements AI<ActiveFighter> {
-    private final AI<?> ai;
+public final class ProxyAI implements AI {
+    private final AI ai;
 
     private ProxyBattlefield map;
     private ProxyActiveFighter fighter;
@@ -46,7 +46,7 @@ public final class ProxyAI implements AI<ActiveFighter> {
 
     private final Map<FighterData, FighterData> fighters = new WeakHashMap<>();
 
-    public ProxyAI(AI<?> ai) {
+    public ProxyAI(AI ai) {
         this.ai = ai;
         this.fighter = new ProxyActiveFighter(ai.fighter());
         this.map = new ProxyBattlefield(ai.map());
@@ -61,11 +61,6 @@ public final class ProxyAI implements AI<ActiveFighter> {
     }
 
     @Override
-    public void start(Turn turn) {
-        throw new UnsupportedOperationException("This is a proxy AI");
-    }
-
-    @Override
     public ActiveFighter fighter() {
         return fighter;
     }
@@ -76,7 +71,7 @@ public final class ProxyAI implements AI<ActiveFighter> {
     }
 
     @Override
-    public Turn turn() {
+    public Turn<?> turn() {
         return turn;
     }
 
@@ -97,7 +92,7 @@ public final class ProxyAI implements AI<ActiveFighter> {
      *
      * @return The new AI instance with the updated position
      *
-     * @see fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper#withPosition(FightCell)
+     * @see fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper#withPosition(BattlefieldCell)
      */
     public ProxyAI withPosition(@NonNegative int cellId) {
         final ProxyAI newAi = new ProxyAI(this);

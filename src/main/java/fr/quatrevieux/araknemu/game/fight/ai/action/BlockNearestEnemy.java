@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -32,28 +31,26 @@ import java.util.Optional;
 /**
  * Try to block the nearest enemy of the invoker
  * If the invoker is hidden, this generator will act like {@link MoveNearEnemy}
- *
- * @param <F> the fighter type
  */
-public final class BlockNearestEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
-    private final ActionGenerator<F> moveGenerator;
+public final class BlockNearestEnemy implements ActionGenerator {
+    private final ActionGenerator moveGenerator;
 
     @SuppressWarnings("methodref.receiver.bound")
     public BlockNearestEnemy() {
-        moveGenerator = new MoveNearFighter<>(this::resolve);
+        moveGenerator = new MoveNearFighter(this::resolve);
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         moveGenerator.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return moveGenerator.generate(ai, actions);
     }
 
-    private Optional<? extends FighterData> resolve(AI<F> ai) {
+    private Optional<? extends FighterData> resolve(AI ai) {
         final FighterData invoker = ai.fighter().invoker();
 
         if (invoker == null || invoker.hidden()) {
@@ -68,6 +65,6 @@ public final class BlockNearestEnemy<F extends ActiveFighter> implements ActionG
                 .<FighterData>comparingInt(f -> currentCell.distance(f.cell()))
                 .thenComparingInt(f -> f.life().current())
             )
-        ;
+            ;
     }
 }

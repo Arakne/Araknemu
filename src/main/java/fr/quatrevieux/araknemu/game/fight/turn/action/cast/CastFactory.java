@@ -23,8 +23,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValid
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
@@ -33,7 +33,7 @@ import fr.quatrevieux.araknemu.util.ParseUtils;
 /**
  * Factory for cast action
  */
-public final class CastFactory implements CastActionFactory<PlayableFighter> {
+public final class CastFactory implements CastActionFactory {
     private final CastConstraintValidator<Spell> validator;
     private final CriticalityStrategy criticalityStrategy;
 
@@ -43,7 +43,7 @@ public final class CastFactory implements CastActionFactory<PlayableFighter> {
     }
 
     @Override
-    public Action create(PlayableFighter fighter, String[] arguments) {
+    public FightAction create(PlayableFighter fighter, String[] arguments) {
         if (arguments.length < 2) {
             throw new IllegalArgumentException("Invalid cast arguments");
         }

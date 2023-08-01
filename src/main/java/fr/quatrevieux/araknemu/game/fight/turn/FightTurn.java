@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionHandler;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @todo turn list on constructor
  */
-public final class FightTurn implements Turn {
+public final class FightTurn implements Turn<FightAction> {
     private final AtomicBoolean active = new AtomicBoolean(false);
 
     private final PlayableFighter fighter;
@@ -142,7 +142,7 @@ public final class FightTurn implements Turn {
     }
 
     @Override
-    public void perform(Action action) throws FightException {
+    public void perform(FightAction action) throws FightException {
         if (!active.get()) {
             throw new FightException("Turn is not active");
         }

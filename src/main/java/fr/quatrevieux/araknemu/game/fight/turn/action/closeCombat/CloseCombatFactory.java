@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
@@ -31,7 +30,7 @@ import fr.quatrevieux.araknemu.util.ParseUtils;
 /**
  * Factory for close combat action
  */
-public final class CloseCombatFactory implements FightActionFactory<PlayableFighter> {
+public final class CloseCombatFactory implements FightActionFactory {
     private final WeaponConstraintsValidator validator;
     private final CriticalityStrategy criticalityStrategy;
 
@@ -41,7 +40,7 @@ public final class CloseCombatFactory implements FightActionFactory<PlayableFigh
     }
 
     @Override
-    public Action create(PlayableFighter fighter, String[] arguments) {
+    public CloseCombat create(PlayableFighter fighter, String[] arguments) {
         if (arguments.length < 1) {
             throw new IllegalArgumentException("Invalid close combat arguments");
         }

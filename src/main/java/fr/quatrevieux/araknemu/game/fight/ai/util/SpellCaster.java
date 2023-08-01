@@ -34,11 +34,11 @@ import java.util.stream.Stream;
  * Utility class for cast spells
  */
 public final class SpellCaster {
-    private final AI<?> ai;
+    private final AI ai;
     private final AIHelper helper;
     private final CastConstraintValidator<Spell> validator;
 
-    public SpellCaster(AI<?> ai, AIHelper helper, CastConstraintValidator<Spell> validator) {
+    public SpellCaster(AI ai, AIHelper helper, CastConstraintValidator<Spell> validator) {
         this.ai = ai;
         this.helper = helper;
         this.validator = validator;
@@ -53,7 +53,7 @@ public final class SpellCaster {
             return false;
         }
 
-        final Turn turn = ai.turn();
+        final Turn<?> turn = ai.turn();
 
         return validator.check(turn, spell, target);
     }

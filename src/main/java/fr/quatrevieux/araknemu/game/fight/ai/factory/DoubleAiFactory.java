@@ -38,12 +38,12 @@ public final class DoubleAiFactory implements AiFactory<PlayableFighter> {
     }
 
     @Override
-    public Optional<AI<PlayableFighter>> create(PlayableFighter fighter) {
+    public Optional<AI> create(PlayableFighter fighter) {
         return Optional.ofNullable(fighter.apply(new Resolver()).ai);
     }
 
     private class Resolver implements FighterOperation {
-        private @Nullable AI<PlayableFighter> ai;
+        private @Nullable AI ai;
 
         @Override
         public void onDouble(DoubleFighter fighter) {

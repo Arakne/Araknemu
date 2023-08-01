@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle fixed damage, which cannot be boosted nor reduced
@@ -38,7 +37,7 @@ public final class FixedDamageHandler implements EffectHandler, BuffHook {
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
-        for (FighterData target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             target.life().alter(caster, -EffectValue.create(effect.effect(), caster, target).value());
         }
     }

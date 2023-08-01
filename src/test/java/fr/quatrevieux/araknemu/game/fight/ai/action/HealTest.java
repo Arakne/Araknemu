@@ -39,7 +39,7 @@ class HealTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        action = new Heal<>(container.get(Simulator.class));
+        action = new Heal(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
     }
 

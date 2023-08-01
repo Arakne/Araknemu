@@ -20,16 +20,15 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.arakne.utils.maps.constant.Direction;
-import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
+import fr.quatrevieux.araknemu.game.world.creature.Life;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -93,7 +92,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public FighterLife life() {
+    public Life life() {
         return fighter.life();
     }
 
@@ -120,11 +119,6 @@ public final class ProxyActiveFighter implements ActiveFighter {
     @Override
     public Team<? extends FighterData> team() {
         return fighter.team();
-    }
-
-    @Override
-    public Fight fight() {
-        return fighter.fight();
     }
 
     @Override

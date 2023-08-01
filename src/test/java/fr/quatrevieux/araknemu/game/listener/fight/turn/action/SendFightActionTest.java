@@ -158,7 +158,7 @@ class SendFightActionTest extends FightBaseCase {
         player.fighter().setHidden(player.fighter(), true);
         requestStack.clear();
 
-        Action cast = fight.actions().cast().create(player.fighter(), player.fighter().spells().get(3), other.fighter().cell());
+        fr.quatrevieux.araknemu.game.fight.turn.action.FightAction cast = fight.actions().cast().create(player.fighter(), player.fighter().spells().get(3), other.fighter().cell());
 
         ActionResult result = cast.start();
 

@@ -35,7 +35,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +62,8 @@ import java.util.function.Predicate;
  * ;
  * }</pre>
  */
-public class GeneratorBuilder<F extends ActiveFighter> {
-    private final List<ActionGenerator<F>> generators = new ArrayList<>();
+public class GeneratorBuilder {
+    private final List<ActionGenerator> generators = new ArrayList<>();
 
     /**
      * Append a new action generator at the end of the pipeline
@@ -83,7 +82,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      *
      * @return The builder instance
      */
-    public final GeneratorBuilder<F> add(ActionGenerator<F> generator) {
+    public final GeneratorBuilder add(ActionGenerator generator) {
         generators.add(generator);
 
         return this;
@@ -108,8 +107,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see ConditionalBuilder
      * @see fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator
      */
-    public final GeneratorBuilder<F> when(Predicate<AI<F>> condition, Consumer<ConditionalBuilder<F>> configurator) {
-        final ConditionalBuilder<F> builder = new ConditionalBuilder<>(condition);
+    public final GeneratorBuilder when(Predicate<AI> condition, Consumer<ConditionalBuilder> configurator) {
+        final ConditionalBuilder builder = new ConditionalBuilder(condition);
 
         configurator.accept(builder);
 
@@ -133,7 +132,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see GeneratorBuilder#moveToAttack(Simulator) For only perform the move action, without attack
      * @see GeneratorBuilder#attack(Simulator) For only perform the attack, without move
      */
-    public final GeneratorBuilder<F> attackFromBestCell(Simulator simulator) {
+    public final GeneratorBuilder attackFromBestCell(Simulator simulator) {
         return moveToAttack(simulator).attack(simulator);
     }
 
@@ -153,7 +152,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see GeneratorBuilder#attackFromBestCell(Simulator) For perform move and attack
      * @see MoveToAttack#bestTarget(Simulator) The used action generator
      */
-    public final GeneratorBuilder<F> moveToAttack(Simulator simulator) {
+    public final GeneratorBuilder moveToAttack(Simulator simulator) {
         return add(MoveToAttack.bestTarget(simulator));
     }
 
@@ -175,7 +174,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see GeneratorBuilder#attackFromBestCell(Simulator) Same action (move and attack), but configured to maximize damage
      * @see GeneratorBuilder#attack(Simulator) For only perform the attack, without move
      */
-    public final GeneratorBuilder<F> attackFromNearestCell(Simulator simulator) {
+    public final GeneratorBuilder attackFromNearestCell(Simulator simulator) {
         return attack(simulator).add(MoveToAttack.nearest(simulator));
     }
 
@@ -190,8 +189,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see GeneratorBuilder#attackFromBestCell(Simulator) For perform move and attack action
      * @see GeneratorBuilder#attackFromNearestCell(Simulator) For perform move and attack action
      */
-    public final GeneratorBuilder<F> attack(Simulator simulator) {
-        return add(new Attack<>(simulator));
+    public final GeneratorBuilder attack(Simulator simulator) {
+        return add(new Attack(simulator));
     }
 
     /**
@@ -206,7 +205,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see Boost#self(Simulator) The used action generator
      * @see GeneratorBuilder#boostAllies(Simulator) To boost allies in priority
      */
-    public final GeneratorBuilder<F> boostSelf(Simulator simulator) {
+    public final GeneratorBuilder boostSelf(Simulator simulator) {
         return add(Boost.self(simulator));
     }
 
@@ -220,7 +219,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see Boost#allies(Simulator) The used action generator
      * @see GeneratorBuilder#boostSelf(Simulator) To boost oneself in priority
      */
-    public final GeneratorBuilder<F> boostAllies(Simulator simulator) {
+    public final GeneratorBuilder boostAllies(Simulator simulator) {
         return add(Boost.allies(simulator));
     }
 
@@ -236,8 +235,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      *
      * @see MoveToBoost The used action generator
      */
-    public final GeneratorBuilder<F> moveToBoost(Simulator simulator) {
-        return add(new MoveToBoost<>(simulator)).boostAllies(simulator);
+    public final GeneratorBuilder moveToBoost(Simulator simulator) {
+        return add(new MoveToBoost(simulator)).boostAllies(simulator);
     }
 
     /**
@@ -249,8 +248,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      *
      * @see Heal The used action generator
      */
-    public final GeneratorBuilder<F> heal(Simulator simulator) {
-        return add(new Heal<>(simulator));
+    public final GeneratorBuilder heal(Simulator simulator) {
+        return add(new Heal(simulator));
     }
 
     /**
@@ -262,8 +261,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      *
      * @see Debuff The used action generator
      */
-    public final GeneratorBuilder<F> debuff(Simulator simulator) {
-        return add(new Debuff<>(simulator));
+    public final GeneratorBuilder debuff(Simulator simulator) {
+        return add(new Debuff(simulator));
     }
 
     /**
@@ -275,8 +274,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see AI#enemy() The selected enemy
      * @see GeneratorBuilder#moveOrTeleportNearEnemy() The move using MP or teleport spell
      */
-    public final GeneratorBuilder<F> moveNearEnemy() {
-        return add(new MoveNearEnemy<>());
+    public final GeneratorBuilder moveNearEnemy() {
+        return add(new MoveNearEnemy());
     }
 
     /**
@@ -286,8 +285,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      *
      * @see BlockNearestEnemy The used action generator
      */
-    public final GeneratorBuilder<F> blockNearestEnemy() {
-        return add(new BlockNearestEnemy<>());
+    public final GeneratorBuilder blockNearestEnemy() {
+        return add(new BlockNearestEnemy());
     }
 
     /**
@@ -299,8 +298,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see AI#enemy() The selected enemy
      * @see GeneratorBuilder#moveOrTeleportNearEnemy() The move using MP or teleport spell
      */
-    public final GeneratorBuilder<F> teleportNearEnemy() {
-        return add(new TeleportNearEnemy<>());
+    public final GeneratorBuilder teleportNearEnemy() {
+        return add(new TeleportNearEnemy());
     }
 
     /**
@@ -314,7 +313,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * @see GeneratorBuilder#moveNearEnemy()
      * @see GeneratorBuilder#moveFarEnemies()
      */
-    public final GeneratorBuilder<F> moveOrTeleportNearEnemy() {
+    public final GeneratorBuilder moveOrTeleportNearEnemy() {
         return moveNearEnemy().teleportNearEnemy();
     }
 
@@ -327,8 +326,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      *
      * @see MoveFarEnemies The used action generator
      */
-    public final GeneratorBuilder<F> moveFarEnemies() {
-        return add(new MoveFarEnemies<>());
+    public final GeneratorBuilder moveFarEnemies() {
+        return add(new MoveFarEnemies());
     }
 
     /**
@@ -340,8 +339,8 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      *
      * @see MoveNearAllies The used action generator
      */
-    public final GeneratorBuilder<F> moveNearAllies() {
-        return add(new MoveNearAllies<>());
+    public final GeneratorBuilder moveNearAllies() {
+        return add(new MoveNearAllies());
     }
 
     /**
@@ -351,8 +350,7 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      * If there is only one action generator, it will be returned
      * Else, create a {@link GeneratorAggregate}
      */
-    @SuppressWarnings("unchecked")
-    public final ActionGenerator<F> build() {
+    public final ActionGenerator build() {
         if (generators.isEmpty()) {
             return NullGenerator.get();
         }
@@ -361,6 +359,6 @@ public class GeneratorBuilder<F extends ActiveFighter> {
             return generators.get(0);
         }
 
-        return new GeneratorAggregate<>(generators.toArray(new ActionGenerator[0]));
+        return new GeneratorAggregate(generators.toArray(new ActionGenerator[0]));
     }
 }

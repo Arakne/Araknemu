@@ -71,7 +71,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void startInvalid() {
-        assertFalse(actionHandler.start(new Action() {
+        assertFalse(actionHandler.start(new FightAction() {
             @Override
             public boolean validate(Turn turn) {
                 return false;
@@ -101,7 +101,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void startSuccessWillDispatchEvent() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -120,7 +120,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void startFailedWillDispatchEventAndCallFailed() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -141,7 +141,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @RepeatedIfExceptionsTest
     void startSuccessTerminateActionWhenDurationIsReached() throws InterruptedException {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -160,7 +160,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void startWithPendingAction() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -171,7 +171,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         assertTrue(actionHandler.start(action));
 
-        Action other = Mockito.mock(Action.class);
+        FightAction other = Mockito.mock(FightAction.class);
 
         assertFalse(actionHandler.start(other));
         Mockito.verify(other, Mockito.never()).start();
@@ -189,7 +189,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void terminateSuccessWillDispatchEvent() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -211,7 +211,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @RepeatedIfExceptionsTest
     void terminateSuccessWillCancelTimer() throws InterruptedException {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -230,7 +230,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void terminateWithTerminationListener() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -252,7 +252,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void terminateWithException() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -274,7 +274,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void terminateWithTerminationListenerWillRemoveOldListeners() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);
@@ -306,7 +306,7 @@ class ActionHandlerTest extends FightBaseCase {
 
     @Test
     void terminateOnStoppedFightShouldBeIgnored() {
-        Action action = Mockito.mock(Action.class);
+        FightAction action = Mockito.mock(FightAction.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
         Mockito.when(action.validate(turn)).thenReturn(true);

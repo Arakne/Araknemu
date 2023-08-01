@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -33,7 +32,7 @@ import java.util.Optional;
 /**
  * Try to cast the best spell
  */
-public final class CastSpell<F extends ActiveFighter> implements ActionGenerator<F> {
+public final class CastSpell implements ActionGenerator {
     private final Simulator simulator;
     private final SimulationSelector selector;
 
@@ -43,11 +42,11 @@ public final class CastSpell<F extends ActiveFighter> implements ActionGenerator
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         final AIHelper helper = ai.helper();
 
         if (!helper.canCast()) {

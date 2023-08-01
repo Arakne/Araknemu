@@ -22,14 +22,13 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 
 /**
  * Factory for move action
  */
-public final class MoveFactory implements MoveActionFactory<PlayableFighter> {
+public final class MoveFactory implements MoveActionFactory {
     private final FightPathValidator[] validators;
 
     public MoveFactory(FightPathValidator[] validators) {
@@ -37,7 +36,7 @@ public final class MoveFactory implements MoveActionFactory<PlayableFighter> {
     }
 
     @Override
-    public Action create(PlayableFighter fighter, String[] arguments) {
+    public Move create(PlayableFighter fighter, String[] arguments) {
         if (arguments.length < 1) {
             throw new IllegalArgumentException("Invalid move arguments");
         }

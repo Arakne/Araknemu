@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -37,23 +36,23 @@ import java.util.Optional;
  * and check all spells on all available cells.
  * The first matching cell is selected.
  */
-public final class MoveToAttack<F extends ActiveFighter> implements ActionGenerator<F> {
-    private final MoveToCast<F> generator;
-    private final Attack<F> attack;
+public final class MoveToAttack implements ActionGenerator {
+    private final MoveToCast generator;
+    private final Attack attack;
 
-    private MoveToAttack(Simulator simulator, MoveToCast.TargetSelectionStrategy<F> strategy) {
-        this.attack = new Attack<>(simulator);
-        this.generator = new MoveToCast<>(simulator, attack, strategy);
+    private MoveToAttack(Simulator simulator, MoveToCast.TargetSelectionStrategy strategy) {
+        this.attack = new Attack(simulator);
+        this.generator = new MoveToCast(simulator, attack, strategy);
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         attack.initialize(ai);
         generator.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return generator.generate(ai, actions);
     }
 
@@ -63,14 +62,14 @@ public final class MoveToAttack<F extends ActiveFighter> implements ActionGenera
      * Note: This selected cell is not the best cell for perform an attack, but the nearest cell.
      *       So, it do not perform the best move for maximize damage.
      */
-    public static <F extends ActiveFighter> MoveToAttack<F> nearest(Simulator simulator) {
-        return new MoveToAttack<>(simulator, new MoveToCast.NearestStrategy<>());
+    public static MoveToAttack nearest(Simulator simulator) {
+        return new MoveToAttack(simulator, new MoveToCast.NearestStrategy());
     }
 
     /**
      * Select the best target cell for cast a spell, and maximizing damage
      */
-    public static <F extends ActiveFighter> MoveToAttack<F> bestTarget(Simulator simulator) {
-        return new MoveToAttack<>(simulator, new MoveToCast.BestTargetStrategy<>());
+    public static MoveToAttack bestTarget(Simulator simulator) {
+        return new MoveToAttack(simulator, new MoveToCast.BestTargetStrategy());
     }
 }

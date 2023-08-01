@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -31,21 +30,21 @@ import java.util.Optional;
 /**
  * Try to debuff (apply negative buffs) enemies
  */
-public final class Debuff<F extends ActiveFighter> implements ActionGenerator<F>, CastSpell.SimulationSelector {
-    private final CastSpell<F> generator;
+public final class Debuff implements ActionGenerator, CastSpell.SimulationSelector {
+    private final CastSpell generator;
 
     @SuppressWarnings({"argument", "assignment"})
     public Debuff(Simulator simulator) {
-        this.generator = new CastSpell<>(simulator, this);
+        this.generator = new CastSpell(simulator, this);
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         generator.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return generator.generate(ai, actions);
     }
 

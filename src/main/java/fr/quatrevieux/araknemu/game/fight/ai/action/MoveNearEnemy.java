@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.util.Optional;
@@ -28,20 +27,20 @@ import java.util.Optional;
 /**
  * Try to move near the selected enemy
  */
-public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
-    private final ActionGenerator<F> moveGenerator;
+public final class MoveNearEnemy implements ActionGenerator {
+    private final ActionGenerator moveGenerator;
 
     public MoveNearEnemy() {
-        this.moveGenerator = new MoveNearFighter<>(AI::enemy);
+        this.moveGenerator = new MoveNearFighter(AI::enemy);
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         moveGenerator.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return moveGenerator.generate(ai, actions);
     }
 }

@@ -31,15 +31,15 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
  *
  * Note: this object is immutable
  */
-public final class ProxyTurn implements Turn {
-    private final AI<?> ai;
+public final class ProxyTurn implements Turn<Action> {
+    private final AI ai;
     private final ActiveFighter fighter;
 
     /**
      * @param ai The real AI instance (i.e. not the proxy one, because it will cause a cyclic reference)
      * @param fighter The overridden fighter instance
      */
-    public ProxyTurn(AI<?> ai, ActiveFighter fighter) {
+    public ProxyTurn(AI ai, ActiveFighter fighter) {
         this.ai = ai;
         this.fighter = fighter;
     }

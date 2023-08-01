@@ -14,32 +14,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.turn.action;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 
-import java.time.Duration;
-
 /**
- * Base Action type which will be executed by {@link Turn}
+ * Action for a fight turn
+ *
+ * Lifecycle :
+ * - Check if the action can be proceeded using {@link FightAction#validate(Turn)}
+ * - If valid, call {@link FightAction#start()} and get the result
+ * - If the result is not successful, directly call {@link ActionResult#apply(FightTurn)} and stop the process
+ * - If successful, wait for termination (i.e. {@link FightTurn#terminate()}
+ * - On termination, call {@link ActionResult#apply(FightTurn)}
  */
-public interface Action {
+public interface FightAction extends Action {
     /**
-     * Get the action performer
+     * Validate the action before start
+     *
+     * @param turn The active fighter turn
      */
-    public ActiveFighter performer();
+    public boolean validate(Turn<?> turn);
 
     /**
-     * Get the action type
+     * Start to perform the action
      */
-    public ActionType type();
-
-    /**
-     * Get the maximum action duration (will invoke end when this duration is reached)
-     */
-    public Duration duration();
+    public ActionResult start();
 }

@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
  */
 public final class Blocking extends AbstractAiBuilderFactory {
     @Override
-    public void configure(GeneratorBuilder<PlayableFighter> builder, PlayableFighter fighter) {
+    public void configure(GeneratorBuilder builder, PlayableFighter fighter) {
         builder.blockNearestEnemy();
     }
 }

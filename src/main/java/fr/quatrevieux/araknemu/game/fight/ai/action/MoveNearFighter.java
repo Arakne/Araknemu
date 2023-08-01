@@ -23,7 +23,6 @@ import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -39,17 +38,17 @@ import java.util.function.Function;
  * Try to move near the selected fighter
  * If the current fighter is carried by the target one, it will try to move on an adjacent cell
  */
-public final class MoveNearFighter<F extends ActiveFighter> implements ActionGenerator<F> {
+public final class MoveNearFighter implements ActionGenerator {
     private @MonotonicNonNull Pathfinder<BattlefieldCell> pathfinder;
     private @MonotonicNonNull AIHelper helper;
-    private final Function<AI<F>, Optional<? extends FighterData>> fighterResolver;
+    private final Function<AI, Optional<? extends FighterData>> fighterResolver;
 
-    public MoveNearFighter(Function<AI<F>, Optional<? extends FighterData>> fighterResolver) {
+    public MoveNearFighter(Function<AI, Optional<? extends FighterData>> fighterResolver) {
         this.fighterResolver = fighterResolver;
     }
 
     @Override
-    public void initialize(AI<F> ai) {
+    public void initialize(AI ai) {
         this.helper = ai.helper();
         this.pathfinder = helper.cells().pathfinder()
             .targetDistance(1)
@@ -59,7 +58,7 @@ public final class MoveNearFighter<F extends ActiveFighter> implements ActionGen
     }
 
     @Override
-    public Optional<Action> generate(AI<F> ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         if (helper == null || !helper.canMove()) {
             return Optional.empty();
         }
@@ -97,7 +96,7 @@ public final class MoveNearFighter<F extends ActiveFighter> implements ActionGen
         return 1 + Asserter.castNonNegative(3 * (int) NullnessUtil.castNonNull(helper).enemies().adjacent(cell).count());
     }
 
-    private Optional<Path<BattlefieldCell>> generatePath(FighterData target, AI<F> ai) {
+    private Optional<Path<BattlefieldCell>> generatePath(FighterData target, AI ai) {
         final int movementPoints = NullnessUtil.castNonNull(helper).movementPoints();
         final BattlefieldCell currentCell = ai.fighter().cell();
         final BattlefieldCell targetCell = target.cell();

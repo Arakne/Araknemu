@@ -21,17 +21,17 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastActionFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveActionFactory;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Factory for fight actions
  */
-public interface ActionsFactory<@NonNull F extends @NonNull ActiveFighter> {
+public interface ActionsFactory {
     /**
      * Create a fight action
      *
@@ -43,29 +43,29 @@ public interface ActionsFactory<@NonNull F extends @NonNull ActiveFighter> {
      *
      * @throws FightException When cannot create the action
      */
-    public Action create(F fighter, ActionType action, String[] arguments);
+    public FightAction create(PlayableFighter fighter, ActionType action, String[] arguments);
 
     /**
      * Get the factory for spell cast action
      */
-    public CastActionFactory<F> cast();
+    public CastActionFactory cast();
 
     /**
      * Get the factory for close combat action
      */
-    public FightActionFactory<F> closeCombat();
+    public FightActionFactory closeCombat();
 
     /**
      * Get the factory for move action
      */
-    public MoveActionFactory<F> move();
+    public MoveActionFactory move();
 
-    public static interface Factory<@NonNull F extends @NonNull ActiveFighter> {
+    public static interface Factory<A extends Action> {
         /**
          * Create the actions factory for the given fight
          *
          * @param fight The fight
          */
-        public ActionsFactory<F> createForFight(Fight fight);
+        public ActionsFactory createForFight(Fight fight);
     }
 }

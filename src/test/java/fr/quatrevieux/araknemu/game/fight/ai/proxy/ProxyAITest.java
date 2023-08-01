@@ -22,9 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProxyAITest extends AiBaseCase {
@@ -138,18 +135,5 @@ class ProxyAITest extends AiBaseCase {
 
         assertFalse(proxy.map().get(123).hasFighter());
         assertFalse(proxy.map().get(152).hasFighter());
-    }
-
-    @Test
-    void startIsDisabled() {
-        configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(152))
-            .addEnemy(builder -> builder.cell(167))
-            .addAlly(builder -> builder.cell(166))
-        );
-
-        ProxyAI proxy = new ProxyAI(ai);
-
-        assertThrows(UnsupportedOperationException.class, () -> proxy.start(Mockito.mock(Turn.class)));
     }
 }

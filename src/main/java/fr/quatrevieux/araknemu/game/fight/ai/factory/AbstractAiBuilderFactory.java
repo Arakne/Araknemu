@@ -33,20 +33,20 @@ public abstract class AbstractAiBuilderFactory implements AiFactory<PlayableFigh
     /**
      * Configure the AI generator
      */
-    protected void configure(GeneratorBuilder<PlayableFighter> builder) {
+    protected void configure(GeneratorBuilder builder) {
         // To implements if configure(GeneratorBuilder, Fighter) is not implemented
     }
 
     /**
      * Configure the AI generator
      */
-    public void configure(GeneratorBuilder<PlayableFighter> builder, PlayableFighter fighter) {
+    public void configure(GeneratorBuilder builder, PlayableFighter fighter) {
         configure(builder);
     }
 
     @Override
-    public final Optional<AI<PlayableFighter>> create(PlayableFighter fighter) {
-        final GeneratorBuilder<PlayableFighter> builder = new GeneratorBuilder<>();
+    public final Optional<AI> create(PlayableFighter fighter) {
+        final GeneratorBuilder builder = new GeneratorBuilder();
 
         configure(builder, fighter);
 

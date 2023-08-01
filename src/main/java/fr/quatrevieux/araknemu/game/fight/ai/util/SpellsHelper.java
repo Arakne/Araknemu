@@ -35,9 +35,9 @@ import java.util.stream.StreamSupport;
  */
 public final class SpellsHelper {
     private final AIHelper helper;
-    private final AI<?> ai;
+    private final AI ai;
 
-    SpellsHelper(AIHelper helper, AI<?> ai) {
+    SpellsHelper(AIHelper helper, AI ai) {
         this.helper = helper;
         this.ai = ai;
     }

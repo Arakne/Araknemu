@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 /**
  * Factory of actions performed by AI system
  */
-public interface AiActionFactory {
+public interface AiActionFactory<A extends Action> {
     /**
      * Cast a spell
      *
@@ -39,7 +39,7 @@ public interface AiActionFactory {
      *
      * @see AiActionFactory#castSpellValidator() For validate cast before perform action
      */
-    public Action cast(Spell spell, BattlefieldCell target);
+    public A cast(Spell spell, BattlefieldCell target);
 
     /**
      * Create a move action
@@ -48,7 +48,7 @@ public interface AiActionFactory {
      *
      * @return Action to perform
      */
-    public Action move(Path<BattlefieldCell> path);
+    public A move(Path<BattlefieldCell> path);
 
     /**
      * Validator for cast spell action

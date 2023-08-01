@@ -35,5 +35,5 @@ public interface AiFactory<F extends ActiveFighter> {
      *
      * @return The AI, or an empty optional if cannot be resolved
      */
-    public Optional<AI<F>> create(F fighter);
+    public Optional<AI> create(F fighter);
 }
