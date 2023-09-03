@@ -203,6 +203,17 @@ class CastSimulationTest extends FightBaseCase {
     }
 
     @Test
+    void invocation() {
+        assertEquals(0, simulation.invocation());
+
+        simulation.addInvocation(10.0);
+        assertEquals(10.0, simulation.invocation());
+
+        simulation.addInvocation(5.0);
+        assertEquals(15.0, simulation.invocation());
+    }
+
+    @Test
     void merge() {
         simulation.addDamage(new Interval(15, 15), ennemy);
         simulation.addBoost(15, ennemy);
@@ -244,6 +255,19 @@ class CastSimulationTest extends FightBaseCase {
         simulation.merge(other, 20);
 
         assertEquals(.415, simulation.suicideProbability());
+    }
+
+    @Test
+    void mergeInvocation() {
+        simulation.addInvocation(15.0);
+
+        CastSimulation other = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
+
+        other.addInvocation(20.0);
+
+        simulation.merge(other, 20.0);
+
+        assertEquals(19.0, simulation.invocation());
     }
 
     @Test

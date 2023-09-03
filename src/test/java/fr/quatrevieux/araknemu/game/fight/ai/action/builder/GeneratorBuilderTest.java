@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.BlockNearestEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
@@ -175,6 +176,11 @@ class GeneratorBuilderTest extends TestCase {
     @Test
     void blockNearestEnemy() {
         assertInstanceOf(BlockNearestEnemy.class, builder.blockNearestEnemy().build());
+    }
+
+    @Test
+    void invoke() {
+        assertInstanceOf(Invoke.class, builder.invoke(simulator).build());
     }
 
     private void assertActions(ActionGenerator action, Class<? extends ActionGenerator> ...types) throws NoSuchFieldException, IllegalAccessException {

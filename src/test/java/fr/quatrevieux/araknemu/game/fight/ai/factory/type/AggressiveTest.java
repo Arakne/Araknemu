@@ -27,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -111,6 +112,26 @@ class AggressiveTest extends AiBaseCase {
 
         assertEquals(136, fighter.cell().id());
         assertEquals(6, distance(getEnemy(0)));
+    }
+
+    @Test
+    void shouldInvokeIfCantMoveOrAttack() throws NoSuchFieldException, IllegalAccessException, SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(210).spell(35))
+            .addAlly(fb -> fb.cell(198))
+            .addEnemy(fb -> fb.cell(52))
+        );
+
+        setMP(0);
+
+        removeSpell(6);
+
+        assertCast(35, 195);
     }
 
     @Test

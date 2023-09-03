@@ -22,9 +22,12 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -40,8 +43,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PunishmentSimulatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayerFighter fighter;
     private PunishmentSimulator simulator;
+    private FighterAI ai;
 
     @Override
     @BeforeEach
@@ -51,6 +55,7 @@ class PunishmentSimulatorTest extends FightBaseCase {
         fight = createFight();
         fighter = player.fighter();
         simulator = new PunishmentSimulator();
+        ai = new FighterAI(fighter, fight, new NullGenerator());
     }
 
     @Test
@@ -68,7 +73,7 @@ class PunishmentSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(10, simulation.selfBoost());
     }
@@ -89,26 +94,26 @@ class PunishmentSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(20, simulation.selfBoost());
 
         Mockito.when(effect.duration()).thenReturn(5);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(50, simulation.selfBoost());
 
         Mockito.when(effect.duration()).thenReturn(20);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(100, simulation.selfBoost());
 
         Mockito.when(effect.duration()).thenReturn(-1);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(100, simulation.selfBoost());
     }
 
@@ -127,7 +132,7 @@ class PunishmentSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(10, simulation.selfBoost());
         assertEquals(10, simulation.enemiesBoost());

@@ -22,11 +22,15 @@ package fr.quatrevieux.araknemu.game.monster;
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class MonsterTest extends GameBaseCase {
     private Monster monster;
@@ -60,5 +64,52 @@ class MonsterTest extends GameBaseCase {
 
         assertEquals(new Interval(50, 70), monster.reward().kamas());
         assertEquals(58, monster.reward().experience());
+    }
+
+    @Test
+    void equals() {
+        assertEquals(monster, monster);
+        assertEquals(monster, new Monster(
+            container.get(MonsterTemplateRepository.class).get(34),
+            new MonsterSpellList(new HashMap<>()),
+            null,
+            2
+        ));
+        assertNotEquals(monster, new Monster(
+            container.get(MonsterTemplateRepository.class).get(34),
+            new MonsterSpellList(new HashMap<>()),
+            null,
+            3
+        ));
+        assertNotEquals(monster, new Monster(
+            container.get(MonsterTemplateRepository.class).get(36),
+            new MonsterSpellList(new HashMap<>()),
+            null,
+            2
+        ));
+        assertNotEquals(monster, new Object());
+    }
+
+    @Test
+    void hash() {
+        assertEquals(monster.hashCode(), monster.hashCode());
+        assertEquals(monster.hashCode(), new Monster(
+            container.get(MonsterTemplateRepository.class).get(34),
+            new MonsterSpellList(new HashMap<>()),
+            null,
+            2
+        ).hashCode());
+        assertNotEquals(monster.hashCode(), new Monster(
+            container.get(MonsterTemplateRepository.class).get(34),
+            new MonsterSpellList(new HashMap<>()),
+            null,
+            3
+        ).hashCode());
+        assertNotEquals(monster.hashCode(), new Monster(
+            container.get(MonsterTemplateRepository.class).get(36),
+            new MonsterSpellList(new HashMap<>()),
+            null,
+            2
+        ).hashCode());
     }
 }

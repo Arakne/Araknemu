@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RunawayTest extends AiBaseCase {
@@ -72,6 +74,22 @@ class RunawayTest extends AiBaseCase {
         assertEquals(327, fighter.cell().id());
 
         assertCast(3, 241);
+    }
+
+    @Test
+    void shouldInvokeIfCantAttackFromTheCurrentCell() throws NoSuchFieldException, IllegalAccessException, SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(342).spell(35))
+            .addEnemy(fb -> fb.cell(241))
+        );
+
+        removeSpell(6);
+        assertCast(35, 327);
     }
 
     @Test

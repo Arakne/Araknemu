@@ -39,6 +39,8 @@ public final class Runaway extends AbstractAiBuilderFactory {
     public void configure(GeneratorBuilder builder) {
         builder
             .boostSelf(simulator)
+            .attack(simulator)
+            .invoke(simulator)
             .attackFromNearestCell(simulator)
             .boostAllies(simulator)
             .moveFarEnemies()

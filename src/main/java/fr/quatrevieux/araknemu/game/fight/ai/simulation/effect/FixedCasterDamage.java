@@ -14,37 +14,42 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2022 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.arakne.utils.maps.BattlefieldCell;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 /**
- * Simulator for punishment effect
- *
- * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicOnDamageHandler
+ * Simulator for fixed damage effect on the caster
  */
-public final class PunishmentSimulator implements EffectSimulator {
+public final class FixedCasterDamage implements EffectSimulator {
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        int duration = effect.effect().duration();
+        final SpellEffect spellEffect = effect.effect();
+        final int min = spellEffect.min();
+        final int max = Math.max(spellEffect.max(), min);
+        final int duration = spellEffect.duration();
 
-        if (duration == -1 || duration > 10) {
-            duration = 10;
-        } else if (duration == 0) {
-            duration = 1;
+        if (duration == 0) {
+            simulation.addDamage(new Interval(min, max), ai.fighter());
+        } else {
+            // Limit duration to 10
+            simulation.addPoison(new Interval(min, max), duration < 1 || duration > 10 ? 10 : duration, ai.fighter());
         }
+    }
 
-        final int value = duration * effect.effect().max();
-
-        for (FighterData target : effect.targets()) {
-            simulation.addBoost(value, target);
-        }
+    @Override
+    public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
+        score.setSuicide(effect.min() >= 1000);
     }
 }

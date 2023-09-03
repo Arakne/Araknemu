@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
+import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
@@ -45,6 +46,7 @@ public final class Tactical extends AbstractAiBuilderFactory {
             .boostSelf(simulator)
             .attackFromBestCell(simulator)
             .when(Predicates.hasLessThanPercentLife(50), cond -> cond.success(gb -> gb.heal(simulator)))
+            .invoke(simulator)
             .debuff(simulator)
             .boostAllies(simulator)
             .heal(simulator)

@@ -27,6 +27,9 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.Objects;
 
 /**
  * Monster grade data
@@ -121,5 +124,25 @@ public final class Monster {
      */
     public String ai() {
         return template.ai();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Monster monster = (Monster) o;
+
+        return grade == monster.grade && template.id() == monster.template.id();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(template.id(), grade);
     }
 }

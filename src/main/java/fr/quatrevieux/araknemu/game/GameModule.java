@@ -142,11 +142,14 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AddMaxSummonedCreatureSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterActionPointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedCasterDamage;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeMonsterSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
@@ -937,7 +940,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(126, new AlterCharacteristicSimulator()); // intelligence
             simulator.register(138, new AlterCharacteristicSimulator(2)); // percent damage
             simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
-            simulator.register(182, new AlterCharacteristicSimulator(10)); // summoned creature
+            simulator.register(182, new AddMaxSummonedCreatureSimulator(10)); // summoned creature
             simulator.register(606, new AlterCharacteristicSimulator()); // Wisdom not dispellable
             simulator.register(607, new AlterCharacteristicSimulator()); // Strength not dispellable
             simulator.register(608, new AlterCharacteristicSimulator()); // Luck not dispellable
@@ -967,6 +970,8 @@ public final class GameModule implements ContainerModule {
                 .state(50, -500) // Altruiste
             );
             simulator.register(150, new PunishmentSimulator());
+            simulator.register(109, new FixedCasterDamage());
+            simulator.register(181, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator)); // Invocation
 
             return simulator;
         });

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.BlockNearestEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
@@ -341,6 +342,17 @@ public class GeneratorBuilder {
      */
     public final GeneratorBuilder moveNearAllies() {
         return add(new MoveNearAllies());
+    }
+
+    /**
+     * Try to invoke a monster
+     *
+     * @return The builder instance
+     *
+     * @see Invoke The used action generator
+     */
+    public final GeneratorBuilder invoke(Simulator simulator) {
+        return add(new Invoke(simulator));
     }
 
     /**

@@ -21,10 +21,13 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.arakne.utils.maps.BattlefieldCell;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 import java.util.EnumSet;
@@ -32,7 +35,7 @@ import java.util.Set;
 
 public final class ArmorSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
+    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         int duration = effect.effect().duration();
 
         if (duration == 0) {
@@ -64,5 +67,12 @@ public final class ArmorSimulator implements EffectSimulator {
                 simulation.addBoost(armor * duration, target);
             }
         }
+    }
+
+    @Override
+    public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
+        final int boost = Math.max(100 + characteristics.get(Characteristic.INTELLIGENCE), 100);
+
+        score.addBoost(effect.min() * boost / 100);
     }
 }

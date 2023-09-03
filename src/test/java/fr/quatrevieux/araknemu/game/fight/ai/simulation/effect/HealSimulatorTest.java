@@ -23,9 +23,13 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -41,8 +45,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HealSimulatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayerFighter fighter;
     private Fighter target;
+    private FighterAI ai;
 
     @Override
     @BeforeEach
@@ -58,6 +63,7 @@ class HealSimulatorTest extends FightBaseCase {
 
         target.life().alter(target, -40);
         fighter.life().alter(fighter, -40);
+        ai = new FighterAI(fighter, fight, new NullGenerator());
     }
 
     @Test
@@ -95,7 +101,7 @@ class HealSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(25, simulation.selfLife());
         assertEquals(18.75, simulation.selfBoost());
@@ -103,14 +109,14 @@ class HealSimulatorTest extends FightBaseCase {
         Mockito.when(effect.duration()).thenReturn(5);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(25, simulation.selfLife());
         assertEquals(75, simulation.selfBoost());
 
         Mockito.when(effect.duration()).thenReturn(20);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(25, simulation.selfLife());
         assertEquals(168.75, simulation.selfBoost());
     }
@@ -135,7 +141,7 @@ class HealSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(10, simulation.selfLife());
         assertEquals(37.5, simulation.selfBoost());
@@ -160,7 +166,7 @@ class HealSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(25, simulation.selfLife());
         assertEquals(168.75, simulation.selfBoost());
@@ -183,10 +189,53 @@ class HealSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(25, simulation.selfLife());
         assertEquals(25, simulation.enemiesLife());
+    }
+
+    @Test
+    void score() {
+        fighter.player().properties().characteristics().base().set(Characteristic.INTELLIGENCE, 0);
+
+        SpellScore score = new SpellScore();
+        HealSimulator simulator = new HealSimulator();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.max()).thenReturn(20);
+
+        simulator.score(score, effect, fighter.characteristics());
+
+        assertEquals(15, score.heal());
+
+        fighter.characteristics().alter(Characteristic.INTELLIGENCE, 50);
+        score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+        assertEquals(22, score.heal());
+    }
+
+    @Test
+    void scoreFixed() {
+        fighter.player().properties().characteristics().base().set(Characteristic.INTELLIGENCE, 0);
+
+        SpellScore score = new SpellScore();
+        HealSimulator simulator = new HealSimulator();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        simulator.score(score, effect, fighter.characteristics());
+
+        assertEquals(10, score.heal());
+
+        fighter.characteristics().alter(Characteristic.INTELLIGENCE, 50);
+        score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+        assertEquals(15, score.heal());
     }
 
     private double simulate() {
@@ -203,7 +252,7 @@ class HealSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
-        new HealSimulator().simulate(simulation, scope.effects().get(0));
+        new HealSimulator().simulate(simulation, ai, scope.effects().get(0));
 
         return simulation.enemiesLife();
     }

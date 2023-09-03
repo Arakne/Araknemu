@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SupportTest extends AiBaseCase {
@@ -76,6 +78,24 @@ class SupportTest extends AiBaseCase {
         removeSpell(6);
 
         assertCast(3, 165);
+    }
+
+    @Test
+    void shouldInvokeIfCantBoost() throws NoSuchFieldException, IllegalAccessException, SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(210).spell(35))
+            .addAlly(fb -> fb.cell(198))
+            .addEnemy(fb -> fb.cell(165))
+        );
+
+        removeSpell(6);
+
+        assertCast(35, 195);
     }
 
     @Test

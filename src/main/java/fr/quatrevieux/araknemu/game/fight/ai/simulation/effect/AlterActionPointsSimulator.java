@@ -20,9 +20,13 @@
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.arakne.utils.maps.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -42,7 +46,7 @@ public final class AlterActionPointsSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
+    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         int duration = effect.effect().duration();
 
         if (duration == -1 || duration > 10) {
@@ -95,6 +99,19 @@ public final class AlterActionPointsSimulator implements EffectSimulator {
         // Spell adds more AP than its removes : use added AP as boost
         if (duration == 0 && value > simulation.spell().apCost()) {
             simulation.addBoost((value - simulation.spell().apCost()) * multiplier, target);
+        }
+    }
+
+    @Override
+    public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
+        final int min = effect.min();
+        final int max = Math.max(effect.max(), min);
+        final int value = (min + max) * multiplier / 2;
+
+        if (value < 0) {
+            score.addDebuff(-value);
+        } else {
+            score.addBoost(value);
         }
     }
 }

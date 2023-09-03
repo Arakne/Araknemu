@@ -23,9 +23,13 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -46,8 +50,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RemovePointsSimulatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayerFighter fighter;
     private RemovePointsSimulator simulator;
+    private FighterAI ai;
 
     @Override
     @BeforeEach
@@ -57,6 +62,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         fight = createFight();
         fighter = player.fighter();
         simulator = new RemovePointsSimulator(Characteristic.ACTION_POINT, Characteristic.RESISTANCE_ACTION_POINT, 200);
+        ai = new FighterAI(fighter, fight, new NullGenerator());
     }
 
     @Test
@@ -74,7 +80,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(-1000, simulation.selfBoost());
     }
@@ -95,7 +101,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(-250, simulation.selfBoost());
     }
@@ -116,26 +122,26 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(-2000, simulation.selfBoost());
 
         Mockito.when(effect.duration()).thenReturn(5);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(-5000, simulation.selfBoost());
 
         Mockito.when(effect.duration()).thenReturn(20);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(-10000, simulation.selfBoost());
 
         Mockito.when(effect.duration()).thenReturn(-1);
         simulation = new CastSimulation(spell, fighter, fighter.cell());
         scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(-10000, simulation.selfBoost());
     }
 
@@ -156,7 +162,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(-100, simulation.selfBoost());
         assertEquals(-100, simulation.enemiesBoost());
@@ -181,7 +187,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(expectedBoost, simulation.enemiesBoost());
     }
@@ -215,7 +221,7 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(-1200, simulation.enemiesBoost());
     }
@@ -237,8 +243,33 @@ class RemovePointsSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(0.0, simulation.enemiesBoost());
+    }
+
+    @Test
+    void scoreFixed() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        SpellScore score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+
+        assertEquals(2000, score.debuff());
+    }
+
+    @Test
+    void scoreRandom() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.max()).thenReturn(15);
+
+        SpellScore score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+
+        assertEquals(2500, score.debuff());
     }
 }

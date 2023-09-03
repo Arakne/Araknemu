@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -28,7 +27,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -38,16 +36,21 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ArmorSimulatorTest extends FightBaseCase {
+class FixedCasterDamageTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter fighter;
+    private Fighter target;
     private FighterAI ai;
+    private FixedCasterDamage simulator;
 
     @Override
     @BeforeEach
@@ -56,26 +59,15 @@ class ArmorSimulatorTest extends FightBaseCase {
 
         fight = createFight();
         fighter = player.fighter();
-
-        player.properties().characteristics().base().set(Characteristic.INTELLIGENCE, 0);
-        player.properties().characteristics().base().set(Characteristic.STRENGTH, 0);
+        target = other.fighter();
         ai = new FighterAI(fighter, fight, new NullGenerator());
+        simulator = new FixedCasterDamage();
     }
 
     @Test
-    void simulateShouldIgnoreNotBuff() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-        Spell spell = Mockito.mock(Spell.class);
-        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
-
-        Mockito.when(effect.min()).thenReturn(10);
-        Mockito.when(effect.area()).thenReturn(new CellArea());
-        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
-        Mockito.when(effect.duration()).thenReturn(0);
-        Mockito.when(spell.constraints()).thenReturn(constraints);
-        Mockito.when(constraints.freeCell()).thenReturn(false);
-
-        assertEquals(0, performSimulation(spell, effect).selfBoost());
+    void simulateSimple() {
+        assertEquals(-10, simulate().selfLife());
+        assertEquals(0, simulate().enemiesLife());
     }
 
     @Test
@@ -91,16 +83,45 @@ class ArmorSimulatorTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        assertEquals(100, performSimulation(spell, effect).selfBoost());
+        CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
-        Mockito.when(effect.duration()).thenReturn(3);
-        assertEquals(150, performSimulation(spell, effect).selfBoost());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, ai, scope.effects().get(0));
+
+        assertEquals(-15.0, simulation.selfLife());
+
+        Mockito.when(effect.duration()).thenReturn(5);
+        simulation = new CastSimulation(spell, fighter, fighter.cell());
+        scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, ai, scope.effects().get(0));
+        assertEquals(-37.5, simulation.selfLife());
 
         Mockito.when(effect.duration()).thenReturn(20);
-        assertEquals(500, performSimulation(spell, effect).selfBoost());
+        simulation = new CastSimulation(spell, fighter, fighter.cell());
+        scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, ai, scope.effects().get(0));
+        assertEquals(-75.0, simulation.selfLife());
+    }
 
+    @Test
+    void simulateInfiniteBuff() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect.duration()).thenReturn(-1);
-        assertEquals(500, performSimulation(spell, effect).selfBoost());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
+
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, ai, scope.effects().get(0));
+
+        assertEquals(-75.0, simulation.selfLife());
     }
 
     @Test
@@ -114,37 +135,18 @@ class ArmorSimulatorTest extends FightBaseCase {
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
-        Mockito.when(effect.duration()).thenReturn(1);
 
-        CastSimulation simulation = performSimulation(spell, effect);
+        CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
-        assertEquals(50, simulation.selfBoost());
-        assertEquals(50, simulation.enemiesBoost());
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
+        simulator.simulate(simulation, ai, scope.effects().get(0));
+
+        assertEquals(-10, simulation.selfLife());
+        assertEquals(0, simulation.enemiesLife());
     }
 
     @Test
-    void shouldOnlyConsiderCasterCharacteristics() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-        Spell spell = Mockito.mock(Spell.class);
-        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
-
-        Mockito.when(effect.min()).thenReturn(10);
-        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
-        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
-        Mockito.when(spell.constraints()).thenReturn(constraints);
-        Mockito.when(constraints.freeCell()).thenReturn(false);
-        Mockito.when(effect.duration()).thenReturn(1);
-
-        fighter.characteristics().alter(Characteristic.INTELLIGENCE, 100);
-        other.fighter().characteristics().alter(Characteristic.INTELLIGENCE, 100);
-        CastSimulation simulation = performSimulation(spell, effect);
-
-        assertEquals(80, simulation.selfBoost());
-        assertEquals(50, simulation.enemiesBoost());
-    }
-
-    @Test
-    void simulateShouldConsiderCasterIntelligence() {
+    void scoreLowShouldDoNothing() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
@@ -154,63 +156,47 @@ class ArmorSimulatorTest extends FightBaseCase {
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
-        Mockito.when(effect.duration()).thenReturn(1);
-
-        assertEquals(50, performSimulation(spell, effect).selfBoost());
-
-        fighter.characteristics().alter(Characteristic.INTELLIGENCE, 100);
-        assertEquals(80, performSimulation(spell, effect).selfBoost());
-    }
-
-    @Test
-    void simulateSingleElementArmorShouldConsiderCasterIntelligenceAndProtectedElement() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-        Spell spell = Mockito.mock(Spell.class);
-        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
-
-        Mockito.when(effect.min()).thenReturn(10);
-        Mockito.when(effect.area()).thenReturn(new CellArea());
-        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
-        Mockito.when(effect.special()).thenReturn(1 << Element.WATER.ordinal());
-        Mockito.when(spell.constraints()).thenReturn(constraints);
-        Mockito.when(constraints.freeCell()).thenReturn(false);
-        Mockito.when(effect.duration()).thenReturn(1);
-
-        assertEquals(10, performSimulation(spell, effect).selfBoost());
-
-        fighter.characteristics().alter(Characteristic.INTELLIGENCE, 100);
-        assertEquals(15, performSimulation(spell, effect).selfBoost());
-
-        fighter.characteristics().alter(Characteristic.LUCK, 100);
-        assertEquals(20, performSimulation(spell, effect).selfBoost());
-    }
-
-    @Test
-    void score() {
-        ArmorSimulator simulator = new ArmorSimulator();
-
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-        Mockito.when(effect.min()).thenReturn(10);
 
         SpellScore score = new SpellScore();
-        simulator.score(score, effect, fighter.characteristics());
-        assertEquals(10, score.score());
-        assertEquals(10, score.boost());
+        simulator.score(score, effect, new DefaultCharacteristics());
 
-        fighter.characteristics().alter(Characteristic.INTELLIGENCE, 100);
-
-        score = new SpellScore();
-        simulator.score(score, effect, fighter.characteristics());
-        assertEquals(20, score.score());
-        assertEquals(20, score.boost());
+        assertEquals(0, score.score());
+        assertFalse(score.isSuicide());
     }
 
-    private CastSimulation performSimulation(Spell spell, SpellEffect effect) {
-        ArmorSimulator simulator = new ArmorSimulator();
+    @Test
+    void scoreHighShouldMarkAsSuicide() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
-        CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
+        Mockito.when(effect.min()).thenReturn(1000);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        SpellScore score = new SpellScore();
+        simulator.score(score, effect, new DefaultCharacteristics());
+
+        assertEquals(0, score.score());
+        assertTrue(score.isSuicide());
+    }
+
+    private CastSimulation simulate() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
+
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
         simulator.simulate(simulation, ai, scope.effects().get(0));
 
         return simulation;

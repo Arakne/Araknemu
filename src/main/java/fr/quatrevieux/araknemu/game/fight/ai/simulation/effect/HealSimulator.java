@@ -22,11 +22,14 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 import fr.arakne.utils.maps.BattlefieldCell;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 /**
  * Simulate simple heal effect
@@ -35,7 +38,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  */
 public final class HealSimulator implements EffectSimulator {
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
+    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(Characteristic.INTELLIGENCE);
         final int fixed = caster.characteristics().get(Characteristic.HEALTH_BOOST);
@@ -57,5 +60,15 @@ public final class HealSimulator implements EffectSimulator {
                 simulation.addHealBuff(value, duration < 1 || duration > 10 ? 10 : duration, target);
             }
         }
+    }
+
+    @Override
+    public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
+        final int min = effect.min();
+        final int max = Math.max(effect.max(), min);
+        final int value = (min + max) / 2;
+        final int boost = Math.max(100 + characteristics.get(Characteristic.INTELLIGENCE), 100);
+
+        score.addHeal(value * boost / 100);
     }
 }
