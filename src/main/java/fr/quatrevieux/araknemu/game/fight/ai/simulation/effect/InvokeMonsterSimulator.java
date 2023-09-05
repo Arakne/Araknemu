@@ -91,7 +91,6 @@ public final class InvokeMonsterSimulator implements EffectSimulator {
             return;
         }
 
-
         // The invocation can attack enemy, so consider it as an attack
         if (spellsScore.isAttack() && canAttackEnemy) {
             ai.enemy().ifPresent(enemy -> simulation.addDamage(Interval.of(spellsScore.damage()), enemy));

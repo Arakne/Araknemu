@@ -149,6 +149,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedCasterDamage;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeDoubleSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeMonsterSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
@@ -971,7 +972,9 @@ public final class GameModule implements ContainerModule {
             );
             simulator.register(150, new PunishmentSimulator());
             simulator.register(109, new FixedCasterDamage());
-            simulator.register(181, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator)); // Invocation
+            simulator.register(180, new InvokeDoubleSimulator());
+            simulator.register(181, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
+            simulator.register(405, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
 
             return simulator;
         });

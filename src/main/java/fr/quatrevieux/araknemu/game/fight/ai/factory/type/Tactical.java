@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
-import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
