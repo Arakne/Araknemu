@@ -19,12 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
-import fr.arakne.utils.maps.BattlefieldCell;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
 /**
  * Simulation effect adding max summoned creatures
