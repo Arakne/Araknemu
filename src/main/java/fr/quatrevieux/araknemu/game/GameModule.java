@@ -156,6 +156,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulat
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SwitchPositionOnAttackSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
@@ -977,6 +978,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(181, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
             simulator.register(405, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
             simulator.register(5, new MoveBackSimulator());
+            simulator.register(765, new SwitchPositionOnAttackSimulator());
 
             return simulator;
         });
