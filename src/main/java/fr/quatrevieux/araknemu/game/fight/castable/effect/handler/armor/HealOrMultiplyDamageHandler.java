@@ -33,6 +33,11 @@ import fr.quatrevieux.araknemu.util.Asserter;
 /**
  * Suffered damage will be healed, or multiplied
  *
+ * Parameters:
+ * - min: multiplier if damage is not healed
+ * - max: multiplier if damage is healed
+ * - special: chance to take damage instead of healing
+ *
  * Note: this buff is only applied on direct damage (see: https://forums.jeuxonline.info/sujet/969716/chance-d-ecaflip)
  */
 public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHook {
@@ -64,7 +69,7 @@ public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
      * Modify the damage multiplier depending on the chance
      */
     private void apply(Buff buff, MultipliableDamage damage) {
-        final boolean heal = random.bool(Asserter.assertPercent(buff.effect().special()));
+        final boolean heal = !random.bool(Asserter.assertPercent(buff.effect().special()));
 
         if (heal) {
             damage.multiply(-buff.effect().max());

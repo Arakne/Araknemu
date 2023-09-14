@@ -148,6 +148,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacterist
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedCasterDamage;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealOrMultiplyDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeDoubleSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeMonsterSimulator;
@@ -979,6 +980,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(405, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
             simulator.register(5, new MoveBackSimulator());
             simulator.register(765, new SwitchPositionOnAttackSimulator());
+            simulator.register(79, new HealOrMultiplyDamageSimulator(100));
 
             return simulator;
         });
