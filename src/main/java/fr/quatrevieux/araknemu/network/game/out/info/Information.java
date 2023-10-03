@@ -135,6 +135,24 @@ public final class Information extends AbstractInformationMessage {
     }
 
     /**
+     * Show the last login date and IP address
+     *
+     * @param date Last login date
+     * @param ipAddress Last login IP address
+     * @param zoneId The zone id
+     */
+    public static Information lastLogin(Instant date, String ipAddress, ZoneId zoneId) {
+        final LocalDateTime localDateTime = LocalDateTime.ofInstant(date, zoneId);
+
+        return new Information(
+            152,
+            localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth(),
+            localDateTime.getHour(), localDateTime.getMinute(),
+            ipAddress
+        );
+    }
+
+    /**
      * Show the current IP address
      *
      * @param ipAddress IP address to show
