@@ -52,7 +52,8 @@ public final class LoggedLoader extends AbstractLoader {
                 container.get(CharactersService.class)
             ),
             new SelectCharacter(
-                container.get(PlayerService.class)
+                container.get(PlayerService.class),
+                container.get(GameConfiguration.class)
             ),
             new DeleteCharacter(
                 container.get(CharactersService.class),

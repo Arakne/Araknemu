@@ -26,6 +26,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.IntRange;
 
 import java.time.Duration;
+import java.time.ZoneId;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -172,6 +173,31 @@ public final class PoolUtils implements Pool {
         return decimal(key, 0d);
     }
 
+    /**
+     * Parse a config item as a ZoneId
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public ZoneId zoneId(String key, ZoneId defaultValue) {
+        final String value = pool.get(key);
+
+        return value != null
+            ? ZoneId.of(value)
+            : defaultValue
+        ;
+    }
+
+    /**
+     * Parse a config item as a ZoneId
+     * If the item is not configured, will return Europe/Paris
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public ZoneId zoneId(String key) {
+        return zoneId(key, ZoneId.of("Europe/Paris"));
+    }
     /**
      * Get a duration duration config item
      * Use the standard duration format (ISO-8601) with some differences :

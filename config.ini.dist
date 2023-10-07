@@ -101,6 +101,8 @@ game.dbname = araknemu
 ;server.port = 5555
 ; > Get the server IP address. Default 127.0.0.1
 ;server.ip = 127.0.0.1
+; > The timezone for game server. Default Europe/Paris
+;server.timezone = Europe/Paris
 
 
 ; Antispam & other

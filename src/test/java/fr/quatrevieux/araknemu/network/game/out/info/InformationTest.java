@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -93,7 +94,7 @@ class InformationTest {
     void lastLogin() {
         assertEquals(
             "Im0152;2020~6~20~16~25~141.22.12.34",
-            Information.lastLogin(Instant.parse("2020-06-20T14:25:00.00Z"), "141.22.12.34", ZoneId.of("Europe/Paris")).toString()
+            Information.lastLogin(LocalDateTime.ofInstant(Instant.parse("2020-06-20T14:25:00.00Z"), ZoneId.of("Europe/Paris")), "141.22.12.34").toString()
         );
     }
 

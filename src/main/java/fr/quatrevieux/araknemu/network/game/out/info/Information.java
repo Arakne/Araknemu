@@ -123,27 +123,7 @@ public final class Information extends AbstractInformationMessage {
      * @param date Last login date
      * @param ipAddress Last login IP address
      */
-    public static Information lastLogin(Instant date, String ipAddress) {
-        final LocalDateTime localDateTime = LocalDateTime.ofInstant(date, ZoneId.systemDefault());
-
-        return new Information(
-            152,
-            localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth(),
-            localDateTime.getHour(), localDateTime.getMinute(),
-            ipAddress
-        );
-    }
-
-    /**
-     * Show the last login date and IP address
-     *
-     * @param date Last login date
-     * @param ipAddress Last login IP address
-     * @param zoneId The zone id
-     */
-    public static Information lastLogin(Instant date, String ipAddress, ZoneId zoneId) {
-        final LocalDateTime localDateTime = LocalDateTime.ofInstant(date, zoneId);
-
+    public static Information lastLogin(LocalDateTime localDateTime, String ipAddress) {
         return new Information(
             152,
             localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth(),
