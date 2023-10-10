@@ -22,9 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.info;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  * Information messages
@@ -120,12 +118,10 @@ public final class Information extends AbstractInformationMessage {
     /**
      * Show the last login date and IP address
      *
-     * @param date Last login date
+     * @param localDateTime Last login date in local time
      * @param ipAddress Last login IP address
      */
-    public static Information lastLogin(Instant date, String ipAddress) {
-        final LocalDateTime localDateTime = LocalDateTime.ofInstant(date, ZoneId.systemDefault());
-
+    public static Information lastLogin(LocalDateTime localDateTime, String ipAddress) {
         return new Information(
             152,
             localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth(),

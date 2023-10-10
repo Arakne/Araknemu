@@ -28,6 +28,7 @@ import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.common.value.qual.IntRange;
 
 import java.time.Duration;
+import java.time.ZoneId;
 import java.util.Arrays;
 
 /**
@@ -71,6 +72,14 @@ public final class GameConfiguration {
      */
     public String ip() {
         return pool.string("server.ip", "127.0.0.1");
+    }
+
+    /**
+     * Get the configured time zone.
+     * Default: system default time zone
+     */
+    public ZoneId timezone() {
+        return pool.zoneId("server.timezone", ZoneId.systemDefault());
     }
 
     /**

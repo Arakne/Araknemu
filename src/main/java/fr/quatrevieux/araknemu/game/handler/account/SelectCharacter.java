@@ -19,10 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import java.time.LocalDateTime;
+
 import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.event.GameJoined;
@@ -38,9 +41,11 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
  */
 public final class SelectCharacter implements PacketHandler<GameSession, ChoosePlayingCharacter> {
     private final PlayerService service;
+    private final GameConfiguration configuration;
 
-    public SelectCharacter(PlayerService service) {
+    public SelectCharacter(PlayerService service, GameConfiguration configuration) {
         this.service = service;
+        this.configuration = configuration;
     }
 
     @Override
@@ -66,7 +71,7 @@ public final class SelectCharacter implements PacketHandler<GameSession, ChooseP
         session.log().ifPresent(log -> log.setPlayerId(player.id()));
 
         session.send(Error.welcome());
-        session.log().flatMap(SessionLog::last).ifPresent(log -> session.send(Information.lastLogin(log.startDate(), log.ipAddress())));
+        session.log().flatMap(SessionLog::last).ifPresent(log -> session.send(Information.lastLogin(LocalDateTime.ofInstant(log.startDate(), configuration.timezone()), log.ipAddress())));
         session.send(Information.currentIpAddress(session.channel().address().getAddress().getHostAddress()));
     }
 

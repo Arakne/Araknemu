@@ -30,17 +30,21 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
+import fr.quatrevieux.araknemu.network.game.out.fight.battlefield.AddZones.Zone;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +59,8 @@ class SelectCharacterTest extends GameBaseCase {
         super.setUp();
 
         handler = new SelectCharacter(
-            container.get(PlayerService.class)
+            container.get(PlayerService.class),
+            container.get(GameConfiguration.class)
         );
 
         login();
@@ -118,6 +123,6 @@ class SelectCharacterTest extends GameBaseCase {
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
-        requestStack.assertOne(Information.lastLogin(log.startDate(), log.ipAddress()));
+        requestStack.assertOne(Information.lastLogin(LocalDateTime.ofInstant(log.startDate(), ZoneId.of("Europe/Paris")), log.ipAddress()));
     }
 }
