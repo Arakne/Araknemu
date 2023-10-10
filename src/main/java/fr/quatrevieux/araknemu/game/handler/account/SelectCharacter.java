@@ -72,7 +72,6 @@ public final class SelectCharacter implements PacketHandler<GameSession, ChooseP
         session.log().ifPresent(log -> log.setPlayerId(player.id()));
 
         session.send(Error.welcome());
-        System.out.println(configuration.timezone());
         session.log().flatMap(SessionLog::last).ifPresent(log -> session.send(Information.lastLogin(LocalDateTime.ofInstant(log.startDate(), configuration.timezone()), log.ipAddress())));
         session.send(Information.currentIpAddress(session.channel().address().getAddress().getHostAddress()));
     }
