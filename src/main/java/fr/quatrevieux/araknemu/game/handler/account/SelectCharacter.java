@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.handler.account;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
