@@ -125,4 +125,13 @@ class GameConfigurationTest extends GameBaseCase {
         assertFalse(configuration.autosaveEnabled());
         assertEquals(Duration.ofSeconds(30), configuration.autosaveInterval());
     }
+
+    @Test
+    void timezone() {
+        assertEquals("Europe/Paris", configuration.timezone().getId());
+
+        setConfigValue("server.timezone", "America/Bogota");
+
+        assertEquals("America/Bogota", configuration.timezone().getId());
+    }
 }
