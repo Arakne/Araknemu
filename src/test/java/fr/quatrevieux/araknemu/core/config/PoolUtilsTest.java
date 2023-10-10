@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -142,5 +143,13 @@ class PoolUtilsTest {
         assertEquals(Duration.ofSeconds(125), pool.duration("min_and_sec"));
         assertEquals(Duration.ofHours(1), pool.duration("with_prefix"));
         assertEquals(Duration.ofHours(29), pool.duration("date"));
+    }
+
+    @Test
+    void zoneId() {
+        map.put("test", "Europe/Paris");
+
+        assertEquals("Europe/Paris", pool.zoneId("test").getId());
+        assertEquals("Europe/Paris", pool.zoneId("not_found", ZoneId.of("Europe/Paris")).getId());
     }
 }
