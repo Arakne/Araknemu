@@ -175,9 +175,6 @@ public final class PoolUtils implements Pool {
 
     /**
      * Parse a config item as a ZoneId
-     * @param key
-     * @param defaultValue
-     * @return
      */
     public ZoneId zoneId(String key, ZoneId defaultValue) {
         final String value = pool.get(key);
@@ -191,13 +188,11 @@ public final class PoolUtils implements Pool {
     /**
      * Parse a config item as a ZoneId
      * If the item is not configured, will return Europe/Paris
-     * @param key
-     * @param defaultValue
-     * @return
      */
     public ZoneId zoneId(String key) {
         return zoneId(key, ZoneId.of("Europe/Paris"));
     }
+    
     /**
      * Get a duration duration config item
      * Use the standard duration format (ISO-8601) with some differences :
