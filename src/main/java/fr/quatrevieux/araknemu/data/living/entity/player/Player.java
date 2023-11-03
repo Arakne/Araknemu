@@ -55,7 +55,6 @@ public final class Player implements WalletEntity {
     private @NonNegative long experience;
     private Position savedPosition;
     private @NonNegative long kamas;
-    private boolean isActive = true;
 
     public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, @Positive int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, @NonNegative int boostPoints, @NonNegative int spellPoints, @NonNegative int life, @NonNegative long experience, Position savedPosition, @NonNegative long kamas) {
         this.id = id;
@@ -189,14 +188,6 @@ public final class Player implements WalletEntity {
     @Override
     public void setKamas(@NonNegative long kamas) {
         this.kamas = kamas;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
     }
 
     /**

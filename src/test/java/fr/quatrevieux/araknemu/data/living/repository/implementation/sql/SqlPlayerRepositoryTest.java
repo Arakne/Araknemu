@@ -88,7 +88,6 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(Gender.MALE, inserted.gender());
         assertEquals(-1, inserted.colors().color1());
         assertEquals(1, inserted.level());
-        assertTrue(inserted.isActive());
     }
 
     @Test
@@ -105,7 +104,6 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(Gender.MALE, get.gender());
         assertEquals(-1, get.colors().color1());
         assertEquals(1, get.level());
-        assertTrue(get.isActive());
     }
 
     @Test

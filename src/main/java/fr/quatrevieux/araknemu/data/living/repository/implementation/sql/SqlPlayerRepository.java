@@ -81,7 +81,6 @@ final class SqlPlayerRepository implements PlayerRepository {
                     "SAVED_MAP_ID INTEGER," +
                     "SAVED_CELL_ID INTEGER," +
                     "PLAYER_KAMAS BIGINT," +
-                    "IS_ACTIVE BOOLEAN DEFAULT 1," +
                     "UNIQUE (PLAYER_NAME, SERVER_ID)" +
                 ")"
             );
@@ -135,7 +134,7 @@ final class SqlPlayerRepository implements PlayerRepository {
 
     @Override
     public void delete(Player entity) throws RepositoryException {
-        if (utils.update("UPDATE PLAYER SET IS_ACTIVE = 0 WHERE PLAYER_ID = ?", rs -> rs.setInt(1, entity.id())) < 1) {
+        if (utils.update("DELETE FROM PLAYER WHERE PLAYER_ID = ?", rs -> rs.setInt(1, entity.id())) < 1) {
             throw new EntityNotFoundException();
         }
     }
@@ -143,7 +142,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public Player get(Player entity) throws RepositoryException {
         return utils.findOne(
-            "SELECT * FROM PLAYER WHERE PLAYER_ID = ? AND IS_ACTIVE = 1",
+            "SELECT * FROM PLAYER WHERE PLAYER_ID = ?",
             stmt -> stmt.setInt(1, entity.id())
         );
     }
@@ -151,7 +150,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public boolean has(Player entity) throws RepositoryException {
         return utils.aggregate(
-            "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_ID = ? AND IS_ACTIVE = 1",
+            "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_ID = ?",
             stmt -> stmt.setInt(1, entity.id())
         ) > 0;
     }
@@ -159,7 +158,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public Collection<Player> findByAccount(int accountId, int serverId) {
         return utils.findAll(
-            "SELECT * FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND IS_ACTIVE = 1",
+            "SELECT * FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
             stmt -> {
                 stmt.setInt(1, accountId);
                 stmt.setInt(2, serverId);
@@ -181,7 +180,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public int accountCharactersCount(Player player) {
         return utils.aggregate(
-            "SELECT COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND IS_ACTIVE = 1",
+            "SELECT COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
             stmt -> {
                 stmt.setInt(1, player.accountId());
                 stmt.setInt(2, player.serverId());
@@ -193,7 +192,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     public Collection<ServerCharacters> accountCharactersCount(int accountId) {
         try {
             return executor.prepare(
-                "SELECT SERVER_ID, COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? AND IS_ACTIVE = 1 GROUP BY SERVER_ID",
+                "SELECT SERVER_ID, COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? GROUP BY SERVER_ID",
                 stmt -> {
                     stmt.setInt(1, accountId);
 
@@ -222,7 +221,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     public Collection<ServerCharacters> serverCharactersCountByAccountPseudo(String accountPseudo) {
         try {
             return executor.prepare(
-                "SELECT SERVER_ID, COUNT(*) FROM PLAYER P JOIN ACCOUNT A ON P.ACCOUNT_ID = A.ACCOUNT_ID WHERE A.PSEUDO = ? AND P.IS_ACTIVE = 1 GROUP BY SERVER_ID",
+                "SELECT SERVER_ID, COUNT(*) FROM PLAYER P JOIN ACCOUNT A ON P.ACCOUNT_ID = A.ACCOUNT_ID WHERE A.PSEUDO = ? GROUP BY SERVER_ID",
                 stmt -> {
                     stmt.setString(1, accountPseudo);
 
@@ -245,7 +244,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public Player getForGame(Player player) {
         return utils.findOne(
-            "SELECT * FROM PLAYER WHERE PLAYER_ID = ? AND ACCOUNT_ID = ? AND SERVER_ID = ? AND IS_ACTIVE = 1",
+            "SELECT * FROM PLAYER WHERE PLAYER_ID = ? AND ACCOUNT_ID = ? AND SERVER_ID = ?",
             stmt -> {
                 stmt.setInt(1, player.id());
                 stmt.setInt(2, player.accountId());
