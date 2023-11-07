@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
+import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -61,7 +62,8 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         repository = new SqlPlayerRepository(
             new ConnectionPoolExecutor(connection),
             new MutableCharacteristicsTransformer(),
-            new ChannelsTransformer()
+            new ChannelsTransformer(),
+            new InstantTransformer()
         );
 
         repository.initialize();
