@@ -80,6 +80,28 @@ class AggressiveTest extends AiBaseCase {
     }
 
     @Test
+    void shouldAttractEnemyIfCantAttack() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(210).spell(434, 5))
+            .addEnemy(fb -> fb.cell(82))
+        );
+
+        removeSpell(6);
+        removeSpell(3);
+        assertEquals(9, distance(getEnemy(0)));
+
+        generateAndPerformMove();
+
+        assertEquals(180, fighter.cell().id());
+        assertEquals(7, distance(getEnemy(0)));
+
+        assertCast(434, 82);
+        performGeneratedAction();
+
+        assertEquals(1, distance(getEnemy(0)));
+    }
+
+    @Test
     void shouldMoveNearEnemyIfCantAttack() throws NoSuchFieldException, IllegalAccessException {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(210))

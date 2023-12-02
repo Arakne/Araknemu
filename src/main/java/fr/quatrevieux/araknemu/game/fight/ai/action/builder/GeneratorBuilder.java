@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.builder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AttractEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.BlockNearestEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
@@ -31,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttractEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToBoost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
@@ -353,6 +355,18 @@ public class GeneratorBuilder {
      */
     public final GeneratorBuilder invoke(Simulator simulator) {
         return add(new Invoke(simulator));
+    }
+
+    /**
+     * Try to attract enemies, or move to attract them
+     *
+     * @see AttractEnemy The used action generator
+     * @see MoveToAttractEnemy to perform the move action if needed
+     */
+    public final GeneratorBuilder attractEnemy() {
+        final AttractEnemy attractEnemy = new AttractEnemy(6);
+
+        return add(attractEnemy).add(new MoveToAttractEnemy(attractEnemy));
     }
 
     /**

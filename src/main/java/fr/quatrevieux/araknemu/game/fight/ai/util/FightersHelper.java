@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -37,7 +38,7 @@ import java.util.stream.Stream;
  * @see AIHelper#enemies()
  * @see AIHelper#allies()
  */
-public final class FightersHelper {
+public final class FightersHelper implements Iterable<FighterData> {
     private final AIHelper helper;
     private final AI ai;
     private final Predicate<FighterData> filter;
@@ -135,5 +136,10 @@ public final class FightersHelper {
      */
     public int count() {
         return (int) stream().count();
+    }
+
+    @Override
+    public Iterator<FighterData> iterator() {
+        return (Iterator<FighterData>) stream().iterator();
     }
 }

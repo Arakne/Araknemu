@@ -23,9 +23,12 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class FightersHelperTest extends AiBaseCase {
     @Test
@@ -38,6 +41,17 @@ class FightersHelperTest extends AiBaseCase {
 
         assertEquals(2, helper().stream().count());
         assertArrayEquals(new Object[] {getEnemy(0), getEnemy(1)}, helper().stream().toArray());
+    }
+    @Test
+    void iterator() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(123))
+            .addEnemy(b -> b.cell(125))
+            .addEnemy(b -> b.cell(135))
+        );
+
+        assertEquals(2, helper().stream().count());
+        assertIterableEquals(Arrays.asList(getEnemy(0), getEnemy(1)), helper());
     }
 
     @Test

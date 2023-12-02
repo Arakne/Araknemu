@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
@@ -203,16 +204,7 @@ public final class MoveToCast implements ActionGenerator {
     public static final class NearestStrategy implements TargetSelectionStrategy {
         @Override
         public double score(MoveToCast.GenerationScope scope, CoordinateCell<BattlefieldCell> target) {
-            return -target.distance(scope.fighter().cell()) + sigmoid(BestTargetStrategy.maxScore(scope, target.cell()));
-        }
-
-        /**
-         * Transform score value in interval [-inf; +inf] to bounded value [0; 1]
-         *
-         * @param value Score to transform
-         */
-        private double sigmoid(double value) {
-            return 0.5 + value / (2 * (1 + Math.abs(value)));
+            return -target.distance(scope.fighter().cell()) + Formula.sigmoid(BestTargetStrategy.maxScore(scope, target.cell()));
         }
     }
 }
