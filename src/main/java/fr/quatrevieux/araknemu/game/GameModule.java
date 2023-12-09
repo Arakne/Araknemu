@@ -158,6 +158,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulat
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SpellReturnSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SwitchPositionOnAttackSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
@@ -935,6 +936,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(127, new RemovePointsSimulator(Characteristic.MOVEMENT_POINT, Characteristic.RESISTANCE_MOVEMENT_POINT, 200));
 
             // Characteristics boost
+            simulator.register(110, new AlterCharacteristicSimulator()); // vitality
             simulator.register(112, new AlterCharacteristicSimulator(10)); // damage
             simulator.register(115, new AlterCharacteristicSimulator(5)); // critical
             simulator.register(117, new AlterCharacteristicSimulator(5)); // sight
@@ -943,6 +945,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(122, new AlterCharacteristicSimulator(-5)); // Fail malus
             simulator.register(123, new AlterCharacteristicSimulator()); // luck
             simulator.register(124, new AlterCharacteristicSimulator()); // wisdom
+            simulator.register(125, new AlterCharacteristicSimulator()); // vitality
             simulator.register(126, new AlterCharacteristicSimulator()); // intelligence
             simulator.register(138, new AlterCharacteristicSimulator(2)); // percent damage
             simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
@@ -951,12 +954,14 @@ public final class GameModule implements ContainerModule {
             simulator.register(607, new AlterCharacteristicSimulator()); // Strength not dispellable
             simulator.register(608, new AlterCharacteristicSimulator()); // Luck not dispellable
             simulator.register(609, new AlterCharacteristicSimulator()); // Agility not dispellable
+            simulator.register(610, new AlterCharacteristicSimulator()); // Vitality not dispellable
             simulator.register(611, new AlterCharacteristicSimulator()); // Intelligence not dispellable
 
             // Characteristics malus
             simulator.register(116, new AlterCharacteristicSimulator(-5)); // sight malus
             simulator.register(145, new AlterCharacteristicSimulator(-10)); // -damage
             simulator.register(152, new AlterCharacteristicSimulator(-1)); // -luck
+            simulator.register(153, new AlterCharacteristicSimulator(-1)); // -vitality
             simulator.register(154, new AlterCharacteristicSimulator(-1)); // -agility
             simulator.register(155, new AlterCharacteristicSimulator(-1)); // -intelligence
             simulator.register(156, new AlterCharacteristicSimulator(-1)); // -wisdom
@@ -965,6 +970,14 @@ public final class GameModule implements ContainerModule {
             simulator.register(179, new AlterCharacteristicSimulator(-8)); // -heal
             simulator.register(186, new AlterCharacteristicSimulator(-2)); // -percent damage
 
+            // Steal characteristics
+            simulator.register(267, new StealCharacteristicSimulator()); // vitality
+            simulator.register(268, new StealCharacteristicSimulator()); // agility
+            simulator.register(269, new StealCharacteristicSimulator()); // intelligence
+            simulator.register(271, new StealCharacteristicSimulator()); // strength
+            simulator.register(320, new StealCharacteristicSimulator(5)); // sight
+
+            // Armors
             simulator.register(105, new ArmorSimulator());
             simulator.register(106, new SpellReturnSimulator(20));
             simulator.register(107, new AlterCharacteristicSimulator(5)); // Reflect damage. Considered as simple characteristic boost to simplify the code
