@@ -71,6 +71,7 @@ class SwitchPositionOnAttackSimulatorTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(5);
+        Mockito.when(effect.duration()).thenReturn(2);
         Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
@@ -84,7 +85,7 @@ class SwitchPositionOnAttackSimulatorTest extends FightBaseCase {
         assertEquals(0, simulation.enemiesLife());
         assertEquals(0, simulation.alliesLife());
         assertEquals(0, simulation.selfLife());
-        assertEquals(0, simulation.selfBoost());
+        assertEquals(-200, simulation.selfBoost());
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
     }

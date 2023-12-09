@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
@@ -28,37 +28,23 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
- * Simulator for simple alter characteristic effect
+ * Simulate spell return effect
+ *
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler
  */
-public final class AlterCharacteristicSimulator implements EffectSimulator {
+public final class SpellReturnSimulator implements EffectSimulator {
     private final int multiplier;
 
-    /**
-     * Creates without multiplier
-     */
-    public AlterCharacteristicSimulator() {
-        this(1);
-    }
-
-    /**
-     * Creates with defining a multiplier
-     *
-     * @param multiplier The value multiplier. Can be negative for malus buff
-     */
-    public AlterCharacteristicSimulator(int multiplier) {
+    public SpellReturnSimulator(int multiplier) {
         this.multiplier = multiplier;
     }
 
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        final int duration = Formula.capedDuration(effect.effect().duration());
-
-        final double value = (effect.effect().max() < effect.effect().min() ? effect.effect().min() : (double) (effect.effect().min() + effect.effect().max()) / 2)
-            * multiplier
-            * duration
-        ;
+        final double value = score(effect.effect());
 
         for (FighterData target : effect.targets()) {
             simulation.addBoost(value, target);
@@ -67,14 +53,14 @@ public final class AlterCharacteristicSimulator implements EffectSimulator {
 
     @Override
     public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
-        final int min = effect.min();
-        final int max = Math.max(effect.max(), min);
-        final int value = (min + max) * multiplier / 2;
+        score.addBoost(Asserter.castNonNegative((int) score(effect)));
+    }
 
-        if (value < 0) {
-            score.addDebuff(-value);
-        } else {
-            score.addBoost(value);
-        }
+    private double score(SpellEffect effect) {
+        final int level = Math.max(effect.min(), effect.max());
+        final double percent = effect.special() / 100d;
+        final int duration = Formula.capedDuration(effect.duration());
+
+        return level * percent * multiplier * duration;
     }
 }

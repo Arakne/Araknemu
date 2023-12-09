@@ -23,6 +23,7 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -44,7 +45,7 @@ public final class FixedCasterDamage implements EffectSimulator {
             simulation.addDamage(new Interval(min, max), ai.fighter());
         } else {
             // Limit duration to 10
-            simulation.addPoison(new Interval(min, max), duration < 1 || duration > 10 ? 10 : duration, ai.fighter());
+            simulation.addPoison(new Interval(min, max), Formula.capedDuration(effect.effect().duration()), ai.fighter());
         }
     }
 

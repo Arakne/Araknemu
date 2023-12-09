@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -55,16 +56,7 @@ public final class RemovePointsSimulator implements EffectSimulator {
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final int casterChance = Math.max(simulation.caster().characteristics().get(Characteristic.WISDOM) / 10, 1);
-
-        int duration = effect.effect().duration();
-
-        if (duration == -1 || duration > 10) {
-            duration = 10;
-        }
-
-        if (duration == 0) {
-            duration = 1;
-        }
+        final int duration = Formula.capedDuration(effect.effect().duration());
 
         for (FighterData target : effect.targets()) {
             // @todo actual turn AP is target is current fighter

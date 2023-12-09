@@ -80,7 +80,13 @@ class AiModuleTest extends FightBaseCase {
 
         assertTrue(turn.active());
 
+        // Cast action started : retour de flamme
+        requestStack.assertOne("GA0;300;-2;215,126,110,4,10,1,1");
+
+        turn.terminate();
+        Thread.sleep(900); // Wait for the AI to start next action
+
         // Move action started
-        requestStack.assertOne("GA0;1;-2;ab-fbG");
+        requestStack.assertOne("GA0;1;-2;ab-fbGdbU");
     }
 }

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -33,14 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 public final class PunishmentSimulator implements EffectSimulator {
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        int duration = effect.effect().duration();
-
-        if (duration == -1 || duration > 10) {
-            duration = 10;
-        } else if (duration == 0) {
-            duration = 1;
-        }
-
+        final int duration = Formula.capedDuration(effect.effect().duration());
         final int value = duration * effect.effect().max();
 
         for (FighterData target : effect.targets()) {

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -64,7 +65,7 @@ public final class HealOrMultiplyDamageSimulator implements EffectSimulator {
         final double efficiency = (((100d - chance) * (1d + spellEffect.max())) - (chance * spellEffect.min())) / 100;
 
         for (FighterData target : effect.targets()) {
-            simulation.addBoost(efficiency * spellEffect.duration() * score, target);
+            simulation.addBoost(efficiency * Formula.capedDuration(effect.effect().duration()) * score, target);
         }
     }
 }

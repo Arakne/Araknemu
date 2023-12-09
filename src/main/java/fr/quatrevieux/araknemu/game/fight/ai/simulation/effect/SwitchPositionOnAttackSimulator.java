@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -41,10 +42,7 @@ public final class SwitchPositionOnAttackSimulator implements EffectSimulator {
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final FighterData caster = simulation.caster();
         final int currentLife = caster.life().current();
-        final int duration = effect.effect().duration() == -1
-            ? 10
-            : Math.min(effect.effect().duration(), 10)
-        ;
+        final int duration = Formula.capedDuration(effect.effect().duration());
 
         for (FighterData target : effect.targets()) {
             if (target.equals(caster)) {

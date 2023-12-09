@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -57,7 +58,7 @@ public final class HealSimulator implements EffectSimulator {
                 simulation.addHeal(value, target);
             } else {
                 // Limit duration to 10
-                simulation.addHealBuff(value, duration < 1 || duration > 10 ? 10 : duration, target);
+                simulation.addHealBuff(value, Formula.capedDuration(effect.effect().duration()), target);
             }
         }
     }

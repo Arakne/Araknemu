@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -36,16 +37,11 @@ import java.util.Set;
 public final class ArmorSimulator implements EffectSimulator {
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        int duration = effect.effect().duration();
-
-        if (duration == 0) {
+        if (effect.effect().duration() == 0) {
             return;
         }
 
-        // Limit duration to 10 for compute score
-        if (duration == -1 || duration > 10) {
-            duration = 10;
-        }
+        final int duration = Formula.capedDuration(effect.effect().duration());
 
         final Set<Element> elements = effect.effect().special() == 0
             ? EnumSet.allOf(Element.class)

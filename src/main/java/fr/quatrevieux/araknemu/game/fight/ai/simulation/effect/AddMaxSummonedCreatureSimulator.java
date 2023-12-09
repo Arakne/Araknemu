@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -49,10 +50,7 @@ public final class AddMaxSummonedCreatureSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        final int duration = effect.effect().duration() == -1
-            ? 10
-            : Math.min(effect.effect().duration(), 10)
-        ;
+        final int duration = Formula.capedDuration(effect.effect().duration());
 
         final double value = (effect.effect().max() < effect.effect().min() ? effect.effect().min() : (double) (effect.effect().min() + effect.effect().max()) / 2)
             * multiplier
