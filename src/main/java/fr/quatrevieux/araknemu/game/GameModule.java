@@ -146,6 +146,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AddMaxSummonedCre
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterActionPointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageOnActionPointUseSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedCasterDamage;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.GivePercentLifeSimulator;
@@ -922,6 +923,8 @@ public final class GameModule implements ContainerModule {
             simulator.register(98,  new DamageSimulator(Element.AIR));
             simulator.register(99,  new DamageSimulator(Element.FIRE));
             simulator.register(100, new DamageSimulator(Element.NEUTRAL));
+
+            simulator.register(131, new DamageOnActionPointUseSimulator());
 
             // AP
             simulator.register(111, new AlterActionPointsSimulator(200));
