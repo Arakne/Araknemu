@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 
 import java.util.Collection;
@@ -67,11 +68,11 @@ public final class PercentLifeDamageSimulator implements EffectSimulator {
     }
 
     private Interval applyResistances(Interval damage, FighterData target) {
-        return damage.map(value -> new Damage(value, element)
+        return damage.map(value -> Asserter.castNonNegative(new Damage(value, element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
             .value()
-        );
+        ));
     }
 
     private void simulatePoison(CastSimulation simulation, Interval damage, @GTENegativeOne int duration, Collection<? extends FighterData> targets) {
