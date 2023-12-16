@@ -157,6 +157,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeDoubleSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeMonsterSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.MoveBackSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
@@ -925,6 +926,12 @@ public final class GameModule implements ContainerModule {
             simulator.register(98,  new DamageSimulator(Element.AIR));
             simulator.register(99,  new DamageSimulator(Element.FIRE));
             simulator.register(100, new DamageSimulator(Element.NEUTRAL));
+
+            simulator.register(85, new PercentLifeDamageSimulator(Element.WATER));
+            simulator.register(86, new PercentLifeDamageSimulator(Element.EARTH));
+            simulator.register(87, new PercentLifeDamageSimulator(Element.AIR));
+            simulator.register(88, new PercentLifeDamageSimulator(Element.FIRE));
+            simulator.register(89, new PercentLifeDamageSimulator(Element.NEUTRAL));
 
             simulator.register(82, new FixedStealLifeSimulator());
             simulator.register(131, new DamageOnActionPointUseSimulator());
