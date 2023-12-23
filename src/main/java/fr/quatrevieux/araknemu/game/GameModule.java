@@ -158,6 +158,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeDoubleSimul
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeMonsterSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.MoveBackSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeDamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeLostDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
@@ -932,6 +933,10 @@ public final class GameModule implements ContainerModule {
             simulator.register(87, new PercentLifeDamageSimulator(Element.AIR));
             simulator.register(88, new PercentLifeDamageSimulator(Element.FIRE));
             simulator.register(89, new PercentLifeDamageSimulator(Element.NEUTRAL));
+            simulator.register(671, new PercentLifeDamageSimulator(Element.NEUTRAL)); // The actual effect is applied as "indirect damage" but it works mostly like a simple percent life damage.
+
+            simulator.register(276, new PercentLifeLostDamageSimulator(Element.EARTH));
+            simulator.register(279, new PercentLifeLostDamageSimulator(Element.NEUTRAL));
 
             simulator.register(82, new FixedStealLifeSimulator());
             simulator.register(131, new DamageOnActionPointUseSimulator());

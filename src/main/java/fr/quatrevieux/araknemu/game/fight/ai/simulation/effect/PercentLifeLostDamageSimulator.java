@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.Life;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 
@@ -36,14 +37,15 @@ import java.util.Collection;
 
 /**
  * Simulator for damage depending on the life of the caster effect
- * Unlike {@link FixedDamageSimulator}, this effect is related to an element, so it can be reduced by armor
+ * This effect is related to an element, so it can be reduced by armor
  *
- * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PercentLifeDamageHandler The simulated effect
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PercentLifeLostDamageHandler The simulated effect
+ * @see PercentLifeDamageSimulator The opposite effect
  */
-public final class PercentLifeDamageSimulator implements EffectSimulator {
+public final class PercentLifeLostDamageSimulator implements EffectSimulator {
     private final Element element;
 
-    public PercentLifeDamageSimulator(Element element) {
+    public PercentLifeLostDamageSimulator(Element element) {
         this.element = element;
     }
 
@@ -60,10 +62,11 @@ public final class PercentLifeDamageSimulator implements EffectSimulator {
     }
 
     private Interval damage(FighterData caster, SpellEffect effect) {
-        final int currentLife = caster.life().current();
+        final Life casterLife = caster.life();
+        final int lostLife = Asserter.castNonNegative(casterLife.max() - casterLife.current());
 
         return Interval.of(effect.min(), Math.max(effect.max(), effect.min()))
-            .map(value -> value * currentLife / 100)
+            .map(value -> value * lostLife / 100)
         ;
     }
 
