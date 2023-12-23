@@ -157,6 +157,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealOrMultiplyDam
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeDoubleSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeMonsterSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.KillSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.MoveBackSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeLostDamageSimulator;
@@ -942,6 +943,9 @@ public final class GameModule implements ContainerModule {
             simulator.register(82, new FixedStealLifeSimulator());
             simulator.register(131, new DamageOnActionPointUseSimulator());
             simulator.register(144, new FixedDamageSimulator());
+            simulator.register(672, new PunishmentSimulator());
+
+            simulator.register(141, new KillSimulator());
 
             // AP
             simulator.register(111, new AlterActionPointsSimulator(200));
@@ -1012,7 +1016,6 @@ public final class GameModule implements ContainerModule {
             simulator.register(950, new SetStateSimulator()
                 .state(50, -500) // Altruiste
             );
-            simulator.register(150, new PunishmentSimulator());
             simulator.register(109, new FixedCasterDamage());
             simulator.register(180, new InvokeDoubleSimulator());
             simulator.register(181, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
