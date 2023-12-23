@@ -150,6 +150,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageOnActionPoi
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedCasterDamage;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedDamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedHealSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedStealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.GivePercentLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealOrMultiplyDamageSimulator;
@@ -1003,8 +1004,9 @@ public final class GameModule implements ContainerModule {
             simulator.register(265, new ArmorSimulator());
 
             // Heal
-            simulator.register(108, new HealSimulator());
             simulator.register(90, new GivePercentLifeSimulator());
+            simulator.register(108, new HealSimulator());
+            simulator.register(143, new FixedHealSimulator());
 
             // Misc
             simulator.register(950, new SetStateSimulator()
