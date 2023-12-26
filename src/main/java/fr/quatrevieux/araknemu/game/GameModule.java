@@ -142,6 +142,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AddCharacteristicOnDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AddMaxSummonedCreatureSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterActionPointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
@@ -1029,6 +1030,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(79, new HealOrMultiplyDamageSimulator(100));
             simulator.register(140, new SkipTurnSimulator(1000));
             simulator.register(150, new InvisibilitySimulator(100));
+            simulator.register(788, new AddCharacteristicOnDamageSimulator(0.75));
 
             return simulator;
         });
