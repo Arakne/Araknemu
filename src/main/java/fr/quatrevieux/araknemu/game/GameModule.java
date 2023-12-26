@@ -165,6 +165,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeLostDa
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SkipTurnSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SpellReturnSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
@@ -1024,6 +1025,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(5, new MoveBackSimulator());
             simulator.register(765, new SwitchPositionOnAttackSimulator());
             simulator.register(79, new HealOrMultiplyDamageSimulator(100));
+            simulator.register(140, new SkipTurnSimulator(1000));
             simulator.register(150, new InvisibilitySimulator(100));
 
             return simulator;
