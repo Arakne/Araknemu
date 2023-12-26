@@ -19,10 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
-import fr.arakne.utils.maps.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 /**
  * Simulator for simple alter characteristic effect
@@ -47,20 +52,29 @@ public final class AlterCharacteristicSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        int duration = effect.effect().duration();
-
-        if (duration == -1 || duration > 10) {
-            duration = 10;
-        }
+    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
+        final int duration = Formula.capedDuration(effect.effect().duration());
 
         final double value = (effect.effect().max() < effect.effect().min() ? effect.effect().min() : (double) (effect.effect().min() + effect.effect().max()) / 2)
             * multiplier
-            * Math.max(duration, 1)
+            * duration
         ;
 
         for (FighterData target : effect.targets()) {
             simulation.addBoost(value, target);
+        }
+    }
+
+    @Override
+    public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
+        final int min = effect.min();
+        final int max = Math.max(effect.max(), min);
+        final int value = (min + max) * multiplier / 2;
+
+        if (value < 0) {
+            score.addDebuff(-value);
+        } else {
+            score.addBoost(value);
         }
     }
 }

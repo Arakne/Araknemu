@@ -23,10 +23,14 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -42,7 +46,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArmorSimulatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayerFighter fighter;
+    private FighterAI ai;
 
     @Override
     @BeforeEach
@@ -54,6 +59,7 @@ class ArmorSimulatorTest extends FightBaseCase {
 
         player.properties().characteristics().base().set(Characteristic.INTELLIGENCE, 0);
         player.properties().characteristics().base().set(Characteristic.STRENGTH, 0);
+        ai = new FighterAI(fighter, fight, new NullGenerator());
     }
 
     @Test
@@ -179,13 +185,33 @@ class ArmorSimulatorTest extends FightBaseCase {
         assertEquals(20, performSimulation(spell, effect).selfBoost());
     }
 
+    @Test
+    void score() {
+        ArmorSimulator simulator = new ArmorSimulator();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.min()).thenReturn(10);
+
+        SpellScore score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+        assertEquals(10, score.score());
+        assertEquals(10, score.boost());
+
+        fighter.characteristics().alter(Characteristic.INTELLIGENCE, 100);
+
+        score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+        assertEquals(20, score.score());
+        assertEquals(20, score.boost());
+    }
+
     private CastSimulation performSimulation(Spell spell, SpellEffect effect) {
         ArmorSimulator simulator = new ArmorSimulator();
 
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, fighter.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         return simulation;
     }

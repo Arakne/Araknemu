@@ -114,7 +114,7 @@ class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(2);
         Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(0);
+        Mockito.when(returnEffect.special()).thenReturn(100);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
@@ -131,7 +131,7 @@ class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(2);
         Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(100);
+        Mockito.when(returnEffect.special()).thenReturn(0);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
@@ -148,7 +148,7 @@ class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(2);
         Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(0);
+        Mockito.when(returnEffect.special()).thenReturn(100);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
@@ -165,7 +165,7 @@ class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(2);
         Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(100);
+        Mockito.when(returnEffect.special()).thenReturn(0);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
@@ -182,7 +182,7 @@ class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(2);
         Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(20);
+        Mockito.when(returnEffect.special()).thenReturn(80);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 

@@ -50,6 +50,7 @@ public final class Support extends AbstractAiBuilderFactory {
             .success(sb -> sb
                 .moveToBoost(simulator)
                 .heal(simulator)
+                .invoke(simulator)
                 .debuff(simulator)
                 .attack(simulator)
                 .moveNearAllies()

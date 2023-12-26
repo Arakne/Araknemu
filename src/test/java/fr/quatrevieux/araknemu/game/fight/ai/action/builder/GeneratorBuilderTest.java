@@ -22,14 +22,17 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.builder;
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.AttractEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.BlockNearestEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttractEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToBoost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator;
@@ -175,6 +178,16 @@ class GeneratorBuilderTest extends TestCase {
     @Test
     void blockNearestEnemy() {
         assertInstanceOf(BlockNearestEnemy.class, builder.blockNearestEnemy().build());
+    }
+
+    @Test
+    void invoke() {
+        assertInstanceOf(Invoke.class, builder.invoke(simulator).build());
+    }
+
+    @Test
+    void attractEnemy() throws NoSuchFieldException, IllegalAccessException {
+        assertActions(builder.attractEnemy().build(), AttractEnemy.class, MoveToAttractEnemy.class);
     }
 
     private void assertActions(ActionGenerator action, Class<? extends ActionGenerator> ...types) throws NoSuchFieldException, IllegalAccessException {

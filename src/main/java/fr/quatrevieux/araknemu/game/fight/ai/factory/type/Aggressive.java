@@ -44,7 +44,6 @@ public final class Aggressive extends AbstractAiBuilderFactory {
     public void configure(GeneratorBuilder builder, PlayableFighter fighter) {
         builder
             .boostSelf(simulator)
-            .attack(simulator)
         ;
 
         // Optimisation: do not execute "move to attack" is the fighter has only close combat spell
@@ -53,8 +52,12 @@ public final class Aggressive extends AbstractAiBuilderFactory {
             builder.moveToAttack(simulator);
         }
 
+        builder.attack(simulator);
+
         builder
+            .attractEnemy()
             .moveOrTeleportNearEnemy()
+            .invoke(simulator)
             .boostAllies(simulator)
             .heal(simulator)
         ;

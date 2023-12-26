@@ -279,6 +279,7 @@ public class AiBaseCase extends FightBaseCase {
     public double computeScore(int spellId, int spellLevel, int targetCell) {
         CastSimulation simulation = container.get(Simulator.class).simulate(
             container.get(SpellService.class).get(spellId).level(spellLevel),
+            ai,
             fighter,
             fight.map().get(targetCell)
         );

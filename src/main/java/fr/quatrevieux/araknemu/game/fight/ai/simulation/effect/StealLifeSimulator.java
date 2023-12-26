@@ -19,12 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
-import fr.arakne.utils.maps.BattlefieldCell;
 import fr.arakne.utils.value.Interval;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 /**
  * Simulate steal life effect
@@ -39,16 +43,22 @@ public final class StealLifeSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
+    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final double lastDamage = -simulation.alliesLife() - simulation.enemiesLife();
 
         // Poison is already handled by the DamageSimulator
-        simulator.simulate(simulation, effect);
+        simulator.simulate(simulation, ai, effect);
 
         final double totalDamage = (-simulation.alliesLife() - simulation.enemiesLife()) - lastDamage;
 
         if (totalDamage > 0) {
             simulation.addHeal(Interval.of((int) totalDamage / 2), simulation.caster());
         }
+    }
+
+    @Override
+    public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
+        // Only score the damage part
+        simulator.score(score, effect, characteristics);
     }
 }

@@ -19,10 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
-import fr.arakne.utils.maps.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,20 +66,15 @@ public final class SetStateSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
+    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final Integer base = stateBoost.get(effect.effect().special());
 
         if (base == null) {
             return;
         }
 
-        int duration = effect.effect().duration();
-
-        if (duration == -1 || duration > 10) {
-            duration = 10;
-        }
-
-        final int boost = base * Math.max(duration, 1);
+        final int duration = Formula.capedDuration(effect.effect().duration());
+        final int boost = base * duration;
 
         for (FighterData target : effect.targets()) {
             simulation.addBoost(boost, target);

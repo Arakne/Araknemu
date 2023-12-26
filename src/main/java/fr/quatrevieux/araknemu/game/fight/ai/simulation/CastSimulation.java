@@ -45,6 +45,7 @@ public final class CastSimulation {
     private double enemiesBoost;
     private double alliesBoost;
     private double selfBoost;
+    private double invocation;
 
     private double killedAllies;
     private double killedEnemies;
@@ -232,6 +233,13 @@ public final class CastSimulation {
     }
 
     /**
+     * The score of the invoked creature
+     */
+    public double invocation() {
+        return invocation;
+    }
+
+    /**
      * Add a boost to the target
      *
      * @param value The boost value. Can be negative for a malus
@@ -244,6 +252,15 @@ public final class CastSimulation {
                 return value;
             }
         }, target);
+    }
+
+    /**
+     * Add an invocation score
+     *
+     * @param score The score of the invoked creature
+     */
+    public void addInvocation(double score) {
+        invocation += score;
     }
 
     /**
@@ -302,6 +319,7 @@ public final class CastSimulation {
         suicide += simulation.suicide * percent / 100d;
 
         actionPointsModifier += simulation.actionPointsModifier * percent / 100d;
+        invocation += simulation.invocation * percent / 100d;
     }
 
     /**

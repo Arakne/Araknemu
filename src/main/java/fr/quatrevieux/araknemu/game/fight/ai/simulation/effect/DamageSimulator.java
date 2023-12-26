@@ -19,16 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
-import fr.arakne.utils.maps.BattlefieldCell;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -45,7 +49,7 @@ public final class DamageSimulator implements EffectSimulator {
     }
 
     @Override
-    public void simulate(CastSimulation simulation, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
+    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final FighterData caster = simulation.caster();
         final int boost = caster.characteristics().get(element.boost());
         final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);
@@ -67,9 +71,19 @@ public final class DamageSimulator implements EffectSimulator {
                 simulation.addDamage(damage, target);
             } else {
                 // Limit duration to 10
-                simulation.addPoison(damage, duration < 1 || duration > 10 ? 10 : duration, target);
+                simulation.addPoison(damage, Formula.capedDuration(effect.effect().duration()), target);
             }
         }
+    }
+
+    @Override
+    public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
+        final int min = effect.min();
+        final int max = Math.max(effect.max(), min);
+        final int value = (min + max) / 2;
+        final int boost = Math.max(100 + characteristics.get(element.boost()), 100);
+
+        score.addDamage(value * boost / 100);
     }
 
     private @NonNegative int computeDamage(@NonNegative int value, FighterData target) {

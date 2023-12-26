@@ -142,15 +142,36 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AddCharacteristicOnDamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AddMaxSummonedCreatureSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterActionPointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageOnActionPointUseSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedCasterDamage;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedDamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedHealSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.FixedStealLifeSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.GivePercentLifeSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealOrMultiplyDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvisibilitySimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeDoubleSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.InvokeMonsterSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.KillSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.MoveBackSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.MultiplyDamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeDamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeLostDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SkipTurnSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SpellReturnSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SwitchPositionOnAttackSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
@@ -913,6 +934,23 @@ public final class GameModule implements ContainerModule {
             simulator.register(99,  new DamageSimulator(Element.FIRE));
             simulator.register(100, new DamageSimulator(Element.NEUTRAL));
 
+            simulator.register(85, new PercentLifeDamageSimulator(Element.WATER));
+            simulator.register(86, new PercentLifeDamageSimulator(Element.EARTH));
+            simulator.register(87, new PercentLifeDamageSimulator(Element.AIR));
+            simulator.register(88, new PercentLifeDamageSimulator(Element.FIRE));
+            simulator.register(89, new PercentLifeDamageSimulator(Element.NEUTRAL));
+            simulator.register(671, new PercentLifeDamageSimulator(Element.NEUTRAL)); // The actual effect is applied as "indirect damage" but it works mostly like a simple percent life damage.
+
+            simulator.register(276, new PercentLifeLostDamageSimulator(Element.EARTH));
+            simulator.register(279, new PercentLifeLostDamageSimulator(Element.NEUTRAL));
+
+            simulator.register(82, new FixedStealLifeSimulator());
+            simulator.register(131, new DamageOnActionPointUseSimulator());
+            simulator.register(144, new FixedDamageSimulator());
+            simulator.register(672, new PunishmentSimulator());
+
+            simulator.register(141, new KillSimulator());
+
             // AP
             simulator.register(111, new AlterActionPointsSimulator(200));
             simulator.register(120, new AlterActionPointsSimulator(200));
@@ -926,6 +964,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(127, new RemovePointsSimulator(Characteristic.MOVEMENT_POINT, Characteristic.RESISTANCE_MOVEMENT_POINT, 200));
 
             // Characteristics boost
+            simulator.register(110, new AlterCharacteristicSimulator()); // vitality
             simulator.register(112, new AlterCharacteristicSimulator(10)); // damage
             simulator.register(115, new AlterCharacteristicSimulator(5)); // critical
             simulator.register(117, new AlterCharacteristicSimulator(5)); // sight
@@ -934,20 +973,23 @@ public final class GameModule implements ContainerModule {
             simulator.register(122, new AlterCharacteristicSimulator(-5)); // Fail malus
             simulator.register(123, new AlterCharacteristicSimulator()); // luck
             simulator.register(124, new AlterCharacteristicSimulator()); // wisdom
+            simulator.register(125, new AlterCharacteristicSimulator()); // vitality
             simulator.register(126, new AlterCharacteristicSimulator()); // intelligence
             simulator.register(138, new AlterCharacteristicSimulator(2)); // percent damage
             simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
-            simulator.register(182, new AlterCharacteristicSimulator(10)); // summoned creature
+            simulator.register(182, new AddMaxSummonedCreatureSimulator(10)); // summoned creature
             simulator.register(606, new AlterCharacteristicSimulator()); // Wisdom not dispellable
             simulator.register(607, new AlterCharacteristicSimulator()); // Strength not dispellable
             simulator.register(608, new AlterCharacteristicSimulator()); // Luck not dispellable
             simulator.register(609, new AlterCharacteristicSimulator()); // Agility not dispellable
+            simulator.register(610, new AlterCharacteristicSimulator()); // Vitality not dispellable
             simulator.register(611, new AlterCharacteristicSimulator()); // Intelligence not dispellable
 
             // Characteristics malus
             simulator.register(116, new AlterCharacteristicSimulator(-5)); // sight malus
             simulator.register(145, new AlterCharacteristicSimulator(-10)); // -damage
             simulator.register(152, new AlterCharacteristicSimulator(-1)); // -luck
+            simulator.register(153, new AlterCharacteristicSimulator(-1)); // -vitality
             simulator.register(154, new AlterCharacteristicSimulator(-1)); // -agility
             simulator.register(155, new AlterCharacteristicSimulator(-1)); // -intelligence
             simulator.register(156, new AlterCharacteristicSimulator(-1)); // -wisdom
@@ -956,17 +998,39 @@ public final class GameModule implements ContainerModule {
             simulator.register(179, new AlterCharacteristicSimulator(-8)); // -heal
             simulator.register(186, new AlterCharacteristicSimulator(-2)); // -percent damage
 
+            // Steal characteristics
+            simulator.register(267, new StealCharacteristicSimulator()); // vitality
+            simulator.register(268, new StealCharacteristicSimulator()); // agility
+            simulator.register(269, new StealCharacteristicSimulator()); // intelligence
+            simulator.register(271, new StealCharacteristicSimulator()); // strength
+            simulator.register(320, new StealCharacteristicSimulator(5)); // sight
+
+            // Armors
             simulator.register(105, new ArmorSimulator());
+            simulator.register(106, new SpellReturnSimulator(20));
+            simulator.register(107, new AlterCharacteristicSimulator(5)); // Reflect damage. Considered as simple characteristic boost to simplify the code
             simulator.register(265, new ArmorSimulator());
 
             // Heal
+            simulator.register(90, new GivePercentLifeSimulator());
             simulator.register(108, new HealSimulator());
+            simulator.register(143, new FixedHealSimulator());
 
             // Misc
             simulator.register(950, new SetStateSimulator()
                 .state(50, -500) // Altruiste
             );
-            simulator.register(150, new PunishmentSimulator());
+            simulator.register(109, new FixedCasterDamage());
+            simulator.register(114, new MultiplyDamageSimulator(300));
+            simulator.register(180, new InvokeDoubleSimulator());
+            simulator.register(181, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
+            simulator.register(405, new InvokeMonsterSimulator(container.get(MonsterService.class), simulator));
+            simulator.register(5, new MoveBackSimulator());
+            simulator.register(765, new SwitchPositionOnAttackSimulator());
+            simulator.register(79, new HealOrMultiplyDamageSimulator(100));
+            simulator.register(140, new SkipTurnSimulator(1000));
+            simulator.register(150, new InvisibilitySimulator(100));
+            simulator.register(788, new AddCharacteristicOnDamageSimulator(0.75));
 
             return simulator;
         });

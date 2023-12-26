@@ -45,6 +45,7 @@ public final class Tactical extends AbstractAiBuilderFactory {
             .boostSelf(simulator)
             .attackFromBestCell(simulator)
             .when(Predicates.hasLessThanPercentLife(50), cond -> cond.success(gb -> gb.heal(simulator)))
+            .invoke(simulator)
             .debuff(simulator)
             .boostAllies(simulator)
             .heal(simulator)

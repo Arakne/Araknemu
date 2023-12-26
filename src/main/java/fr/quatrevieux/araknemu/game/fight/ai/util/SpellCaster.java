@@ -81,7 +81,7 @@ public final class SpellCaster {
 
         return helper.spells().available().flatMap(spell -> helper.cells().stream()
             .filter(target -> validate(spell, target)) // Validate spell (LoS, cooldown, target type...)
-            .map(target -> simulator.simulate(spell, fighter, target)) // Simulate cast
+            .map(target -> simulator.simulate(spell, ai, fighter, target)) // Simulate cast
         );
     }
 }

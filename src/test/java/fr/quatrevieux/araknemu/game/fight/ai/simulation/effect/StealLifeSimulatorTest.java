@@ -23,10 +23,14 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -42,8 +46,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StealLifeSimulatorTest extends FightBaseCase {
     private Fight fight;
-    private Fighter fighter;
+    private PlayerFighter fighter;
     private Fighter target;
+    private FighterAI ai;
 
     @Override
     @BeforeEach
@@ -56,6 +61,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
 
         fighter.init();
         fighter.life().alter(fighter, -30);
+        ai = new FighterAI(fighter, fight, new NullGenerator());
     }
 
     @Test
@@ -96,20 +102,20 @@ class StealLifeSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(-22.5, simulation.enemiesLife());
 
         Mockito.when(effect.duration()).thenReturn(5);
         simulation = new CastSimulation(spell, fighter, target.cell());
         scope = makeCastScope(fighter, spell, effect, target.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(-37.5, simulation.enemiesLife());
 
         Mockito.when(effect.duration()).thenReturn(-1);
         simulation = new CastSimulation(spell, fighter, target.cell());
         scope = makeCastScope(fighter, spell, effect, target.cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
         assertEquals(-37.5, simulation.enemiesLife());
     }
 
@@ -130,10 +136,33 @@ class StealLifeSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, other.fighter().cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, other.fighter().cell());
-        simulator.simulate(simulation, scope.effects().get(0));
+        simulator.simulate(simulation, ai, scope.effects().get(0));
 
         assertEquals(-8, simulation.selfLife());
         assertEquals(-15, simulation.enemiesLife());
+    }
+
+    @Test
+    void score() {
+        fighter.player().properties().characteristics().base().set(Characteristic.STRENGTH, 0);
+
+        StealLifeSimulator simulator = new StealLifeSimulator(Element.EARTH);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.max()).thenReturn(15);
+
+        SpellScore score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+        assertEquals(12, score.score());
+        assertEquals(12, score.damage());
+
+        fighter.characteristics().alter(Characteristic.STRENGTH, 100);
+
+        score = new SpellScore();
+        simulator.score(score, effect, fighter.characteristics());
+        assertEquals(24, score.score());
+        assertEquals(24, score.damage());
     }
 
     private CastSimulation simulate() {
@@ -150,7 +179,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
-        new StealLifeSimulator(Element.EARTH).simulate(simulation, scope.effects().get(0));
+        new StealLifeSimulator(Element.EARTH).simulate(simulation, ai, scope.effects().get(0));
 
         return simulation;
     }
