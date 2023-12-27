@@ -93,10 +93,13 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void moveAlreadyOnRequestedPosition() throws InventoryException, ContainerException {
+    void moveAlreadyOnRequestedPositionShouldDoesNothing() throws InventoryException, ContainerException {
         InventoryEntry entry = inventory.add(container.get(ItemService.class).create(284));
 
-        assertThrowsWithMessage(InventoryException.class, "The item is already on the requested position", () -> entry.move(-1, 1));
+        entry.move(-1, 1);
+
+        assertEquals(-1, entry.position());
+        assertEquals(1, entry.quantity());
     }
 
     @Test

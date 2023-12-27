@@ -97,8 +97,8 @@ public final class InventorySlots {
     private void initSlots(GamePlayer owner) {
         add(new AmuletSlot(dispatcher, storage, owner));
         add(new WeaponSlot(dispatcher, storage, owner));
-        add(new RingSlot(dispatcher, storage, owner, RingSlot.RING1));
-        add(new RingSlot(dispatcher, storage, owner, RingSlot.RING2));
+        add(new RingSlot(dispatcher, storage, owner, this, RingSlot.RING1));
+        add(new RingSlot(dispatcher, storage, owner, this, RingSlot.RING2));
         add(new BeltSlot(dispatcher, storage, owner));
         add(new BootsSlot(dispatcher, storage, owner));
         add(new HelmetSlot(dispatcher, storage, owner));
@@ -112,7 +112,7 @@ public final class InventorySlots {
 
     private void initDofusSlots(GamePlayer owner) {
         for (int id : DofusSlot.SLOT_IDS) {
-            add(new DofusSlot(dispatcher, storage, owner, id));
+            add(new DofusSlot(dispatcher, storage, owner, this, id));
         }
     }
 

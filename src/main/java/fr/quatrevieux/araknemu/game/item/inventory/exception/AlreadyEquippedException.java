@@ -14,31 +14,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2023 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.item.inventory.exception;
 
 /**
- * Exception raised when cannot move the item
+ * Raise when the item is already equipped
+ * When this exception is raised, an error "ALREADY_EQUIPPED" should be sent to the client, and nothing should be done
+ *
+ * @see fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.EquipOnceConstraint The constraint that raise this exception
  */
-public class MoveException extends InventoryException {
-    public MoveException() {
-    }
-
-    public MoveException(String message) {
-        super(message);
-    }
-
-    public MoveException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MoveException(Throwable cause) {
-        super(cause);
-    }
-
-    public MoveException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+public class AlreadyEquippedException extends InventoryException {
 }

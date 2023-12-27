@@ -23,8 +23,10 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
@@ -41,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RingSlotTest extends GameBaseCase {
     private RingSlot slot;
+    private InventorySlots inventorySlots;
 
     @Override
     @BeforeEach
@@ -52,7 +55,16 @@ class RingSlotTest extends GameBaseCase {
             .pushItemSets()
         ;
 
-        slot = new RingSlot(new DefaultListenerAggregate(), Mockito.mock(ItemStorage.class), gamePlayer(), RingSlot.RING1);
+        inventorySlots = new InventorySlots(
+            new DefaultListenerAggregate(),
+            new SimpleItemStorage<>(
+                new DefaultListenerAggregate(),
+                null,
+                new ArrayList<>()
+            ),
+            gamePlayer()
+        );
+        slot = new RingSlot(new DefaultListenerAggregate(), Mockito.mock(ItemStorage.class), gamePlayer(), inventorySlots, RingSlot.RING1);
     }
 
     @Test
@@ -70,6 +82,29 @@ class RingSlotTest extends GameBaseCase {
         slot.uncheckedSet(new InventoryEntry(null, null, null));
 
         assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(2419), 1));
+    }
+
+    @Test
+    void checkAlreadyEquipped() {
+        Item item = container.get(ItemService.class).create(2419);
+
+        for (int slotId : new int[] {RingSlot.RING1, RingSlot.RING2}) {
+            InventoryEntry entry = new InventoryEntry(null, new PlayerItem(1, 1, 2419, new ArrayList<>(), 1, -1), item);
+            inventorySlots.get(slotId).uncheckedSet(entry);
+
+            assertThrows(InventoryException.class, () -> slot.check(item, 1));
+            slot.unset();
+        }
+    }
+
+    @Test
+    void checkAlreadyEquippedNotOnItemSet() {
+        Item item = container.get(ItemService.class).create(849);
+
+        InventoryEntry entry = new InventoryEntry(null, new PlayerItem(1, 1, 849, new ArrayList<>(), 1, -1), item);
+        inventorySlots.get(RingSlot.RING1).uncheckedSet(entry);
+
+        slot.check(item, 1);
     }
 
     @Test

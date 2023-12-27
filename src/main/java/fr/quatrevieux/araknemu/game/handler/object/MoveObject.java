@@ -20,8 +20,8 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.AlreadyEquippedException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.MoveException;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
@@ -44,7 +44,7 @@ public final class MoveObject implements PacketHandler<GameSession, ObjectMoveRe
             ;
         } catch (BadLevelException e) {
             session.send(new AddItemError(AddItemError.Error.TOO_LOW_LEVEL));
-        } catch (MoveException e) {
+        } catch (AlreadyEquippedException e) {
             session.send(new AddItemError(AddItemError.Error.ALREADY_EQUIPED));
         }
     }

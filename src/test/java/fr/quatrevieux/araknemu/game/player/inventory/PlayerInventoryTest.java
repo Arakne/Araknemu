@@ -36,12 +36,15 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.AlreadyEquippedException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.item.type.Resource;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.DofusSlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.RingSlot;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -403,5 +406,57 @@ class PlayerInventoryTest extends GameBaseCase {
 
         assertEquals(1000, inventory.kamas());
         assertNull(ref.get());
+    }
+
+    /**
+     * #312 https://github.com/Arakne/Araknemu/issues/312
+     */
+    @Test
+    void equipSameDofusIsNotAllowed() throws SQLException {
+        dataSet.pushItemTemplates();
+
+        Item dofus1 = container.get(ItemService.class).create(694);
+        Item dofus2 = container.get(ItemService.class).create(694);
+
+        inventory.add(dofus1, 1, DofusSlot.SLOT_IDS[0]);
+        assertThrows(AlreadyEquippedException.class, () -> inventory.add(dofus2, 1, DofusSlot.SLOT_IDS[1]));
+    }
+
+    /**
+     * #312 https://github.com/Arakne/Araknemu/issues/312
+     */
+    @Test
+    void equipSameRingIfWithinItemSetIsNotAllowed() throws SQLException {
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        Item ring1 = container.get(ItemService.class).create(8219);
+        Item ring2 = container.get(ItemService.class).create(8219);
+
+        inventory.add(ring1, 1, RingSlot.RING1);
+        assertThrows(AlreadyEquippedException.class, () -> inventory.add(ring2, 1, RingSlot.RING2));
+    }
+
+    /**
+     * #312 https://github.com/Arakne/Araknemu/issues/312
+     */
+    @Test
+    void equipSameRingWithoutItemSetIsAllowed() throws SQLException {
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        Item ring1 = container.get(ItemService.class).create(849);
+        Item ring2 = container.get(ItemService.class).create(849);
+
+        inventory.add(ring1, 1, RingSlot.RING1);
+        inventory.add(ring2, 1, RingSlot.RING2);
+
+        assertCount(2, inventory.equipments());
+        assertEquals(ring1, inventory.bySlot(RingSlot.RING1).get());
+        assertEquals(ring1, inventory.bySlot(RingSlot.RING2).get());
     }
 }

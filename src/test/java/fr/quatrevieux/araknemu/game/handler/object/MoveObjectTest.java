@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.DofusSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.MantleSlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.RingSlot;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
@@ -99,13 +101,39 @@ class MoveObjectTest extends FightBaseCase {
     }
 
     @Test
-    void handleErrorAlreadyOnRequestPosition() throws Exception {
+    void handleAlreadyOnRequestedPositionShouldDoesNothing() throws Exception {
         handler.handle(session, new ObjectMoveRequest(1, 0, 1));
 
-        requestStack.assertLast(new AddItemError(AddItemError.Error.ALREADY_EQUIPED));
+        requestStack.assertEmpty();
 
         assertEquals(0, gamePlayer().inventory().get(1).position());
         assertEquals(1, gamePlayer().inventory().get(1).quantity());
+    }
+
+    @Test
+    void handleErrorDofusAlreadyEquipped() throws Exception {
+        gamePlayer().inventory().add(itemService.create(694), 1, DofusSlot.SLOT_IDS[0]);
+        InventoryEntry entry = gamePlayer().inventory().add(itemService.create(694), 1);
+
+        handler.handle(session, new ObjectMoveRequest(entry.id(), DofusSlot.SLOT_IDS[1], 1));
+
+        requestStack.assertLast(new AddItemError(AddItemError.Error.ALREADY_EQUIPED));
+
+        assertEquals(-1, entry.position());
+        assertEquals(1, entry.quantity());
+    }
+
+    @Test
+    void handleErrorRingAlreadyEquipped() throws Exception {
+        gamePlayer().inventory().add(itemService.create(2419), 1, RingSlot.RING1);
+        InventoryEntry entry = gamePlayer().inventory().add(itemService.create(2419), 1);
+
+        handler.handle(session, new ObjectMoveRequest(entry.id(), RingSlot.RING2, 1));
+
+        requestStack.assertLast(new AddItemError(AddItemError.Error.ALREADY_EQUIPED));
+
+        assertEquals(-1, entry.position());
+        assertEquals(1, entry.quantity());
     }
 
     @Test
