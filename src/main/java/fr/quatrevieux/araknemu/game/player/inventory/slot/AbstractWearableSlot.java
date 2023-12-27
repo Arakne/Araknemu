@@ -36,19 +36,38 @@ import org.checkerframework.common.value.qual.IntRange;
  * Base slot class for wearable
  */
 public abstract class AbstractWearableSlot extends AbstractEquipmentSlot {
-    public AbstractWearableSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int id, SuperType type) {
+    public AbstractWearableSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int id, SuperType type, SlotConstraint[] customConstraints) {
         super(
             dispatcher,
             new SimpleSlot(
                 id,
-                new SlotConstraint[] {
-                    new SingleItemConstraint(),
-                    new ItemClassConstraint(Wearable.class),
-                    new ItemTypeConstraint(type),
-                    new EquipmentLevelConstraint(owner),
-                },
+                makeConstraints(owner, type, customConstraints),
                 storage
             )
         );
+    }
+
+    public AbstractWearableSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int id, SuperType type) {
+        this(dispatcher, storage, owner, id, type, new SlotConstraint[0]);
+    }
+
+    private static SlotConstraint[] makeConstraints(GamePlayer owner, SuperType type, SlotConstraint[] customConstraints) {
+        final SlotConstraint[] defaultConstraints = new SlotConstraint[] {
+            new SingleItemConstraint(),
+            new ItemClassConstraint(Wearable.class),
+            new ItemTypeConstraint(type),
+            new EquipmentLevelConstraint(owner),
+        };
+
+        if (customConstraints.length == 0) {
+            return defaultConstraints;
+        }
+
+        final SlotConstraint[] constraints = new SlotConstraint[defaultConstraints.length + customConstraints.length];
+
+        System.arraycopy(defaultConstraints, 0, constraints, 0, defaultConstraints.length);
+        System.arraycopy(customConstraints, 0, constraints, defaultConstraints.length, customConstraints.length);
+
+        return constraints;
     }
 }

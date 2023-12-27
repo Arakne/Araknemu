@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.MoveException;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.common.value.qual.IntRange;
@@ -57,11 +56,14 @@ public final class InventoryEntry extends AbstractItemEntry {
 
     /**
      * Move the entry to a new position
+     * If the item is already in the given position, nothing is done
      *
      * @param position The new position
      * @param quantity Quantity to move
      *
-     * @throws MoveException When the item is already on the requested position
+     * @throws InventoryException When cannot move the item
+     * @throws fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException When the player level is too low for the item
+     * @throws fr.quatrevieux.araknemu.game.item.inventory.exception.AlreadyEquippedException When the item is already equipped
      */
     public void move(@IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position, @Positive int quantity) throws InventoryException {
         if (quantity > quantity() || quantity <= 0) {
@@ -69,7 +71,7 @@ public final class InventoryEntry extends AbstractItemEntry {
         }
 
         if (position == position()) {
-            throw new MoveException("The item is already on the requested position");
+            return;
         }
 
         if (quantity == quantity()) {

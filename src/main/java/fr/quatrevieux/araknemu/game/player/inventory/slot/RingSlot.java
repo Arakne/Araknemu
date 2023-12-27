@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.EquipOnceConstraint;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 import org.checkerframework.common.value.qual.IntVal;
 
 /**
@@ -33,7 +35,9 @@ public final class RingSlot extends AbstractWearableSlot {
     public static final int RING1 = 2;
     public static final int RING2 = 4;
 
-    public RingSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, @IntVal({RING1, RING2}) int id) {
-        super(dispatcher, storage, owner, id, SuperType.RING);
+    public RingSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, InventorySlots inventorySlots, @IntVal({RING1, RING2}) int id) {
+        super(dispatcher, storage, owner, id, SuperType.RING, new SlotConstraint[] {
+            new EquipOnceConstraint(inventorySlots, new int[] {RING1, RING2}, true),
+        });
     }
 }

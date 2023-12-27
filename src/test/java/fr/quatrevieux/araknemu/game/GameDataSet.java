@@ -321,6 +321,8 @@ public class GameDataSet extends TestingDataSet {
         pushItemTemplate(new ItemTemplate(8237, 10, "Ceinture du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
         pushItemTemplate(new ItemTemplate(8243, 16, "Chapeau du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
 
+        pushItemTemplate(new ItemTemplate(849, 9, "Anneau Forcesque", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 2, 0, 0, "0d0+2")), 1, "", 0, "", 1));
+
         return this;
     }
 
