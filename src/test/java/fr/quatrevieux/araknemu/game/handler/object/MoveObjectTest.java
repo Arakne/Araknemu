@@ -137,6 +137,25 @@ class MoveObjectTest extends FightBaseCase {
     }
 
     @Test
+    void handleSlotNotEmpty() throws Exception {
+        requestStack.clear();
+        handler.handle(session, new ObjectMoveRequest(3, 0, 1));
+
+        requestStack.assertOne("OM1|-1");
+        requestStack.assertOne("OQ3|9");
+        requestStack.assertOne("OAKO4~979~1~0~7e#a#0#0#0d0+10,76#a#0#0#0d0+10");
+
+        assertEquals(2425, player.inventory().bySlot(0).get().item().template().id());
+        assertEquals(9, player.inventory().get(3).quantity());
+        assertEquals(2425, player.inventory().get(4).item().template().id());
+        assertEquals(1, player.inventory().get(4).quantity());
+
+        assertEquals(39, player.inventory().get(1).item().template().id());
+        assertEquals(-1, player.inventory().get(1).position());
+        assertEquals(1, player.inventory().get(1).quantity());
+    }
+
+    @Test
     void functionalNotAllowedOnActiveFight() throws Exception {
         Fight fight = createFight();
         fight.start(new AlternateTeamFighterOrder());

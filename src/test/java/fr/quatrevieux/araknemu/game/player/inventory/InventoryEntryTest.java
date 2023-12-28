@@ -33,9 +33,11 @@ import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.UsableSlot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
@@ -157,6 +159,44 @@ class InventoryEntryTest extends GameBaseCase {
         assertEquals(1, ref1.get().position());
         assertEquals(1, ref1.get().quantity());
         assertSame(item, ref1.get().item());
+    }
+
+    @Test
+    void unequipItem() throws InventoryException, ContainerException {
+        InventoryEntry entry = inventory.add(
+            container.get(ItemService.class).create(40),
+            1,
+            1
+        );
+
+        AtomicReference<ItemEntry> ref = new AtomicReference<>();
+        dispatcher.add(ObjectMoved.class, objectMoved -> ref.set(objectMoved.entry()));
+
+        entry.unequip();
+
+        assertSame(ref.get(), entry);
+        assertEquals(-1, entry.position());
+        assertEquals(1, entry.quantity());
+    }
+
+    @Test
+    void unequipUsableSlot() throws InventoryException, ContainerException, SQLException {
+        dataSet.pushUsableItems();
+
+        InventoryEntry entry = inventory.add(
+            container.get(ItemService.class).create(283),
+            10,
+            UsableSlot.SLOT_ID_START
+        );
+
+        AtomicReference<ItemEntry> ref = new AtomicReference<>();
+        dispatcher.add(ObjectMoved.class, objectMoved -> ref.set(objectMoved.entry()));
+
+        entry.unequip();
+
+        assertSame(ref.get(), entry);
+        assertEquals(-1, entry.position());
+        assertEquals(10, entry.quantity());
     }
 
     @Test

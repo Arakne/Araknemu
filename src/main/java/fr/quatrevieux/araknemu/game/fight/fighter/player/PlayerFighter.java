@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.boost.DispatcherSpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
@@ -142,6 +143,7 @@ public final class PlayerFighter extends AbstractPlayableFighter implements Play
 
         return weapon = player.inventory()
             .bySlot(WeaponSlot.SLOT_ID)
+            .map(InventoryEntry::item)
             .map(Weapon.class::cast)
             .map(CastableWeapon::new)
             .orElseThrow(() -> new FightException("The fighter do not have any weapon"))
