@@ -20,12 +20,17 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.AlreadyEquippedException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
+import org.checkerframework.common.value.qual.IntRange;
 
 /**
  * Move an object from the repository
@@ -33,14 +38,21 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
 public final class MoveObject implements PacketHandler<GameSession, ObjectMoveRequest> {
     @Override
     public void handle(GameSession session, ObjectMoveRequest packet) throws Exception {
+        final PlayerInventory inventory = NullnessUtil.castNonNull(session.player()).inventory();
+        final @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position = packet.position();
+
+        if (position != ItemEntry.DEFAULT_POSITION) {
+            // Unequip the item from the target position
+            inventory.bySlot(position)
+                .filter(entry -> entry.id() != packet.id())
+                .ifPresent(InventoryEntry::unequip)
+            ;
+        }
+
         try {
-            NullnessUtil.castNonNull(session.player())
-                .inventory()
+            inventory
                 .get(packet.id())
-                .move(
-                    packet.position(),
-                    packet.quantity()
-                )
+                .move(position, packet.quantity())
             ;
         } catch (BadLevelException e) {
             session.send(new AddItemError(AddItemError.Error.TOO_LOW_LEVEL));

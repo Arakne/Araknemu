@@ -301,7 +301,7 @@ class PlayerInventoryTest extends GameBaseCase {
 
         InventoryEntry entry = inventory.add(container.get(ItemService.class).create(2416), 1, 1);
 
-        assertEquals(Optional.of(entry.item()), inventory.bySlot(1));
+        assertEquals(Optional.of(entry), inventory.bySlot(1));
         assertFalse(inventory.bySlot(5).isPresent());
     }
 
@@ -456,7 +456,7 @@ class PlayerInventoryTest extends GameBaseCase {
         inventory.add(ring2, 1, RingSlot.RING2);
 
         assertCount(2, inventory.equipments());
-        assertEquals(ring1, inventory.bySlot(RingSlot.RING1).get());
-        assertEquals(ring1, inventory.bySlot(RingSlot.RING2).get());
+        assertEquals(ring1, inventory.bySlot(RingSlot.RING1).get().item());
+        assertEquals(ring1, inventory.bySlot(RingSlot.RING2).get().item());
     }
 }

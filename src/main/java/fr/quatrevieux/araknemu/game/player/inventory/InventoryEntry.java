@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.dataflow.qual.Pure;
@@ -87,8 +88,22 @@ public final class InventoryEntry extends AbstractItemEntry {
     }
 
     /**
+     * Move all the entry to the default position
+     * This can be used to unequip the item
+     *
+     * This is equivalent of calling `move(DEFAULT_POSITION, quantity())`
+     *
+     * This method will do nothing if the item is already on the default position
+     */
+    public void unequip() {
+        move(DEFAULT_POSITION, Asserter.assertPositive(quantity()));
+    }
+
+    /**
      * Set the item to the default position
      * Note: this method is internal and should not be called
+     *
+     * @see #unequip() To unequip the item (this method should be called instead)
      */
     public void setToDefaultPosition() {
         entity.setPosition(DEFAULT_POSITION);

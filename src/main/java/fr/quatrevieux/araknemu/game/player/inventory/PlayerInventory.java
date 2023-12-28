@@ -127,14 +127,14 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
     }
 
     /**
-     * Get an item by the slot id
+     * Get an entry by the slot id
      *
      * @param slotId The slot of the item
      *
-     * @return The item contained in the slot, or an empty Optional
+     * @return The entry if the slot is full, empty otherwise
      */
-    public Optional<Item> bySlot(@IntRange(from = 0, to = InventorySlots.SLOT_MAX) int slotId) throws InventoryException {
-        return slots.get(slotId).entry().map(InventoryEntry::item);
+    public Optional<InventoryEntry> bySlot(@IntRange(from = 0, to = InventorySlots.SLOT_MAX) int slotId) throws InventoryException {
+        return slots.get(slotId).entry();
     }
 
     /**
