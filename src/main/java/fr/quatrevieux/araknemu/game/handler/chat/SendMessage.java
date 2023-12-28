@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.chat.SendMessageError;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
@@ -46,6 +47,10 @@ public final class SendMessage implements PacketHandler<GameSession, Message> {
 
         if (!player.restrictions().canChat()) {
             throw new ErrorPacket(Error.cantDoOnCurrentState());
+        }
+
+        if (packet.message().isEmpty()) {
+            throw new ErrorPacket(new Noop());
         }
 
         try {

@@ -77,7 +77,7 @@ public final class Message implements Packet {
                 return new Message(
                     ChannelType.byChar(channel.charAt(0)),
                     null,
-                    tokenizer.nextPart(),
+                    tokenizer.nextPart().trim(),
                     tokenizer.nextPartOrDefault("")
                 );
             }
@@ -85,7 +85,7 @@ public final class Message implements Packet {
             return new Message(
                 ChannelType.PRIVATE,
                 channel,
-                tokenizer.nextPart(),
+                tokenizer.nextPart().trim(),
                 tokenizer.nextPartOrDefault("")
             );
         }

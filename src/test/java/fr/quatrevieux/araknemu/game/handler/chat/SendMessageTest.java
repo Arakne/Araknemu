@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.player.Restrictions;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 import fr.quatrevieux.araknemu.network.game.out.chat.SendMessageError;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -197,5 +198,19 @@ class SendMessageTest extends FightBaseCase {
             "Hello World !",
             ""
         ));
+    }
+
+    @Test
+    void handleEmptyMessage() throws Exception {
+        explorationPlayer();
+        requestStack.clear();
+
+        session.receive("BM*||");
+        requestStack.assertLast("BN");
+        requestStack.clear();
+
+        session.receive("BM*||\t\n   \t ");
+        requestStack.assertLast("BN");
+        requestStack.clear();
     }
 }

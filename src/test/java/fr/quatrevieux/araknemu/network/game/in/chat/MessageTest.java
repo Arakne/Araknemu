@@ -52,8 +52,28 @@ class MessageTest {
     }
 
     @Test
+    void parseWithGlobalChannelShouldTrimMessage() {
+        Message message = parser.parse("*|  \tMy message  \r|my items");
+
+        assertEquals(ChannelType.MESSAGES, message.channel());
+        assertEquals("My message", message.message());
+        assertNull(message.target());
+        assertEquals("my items", message.items());
+    }
+
+    @Test
     void parseWisp() {
         Message message = parser.parse("Bob|My message|my items");
+
+        assertEquals(ChannelType.PRIVATE, message.channel());
+        assertEquals("My message", message.message());
+        assertEquals("Bob", message.target());
+        assertEquals("my items", message.items());
+    }
+
+    @Test
+    void parseShouldTrimMessage() {
+        Message message = parser.parse("Bob|  My message  |my items");
 
         assertEquals(ChannelType.PRIVATE, message.channel());
         assertEquals("My message", message.message());
