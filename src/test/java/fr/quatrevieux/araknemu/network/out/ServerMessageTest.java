@@ -58,4 +58,9 @@ class ServerMessageTest {
     void kick() {
         assertEquals("M018|John;cause", ServerMessage.kick("John", "cause").toString());
     }
+
+    @Test
+    void spam() {
+        assertEquals("M10|", ServerMessage.spam().toString());
+    }
 }

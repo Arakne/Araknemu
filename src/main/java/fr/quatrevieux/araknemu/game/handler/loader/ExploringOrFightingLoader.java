@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.ExploringOrFightingSwitcher;
 import fr.quatrevieux.araknemu.game.handler.chat.SendSmileyToExplorationMap;
 import fr.quatrevieux.araknemu.game.handler.chat.SendSmileyToFight;
+import fr.quatrevieux.araknemu.game.handler.chat.SpamCheckAttachment;
 import fr.quatrevieux.araknemu.game.handler.fight.PerformTurnAction;
 import fr.quatrevieux.araknemu.game.handler.fight.TerminateTurnAction;
 import fr.quatrevieux.araknemu.game.handler.fight.UseObjectBeforeStart;
@@ -57,8 +58,8 @@ public final class ExploringOrFightingLoader implements Loader {
                 new EnsureInactiveFight<>(new UseObjectBeforeStart())
             ),
             new ExploringOrFightingSwitcher<>(
-                new SendSmileyToExplorationMap(),
-                new SendSmileyToFight()
+                new SendSmileyToExplorationMap(container.get(SpamCheckAttachment.Key.class)),
+                new SendSmileyToFight(container.get(SpamCheckAttachment.Key.class))
             ),
         };
     }

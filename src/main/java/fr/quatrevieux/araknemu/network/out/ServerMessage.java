@@ -101,4 +101,11 @@ public final class ServerMessage {
     public static ServerMessage kick(String performer, String cause) {
         return new ServerMessage(false, 18, new Object[] {performer, cause}, null);
     }
+
+    /**
+     * The player has reach the spam limit of messages or smileys
+     */
+    public static ServerMessage spam() {
+        return new ServerMessage(true, 0, new Object[] {}, null);
+    }
 }

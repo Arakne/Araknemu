@@ -32,9 +32,13 @@ import fr.quatrevieux.araknemu.network.AccountSession;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 import org.checkerframework.dataflow.qual.Pure;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -47,6 +51,7 @@ public final class GameSession extends AbstractDelegatedSession implements Accou
     private @Nullable PlayerFighter fighter;
     private @Nullable Spectator spectator;
     private @MonotonicNonNull SessionLog log;
+    private Map<SessionAttachmentKey, Object> attachments = new HashMap<>();
 
     public GameSession(Session session) {
         super(session);
@@ -158,6 +163,22 @@ public final class GameSession extends AbstractDelegatedSession implements Accou
      */
     public void setLog(SessionLog log) {
         this.log = log;
+    }
+
+    /**
+     * Get an attachment
+     *
+     * If the attachment is not set, it will be initialized using {@link SessionAttachmentKey#initialize()},
+     * so this method will never return null
+     *
+     * @param key The attachment key
+     *
+     * @return The attached value. Can be a new instance if not set
+     * @param <V> The attachment type
+     */
+    @SuppressWarnings("unchecked")
+    public <V> @NonNull V get(SessionAttachmentKey<V> key) {
+        return NullnessUtil.castNonNull((V) attachments.computeIfAbsent(key, SessionAttachmentKey::initialize));
     }
 
     @Override

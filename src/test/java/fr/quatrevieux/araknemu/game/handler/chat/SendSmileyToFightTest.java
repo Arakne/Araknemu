@@ -19,10 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.handler.chat;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
 import fr.quatrevieux.araknemu.network.game.out.chat.Smiley;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SendSmileyToFightTest extends FightBaseCase {
     @Test
@@ -32,5 +36,25 @@ class SendSmileyToFightTest extends FightBaseCase {
         handlePacket(new UseSmiley(3));
 
         requestStack.assertLast(new Smiley(session.fighter(), 3));
+    }
+
+    @Test
+    void spamCheck() throws Exception {
+        createFight();
+
+        handlePacket(new UseSmiley(3));
+        handlePacket(new UseSmiley(3));
+        handlePacket(new UseSmiley(3));
+        handlePacket(new UseSmiley(3));
+        handlePacket(new UseSmiley(3));
+        requestStack.clear();
+
+        try {
+            handlePacket(new UseSmiley(3));
+        } catch (ErrorPacket error) {
+            assertEquals(ServerMessage.spam().toString(), error.packet().toString());
+        }
+
+        requestStack.assertEmpty();
     }
 }
