@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.handler.chat;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -38,11 +37,11 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
  */
 public final class SendMessage implements PacketHandler<GameSession, Message> {
     private final ChatService service;
-    private final GameConfiguration.ChatConfiguration configuration;
+    private final SpamCheckAttachment.Key spamCheckKey;
 
-    public SendMessage(ChatService service, GameConfiguration.ChatConfiguration configuration) {
+    public SendMessage(ChatService service, SpamCheckAttachment.Key spamCheckKey) {
         this.service = service;
-        this.configuration = configuration;
+        this.spamCheckKey = spamCheckKey;
     }
 
     @Override
@@ -57,7 +56,7 @@ public final class SendMessage implements PacketHandler<GameSession, Message> {
             throw new ErrorPacket(new Noop());
         }
 
-        if (!session.get(SpamCheckAttachment.KEY).check(configuration.spamCheckInterval(), configuration.spamCheckMaxCount())) {
+        if (!session.get(spamCheckKey).check()) {
             throw new ErrorPacket(ServerMessage.spam());
         }
 

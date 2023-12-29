@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.handler.chat;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -34,10 +33,10 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
  * Send the player smiley to map
  */
 public final class SendSmileyToExplorationMap implements PacketHandler<GameSession, UseSmiley> {
-    private final GameConfiguration.ChatConfiguration configuration;
+    private final SpamCheckAttachment.Key spamCheckKey;
 
-    public SendSmileyToExplorationMap(GameConfiguration.ChatConfiguration configuration) {
-        this.configuration = configuration;
+    public SendSmileyToExplorationMap(SpamCheckAttachment.Key spamCheckKey) {
+        this.spamCheckKey = spamCheckKey;
     }
 
     @Override
@@ -49,7 +48,7 @@ public final class SendSmileyToExplorationMap implements PacketHandler<GameSessi
             return;
         }
 
-        if (!session.get(SpamCheckAttachment.KEY).check(configuration.spamCheckInterval(), configuration.spamCheckMaxCount())) {
+        if (!session.get(spamCheckKey).check()) {
             throw new ErrorPacket(ServerMessage.spam());
         }
 

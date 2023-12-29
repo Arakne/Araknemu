@@ -22,13 +22,13 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.ExploringOrFightingSwitcher;
 import fr.quatrevieux.araknemu.game.handler.chat.SendSmileyToExplorationMap;
 import fr.quatrevieux.araknemu.game.handler.chat.SendSmileyToFight;
+import fr.quatrevieux.araknemu.game.handler.chat.SpamCheckAttachment;
 import fr.quatrevieux.araknemu.game.handler.fight.PerformTurnAction;
 import fr.quatrevieux.araknemu.game.handler.fight.TerminateTurnAction;
 import fr.quatrevieux.araknemu.game.handler.fight.UseObjectBeforeStart;
@@ -58,8 +58,8 @@ public final class ExploringOrFightingLoader implements Loader {
                 new EnsureInactiveFight<>(new UseObjectBeforeStart())
             ),
             new ExploringOrFightingSwitcher<>(
-                new SendSmileyToExplorationMap(container.get(GameConfiguration.class).chat()),
-                new SendSmileyToFight(container.get(GameConfiguration.class).chat())
+                new SendSmileyToExplorationMap(container.get(SpamCheckAttachment.Key.class)),
+                new SendSmileyToFight(container.get(SpamCheckAttachment.Key.class))
             ),
         };
     }

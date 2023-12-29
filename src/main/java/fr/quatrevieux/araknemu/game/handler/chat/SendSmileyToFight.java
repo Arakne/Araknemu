@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.handler.chat;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
@@ -33,17 +32,17 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
  * Send the player smiley to the fight
  */
 public final class SendSmileyToFight implements PacketHandler<GameSession, UseSmiley> {
-    private final GameConfiguration.ChatConfiguration configuration;
+    private final SpamCheckAttachment.Key spamCheckKey;
 
-    public SendSmileyToFight(GameConfiguration.ChatConfiguration configuration) {
-        this.configuration = configuration;
+    public SendSmileyToFight(SpamCheckAttachment.Key spamCheckKey) {
+        this.spamCheckKey = spamCheckKey;
     }
 
     @Override
     public void handle(GameSession session, UseSmiley packet) throws Exception {
         final PlayerFighter fighter = NullnessUtil.castNonNull(session.fighter());
 
-        if (!session.get(SpamCheckAttachment.KEY).check(configuration.spamCheckInterval(), configuration.spamCheckMaxCount())) {
+        if (!session.get(spamCheckKey).check()) {
             throw new ErrorPacket(ServerMessage.spam());
         }
 

@@ -30,16 +30,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SpamCheckAttachmentTest {
     @RepeatedIfExceptionsTest
     void check() throws InterruptedException {
-        SpamCheckAttachment attachment = SpamCheckAttachment.KEY.initialize();
+        SpamCheckAttachment attachment = new SpamCheckAttachment.Key(Duration.ofMillis(400), 3).initialize();
 
-        assertTrue(attachment.check(Duration.ofMillis(100), 3));
-        assertTrue(attachment.check(Duration.ofMillis(100), 3));
-        assertTrue(attachment.check(Duration.ofMillis(100), 3));
+        assertTrue(attachment.check());
+        assertTrue(attachment.check());
+        assertTrue(attachment.check());
 
-        assertFalse(attachment.check(Duration.ofMillis(100), 3));
-        assertFalse(attachment.check(Duration.ofMillis(100), 3));
+        assertFalse(attachment.check());
+        assertFalse(attachment.check());
 
-        Thread.sleep(100);
-        assertTrue(attachment.check(Duration.ofMillis(100), 3));
+        Thread.sleep(600);
+        assertTrue(attachment.check());
     }
 }

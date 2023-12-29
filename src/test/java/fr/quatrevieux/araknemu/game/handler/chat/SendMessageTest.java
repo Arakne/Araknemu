@@ -58,7 +58,7 @@ class SendMessageTest extends FightBaseCase {
 
         handler = new SendMessage(
             container.get(ChatService.class),
-            container.get(GameConfiguration.class).chat()
+            container.get(SpamCheckAttachment.Key.class)
         );
 
         container.get(Dispatcher.class).dispatch(

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.network.game.SessionAttachmentKey;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.time.Duration;
 
@@ -30,7 +31,17 @@ import java.time.Duration;
  * An attachment for spam check
  */
 public final class SpamCheckAttachment {
-    public static final SessionAttachmentKey<SpamCheckAttachment> KEY = SpamCheckAttachment::new;
+    /**
+     * The check interval
+     * @see GameConfiguration.ChatConfiguration#spamCheckInterval()
+     */
+    private final Duration interval;
+
+    /**
+     * The maximum number of message or smiley that can be sent in the interval
+     * @see GameConfiguration.ChatConfiguration#spamCheckMaxCount()
+     */
+    private final @Positive int maxCount;
 
     /**
      * The last check time in milliseconds
@@ -45,19 +56,17 @@ public final class SpamCheckAttachment {
      */
     private @NonNegative int messageCount = 0;
 
-    private SpamCheckAttachment() {
-        // Instantiation only by the attachment key
+    private SpamCheckAttachment(Duration interval, @Positive int maxCount) {
+        this.interval = interval;
+        this.maxCount = maxCount;
     }
 
     /**
      * Check for spam before sending a message or smiley
      *
-     * @param interval The check interval {@link GameConfiguration.ChatConfiguration#spamCheckInterval()}
-     * @param maxCount Maximum number of message or smiley that can be sent in the interval {@link GameConfiguration.ChatConfiguration#spamCheckMaxCount()}
-     *
      * @return true if the limit is not reached, false otherwise
      */
-    public boolean check(Duration interval, @Positive int maxCount) {
+    public boolean check() {
         final long now = System.currentTimeMillis();
 
         if (now - checkTime > interval.toMillis()) {
@@ -72,5 +81,24 @@ public final class SpamCheckAttachment {
         ++messageCount;
 
         return true;
+    }
+
+    public static final class Key implements SessionAttachmentKey<SpamCheckAttachment> {
+        private final Duration interval;
+        private final @Positive int maxCount;
+
+        /**
+         * @param interval The check interval {@link GameConfiguration.ChatConfiguration#spamCheckInterval()}
+         * @param maxCount Maximum number of message or smiley that can be sent in the interval {@link GameConfiguration.ChatConfiguration#spamCheckMaxCount()}
+         */
+        public Key(Duration interval, @Positive int maxCount) {
+            this.interval = interval;
+            this.maxCount = maxCount;
+        }
+
+        @Override
+        public @NonNull SpamCheckAttachment initialize() {
+            return new SpamCheckAttachment(interval, maxCount);
+        }
     }
 }

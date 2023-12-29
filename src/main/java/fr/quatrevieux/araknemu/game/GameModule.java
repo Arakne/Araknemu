@@ -213,6 +213,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrate
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
+import fr.quatrevieux.araknemu.game.handler.chat.SpamCheckAttachment;
 import fr.quatrevieux.araknemu.game.handler.loader.AdminLoader;
 import fr.quatrevieux.araknemu.game.handler.loader.AggregateLoader;
 import fr.quatrevieux.araknemu.game.handler.loader.CommonLoader;
@@ -540,6 +541,11 @@ public final class GameModule implements ContainerModule {
                 }
             )
         );
+
+        configurator.persist(SpamCheckAttachment.Key.class, container -> new SpamCheckAttachment.Key(
+            container.get(GameConfiguration.class).chat().spamCheckInterval(),
+            container.get(GameConfiguration.class).chat().spamCheckMaxCount()
+        ));
 
         configurator.persist(
             AreaService.class,
