@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.handler.EnsureFightingOrSpectator;
@@ -55,7 +56,8 @@ public final class PlayingLoader extends AbstractLoader {
                 container.get(ExplorationService.class)
             ),
             new SendMessage(
-                container.get(ChatService.class)
+                container.get(ChatService.class),
+                container.get(GameConfiguration.class).chat()
             ),
             new SaveSubscription(),
             new EnsureInactiveFight(new MoveObject()),

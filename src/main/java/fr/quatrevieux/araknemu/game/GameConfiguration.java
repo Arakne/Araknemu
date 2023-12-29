@@ -307,6 +307,25 @@ public final class GameConfiguration {
         public String adminChannels() {
             return pool.string("chat.channels.admin", "@");
         }
+
+        /**
+         * Interval of time for checking spam of messages or smileys
+         * During this interval, the player can send a limited number of messages or smileys
+         * Once it reached, the player should wait the end of the interval for send a new message
+         * By default 30s
+         */
+        public Duration spamCheckInterval() {
+            return pool.duration("chat.spam.interval", Duration.ofSeconds(30));
+        }
+
+        /**
+         * Maximum number of messages or smileys per spam check interval
+         * This value must be a positive integer (> 1)
+         * By default 5
+         */
+        public @Positive int spamCheckMaxCount() {
+            return pool.positiveInteger("chat.spam.max", 5);
+        }
     }
 
     public final class ActivityConfiguration {

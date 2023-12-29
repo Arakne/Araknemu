@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.chat;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
@@ -38,6 +39,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 import fr.quatrevieux.araknemu.network.game.out.chat.SendMessageError;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +57,8 @@ class SendMessageTest extends FightBaseCase {
         super.setUp();
 
         handler = new SendMessage(
-            container.get(ChatService.class)
+            container.get(ChatService.class),
+            container.get(GameConfiguration.class).chat()
         );
 
         container.get(Dispatcher.class).dispatch(
@@ -212,5 +215,26 @@ class SendMessageTest extends FightBaseCase {
         session.receive("BM*||\t\n   \t ");
         requestStack.assertLast("BN");
         requestStack.clear();
+    }
+
+    @Test
+    void handleSpamCheck() throws Exception {
+        explorationPlayer();
+
+        handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+        handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+        handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+        handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+        handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+        requestStack.clear();
+
+        try {
+            handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+            requestStack.assertEmpty();
+
+            fail("Error packet should be thrown");
+        } catch (ErrorPacket packet) {
+            assertEquals(ServerMessage.spam().toString(), packet.packet().toString());
+        }
     }
 }

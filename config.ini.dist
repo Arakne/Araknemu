@@ -168,6 +168,13 @@ game.dbname = araknemu
 ;chat.channels.default = *#%!pi$:?
 ; > Channels to add on admin characters
 ;chat.channels.admin = @
+; > Interval of time for checking spam of messages or smileys
+; > During this interval, the player can send a limited number of messages or smileys
+; > Once it reached, the player should wait the end of the interval for send a new message
+;chat.spam.interval = 30s
+; > Maximum number of messages or smileys per spam check interval
+; > This value must be a positive integer (> 1)
+;chat.spam.max = 5
 
 ; Activity
 ; --------

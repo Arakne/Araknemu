@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsC
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -211,5 +212,16 @@ class GameSessionTest extends GameBaseCase {
         session.setSpectator(new Spectator(player, null));
 
         assertEquals("ip=127.0.0.1; account=10010; player=10; position=(10540, 210); state=spectator", session.toString());
+    }
+
+    @Test
+    void get() {
+        SessionAttachmentKey<AtomicInteger> key = () -> new AtomicInteger(42);
+
+        assertEquals(42, session.get(key).get());
+        assertSame(session.get(key).get(), session.get(key).get());
+
+        session.get(key).incrementAndGet();
+        assertEquals(43, session.get(key).get());
     }
 }

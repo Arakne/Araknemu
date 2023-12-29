@@ -65,6 +65,8 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(30, configuration.chat().floodTime());
         assertEquals("*#%!pi$:?", configuration.chat().defaultChannels());
         assertEquals("@", configuration.chat().adminChannels());
+        assertEquals(Duration.ofSeconds(30), configuration.chat().spamCheckInterval());
+        assertEquals(5, configuration.chat().spamCheckMaxCount());
     }
 
     @Test
