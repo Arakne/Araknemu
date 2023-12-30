@@ -66,6 +66,8 @@ public final class SendMessage implements PacketHandler<GameSession, Message> {
             switch (e.error()) {
                 case UNAUTHORIZED:
                     throw new ErrorPacket(Error.cantDoOnServer());
+                case NOT_SUBSCRIBED:
+                    throw new ErrorPacket(new Noop());
                 default:
                     throw new ErrorPacket(new SendMessageError(e.error(), packet.target()));
             }

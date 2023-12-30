@@ -26,6 +26,7 @@ public class ChatException extends Exception {
     public enum Error {
         DEFAULT(""),
         UNAUTHORIZED(""),
+        NOT_SUBSCRIBED(""),
         SYNTAX_ERROR("S"),
         USER_NOT_CONNECTED("f"),
         USER_NOT_CONNECTED_BUT_TRY_SEND_EXTERNAL("e"),

@@ -99,7 +99,13 @@ public final class ChatService implements EventsSubscriber {
             throw new ChatException(ChatException.Error.SYNTAX_ERROR);
         }
 
-        for (Channel channel : channels.getOrDefault(message.channel(), Collections.emptyList())) {
+        final ChannelType type = message.channel();
+
+        if (!sender.subscriptions().contains(type)) {
+            throw new ChatException(ChatException.Error.NOT_SUBSCRIBED);
+        }
+
+        for (Channel channel : channels.getOrDefault(type, Collections.emptyList())) {
             if (channel.authorized(sender)) {
                 channel.send(sender, message);
                 return;
