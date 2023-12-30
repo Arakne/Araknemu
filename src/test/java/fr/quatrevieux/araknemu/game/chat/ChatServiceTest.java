@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -100,6 +101,28 @@ class ChatServiceTest extends GameBaseCase {
                 ""
             )
         );
+    }
+
+    @Test
+    void sendChannelNotEnabled() throws SQLException, ContainerException, ChatException {
+        explorationPlayer();
+        gamePlayer().dispatcher().add(new MessageReceived(
+            gamePlayer()
+        ));
+
+        gamePlayer().subscriptions().remove(ChannelType.MESSAGES);
+        requestStack.clear();
+
+        try {
+            service.send(
+                gamePlayer(),
+                new Message(ChannelType.MESSAGES, "", "My message", "")
+            );
+        } catch (ChatException e) {
+            assertEquals(ChatException.Error.NOT_SUBSCRIBED, e.error());
+        }
+
+        requestStack.assertEmpty();
     }
 
     @Test

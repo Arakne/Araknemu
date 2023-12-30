@@ -26,6 +26,9 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -44,6 +47,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -236,5 +240,65 @@ class SendMessageTest extends FightBaseCase {
         } catch (ErrorPacket packet) {
             assertEquals(ServerMessage.spam().toString(), packet.packet().toString());
         }
+    }
+
+    @Test
+    void handleOnMapOtherSessionShouldReceiveMessage() throws Exception {
+        explorationPlayer();
+        ExplorationPlayer otherExplorationPlayer = makeExplorationPlayer(other);
+
+        Field sf = GamePlayer.class.getDeclaredField("session");
+        sf.setAccessible(true);
+
+        GameSession otherSession = (GameSession) sf.get(other);
+        otherSession.setExploration(otherExplorationPlayer);
+        otherExplorationPlayer.dispatch(new StartExploration(otherExplorationPlayer));
+
+        otherExplorationPlayer.changeMap(explorationPlayer().map(), 123);
+
+        SendingRequestStack otherRequestStack = new SendingRequestStack((DummyChannel) otherSession.channel());
+        otherRequestStack.clear();
+
+        handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+
+        otherRequestStack.assertLast(
+            new MessageSent(
+                gamePlayer(),
+                ChannelType.MESSAGES,
+                "Hello World !",
+                ""
+            )
+        );
+    }
+
+    @Test
+    void handleWithChannelDisabledShouldNotSendMessage() throws Exception {
+        player.subscriptions().remove(ChannelType.MESSAGES);
+
+        explorationPlayer();
+        ExplorationPlayer otherExplorationPlayer = makeExplorationPlayer(other);
+
+        Field sf = GamePlayer.class.getDeclaredField("session");
+        sf.setAccessible(true);
+
+        GameSession otherSession = (GameSession) sf.get(other);
+        otherSession.setExploration(otherExplorationPlayer);
+        otherExplorationPlayer.dispatch(new StartExploration(otherExplorationPlayer));
+
+        otherExplorationPlayer.changeMap(explorationPlayer().map(), 123);
+
+        SendingRequestStack otherRequestStack = new SendingRequestStack((DummyChannel) otherSession.channel());
+        otherRequestStack.clear();
+        requestStack.clear();
+
+        try {
+            handler.handle(session, new Message(ChannelType.MESSAGES, null, "Hello World !", ""));
+            fail("Error packet should be thrown");
+        } catch (ErrorPacket packet) {
+            assertEquals(new Noop().toString(), packet.packet().toString());
+        }
+
+        otherRequestStack.assertEmpty();
+        requestStack.assertEmpty();
     }
 }
