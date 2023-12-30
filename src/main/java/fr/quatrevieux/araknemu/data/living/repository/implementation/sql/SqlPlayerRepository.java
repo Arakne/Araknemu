@@ -178,7 +178,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public boolean nameExists(int serverId, String name) {
         return utils.aggregate(
-            "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_NAME = ? AND SERVER_ID = ? AND DELETED_AT IS NULL",
+            "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_NAME = ? AND SERVER_ID = ?",
             stmt -> {
                 stmt.setString(1, name);
                 stmt.setInt(2, serverId);
