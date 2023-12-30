@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
+import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -41,8 +42,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -61,7 +70,8 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         repository = new SqlPlayerRepository(
             new ConnectionPoolExecutor(connection),
             new MutableCharacteristicsTransformer(),
-            new ChannelsTransformer()
+            new ChannelsTransformer(),
+            new InstantTransformer()
         );
 
         repository.initialize();
@@ -123,15 +133,45 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
     }
 
     @Test
-    void delete() {
-        Player player = new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null);
-        player = repository.add(player);
+    void delete() throws SQLException {
+        AccountRepository accountRepository = new SqlAccountRepository(new ConnectionPoolExecutor(connection), new PermissionsTransformer());
+        accountRepository.initialize();
+        Account account = accountRepository.add(new Account(-1, "john", "", "john"));
+        Player player = repository.add(new Player(-1, account.id(), 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
 
         assertTrue(repository.has(player));
 
         repository.delete(player);
 
         assertFalse(repository.has(player));
+        assertThrows(EntityNotFoundException.class, () -> repository.get(player));
+        assertCount(0, repository.findByAccount(5, 1));
+        assertEquals(0, repository.accountCharactersCount(player));
+        assertCount(0, repository.accountCharactersCount(5));
+        assertCount(0, repository.serverCharactersCountByAccountPseudo("john"));
+        assertThrows(EntityNotFoundException.class, () -> repository.getForGame(player));
+
+        accountRepository.destroy();
+
+        ConnectionPoolExecutor executor = new ConnectionPoolExecutor(connection);
+
+        Map<Integer, Instant> deletedAtById = executor.prepare("SELECT * FROM `player`", statement -> {
+            Map<Integer, Instant> result = new HashMap<>();
+
+            ResultSet rs = statement.executeQuery();
+
+            java.util.Calendar cal = Calendar.getInstance();
+            cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            while (rs.next()) {
+                result.put(rs.getInt("PLAYER_ID"), rs.getTimestamp("DELETED_AT", cal).toInstant());
+            }
+
+            return result;
+        });
+
+        assertEquals(1, deletedAtById.size());
+        assertEquals(Instant.now().getEpochSecond(), deletedAtById.get(player.id()).getEpochSecond(), 2);
     }
 
     @Test
@@ -142,9 +182,13 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
     @Test
     void nameExists() {
         assertFalse(repository.nameExists(1, "name"));
-        repository.add(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
+        Player player = repository.add(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
         assertTrue(repository.nameExists(1, "name"));
         assertFalse(repository.nameExists(2, "name"));
+
+        // Soft delete keep the name
+        repository.delete(player);
+        assertTrue(repository.nameExists(1, "name"));
     }
 
     @Test

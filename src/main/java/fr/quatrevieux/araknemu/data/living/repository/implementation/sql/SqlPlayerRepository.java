@@ -37,6 +37,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharac
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -45,13 +46,15 @@ final class SqlPlayerRepository implements PlayerRepository {
     private final QueryExecutor executor;
     private final Transformer<MutableCharacteristics> characteristicsTransformer;
     private final Transformer<Set<ChannelType>> channelsTransformer;
+    private final Transformer<Instant> instantTransformer;
 
     private final RepositoryUtils<Player> utils;
 
-    public SqlPlayerRepository(QueryExecutor executor, Transformer<MutableCharacteristics> characteristicsTransformer, Transformer<Set<ChannelType>> channelsTransformer) {
+    public SqlPlayerRepository(QueryExecutor executor, Transformer<MutableCharacteristics> characteristicsTransformer, Transformer<Set<ChannelType>> channelsTransformer, Transformer<Instant> instantTransformer) {
         this.executor = executor;
         this.characteristicsTransformer = characteristicsTransformer;
         this.channelsTransformer = channelsTransformer;
+        this.instantTransformer = instantTransformer;
         this.utils = new RepositoryUtils<>(this.executor, new SqlPlayerRepository.Loader());
     }
 
@@ -81,6 +84,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                     "SAVED_MAP_ID INTEGER," +
                     "SAVED_CELL_ID INTEGER," +
                     "PLAYER_KAMAS BIGINT," +
+                    "DELETED_AT DATETIME NULL DEFAULT NULL," +
                     "UNIQUE (PLAYER_NAME, SERVER_ID)" +
                 ")"
             );
@@ -134,7 +138,12 @@ final class SqlPlayerRepository implements PlayerRepository {
 
     @Override
     public void delete(Player entity) throws RepositoryException {
-        if (utils.update("DELETE FROM PLAYER WHERE PLAYER_ID = ?", rs -> rs.setInt(1, entity.id())) < 1) {
+        final String now = instantTransformer.serialize(Instant.now());
+        if (utils.update(
+            "UPDATE PLAYER SET DELETED_AT = ? WHERE PLAYER_ID = ?", rs -> {
+                rs.setString(1, now);
+                rs.setInt(2, entity.id());
+            }) < 1) {
             throw new EntityNotFoundException();
         }
     }
@@ -142,7 +151,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public Player get(Player entity) throws RepositoryException {
         return utils.findOne(
-            "SELECT * FROM PLAYER WHERE PLAYER_ID = ?",
+            "SELECT * FROM PLAYER WHERE PLAYER_ID = ? AND DELETED_AT IS NULL",
             stmt -> stmt.setInt(1, entity.id())
         );
     }
@@ -150,7 +159,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public boolean has(Player entity) throws RepositoryException {
         return utils.aggregate(
-            "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_ID = ?",
+            "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_ID = ? AND DELETED_AT IS NULL",
             stmt -> stmt.setInt(1, entity.id())
         ) > 0;
     }
@@ -158,7 +167,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public Collection<Player> findByAccount(int accountId, int serverId) {
         return utils.findAll(
-            "SELECT * FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
+            "SELECT * FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND DELETED_AT IS NULL",
             stmt -> {
                 stmt.setInt(1, accountId);
                 stmt.setInt(2, serverId);
@@ -180,7 +189,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public int accountCharactersCount(Player player) {
         return utils.aggregate(
-            "SELECT COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
+            "SELECT COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND DELETED_AT IS NULL",
             stmt -> {
                 stmt.setInt(1, player.accountId());
                 stmt.setInt(2, player.serverId());
@@ -192,7 +201,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     public Collection<ServerCharacters> accountCharactersCount(int accountId) {
         try {
             return executor.prepare(
-                "SELECT SERVER_ID, COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? GROUP BY SERVER_ID",
+                "SELECT SERVER_ID, COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? AND DELETED_AT IS NULL GROUP BY SERVER_ID",
                 stmt -> {
                     stmt.setInt(1, accountId);
 
@@ -221,7 +230,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     public Collection<ServerCharacters> serverCharactersCountByAccountPseudo(String accountPseudo) {
         try {
             return executor.prepare(
-                "SELECT SERVER_ID, COUNT(*) FROM PLAYER P JOIN ACCOUNT A ON P.ACCOUNT_ID = A.ACCOUNT_ID WHERE A.PSEUDO = ? GROUP BY SERVER_ID",
+                "SELECT SERVER_ID, COUNT(*) FROM PLAYER P JOIN ACCOUNT A ON P.ACCOUNT_ID = A.ACCOUNT_ID WHERE A.PSEUDO = ? AND P.DELETED_AT IS NULL GROUP BY SERVER_ID",
                 stmt -> {
                     stmt.setString(1, accountPseudo);
 
@@ -244,7 +253,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public Player getForGame(Player player) {
         return utils.findOne(
-            "SELECT * FROM PLAYER WHERE PLAYER_ID = ? AND ACCOUNT_ID = ? AND SERVER_ID = ?",
+            "SELECT * FROM PLAYER WHERE PLAYER_ID = ? AND ACCOUNT_ID = ? AND SERVER_ID = ? AND DELETED_AT IS NULL",
             stmt -> {
                 stmt.setInt(1, player.id());
                 stmt.setInt(2, player.accountId());

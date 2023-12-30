@@ -70,7 +70,8 @@ public final class SqlLivingRepositoriesModule implements ContainerModule {
             container -> new SqlPlayerRepository(
                 executor,
                 container.get(MutableCharacteristicsTransformer.class),
-                container.get(ChannelsTransformer.class)
+                container.get(ChannelsTransformer.class),
+                container.get(InstantTransformer.class)
             )
         );
 
