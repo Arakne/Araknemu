@@ -47,6 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -181,6 +183,33 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         assertContainsType(MonsterFighter.class, fight.fighters().all());
         assertContains(player.player().fighter(), fight.fighters().all());
         assertInstanceOf(PvmType.class, fight.type());
+    }
+
+    @Test
+    void startFightShouldReturnNullIfGroupIsNotOnMap() throws SQLException {
+        monsterGroupPosition.populate(map);
+
+        ExplorationPlayer player = explorationPlayer();
+        player.changeMap(map, 123);
+
+        MonsterGroup group = monsterGroupPosition.available().get(0);
+
+        map.remove(group);
+
+        assertNull(monsterGroupPosition.startFight(group, player));
+    }
+
+    @Test
+    void startFightCannotBeCalledTwice() throws SQLException {
+        monsterGroupPosition.populate(map);
+
+        ExplorationPlayer player = explorationPlayer();
+        player.changeMap(map, 123);
+
+        MonsterGroup group = monsterGroupPosition.available().get(0);
+        assertNotNull(monsterGroupPosition.startFight(group, player));
+
+        assertNull(monsterGroupPosition.startFight(group, player));
     }
 
     @Test

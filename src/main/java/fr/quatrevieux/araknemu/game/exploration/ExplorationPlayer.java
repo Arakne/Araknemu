@@ -243,8 +243,10 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
      */
     public void leave() {
         if (map != null) {
-            map.remove(this);
-            dispatch(new MapLeaved(map));
+            if (map.remove(this)) {
+                dispatch(new MapLeaved(map));
+            }
+
             map = null;
             cell = null;
         }

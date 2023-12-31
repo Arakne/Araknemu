@@ -52,6 +52,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class MonsterGroupTest extends GameBaseCase {
@@ -145,6 +147,25 @@ class MonsterGroupTest extends GameBaseCase {
         assertContainsType(MonsterFighter.class, fight.fighters().all());
         assertContains(player.player().fighter(), fight.fighters().all());
         assertInstanceOf(PvmType.class, fight.type());
+    }
+
+    @Test
+    void startFightNotOnMap() throws SQLException {
+        ExplorationPlayer player = explorationPlayer();
+        player.changeMap(map, 123);
+
+        map.remove(group);
+
+        assertNull(group.startFight(player));
+    }
+
+    @Test
+    void startFightAlreadyInFightShouldBeNull() throws SQLException {
+        ExplorationPlayer player = explorationPlayer();
+        player.changeMap(map, 123);
+
+        assertNotNull(group.startFight(player));
+        assertNull(group.startFight(player));
     }
 
     @Test

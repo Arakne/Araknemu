@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -139,17 +140,24 @@ public final class LivingMonsterGroupPosition {
 
     /**
      * Start a fight with the group
+     * If the group is not on the map, no fight will be returned (null)
+     *
+     * Note: only one fight can be started with a group
      *
      * @param group The monster group. Must be handled by the current instance
      * @param player The player
      *
-     * @return The created fight
+     * @return The created fight, or null if the group is not on the map
      */
-    public Fight startFight(MonsterGroup group, ExplorationPlayer player) {
+    public @Nullable Fight startFight(MonsterGroup group, ExplorationPlayer player) {
         // The existence of the MonsterGroup instance ensure that the map is already set
         final ExplorationMap map = NullnessUtil.castNonNull(this.map);
 
-        map.remove(group);
+        // The group is not on map, so no fight can be started
+        if (!map.remove(group)) {
+            return null;
+        }
+
         environmentService.respawn(this, data.respawnTime());
 
         return fightService.handler(PvmBuilder.class).start(
