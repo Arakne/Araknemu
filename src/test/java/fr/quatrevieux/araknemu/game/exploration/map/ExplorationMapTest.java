@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerServi
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
+import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
@@ -170,8 +171,13 @@ class ExplorationMapTest extends GameBaseCase {
         ExplorationMap map = explorationPlayer().map();
         ExplorationPlayer player = makeOtherExplorationPlayer();
 
+        AtomicReference<NewSpriteOnMap> ref = new AtomicReference<>();
+
         map.add(player);
+
+        map.dispatcher().add(NewSpriteOnMap.class, ref::set);
         assertThrows(IllegalArgumentException.class, () -> map.add(player));
+        assertNull(ref.get());
     }
 
     @Test
@@ -179,7 +185,11 @@ class ExplorationMapTest extends GameBaseCase {
         ExplorationMap map = explorationPlayer().map();
         ExplorationPlayer player = makeOtherExplorationPlayer();
 
-        assertThrows(IllegalArgumentException.class, () -> map.remove(player));
+        AtomicReference<SpriteRemoveFromMap> ref = new AtomicReference<>();
+        map.dispatcher().add(SpriteRemoveFromMap.class, ref::set);
+
+        assertFalse(map.remove(player));
+        assertNull(ref.get());
     }
 
     @Test
@@ -203,8 +213,12 @@ class ExplorationMapTest extends GameBaseCase {
 
         ExplorationMap map = explorationPlayer().map();
 
+        AtomicReference<SpriteRemoveFromMap> ref = new AtomicReference<>();
+        map.dispatcher().add(SpriteRemoveFromMap.class, ref::set);
+
         other.changeMap(map, 123);
-        map.remove(other);
+        assertTrue(map.remove(other));
+        assertEquals(other.sprite(), ref.get().sprite());
 
         requestStack.assertLast(
             new RemoveSprite(other.sprite())

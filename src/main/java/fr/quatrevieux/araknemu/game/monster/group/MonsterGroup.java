@@ -105,13 +105,17 @@ public final class MonsterGroup implements ExplorationCreature {
      * Attack the group and start a PvM fight
      * After this call, the monster group and the player will be removed from map to join the fight
      *
+     * Null is returned if the group is not on the map
+     *
+     * Note: only one fight can be started with a group
+     *
      * @param player The attacker
      *
-     * @return The created fight
+     * @return The created fight, or null if the group is not on the map
      *
      * @see fr.quatrevieux.araknemu.game.fight.type.PvmType
      */
-    public Fight startFight(ExplorationPlayer player) {
+    public @Nullable Fight startFight(ExplorationPlayer player) {
         return handler.startFight(this, player);
     }
 

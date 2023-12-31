@@ -143,27 +143,37 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
 
     /**
      * Add a new creature to the map
+     * Will trigger a {@link NewSpriteOnMap} after the creature is successfully added
+     *
+     * @throws IllegalArgumentException If a creature with the same id is already present
      */
     public void add(ExplorationCreature creature) {
-        if (creatures.containsKey(creature.id())) {
+        final int id = creature.id();
+        final ExplorationCreature previous = creatures.putIfAbsent(id, creature);
+
+        if (previous != null) {
             throw new IllegalArgumentException("The creature is already added");
         }
-
-        creatures.put(creature.id(), creature);
 
         dispatch(new NewSpriteOnMap(creature.sprite()));
     }
 
     /**
      * Remove the creature from the map
+     * Will trigger a {@link SpriteRemoveFromMap} event if the creature was present
+     *
+     * @return true if the creature was removed, false if the creature do not exist
      */
-    public void remove(ExplorationCreature creature) {
-        if (!creatures.containsKey(creature.id())) {
-            throw new IllegalArgumentException("The creature do not exists");
+    public boolean remove(ExplorationCreature creature) {
+        final ExplorationCreature removed = creatures.remove(creature.id());
+
+        if (removed == null || !removed.equals(creature)) {
+            return false;
         }
 
-        creatures.remove(creature.id());
         dispatch(new SpriteRemoveFromMap(creature.sprite()));
+
+        return true;
     }
 
     /**
