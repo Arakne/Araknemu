@@ -165,9 +165,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      * @return true if the creature was removed, false if the creature do not exist
      */
     public boolean remove(ExplorationCreature creature) {
-        final ExplorationCreature removed = creatures.remove(creature.id());
-
-        if (removed == null || !removed.equals(creature)) {
+        if (!creatures.remove(creature.id(), creature)) {
             return false;
         }
 

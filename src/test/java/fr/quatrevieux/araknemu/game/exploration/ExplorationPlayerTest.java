@@ -174,6 +174,32 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
+    void leaveNotOnMap() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
+        player.join(map);
+
+        map.remove(player);
+
+        AtomicReference<ExplorationMap> ref = new AtomicReference<>();
+        Listener<MapLeaved> listener = new Listener<MapLeaved>() {
+            @Override
+            public void on(MapLeaved event) {
+                ref.set(event.map());
+            }
+
+            @Override
+            public Class<MapLeaved> event() {
+                return MapLeaved.class;
+            }
+        };
+
+        player.dispatcher().add(listener);
+
+        player.leave();
+        assertNull(ref.get());
+    }
+
+    @Test
     void changeCell() throws ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);

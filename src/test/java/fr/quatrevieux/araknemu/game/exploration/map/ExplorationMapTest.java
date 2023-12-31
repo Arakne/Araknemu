@@ -41,6 +41,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -190,6 +191,23 @@ class ExplorationMapTest extends GameBaseCase {
 
         assertFalse(map.remove(player));
         assertNull(ref.get());
+    }
+
+    @Test
+    void removeNotSameCreature() throws Exception {
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer player = makeOtherExplorationPlayer();
+        map.add(player);
+
+        AtomicReference<SpriteRemoveFromMap> ref = new AtomicReference<>();
+        map.dispatcher().add(SpriteRemoveFromMap.class, ref::set);
+
+        ExplorationCreature otherCreature = Mockito.mock(ExplorationCreature.class);
+        Mockito.when(otherCreature.id()).thenReturn(player.id());
+
+        assertFalse(map.remove(otherCreature));
+        assertNull(ref.get());
+        assertTrue(map.creatures().contains(player));
     }
 
     @Test
