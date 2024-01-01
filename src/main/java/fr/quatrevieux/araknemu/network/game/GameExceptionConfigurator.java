@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.MarkerManager;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
@@ -41,22 +42,22 @@ public final class GameExceptionConfigurator implements SessionConfigurator.Conf
 
     @Override
     public void configure(ConfigurableSession inner, GameSession session) {
-        inner.addExceptionHandler(WritePacket.class, cause -> {
+        inner.addExceptionHandler(WritePacket.class, (cause, packet) -> {
             session.send(cause.packet());
 
             if (cause instanceof Exception) {
                 final Exception ex = (Exception) cause;
 
                 if (ex.getCause() != null) {
-                    logger.warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", session, NullnessUtil.castNonNull(ex.getCause()).toString());
+                    logger.warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", context(session, packet), NullnessUtil.castNonNull(ex.getCause()).toString());
                 }
             }
 
             return true;
         });
 
-        inner.addExceptionHandler(CloseImmediately.class, cause -> {
-            logger.error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", session, cause.getMessage() == null ? cause.toString() : cause.getMessage());
+        inner.addExceptionHandler(CloseImmediately.class, (cause, packet) -> {
+            logger.error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", context(session, packet), cause.getMessage() == null ? cause.toString() : cause.getMessage());
 
             return true;
         });
@@ -73,5 +74,21 @@ public final class GameExceptionConfigurator implements SessionConfigurator.Conf
 
             return true;
         });
+    }
+
+    /**
+     * Build the context for a log
+     *
+     * @param session the session
+     * @param packet the packet which cause the exception. Can be null
+     *
+     * @return The context object or string
+     */
+    private Object context(GameSession session, @Nullable Object packet) {
+        if (packet == null) {
+            return session;
+        }
+
+        return session + "; packet=" + packet;
     }
 }

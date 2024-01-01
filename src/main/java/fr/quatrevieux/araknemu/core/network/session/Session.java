@@ -52,6 +52,16 @@ public interface Session {
     public void exception(Throwable cause);
 
     /**
+     * Handle an exception raised on the current session, with the packet that caused the exception
+     *
+     * @param cause Exception to handle
+     * @param packet Packet that caused the exception
+     */
+    public default void exception(Throwable cause, Object packet) {
+        exception(cause);
+    }
+
+    /**
      * Close the session
      */
     public void close();

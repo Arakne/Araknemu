@@ -65,7 +65,7 @@ public final class EnsureFightingOrSpectator<P extends Packet> implements Packet
                     spectatorHandler.handle(session, packet);
                 }
             } catch (Exception e) {
-                session.exception(e);
+                session.exception(e, packet);
             }
         });
     }

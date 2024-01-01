@@ -52,6 +52,11 @@ public abstract class AbstractDelegatedSession implements Session {
     }
 
     @Override
+    public final void exception(Throwable cause, Object packet) {
+        session.exception(cause, packet);
+    }
+
+    @Override
     public final void close() {
         session.close();
     }

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
+import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
@@ -72,6 +73,8 @@ public final class JoinFight implements Action {
                 fight.state(PlacementState.class).joinTeam(fighterFactory.create(player.player()), team);
             } catch (JoinFightException e) {
                 error(e.error());
+            } catch (InvalidFightStateException e) {
+                error(JoinFightError.CANT_DO_TOO_LATE);
             }
         });
     }
