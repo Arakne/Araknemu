@@ -38,7 +38,7 @@ Launch the built jar.
 To run the server, your working directory should contains the `conf.ini` file.
 
 ```
-java -jar target/araknemu-0.10-alpha-jar-with-dependencies.jar
+java -jar target/araknemu-0.11-alpha-jar-with-dependencies.jar
 ```
 
 ## About the project
