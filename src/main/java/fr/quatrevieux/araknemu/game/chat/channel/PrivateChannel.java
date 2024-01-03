@@ -48,11 +48,13 @@ public final class PrivateChannel implements Channel {
 
     @Override
     public void send(GamePlayer from, Message message) throws ChatException {
-        if (message.target() == null || !service.isOnline(message.target())) {
+        final String target = message.target();
+
+        if (target == null || !service.isOnline(target)) {
             throw new ChatException(ChatException.Error.USER_NOT_CONNECTED);
         }
 
-        final GamePlayer to = service.get(message.target());
+        final GamePlayer to = service.get(target);
         final ConcealedMessage event = new ConcealedMessage(
             from,
             to,

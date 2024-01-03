@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.di;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,11 +90,11 @@ public final class ScopedContainer implements Container {
      *
      * @param <T> The base type
      */
-    public static final class Mapping<T> {
-        private final T value;
+    public static final class Mapping<@NonNull T> {
+        private final @NonNull T value;
         private final Class[] interfaces;
 
-        public Mapping(T value, Class<? super T>... interfaces) {
+        public Mapping(@NonNull T value, Class<? super T>... interfaces) {
             this.value = value;
             this.interfaces = interfaces;
         }

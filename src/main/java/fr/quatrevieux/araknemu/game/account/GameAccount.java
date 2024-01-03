@@ -176,7 +176,9 @@ public final class GameAccount extends AbstractLivingAccount<GameSession> {
      * @param message Message to show
      */
     public void kick(ServerMessage message) {
-        if (isLogged()) {
+        final GameSession session = this.session;
+
+        if (session != null && isLogged()) {
             session.send(message);
             session.close();
         }

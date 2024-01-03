@@ -78,12 +78,14 @@ public final class ActionQueue {
      * @param actionId The action to end
      */
     public void end(int actionId) {
+        final BlockingAction current = this.current;
+
         if (current == null || current.id() != actionId) {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
 
         current.end();
-        current = null;
+        this.current = null;
 
         runNextAction();
     }
@@ -95,6 +97,8 @@ public final class ActionQueue {
      * @param argument The cancel argument
      */
     public void cancel(int actionId, String argument) {
+        final BlockingAction current = this.current;
+
         if (current == null || current.id() != actionId) {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
@@ -102,7 +106,7 @@ public final class ActionQueue {
         try {
             current.cancel(argument);
         } finally {
-            current = null;
+            this.current = null;
             actions.clear();
         }
     }
