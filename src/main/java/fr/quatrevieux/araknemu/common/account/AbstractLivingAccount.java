@@ -69,6 +69,7 @@ public abstract class AbstractLivingAccount<S extends Session> implements Living
 
     @Override
     @EnsuresNonNullIf(expression = "session", result = true)
+    @SuppressWarnings("contracts.conditional.postcondition")
     public boolean isLogged() {
         return session != null && session.isAlive();
     }

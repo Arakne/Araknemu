@@ -49,10 +49,10 @@ public final class StealLifeSimulator implements EffectSimulator {
         // Poison is already handled by the DamageSimulator
         simulator.simulate(simulation, ai, effect);
 
-        final double totalDamage = (-simulation.alliesLife() - simulation.enemiesLife()) - lastDamage;
+        final int totalDamage = (int) ((-simulation.alliesLife() - simulation.enemiesLife()) - lastDamage);
 
         if (totalDamage > 0) {
-            simulation.addHeal(Interval.of((int) totalDamage / 2), simulation.caster());
+            simulation.addHeal(Interval.of(totalDamage / 2), simulation.caster());
         }
     }
 

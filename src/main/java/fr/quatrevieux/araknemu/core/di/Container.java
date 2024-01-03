@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.di;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 /**
  * Dependency injection container
  */
@@ -78,7 +80,7 @@ public interface Container {
      * @return The scoped container
      * @see ScopedContainer
      */
-    public default <T> Container with(T value, Class<? super T>... interfaces) {
+    public default <T> Container with(@NonNull T value, Class<? super T>... interfaces) {
         return withAll(new ScopedContainer.Mapping<>(value, interfaces));
     }
 
