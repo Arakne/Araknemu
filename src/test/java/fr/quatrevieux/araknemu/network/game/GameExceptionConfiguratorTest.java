@@ -60,6 +60,14 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
     }
 
     @Test
+    void exceptionCaughtCloseSessionWithPacket() {
+        gameSession.exception(new CloseImmediately("my error"), "my packet");
+
+        assertFalse(session.isLogged());
+        Mockito.verify(logger).error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", gameSession + "; packet=my packet", "my error");
+    }
+
+    @Test
     void exceptionCaughtWritePacket() {
         gameSession.exception(new ErrorPacket(new LoginTokenError()));
 
@@ -72,6 +80,14 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
 
         requestStack.assertLast(new LoginTokenError());
         Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "java.lang.Exception: My error");
+    }
+
+    @Test
+    void exceptionCaughtWritePacketWithCauseExceptionAndPacket() {
+        gameSession.exception(new ErrorPacket(new LoginTokenError(), new Exception("My error")), "foo");
+
+        requestStack.assertLast(new LoginTokenError());
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession + "; packet=foo", "java.lang.Exception: My error");
     }
 
     @Test

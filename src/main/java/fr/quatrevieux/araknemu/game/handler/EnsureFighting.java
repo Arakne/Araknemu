@@ -54,7 +54,7 @@ public final class EnsureFighting<P extends Packet> implements PacketHandler<Gam
             try {
                 handler.handle(session, packet);
             } catch (Exception e) {
-                session.exception(e);
+                session.exception(e, packet);
             }
         });
     }

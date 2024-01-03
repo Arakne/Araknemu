@@ -105,4 +105,29 @@ class SessionLoggerTest {
 
         Mockito.verify(logger).warn(MarkerManager.getMarker("NETWORK_ERROR"), "Cannot found handler for packet Ping");
     }
+
+    @Test
+    void exceptionWithPacket() {
+        Exception e = new Exception("my error");
+        session.exception(e, "foo");
+
+        Mockito.verify(logger).error(MarkerManager.getMarker("NETWORK_ERROR"), "[{}; packet={}] Uncaught exception", session, "foo", e);
+    }
+
+    @Test
+    void exceptionWithPacketAndPreviousCause() {
+        Exception previous = new Exception("previous");
+        Exception e = new Exception("my error", previous);
+        session.exception(e, "foo");
+
+        Mockito.verify(logger).error(MarkerManager.getMarker("NETWORK_ERROR"), "[{}; packet={}] Uncaught exception", session, "foo", e);
+        Mockito.verify(logger).error(MarkerManager.getMarker("NETWORK_ERROR"), "[{}] Cause : {}", session, previous);
+    }
+
+    @Test
+    void exceptionWithPacketHandlerNotFound() {
+        session.exception(new HandlerNotFoundException(new Ping()), "foo");
+
+        Mockito.verify(logger).warn(MarkerManager.getMarker("NETWORK_ERROR"), "Cannot found handler for packet Ping");
+    }
 }

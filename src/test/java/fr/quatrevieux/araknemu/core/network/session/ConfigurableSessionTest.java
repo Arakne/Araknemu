@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -193,6 +194,25 @@ class ConfigurableSessionTest extends TestCase {
 
         Mockito.verify(handler1, Mockito.never()).test(e);
         Mockito.verify(handler2).test(e);
+    }
+
+    @Test
+    void exceptionWithPacket() {
+        BiPredicate handler1 = Mockito.mock(BiPredicate.class);
+        BiPredicate handler2 = Mockito.mock(BiPredicate.class);
+
+        session.addExceptionHandler(RuntimeException.class, handler1);
+        session.addExceptionHandler(Exception.class, handler2);
+
+        Mockito.when(handler1.test(Mockito.any(), Mockito.anyString())).thenReturn(false);
+        Mockito.when(handler2.test(Mockito.any(), Mockito.anyString())).thenReturn(false);
+
+        Exception e = new Exception();
+
+        session.exception(e, "foo");
+
+        Mockito.verify(handler1, Mockito.never()).test(e, "foo");
+        Mockito.verify(handler2).test(e, "foo");
     }
 
     @Test

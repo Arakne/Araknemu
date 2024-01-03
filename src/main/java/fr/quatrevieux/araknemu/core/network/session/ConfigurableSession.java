@@ -21,9 +21,11 @@ package fr.quatrevieux.araknemu.core.network.session;
 
 import fr.quatrevieux.araknemu.core.network.Channel;
 import fr.quatrevieux.araknemu.core.network.InternalPacket;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -77,7 +79,7 @@ public final class ConfigurableSession implements Session {
                 try {
                     receiveMiddlewares.get(index++).handlePacket(o, this);
                 } catch (Exception e) {
-                    exception(e);
+                    exception(e, packet);
                 }
             }
         };
@@ -88,21 +90,13 @@ public final class ConfigurableSession implements Session {
     @Override
     @SuppressWarnings("unchecked")
     public void exception(Throwable cause) {
-        boolean handled = false;
+        callExceptionHandlers(cause, handler -> handler.handleException(cause));
+    }
 
-        for (ExceptionHandler handler : exceptionHandlers) {
-            if (handler.type().isInstance(cause)) {
-                handled = true;
-
-                if (!handler.handleException(cause)) {
-                    break;
-                }
-            }
-        }
-
-        if (!handled) {
-            throw new IllegalArgumentException("Unhandled exception", cause);
-        }
+    @Override
+    @SuppressWarnings("unchecked")
+    public void exception(Throwable cause, Object packet) {
+        callExceptionHandlers(cause, handler -> handler.handleExceptionWithPacket(cause, packet));
     }
 
     @Override
@@ -173,6 +167,54 @@ public final class ConfigurableSession implements Session {
     }
 
     /**
+     * Add an exception handler which is can handle the packet that caused the exception
+     *
+     * @param type The handled exception class
+     * @param handle The exception handler. First argument is the exception, second is the packet.
+     *               Note that the packet can be null if the exception is not caused by a packet
+     *
+     * @param <E> The exception type
+     */
+    public <E> void addExceptionHandler(Class<E> type, BiPredicate<E, @Nullable Object> handle) {
+        addExceptionHandler(new ExceptionHandler() {
+            @Override
+            public Class<E> type() {
+                return type;
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public boolean handleException(Throwable cause) {
+                return handle.test((E) cause, null);
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public boolean handleExceptionWithPacket(Throwable cause, Object packet) {
+                return handle.test((E) cause, packet);
+            }
+        });
+    }
+
+    private void callExceptionHandlers(Throwable cause, Predicate<ExceptionHandler> handlerCallback) {
+        boolean handled = false;
+
+        for (ExceptionHandler handler : exceptionHandlers) {
+            if (handler.type().isInstance(cause)) {
+                handled = true;
+
+                if (!handlerCallback.test(handler)) {
+                    break;
+                }
+            }
+        }
+
+        if (!handled) {
+            throw new IllegalArgumentException("Unhandled exception", cause);
+        }
+    }
+
+    /**
      * Handle exceptions thrown during a session
      *
      * @param <E> The exception type
@@ -189,6 +231,18 @@ public final class ConfigurableSession implements Session {
          * @return true for call next handlers, or false to stop exception handling
          */
         public boolean handleException(E cause);
+
+        /**
+         * Handle the exception with the packet that caused the exception
+         *
+         * @param cause The exception
+         * @param packet The packet that caused the exception
+         *
+         * @return true for call next handlers, or false to stop exception handling
+         */
+        public default boolean handleExceptionWithPacket(E cause, Object packet) {
+            return handleException(cause);
+        }
     }
 
     /**

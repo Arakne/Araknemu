@@ -76,6 +76,27 @@ public final class SessionLogger implements ConfigurableSession.ExceptionHandler
     }
 
     @Override
+    public boolean handleExceptionWithPacket(Throwable cause, Object packet) {
+        if (cause instanceof HandlingException) {
+            return true;
+        }
+
+        if (cause instanceof HandlerNotFoundException) {
+            logger.warn(NETWORK_ERROR_MARKER, cause.getMessage() == null ? cause.toString() : cause.getMessage());
+
+            return false;
+        }
+
+        logger.error(NETWORK_ERROR_MARKER, "[{}; packet={}] Uncaught exception", session, packet, cause);
+
+        if (cause.getCause() != null) {
+            logger.error(NETWORK_ERROR_MARKER, "[{}] Cause : {}", session, cause.getCause());
+        }
+
+        return true;
+    }
+
+    @Override
     public void handlePacket(Object packet, Consumer<Object> next) {
         if (packet instanceof SessionCreated) {
             logger.debug(SESSION_MARKER, "[{}] Session created", session);
