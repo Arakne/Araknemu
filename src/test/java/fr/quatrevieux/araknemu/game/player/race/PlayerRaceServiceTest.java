@@ -23,6 +23,7 @@ import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,8 @@ class PlayerRaceServiceTest extends GameBaseCase {
 
         service = new PlayerRaceService(
             container.get(PlayerRaceRepository.class),
-            container.get(SpellService.class)
+            container.get(SpellService.class),
+            container.get(SpellEffectService.class)
         );
     }
 
@@ -56,6 +58,8 @@ class PlayerRaceServiceTest extends GameBaseCase {
         assertEquals(Race.FECA, race.race());
         assertEquals("Feca", race.name());
         assertCount(3, race.spells());
+        assertEquals(2, race.closeCombat().effects().get(0).min());
+        assertEquals(6, race.closeCombat().effects().get(0).max());
     }
 
     @Test

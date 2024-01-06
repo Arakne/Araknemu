@@ -22,8 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
-import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -77,7 +76,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new BaseCriticalityStrategy()
         );
 
@@ -91,12 +90,11 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new BaseCriticalityStrategy()
         );
 
-        assertThrows(FightException.class, () -> action.validate(turn));
-        requestStack.assertEmpty();
+        assertTrue(action.validate(turn));
     }
 
     @Test
@@ -104,7 +102,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new BaseCriticalityStrategy()
         );
 
@@ -121,7 +119,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(0),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new BaseCriticalityStrategy()
         );
 
@@ -137,7 +135,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new BaseCriticalityStrategy()
         );
 
@@ -151,7 +149,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -173,11 +171,35 @@ class CloseCombatTest extends FightBaseCase {
     }
 
     @Test
+    void startCriticalFailureWithoutWeapon() throws InventoryException, ContainerException, SQLException {
+        action = new CloseCombat(
+            fighter,
+            fight.map().get(186),
+            new CloseCombatValidator(fight),
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return true; }
+            }
+        );
+
+        ActionResult result = action.start();
+
+        assertInstanceOf(CloseCombatFailed.class, result);
+        assertEquals(305, result.action());
+        assertFalse(result.success());
+        assertFalse(result.secret());
+        assertEquals(fighter, result.performer());
+        assertArrayEquals(new Object[0], result.arguments());
+    }
+
+    @Test
     void startNormalHit() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -201,11 +223,38 @@ class CloseCombatTest extends FightBaseCase {
     }
 
     @Test
+    void startNormalHitWithoutWeapon() throws InventoryException, ContainerException, SQLException {
+        action = new CloseCombat(
+            fighter,
+            fight.map().get(186),
+            new CloseCombatValidator(fight),
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        );
+
+        ActionResult result = action.start();
+
+        assertInstanceOf(CloseCombatSuccess.class, result);
+        assertEquals(303, result.action());
+        assertTrue(result.success());
+        assertFalse(result.secret());
+        assertEquals(fighter, result.performer());
+        assertArrayEquals(new Object[] {186}, result.arguments());
+        assertFalse(CloseCombatSuccess.class.cast(result).critical());
+        assertEquals(2, CloseCombatSuccess.class.cast(result).effects().get(0).min());
+        assertEquals(6, CloseCombatSuccess.class.cast(result).effects().get(0).max());
+    }
+
+    @Test
     void startCriticalHit() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -229,11 +278,38 @@ class CloseCombatTest extends FightBaseCase {
     }
 
     @Test
+    void startCriticalHitWithoutWeapon() throws InventoryException, ContainerException, SQLException {
+        action = new CloseCombat(
+            fighter,
+            fight.map().get(186),
+            new CloseCombatValidator(fight),
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        );
+
+        ActionResult result = action.start();
+
+        assertInstanceOf(CloseCombatSuccess.class, result);
+        assertEquals(303, result.action());
+        assertTrue(result.success());
+        assertFalse(result.secret());
+        assertEquals(fighter, result.performer());
+        assertArrayEquals(new Object[] {186}, result.arguments());
+        assertTrue(CloseCombatSuccess.class.cast(result).critical());
+        assertEquals(5, CloseCombatSuccess.class.cast(result).effects().get(0).min());
+        assertEquals(9, CloseCombatSuccess.class.cast(result).effects().get(0).max());
+    }
+
+    @Test
     void endNormalHit() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -258,11 +334,39 @@ class CloseCombatTest extends FightBaseCase {
     }
 
     @Test
+    void endNormalHitWithoutWeapon() throws InventoryException, ContainerException, SQLException {
+        action = new CloseCombat(
+            fighter,
+            fight.map().get(186),
+            new CloseCombatValidator(fight),
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        );
+
+        requestStack.clear();
+        action.start().apply(turn);
+
+        int damage = other.fighter().life().max() - other.fighter().life().current();
+
+        assertEquals(2, turn.points().actionPoints());
+        assertBetween(2, 6, damage);
+
+        requestStack.assertAll(
+            ActionEffect.usedActionPoints(fighter, 4),
+            ActionEffect.alterLifePoints(fighter, other.fighter(), -damage)
+        );
+    }
+
+    @Test
     void endCriticalHit() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -288,11 +392,40 @@ class CloseCombatTest extends FightBaseCase {
     }
 
     @Test
+    void endCriticalHitWithoutWeapon() throws InventoryException, ContainerException, SQLException {
+        action = new CloseCombat(
+            fighter,
+            fight.map().get(186),
+            new CloseCombatValidator(fight),
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        );
+
+        requestStack.clear();
+        action.start().apply(turn);
+
+        int damage = other.fighter().life().max() - other.fighter().life().current();
+
+        assertEquals(2, turn.points().actionPoints());
+        assertBetween(7, 13, damage);
+
+        requestStack.assertAll(
+            ActionEffect.criticalHitCloseCombat(fighter),
+            ActionEffect.usedActionPoints(fighter, 4),
+            ActionEffect.alterLifePoints(fighter, other.fighter(), -damage)
+        );
+    }
+
+    @Test
     void failed() throws InventoryException, ContainerException, SQLException {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new BaseCriticalityStrategy()
         );
 
@@ -313,7 +446,7 @@ class CloseCombatTest extends FightBaseCase {
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(fight),
+            new CloseCombatValidator(fight),
             new CriticalityStrategy() {
                 public int hitRate(ActiveFighter fighter, int base) { return 0; }
                 public int failureRate(ActiveFighter fighter, int base) { return 0; }

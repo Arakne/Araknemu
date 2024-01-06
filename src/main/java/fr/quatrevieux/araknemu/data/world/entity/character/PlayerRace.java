@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.entity.character;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
@@ -44,8 +45,9 @@ public final class PlayerRace {
     private final Position startPosition;
     private final Position astrubPosition;
     private final int[] spells;
+    private final SpellTemplate.Level closeCombat;
 
-    public PlayerRace(Race race, String name, SortedMap<@Positive Integer, Characteristics> baseStats, int startDiscernment, @Positive int startPods, @Positive int startLife, @NonNegative int perLevelLife, BoostStatsData boostStats, Position startPosition, Position astrubPosition, int[] spells) {
+    public PlayerRace(Race race, String name, SortedMap<@Positive Integer, Characteristics> baseStats, int startDiscernment, @Positive int startPods, @Positive int startLife, @NonNegative int perLevelLife, BoostStatsData boostStats, Position startPosition, Position astrubPosition, int[] spells, SpellTemplate.Level closeCombat) {
         this.race = race;
         this.name = name;
         this.baseStats = baseStats;
@@ -57,10 +59,11 @@ public final class PlayerRace {
         this.startPosition = startPosition;
         this.astrubPosition = astrubPosition;
         this.spells = spells;
+        this.closeCombat = closeCombat;
     }
 
     public PlayerRace(Race race) {
-        this(race, null, null, 0, 0, 0, 0, null, null, null, null);
+        this(race, null, null, 0, 0, 0, 0, null, null, null, null, null);
     }
 
     public Race race() {
@@ -139,5 +142,15 @@ public final class PlayerRace {
      */
     public int[] spells() {
         return spells;
+    }
+
+    /**
+     * Get the effect of the default close combat action
+     * This value is formatted like a spell effect
+     *
+     * Use this when the fighter has no equipped weapon
+     */
+    public SpellTemplate.Level closeCombat() {
+        return closeCombat;
     }
 }

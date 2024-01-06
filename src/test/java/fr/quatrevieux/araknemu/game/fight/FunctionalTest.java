@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
@@ -336,7 +336,7 @@ public class FunctionalTest extends GameBaseCase {
             new CloseCombat(
                 other.fighter(),
                 player.fighter().cell(),
-                new WeaponConstraintsValidator(fight),
+                new CloseCombatValidator(fight),
                 new CriticalityStrategy() {
                     public int hitRate(ActiveFighter fighter, int base) { return 0; }
                     public int failureRate(ActiveFighter fighter, int base) { return 0; }
@@ -350,7 +350,7 @@ public class FunctionalTest extends GameBaseCase {
             new FightAction(
                 new CloseCombatSuccess(
                     other.fighter(),
-                    other.fighter().weapon(),
+                    other.fighter().closeCombat(),
                     player.fighter().cell(),
                     false
                 )

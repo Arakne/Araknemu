@@ -17,7 +17,7 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.weapon;
+package fr.quatrevieux.araknemu.game.fight.castable.closeCombat;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -37,11 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class WeaponConstraintsValidatorTest extends FightBaseCase {
+class CloseCombatValidatorTest extends FightBaseCase {
     private Fight fight;
     private PlayableFighter fighter;
     private FightTurn turn;
-    private WeaponConstraintsValidator validator;
+    private CloseCombatValidator validator;
 
     @Override
     @BeforeEach
@@ -61,7 +61,7 @@ class WeaponConstraintsValidatorTest extends FightBaseCase {
 
         fighter.move(fight.map().get(235));
 
-        validator = new WeaponConstraintsValidator(fight);
+        validator = new CloseCombatValidator(fight);
     }
 
     @Test

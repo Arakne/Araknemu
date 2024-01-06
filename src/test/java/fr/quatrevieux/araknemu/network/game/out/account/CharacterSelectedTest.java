@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CharacterSelectedTest extends GameBaseCase {
     @Test
     void generate() throws ContainerException, SQLException {
-        assertEquals("ASK|1|Bob|50||0|10|7b|1c8|315|", new CharacterSelected(gamePlayer()).toString());
+        assertEquals("ASK|1|Bob|50|1|0|10|7b|1c8|315|", new CharacterSelected(gamePlayer()).toString());
     }
 
     @Test
@@ -43,6 +43,6 @@ class CharacterSelectedTest extends GameBaseCase {
         gamePlayer().inventory().add(container.get(ItemService.class).create(40), 1, 1);
         gamePlayer().inventory().add(container.get(ItemService.class).create(284), 10, -1);
 
-        assertEquals("ASK|1|Bob|50||0|10|7b|1c8|315|1~27~1~0~7e#2#0#0#0d0+2;2~28~1~1~64#1#7#0#1d7+0;3~11c~a~~", new CharacterSelected(gamePlayer()).toString());
+        assertEquals("ASK|1|Bob|50|1|0|10|7b|1c8|315|1~27~1~0~7e#2#0#0#0d0+2;2~28~1~1~64#1#7#0#1d7+0;3~11c~a~~", new CharacterSelected(gamePlayer()).toString());
     }
 }

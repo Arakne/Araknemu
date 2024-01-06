@@ -17,9 +17,10 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.weapon;
+package fr.quatrevieux.araknemu.game.fight.castable.closeCombat;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ConstraintsAggregateValidator;
@@ -33,13 +34,16 @@ import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Validate weapon cast constraints
+ * Validate weapon or default close combat cast constraints
+ *
+ * @see CastableWeapon
+ * @see fr.quatrevieux.araknemu.game.player.race.DefaultCloseCombat
  */
-public final class WeaponConstraintsValidator implements CastConstraintValidator<CastableWeapon> {
-    private final CastConstraintValidator<CastableWeapon> validator;
+public final class CloseCombatValidator implements CastConstraintValidator<Castable> {
+    private final CastConstraintValidator<Castable> validator;
 
     @SuppressWarnings("unchecked")
-    public WeaponConstraintsValidator(Fight fight) {
+    public CloseCombatValidator(Fight fight) {
         this(new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
@@ -50,17 +54,17 @@ public final class WeaponConstraintsValidator implements CastConstraintValidator
         });
     }
 
-    public WeaponConstraintsValidator(CastConstraintValidator<? super CastableWeapon>[] validators) {
+    public CloseCombatValidator(CastConstraintValidator<? super Castable>[] validators) {
         this.validator = new ConstraintsAggregateValidator<>(validators);
     }
 
     @Override
-    public boolean check(Turn turn, CastableWeapon castable, BattlefieldCell target) {
+    public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
         return validator.check(turn, castable, target);
     }
 
     @Override
-    public @Nullable Object validate(Turn turn, CastableWeapon weapon, BattlefieldCell target) {
+    public @Nullable Object validate(Turn turn, Castable weapon, BattlefieldCell target) {
         return validator.validate(turn, weapon, target);
     }
 }

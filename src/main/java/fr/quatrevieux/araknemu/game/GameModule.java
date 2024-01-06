@@ -176,7 +176,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddItems;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddKamas;
@@ -615,7 +615,8 @@ public final class GameModule implements ContainerModule {
             PlayerRaceService.class,
             container -> new PlayerRaceService(
                 container.get(PlayerRaceRepository.class),
-                container.get(SpellService.class)
+                container.get(SpellService.class),
+                container.get(SpellEffectService.class)
             )
         );
 
@@ -654,7 +655,7 @@ public final class GameModule implements ContainerModule {
                     container.get(CriticalityStrategy.class)
                 ),
                 new CloseCombatFactory(
-                    new WeaponConstraintsValidator(fight),
+                    new CloseCombatValidator(fight),
                     container.get(CriticalityStrategy.class)
                 )
             )

@@ -20,10 +20,12 @@
 package fr.quatrevieux.araknemu.game.player.race;
 
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
@@ -37,12 +39,14 @@ import java.util.stream.Collectors;
 public final class PlayerRaceService implements PreloadableService {
     private final PlayerRaceRepository repository;
     private final SpellService spellService;
+    private final SpellEffectService effectService;
 
     private final Map<Race, GamePlayerRace> races = new EnumMap<>(Race.class);
 
-    public PlayerRaceService(PlayerRaceRepository repository, SpellService spellService) {
+    public PlayerRaceService(PlayerRaceRepository repository, SpellService spellService, SpellEffectService effectService) {
         this.repository = repository;
         this.spellService = spellService;
+        this.effectService = effectService;
     }
 
     @Override
@@ -77,7 +81,16 @@ public final class PlayerRaceService implements PreloadableService {
             entity,
             Arrays.stream(entity.spells())
                 .mapToObj(spellService::get)
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()),
+            createDefaultCloseCombat(entity.closeCombat())
+        );
+    }
+
+    private DefaultCloseCombat createDefaultCloseCombat(SpellTemplate.Level characteristics) {
+        return new DefaultCloseCombat(
+            characteristics,
+            effectService.makeAll(characteristics.effects(), characteristics.effectAreas(), new int[0]),
+            effectService.makeAll(characteristics.criticalEffects(), characteristics.effectAreas(), new int[0])
         );
     }
 }

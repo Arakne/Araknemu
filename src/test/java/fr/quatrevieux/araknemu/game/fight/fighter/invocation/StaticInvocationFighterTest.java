@@ -87,7 +87,7 @@ class StaticInvocationFighterTest extends FightBaseCase {
         assertEquals(-5, fighter.id());
         assertEquals(Direction.SOUTH_EAST, fighter.orientation());
         assertFalse(fighter.dead());
-        assertThrows(FightException.class, fighter::weapon);
+        assertThrows(FightException.class, fighter::closeCombat);
         assertInstanceOf(BuffList.class, fighter.buffs());
         assertInstanceOf(States.class, fighter.states());
         assertTrue(fighter.ready());

@@ -88,7 +88,8 @@ public final class SqlWorldRepositoriesModule implements ContainerModule {
                 new SqlPlayerRaceRepository(
                     executor,
                     container.get(RaceBaseStatsTransformer.class),
-                    container.get(BoostStatsDataTransformer.class)
+                    container.get(BoostStatsDataTransformer.class),
+                    container.get(SpellTemplateLevelTransformer.class)
                 )
             )
         );

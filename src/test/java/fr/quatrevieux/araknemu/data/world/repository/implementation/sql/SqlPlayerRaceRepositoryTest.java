@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
@@ -27,7 +28,9 @@ import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransfor
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.transformer.BoostStatsDataTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.EffectAreaTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.RaceBaseStatsTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.SpellTemplateLevelTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +58,8 @@ class SqlPlayerRaceRepositoryTest extends GameBaseCase {
         repository = new SqlPlayerRaceRepository(
             new ConnectionPoolExecutor(app.database().get("game")),
             new RaceBaseStatsTransformer(new ImmutableCharacteristicsTransformer()),
-            new BoostStatsDataTransformer()
+            new BoostStatsDataTransformer(),
+            new SpellTemplateLevelTransformer(new EffectAreaTransformer())
         );
     }
 
@@ -80,6 +84,25 @@ class SqlPlayerRaceRepositoryTest extends GameBaseCase {
         assertEquals(50, race.startLife());
         assertEquals(5, race.perLevelLife());
         assertArrayEquals(new int[] {3, 6, 17}, race.spells());
+
+        assertEquals(4, race.closeCombat().apCost());
+        assertEquals(Interval.of(1), race.closeCombat().range());
+        assertEquals(20, race.closeCombat().criticalHit());
+        assertEquals(50, race.closeCombat().criticalFailure());
+        assertFalse(race.closeCombat().freeCell());
+        assertFalse(race.closeCombat().modifiableRange());
+        assertTrue(race.closeCombat().lineOfSight());
+        assertFalse(race.closeCombat().lineLaunch());
+        assertEquals(0, race.closeCombat().launchDelay());
+        assertEquals(0, race.closeCombat().launchPerTurn());
+        assertEquals(0, race.closeCombat().launchPerTarget());
+        assertCount(1, race.closeCombat().effects());
+        assertEquals(100, race.closeCombat().effects().get(0).effect());
+        assertEquals(2, race.closeCombat().effects().get(0).min());
+        assertEquals(6, race.closeCombat().effects().get(0).max());
+        assertEquals(100, race.closeCombat().criticalEffects().get(0).effect());
+        assertEquals(5, race.closeCombat().criticalEffects().get(0).min());
+        assertEquals(9, race.closeCombat().criticalEffects().get(0).max());
     }
 
     @Test

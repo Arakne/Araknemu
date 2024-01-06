@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
@@ -58,7 +58,7 @@ class FightActionsFactoryRegistryTest extends FightBaseCase {
                 container.get(CriticalityStrategy.class)
             ),
             new CloseCombatFactory(
-                new WeaponConstraintsValidator(fight),
+                new CloseCombatValidator(fight),
                 container.get(CriticalityStrategy.class)
             )
         );
