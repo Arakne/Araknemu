@@ -41,9 +41,11 @@ import java.util.stream.Collectors;
 public final class GamePlayerRace {
     private final PlayerRace entity;
     private final Map<Integer, SpellLevels> spells;
+    private final DefaultCloseCombat closeCombat;
 
-    public GamePlayerRace(PlayerRace entity, List<SpellLevels> spells) {
+    public GamePlayerRace(PlayerRace entity, List<SpellLevels> spells, DefaultCloseCombat closeCombat) {
         this.entity = entity;
+        this.closeCombat = closeCombat;
         this.spells = spells.stream()
             .collect(
                 Collectors.toMap(
@@ -132,5 +134,14 @@ public final class GamePlayerRace {
      */
     public Position astrubPosition() {
         return entity.astrubPosition();
+    }
+
+    /**
+     * Get the close combat action to use when no weapon is equipped
+     *
+     * @see PlayerRace#closeCombat()
+     */
+    public DefaultCloseCombat closeCombat() {
+        return closeCombat;
     }
 }

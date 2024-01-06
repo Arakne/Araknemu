@@ -60,7 +60,7 @@ public final class CloseCombatFailed implements ActionResult {
 
     @Override
     public void apply(FightTurn turn) {
-        turn.points().useActionPoints(caster.weapon().apCost());
+        turn.points().useActionPoints(caster.closeCombat().apCost());
         turn.stop();
     }
 }

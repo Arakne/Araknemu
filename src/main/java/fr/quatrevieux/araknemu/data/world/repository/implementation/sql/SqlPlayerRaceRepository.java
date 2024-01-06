@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
@@ -45,10 +46,12 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
     private final RepositoryUtils<PlayerRace> utils;
     private final Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer;
     private final Transformer<BoostStatsData> boostStatsDataTransformer;
+    private final Transformer<SpellTemplate.Level> closeCombatTransformer;
 
-    public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
+    public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer, Transformer<SpellTemplate.Level> closeCombatTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;
         this.boostStatsDataTransformer = boostStatsDataTransformer;
+        this.closeCombatTransformer = closeCombatTransformer;
 
         this.executor = executor;
         utils = new RepositoryUtils<>(executor, new Loader());
@@ -71,7 +74,8 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER," +
                     "ASTRUB_MAP_ID INTEGER," +
-                    "ASTRUB_CELL_ID INTEGER" +
+                    "ASTRUB_CELL_ID INTEGER," +
+                    "DEFAULT_CLOSE_COMBAT TEXT" +
                 ")"
             );
         } catch (SQLException e) {
@@ -134,7 +138,8 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
                     record.getNonNegativeInt("ASTRUB_MAP_ID"),
                     record.getNonNegativeInt("ASTRUB_CELL_ID")
                 ),
-                record.getIntArray("RACE_SPELLS", '|')
+                record.getIntArray("RACE_SPELLS", '|'),
+                record.unserialize("DEFAULT_CLOSE_COMBAT", closeCombatTransformer)
             );
         }
 

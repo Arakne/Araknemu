@@ -17,7 +17,7 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.weapon;
+package fr.quatrevieux.araknemu.game.fight.castable.closeCombat;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;

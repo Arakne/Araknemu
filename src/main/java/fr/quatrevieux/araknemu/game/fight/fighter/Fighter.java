@@ -23,8 +23,9 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -87,11 +88,12 @@ public interface Fighter extends Dispatcher, ActiveFighter {
     public void setHidden(Fighter caster, boolean hidden);
 
     /**
-     * Get the weapon
+     * Get the close combat action
+     * Usually, this method will return the {@link CastableWeapon} of the fighter
      *
      * @throws fr.quatrevieux.araknemu.game.fight.exception.FightException When cannot get any weapon on the fighter
      */
-    public CastableWeapon weapon();
+    public Castable closeCombat();
 
     /**
      * Does the current fighter can play ?

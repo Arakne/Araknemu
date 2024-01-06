@@ -44,7 +44,7 @@ public final class CharacterSelected {
             character.id() + "|" +
             character.name() + "|" +
             character.properties().experience().level() + "|" +
-            "|" + // @todo guild
+            character.race().race().ordinal() + "|" +
             character.spriteInfo().gender().ordinal() + "|" +
             character.spriteInfo().gfxId() + "|" +
             character.spriteInfo().colors().toHexString("|") + "|" +

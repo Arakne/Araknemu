@@ -27,9 +27,10 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -298,15 +299,21 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void weaponNoWeapon() {
-        assertThrows(FightException.class, () -> fighter.weapon());
+        Castable weapon = fighter.closeCombat();
+
+        assertSame(weapon, fighter.player().race().closeCombat());
+        assertEquals(4, weapon.apCost());
+        assertEquals(2, weapon.effects().get(0).min());
+        assertEquals(6, weapon.effects().get(0).max());
     }
 
     @Test
     void weaponEquiped() throws ContainerException, SQLException, InventoryException {
         equipWeapon(player);
 
-        CastableWeapon weapon = fighter.weapon();
+        Castable weapon = fighter.closeCombat();
 
+        assertInstanceOf(CastableWeapon.class, weapon);
         assertEquals(4, weapon.apCost());
         assertEquals(1, weapon.effects().get(0).min());
         assertEquals(7, weapon.effects().get(0).max());

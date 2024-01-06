@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
@@ -85,7 +85,7 @@ public final class MonsterFighter extends AbstractPlayableFighter {
     }
 
     @Override
-    public CastableWeapon weapon() {
+    public Castable closeCombat() {
         throw new FightException("The fighter do not have any weapon");
     }
 

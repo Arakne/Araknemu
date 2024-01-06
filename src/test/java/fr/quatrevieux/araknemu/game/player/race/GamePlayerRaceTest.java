@@ -19,11 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.player.race;
 
+import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +34,11 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GamePlayerRaceTest extends GameBaseCase {
     private PlayerRaceService service;
@@ -123,5 +129,39 @@ class GamePlayerRaceTest extends GameBaseCase {
     @Test
     void astrubPosition() {
         assertEquals(new Position(10340, 250), service.get(Race.ENUTROF).astrubPosition());
+    }
+
+    @Test
+    void closeCombat() {
+        GamePlayerRace race = service.get(Race.ENUTROF);
+
+        assertCount(1, race.closeCombat().effects());
+        assertCount(1, race.closeCombat().criticalEffects());
+
+        assertEquals(100, race.closeCombat().effects().get(0).effect());
+        assertEquals(2, race.closeCombat().effects().get(0).min());
+        assertEquals(6, race.closeCombat().effects().get(0).max());
+        assertEquals(SpellEffectTarget.DEFAULT, race.closeCombat().effects().get(0).target());
+        assertInstanceOf(CellArea.class, race.closeCombat().effects().get(0).area());
+
+        assertEquals(100, race.closeCombat().criticalEffects().get(0).effect());
+        assertEquals(5, race.closeCombat().criticalEffects().get(0).min());
+        assertEquals(9, race.closeCombat().criticalEffects().get(0).max());
+        assertEquals(SpellEffectTarget.DEFAULT, race.closeCombat().criticalEffects().get(0).target());
+        assertInstanceOf(CellArea.class, race.closeCombat().criticalEffects().get(0).area());
+
+        assertEquals(4, race.closeCombat().apCost());
+        assertEquals(20, race.closeCombat().criticalHit());
+        assertEquals(50, race.closeCombat().criticalFailure());
+        assertFalse(race.closeCombat().modifiableRange());
+        assertFalse(race.closeCombat().constraints().freeCell());
+        assertFalse(race.closeCombat().constraints().lineLaunch());
+        assertTrue(race.closeCombat().constraints().lineOfSight());
+        assertEquals(Interval.of(1), race.closeCombat().constraints().range());
+        assertEquals(0, race.closeCombat().constraints().launchDelay());
+        assertEquals(0, race.closeCombat().constraints().launchPerTarget());
+        assertEquals(0, race.closeCombat().constraints().launchPerTurn());
+        assertArrayEquals(new int[0], race.closeCombat().constraints().requiredStates());
+        assertArrayEquals(new int[] {18, 19, 3, 1, 41}, race.closeCombat().constraints().forbiddenStates());
     }
 }

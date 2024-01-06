@@ -92,7 +92,7 @@ class SelectCharacterTest extends GameBaseCase {
         ConnectionLog log = container.get(ConnectionLogRepository.class).currentSession(session.account().id());
         assertEquals(id, log.playerId());
 
-        requestStack.assertOne("ASK|1|Bob|23||0|10|7b|1c8|315|");
+        requestStack.assertOne("ASK|1|Bob|23|1|0|10|7b|1c8|315|");
         requestStack.assertOne(Error.welcome());
         requestStack.assertOne(Information.currentIpAddress("127.0.0.1"));
     }

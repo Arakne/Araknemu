@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -36,11 +36,11 @@ import java.util.List;
  */
 public final class CloseCombatSuccess implements ActionResult {
     private final PlayableFighter caster;
-    private final CastableWeapon weapon;
+    private final Castable weapon;
     private final FightCell target;
     private final boolean critical;
 
-    public CloseCombatSuccess(PlayableFighter caster, CastableWeapon weapon, FightCell target, boolean critical) {
+    public CloseCombatSuccess(PlayableFighter caster, Castable weapon, FightCell target, boolean critical) {
         this.caster = caster;
         this.weapon = weapon;
         this.target = target;
@@ -93,7 +93,7 @@ public final class CloseCombatSuccess implements ActionResult {
             caster.fight().send(ActionEffect.criticalHitCloseCombat(caster));
         }
 
-        turn.points().useActionPoints(caster.weapon().apCost());
-        turn.fight().effects().apply(FightCastScope.simple(caster.weapon(), caster, target, effects()));
+        turn.points().useActionPoints(caster.closeCombat().apCost());
+        turn.fight().effects().apply(FightCastScope.simple(caster.closeCombat(), caster, target, effects()));
     }
 }
