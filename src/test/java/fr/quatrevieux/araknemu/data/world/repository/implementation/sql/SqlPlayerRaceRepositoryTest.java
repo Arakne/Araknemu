@@ -31,12 +31,14 @@ import fr.quatrevieux.araknemu.data.world.transformer.BoostStatsDataTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.EffectAreaTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.RaceBaseStatsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.SpellTemplateLevelTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.WeaponsAbilitiesTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,7 +61,8 @@ class SqlPlayerRaceRepositoryTest extends GameBaseCase {
             new ConnectionPoolExecutor(app.database().get("game")),
             new RaceBaseStatsTransformer(new ImmutableCharacteristicsTransformer()),
             new BoostStatsDataTransformer(),
-            new SpellTemplateLevelTransformer(new EffectAreaTransformer())
+            new SpellTemplateLevelTransformer(new EffectAreaTransformer()),
+            container.get(WeaponsAbilitiesTransformer.class)
         );
     }
 
@@ -103,6 +106,9 @@ class SqlPlayerRaceRepositoryTest extends GameBaseCase {
         assertEquals(100, race.closeCombat().criticalEffects().get(0).effect());
         assertEquals(5, race.closeCombat().criticalEffects().get(0).min());
         assertEquals(9, race.closeCombat().criticalEffects().get(0).max());
+
+        assertEquals(90, race.defaultWeaponAbility());
+        assertEquals(new HashMap<Integer, Integer>() {{ put(4, 100); put(3, 95); }}, race.weaponsAbilities());
     }
 
     @Test

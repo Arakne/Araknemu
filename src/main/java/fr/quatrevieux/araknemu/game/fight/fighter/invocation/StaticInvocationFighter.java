@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.EmptySpellList;
@@ -37,6 +36,8 @@ import fr.quatrevieux.araknemu.game.monster.Monster;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
+
+import java.util.Optional;
 
 /**
  * Fighter for invoked monster
@@ -86,8 +87,8 @@ public final class StaticInvocationFighter extends AbstractFighter {
     }
 
     @Override
-    public Castable closeCombat() {
-        throw new FightException("The fighter do not have any weapon");
+    public Optional<Castable> closeCombat() {
+        return Optional.empty();
     }
 
     @Override

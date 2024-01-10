@@ -153,7 +153,7 @@ class AddTrapHandlerTest extends FightBaseCase {
         ;
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
-        CastableWeapon weapon = new CastableWeapon((Weapon) container.get(ItemService.class).create(40));
+        CastableWeapon weapon = new CastableWeapon(100, (Weapon) container.get(ItemService.class).create(40));
 
         Mockito.when(effect.effect()).thenReturn(401);
         Mockito.when(effect.min()).thenReturn(183);

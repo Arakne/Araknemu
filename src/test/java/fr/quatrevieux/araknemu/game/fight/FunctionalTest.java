@@ -350,7 +350,7 @@ public class FunctionalTest extends GameBaseCase {
             new FightAction(
                 new CloseCombatSuccess(
                     other.fighter(),
-                    other.fighter().closeCombat(),
+                    other.fighter().closeCombat().get(),
                     player.fighter().cell(),
                     false
                 )

@@ -24,8 +24,10 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Collection;
@@ -143,5 +145,20 @@ public final class GamePlayerRace {
      */
     public DefaultCloseCombat closeCombat() {
         return closeCombat;
+    }
+
+    /**
+     * Get the weapon ability for the given weapon type
+     *
+     * The ability is a percentage of the weapon damage (e.g. 80 = 80% of damage are applied)
+     * This percent is applied to the weapon damage, not the total damage
+     *
+     * @param type The weapon type
+     */
+    public @NonNegative int weaponAbility(ItemType type) {
+        return entity.weaponsAbilities().getOrDefault(
+            type.id(),
+            entity.defaultWeaponAbility()
+        );
     }
 }

@@ -41,6 +41,8 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
+import java.util.Optional;
+
 /**
  * Fighter for a player
  */
@@ -136,18 +138,8 @@ public final class PlayerFighter extends AbstractPlayableFighter implements Play
     }
 
     @Override
-    public Castable closeCombat() {
-        if (closeCombat != null) {
-            return closeCombat;
-        }
-
-        return closeCombat = player.inventory()
-            .bySlot(WeaponSlot.SLOT_ID)
-            .map(InventoryEntry::item)
-            .map(Weapon.class::cast)
-            .<Castable>map(CastableWeapon::new)
-            .orElse(player.race().closeCombat())
-        ;
+    public Optional<Castable> closeCombat() {
+        return Optional.of(getCloseCombat());
     }
 
     @Override
@@ -199,5 +191,19 @@ public final class PlayerFighter extends AbstractPlayableFighter implements Play
     @Override
     public boolean invoked() {
         return false;
+    }
+
+    private Castable getCloseCombat() {
+        if (closeCombat != null) {
+            return closeCombat;
+        }
+
+        return closeCombat = player.inventory()
+            .bySlot(WeaponSlot.SLOT_ID)
+            .map(InventoryEntry::item)
+            .map(Weapon.class::cast)
+            .<Castable>map(weapon -> new CastableWeapon(player.race().weaponAbility(weapon.type()), weapon))
+            .orElseGet(player.race()::closeCombat)
+        ;
     }
 }

@@ -31,6 +31,8 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Optional;
+
 /**
  * Base fighter
  */
@@ -91,9 +93,9 @@ public interface Fighter extends Dispatcher, ActiveFighter {
      * Get the close combat action
      * Usually, this method will return the {@link CastableWeapon} of the fighter
      *
-     * @throws fr.quatrevieux.araknemu.game.fight.exception.FightException When cannot get any weapon on the fighter
+     * @return The close combat action wrapped into an Optional, or empty Optional if the fighter can't do close combat
      */
-    public Castable closeCombat();
+    public Optional<Castable> closeCombat();
 
     /**
      * Does the current fighter can play ?

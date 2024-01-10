@@ -93,7 +93,7 @@ public final class CloseCombatSuccess implements ActionResult {
             caster.fight().send(ActionEffect.criticalHitCloseCombat(caster));
         }
 
-        turn.points().useActionPoints(caster.closeCombat().apCost());
-        turn.fight().effects().apply(FightCastScope.simple(caster.closeCombat(), caster, target, effects()));
+        turn.points().useActionPoints(weapon.apCost());
+        turn.fight().effects().apply(FightCastScope.simple(weapon, caster, target, effects()));
     }
 }

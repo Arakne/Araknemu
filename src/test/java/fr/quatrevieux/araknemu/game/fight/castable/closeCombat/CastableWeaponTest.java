@@ -57,6 +57,47 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(4, weapon.apCost());
         assertEquals(30, weapon.criticalFailure());
         assertEquals(50, weapon.criticalHit());
+        assertEquals(100, weapon.ability());
+        assertEquals(service.create(40).type(), weapon.weaponType());
+    }
+
+    @Test
+    void ability() {
+        CastableWeapon weapon = new CastableWeapon(90, (Weapon) service.create(40));
+
+        assertEquals(90, weapon.ability());
+        assertEquals(1, weapon.effects().get(0).min());
+        assertEquals(6, weapon.effects().get(0).max());
+        assertEquals(5, weapon.criticalEffects().get(0).min());
+        assertEquals(10, weapon.criticalEffects().get(0).max());
+
+        weapon.increaseAbility(10);
+        assertEquals(100, weapon.ability());
+        assertEquals(1, weapon.effects().get(0).min());
+        assertEquals(7, weapon.effects().get(0).max());
+        assertEquals(6, weapon.criticalEffects().get(0).min());
+        assertEquals(12, weapon.criticalEffects().get(0).max());
+
+        weapon.increaseAbility(30);
+        assertEquals(130, weapon.ability());
+        assertEquals(1, weapon.effects().get(0).min());
+        assertEquals(9, weapon.effects().get(0).max());
+        assertEquals(7, weapon.criticalEffects().get(0).min());
+        assertEquals(15, weapon.criticalEffects().get(0).max());
+
+        weapon.decreaseAbility(50);
+        assertEquals(80, weapon.ability());
+        assertEquals(1, weapon.effects().get(0).min());
+        assertEquals(5, weapon.effects().get(0).max());
+        assertEquals(4, weapon.criticalEffects().get(0).min());
+        assertEquals(9, weapon.criticalEffects().get(0).max());
+
+        weapon.decreaseAbility(100);
+        assertEquals(0, weapon.ability());
+        assertEquals(1, weapon.effects().get(0).min());
+        assertEquals(1, weapon.effects().get(0).max());
+        assertEquals(1, weapon.criticalEffects().get(0).min());
+        assertEquals(1, weapon.criticalEffects().get(0).max());
     }
 
     @Test
@@ -169,6 +210,6 @@ class CastableWeaponTest extends GameBaseCase {
     }
 
     private CastableWeapon weapon(int id) {
-        return new CastableWeapon((Weapon) service.create(id));
+        return new CastableWeapon(100, (Weapon) service.create(id));
     }
 }

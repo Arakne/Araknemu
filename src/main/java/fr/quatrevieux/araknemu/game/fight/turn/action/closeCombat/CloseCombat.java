@@ -19,7 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -39,17 +41,19 @@ public final class CloseCombat implements FightAction {
     private final FightCell target;
     private final CloseCombatValidator validator;
     private final CriticalityStrategy criticalityStrategy;
+    private final Castable action;
 
     public CloseCombat(PlayableFighter caster, FightCell target, CloseCombatValidator validator, CriticalityStrategy criticalityStrategy) {
         this.caster = caster;
         this.target = target;
         this.validator = validator;
         this.criticalityStrategy = criticalityStrategy;
+        this.action = caster.closeCombat().orElseThrow(() -> new FightException("The fighter do not have any weapon"));
     }
 
     @Override
     public boolean validate(Turn turn) {
-        final Object error = validator.validate(turn, caster.closeCombat(), target);
+        final Object error = validator.validate(turn, action, target);
 
         if (error != null) {
             caster.apply(new SendPacket(error));
@@ -62,15 +66,15 @@ public final class CloseCombat implements FightAction {
 
     @Override
     public ActionResult start() {
-        if (criticalityStrategy.failed(caster, caster.closeCombat().criticalFailure())) {
-            return new CloseCombatFailed(caster);
+        if (criticalityStrategy.failed(caster, action.criticalFailure())) {
+            return new CloseCombatFailed(caster, action);
         }
 
         return new CloseCombatSuccess(
             caster,
-            caster.closeCombat(),
+            action,
             target,
-            criticalityStrategy.hit(caster, caster.closeCombat().criticalHit())
+            criticalityStrategy.hit(caster, action.criticalHit())
         );
     }
 

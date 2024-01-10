@@ -299,7 +299,7 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void weaponNoWeapon() {
-        Castable weapon = fighter.closeCombat();
+        Castable weapon = fighter.closeCombat().get();
 
         assertSame(weapon, fighter.player().race().closeCombat());
         assertEquals(4, weapon.apCost());
@@ -311,12 +311,26 @@ class PlayerFighterTest extends FightBaseCase {
     void weaponEquiped() throws ContainerException, SQLException, InventoryException {
         equipWeapon(player);
 
-        Castable weapon = fighter.closeCombat();
+        Castable weapon = fighter.closeCombat().get();
 
         assertInstanceOf(CastableWeapon.class, weapon);
         assertEquals(4, weapon.apCost());
         assertEquals(1, weapon.effects().get(0).min());
+        assertEquals(6, weapon.effects().get(0).max());
+        assertEquals(90, CastableWeapon.class.cast(weapon).ability());
+    }
+
+    @Test
+    void weaponEquipedWithMaximumAbility() throws ContainerException, SQLException, InventoryException {
+        equipWeapon(player, 138);
+
+        Castable weapon = fighter.closeCombat().get();
+
+        assertInstanceOf(CastableWeapon.class, weapon);
+        assertEquals(4, weapon.apCost());
+        assertEquals(3, weapon.effects().get(0).min());
         assertEquals(7, weapon.effects().get(0).max());
+        assertEquals(100, CastableWeapon.class.cast(weapon).ability());
     }
 
     @Test
