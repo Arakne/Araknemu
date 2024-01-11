@@ -96,7 +96,7 @@ public final class CastableWeaponEffect implements SpellEffect {
             return 0;
         }
 
-        if (critical) {
+        if (critical && effect.canBeBoosted()) {
             base += weapon.info().criticalBonus();
         }
 

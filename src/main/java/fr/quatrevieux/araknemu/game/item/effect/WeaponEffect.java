@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.item.effect;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -60,6 +61,14 @@ public final class WeaponEffect implements ItemEffect {
 
     public @NonNegative int extra() {
         return extra;
+    }
+
+    /**
+     * Check if the effect can be boosted by critical bonus
+     * The effect is boostable if it's a damage effect or a heal effect
+     */
+    public boolean canBeBoosted() {
+        return EffectsUtils.isDamageEffect(effect.id()) || effect == Effect.HEAL || effect == Effect.HEAL2;
     }
 
     @Override
