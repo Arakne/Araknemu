@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.EmptySpellList;
@@ -35,6 +34,8 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
+
+import java.util.Optional;
 
 /**
  * Create a double of a fighter as invocation
@@ -82,8 +83,8 @@ public final class DoubleFighter extends AbstractPlayableFighter {
     }
 
     @Override
-    public Castable closeCombat() {
-        throw new FightException("The fighter do not have any weapon");
+    public Optional<Castable> closeCombat() {
+        return Optional.empty();
     }
 
     @Override

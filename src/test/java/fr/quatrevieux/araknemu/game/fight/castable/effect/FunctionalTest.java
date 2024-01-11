@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
@@ -47,6 +50,7 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -1959,6 +1963,39 @@ public class FunctionalTest extends FightBaseCase {
         assertNotSame(fighter, fight.turnList().currentFighter());
     }
 
+    @Test
+    void increaseWeaponSkill() throws SQLException {
+        equipWeapon(player);
+
+        fighter1.move(fight.map().get(166));
+        fighter2.move(fight.map().get(152));
+
+        fighter1.turn().points().addActionPoints(100);
+
+        castNormal(391, fighter1.cell()); // Maîtrise de l'épée
+        assertEquals(120, CastableWeapon.class.cast(fighter1.closeCombat().get()).ability());
+
+        castCloseCombat(fighter2.cell());
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+        assertBetween(1, 12, damage);
+
+        fighter2.life().alter(fighter2, 100);
+
+        castCloseCombatCritical(fighter2.cell());
+        damage = fighter2.life().max() - fighter2.life().current();
+        assertBetween(10, 21, damage);
+
+        passTurns(5);
+        assertEquals(90, CastableWeapon.class.cast(fighter1.closeCombat().get()).ability());
+
+        fighter2.life().alter(fighter2, 100);
+
+        castCloseCombatCritical(fighter2.cell());
+        damage = fighter2.life().max() - fighter2.life().current();
+        assertBetween(8, 16, damage);
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
@@ -2059,5 +2096,45 @@ public class FunctionalTest extends FightBaseCase {
         currentTurn.terminate();
 
         return spell;
+    }
+
+    private void castCloseCombat(FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+
+        currentTurn.perform(new CloseCombat(
+            currentTurn.fighter(),
+            target,
+            new CloseCombatValidator(fight),
+
+            // Ensure no critical hit / fail
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        ));
+
+        currentTurn.terminate();
+    }
+
+    private void castCloseCombatCritical(FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+
+        currentTurn.perform(new CloseCombat(
+            currentTurn.fighter(),
+            target,
+            new CloseCombatValidator(fight),
+
+            // Ensure no critical hit / fail
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 100; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        ));
+
+        currentTurn.terminate();
     }
 }

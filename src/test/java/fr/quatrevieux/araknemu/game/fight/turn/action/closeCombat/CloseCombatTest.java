@@ -196,6 +196,8 @@ class CloseCombatTest extends FightBaseCase {
 
     @Test
     void startNormalHit() throws InventoryException, ContainerException, SQLException {
+        equipWeapon(player);
+
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
@@ -207,8 +209,6 @@ class CloseCombatTest extends FightBaseCase {
                 public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
-
-        equipWeapon(player);
 
         ActionResult result = action.start();
 
@@ -274,7 +274,7 @@ class CloseCombatTest extends FightBaseCase {
         assertEquals(fighter, result.performer());
         assertArrayEquals(new Object[] {186}, result.arguments());
         assertTrue(CloseCombatSuccess.class.cast(result).critical());
-        assertEquals(6, CloseCombatSuccess.class.cast(result).effects().get(0).min());
+        assertEquals(5, CloseCombatSuccess.class.cast(result).effects().get(0).min());
     }
 
     @Test
@@ -382,7 +382,7 @@ class CloseCombatTest extends FightBaseCase {
         int damage = other.fighter().life().max() - other.fighter().life().current();
 
         assertEquals(2, turn.points().actionPoints());
-        assertBetween(9, 18, damage);
+        assertBetween(7, 16, damage);
 
         requestStack.assertAll(
             ActionEffect.criticalHitCloseCombat(fighter),
@@ -422,6 +422,8 @@ class CloseCombatTest extends FightBaseCase {
 
     @Test
     void failed() throws InventoryException, ContainerException, SQLException {
+        equipWeapon(player);
+
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
@@ -429,7 +431,6 @@ class CloseCombatTest extends FightBaseCase {
             new BaseCriticalityStrategy()
         );
 
-        equipWeapon(player);
         requestStack.clear();
 
         action.start().apply(turn);
@@ -443,6 +444,7 @@ class CloseCombatTest extends FightBaseCase {
     void hammerWeaponWillNotTargetTheCaster() throws InventoryException, ContainerException, SQLException {
         dataSet.pushItemSets();
 
+        equipWeapon(player, 2416);
         action = new CloseCombat(
             fighter,
             fight.map().get(186),
@@ -455,7 +457,6 @@ class CloseCombatTest extends FightBaseCase {
             }
         );
 
-        equipWeapon(player, 2416);
         requestStack.clear();
         action.start().apply(turn);
 

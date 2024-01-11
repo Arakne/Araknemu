@@ -23,10 +23,12 @@ import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
+import java.util.Map;
 import java.util.SortedMap;
 
 /**
@@ -46,8 +48,10 @@ public final class PlayerRace {
     private final Position astrubPosition;
     private final int[] spells;
     private final SpellTemplate.Level closeCombat;
+    private final @NonNegative int defaultWeaponAbility;
+    private final Map<Integer, @NonNegative Integer> weaponsAbilities;
 
-    public PlayerRace(Race race, String name, SortedMap<@Positive Integer, Characteristics> baseStats, int startDiscernment, @Positive int startPods, @Positive int startLife, @NonNegative int perLevelLife, BoostStatsData boostStats, Position startPosition, Position astrubPosition, int[] spells, SpellTemplate.Level closeCombat) {
+    public PlayerRace(Race race, String name, SortedMap<@Positive Integer, Characteristics> baseStats, int startDiscernment, @Positive int startPods, @Positive int startLife, @NonNegative int perLevelLife, BoostStatsData boostStats, Position startPosition, Position astrubPosition, int[] spells, SpellTemplate.Level closeCombat, @NonNegative int defaultWeaponAbility, Map<Integer, @NonNegative Integer> weaponsAbilities) {
         this.race = race;
         this.name = name;
         this.baseStats = baseStats;
@@ -60,10 +64,12 @@ public final class PlayerRace {
         this.astrubPosition = astrubPosition;
         this.spells = spells;
         this.closeCombat = closeCombat;
+        this.defaultWeaponAbility = defaultWeaponAbility;
+        this.weaponsAbilities = weaponsAbilities;
     }
 
     public PlayerRace(Race race) {
-        this(race, null, null, 0, 0, 0, 0, null, null, null, null, null);
+        this(race, null, null, 0, 0, 0, 0, null, null, null, null, null, 0, null);
     }
 
     public Race race() {
@@ -152,5 +158,27 @@ public final class PlayerRace {
      */
     public SpellTemplate.Level closeCombat() {
         return closeCombat;
+    }
+
+    /**
+     * Get the default ability for all weapons not defined into {@link PlayerRace#weaponsAbilities()}
+     * The value represent a percent of damage (e.g. 80 = 80%)
+     */
+    public @NonNegative int defaultWeaponAbility() {
+        return defaultWeaponAbility;
+    }
+
+    /**
+     * Associate weapon type to ability percent
+     *
+     * The weapon type is the item type found here {@link ItemTemplate#type()}.
+     * The value represent a percent of damage (e.g. 80 = 80%)
+     *
+     * Every weapon type not defined here will use the default value {@link PlayerRace#defaultWeaponAbility()}
+     *
+     * This value is formatted as a JSON object
+     */
+    public Map<Integer, @NonNegative Integer> weaponsAbilities() {
+        return weaponsAbilities;
     }
 }

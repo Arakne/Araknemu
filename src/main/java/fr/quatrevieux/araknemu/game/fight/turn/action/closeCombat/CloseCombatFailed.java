@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
@@ -28,9 +29,11 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
  */
 public final class CloseCombatFailed implements ActionResult {
     private final PlayableFighter caster;
+    private final Castable action;
 
-    public CloseCombatFailed(PlayableFighter caster) {
+    public CloseCombatFailed(PlayableFighter caster, Castable action) {
         this.caster = caster;
+        this.action = action;
     }
 
     @Override
@@ -60,7 +63,7 @@ public final class CloseCombatFailed implements ActionResult {
 
     @Override
     public void apply(FightTurn turn) {
-        turn.points().useActionPoints(caster.closeCombat().apCost());
+        turn.points().useActionPoints(action.apCost());
         turn.stop();
     }
 }

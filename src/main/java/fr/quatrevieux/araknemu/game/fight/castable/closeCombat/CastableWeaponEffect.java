@@ -32,15 +32,17 @@ import org.checkerframework.checker.index.qual.NonNegative;
 public final class CastableWeaponEffect implements SpellEffect {
     private final WeaponEffect effect;
     private final Weapon weapon;
+    private final @NonNegative int ability;
     private final boolean critical;
 
-    public CastableWeaponEffect(WeaponEffect effect, Weapon weapon) {
-        this(effect, weapon, false);
+    public CastableWeaponEffect(WeaponEffect effect, Weapon weapon, @NonNegative int ability) {
+        this(effect, weapon, ability, false);
     }
 
-    public CastableWeaponEffect(WeaponEffect effect, Weapon weapon, boolean critical) {
+    public CastableWeaponEffect(WeaponEffect effect, Weapon weapon, @NonNegative int ability, boolean critical) {
         this.effect = effect;
         this.weapon = weapon;
+        this.ability = ability;
         this.critical = critical;
     }
 
@@ -90,10 +92,14 @@ public final class CastableWeaponEffect implements SpellEffect {
     }
 
     private @NonNegative int applyCriticalBonus(@NonNegative int base) {
-        if (critical) {
-            return base + weapon.info().criticalBonus();
+        if (base == 0) {
+            return 0;
         }
 
-        return base;
+        if (critical && effect.canBeBoosted()) {
+            base += weapon.info().criticalBonus();
+        }
+
+        return Math.max(base * ability / 100, 1);
     }
 }

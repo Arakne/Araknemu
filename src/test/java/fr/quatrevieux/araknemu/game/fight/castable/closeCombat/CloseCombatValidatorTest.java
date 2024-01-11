@@ -84,6 +84,6 @@ class CloseCombatValidatorTest extends FightBaseCase {
     }
 
     private CastableWeapon weapon(int id) {
-        return new CastableWeapon((Weapon) container.get(ItemService.class).create(id));
+        return new CastableWeapon(100, (Weapon) container.get(ItemService.class).create(id));
     }
 }

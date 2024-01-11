@@ -31,11 +31,13 @@ import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Map;
 import java.util.SortedMap;
 
 /**
@@ -47,11 +49,13 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
     private final Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer;
     private final Transformer<BoostStatsData> boostStatsDataTransformer;
     private final Transformer<SpellTemplate.Level> closeCombatTransformer;
+    private final Transformer<Map<Integer, @NonNegative Integer>> weaponsAbilitiesTransformer;
 
-    public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer, Transformer<SpellTemplate.Level> closeCombatTransformer) {
+    public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<@Positive Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer, Transformer<SpellTemplate.Level> closeCombatTransformer, Transformer<Map<Integer, @NonNegative Integer>> weaponsAbilitiesTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;
         this.boostStatsDataTransformer = boostStatsDataTransformer;
         this.closeCombatTransformer = closeCombatTransformer;
+        this.weaponsAbilitiesTransformer = weaponsAbilitiesTransformer;
 
         this.executor = executor;
         utils = new RepositoryUtils<>(executor, new Loader());
@@ -75,7 +79,9 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
                     "CELL_ID INTEGER," +
                     "ASTRUB_MAP_ID INTEGER," +
                     "ASTRUB_CELL_ID INTEGER," +
-                    "DEFAULT_CLOSE_COMBAT TEXT" +
+                    "DEFAULT_CLOSE_COMBAT TEXT," +
+                    "DEFAULT_WEAPON_ABILITY INTEGER," +
+                    "WEAPONS_ABILITIES TEXT" +
                 ")"
             );
         } catch (SQLException e) {
@@ -139,7 +145,9 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
                     record.getNonNegativeInt("ASTRUB_CELL_ID")
                 ),
                 record.getIntArray("RACE_SPELLS", '|'),
-                record.unserialize("DEFAULT_CLOSE_COMBAT", closeCombatTransformer)
+                record.unserialize("DEFAULT_CLOSE_COMBAT", closeCombatTransformer),
+                record.getNonNegativeInt("DEFAULT_WEAPON_ABILITY"),
+                record.unserialize("WEAPONS_ABILITIES", weaponsAbilitiesTransformer)
             );
         }
 

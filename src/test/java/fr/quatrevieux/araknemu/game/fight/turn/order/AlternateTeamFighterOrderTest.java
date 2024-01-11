@@ -48,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -191,8 +192,8 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public Castable closeCombat() {
-            return null;
+        public Optional<Castable> closeCombat() {
+            return Optional.empty();
         }
 
         @Override

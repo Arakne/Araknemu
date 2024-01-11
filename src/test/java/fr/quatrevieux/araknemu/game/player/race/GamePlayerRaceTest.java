@@ -23,6 +23,8 @@ import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
@@ -31,6 +33,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,5 +166,16 @@ class GamePlayerRaceTest extends GameBaseCase {
         assertEquals(0, race.closeCombat().constraints().launchPerTurn());
         assertArrayEquals(new int[0], race.closeCombat().constraints().requiredStates());
         assertArrayEquals(new int[] {18, 19, 3, 1, 41}, race.closeCombat().constraints().forbiddenStates());
+    }
+
+    @Test
+    void weaponAbility() throws SQLException {
+        dataSet.pushItemTypes();
+        ItemTypeRepository itemTypeRepository = container.get(ItemTypeRepository.class);
+        GamePlayerRace race = service.get(Race.ENUTROF);
+
+        assertEquals(90, race.weaponAbility(itemTypeRepository.get(3))); // Wand
+        assertEquals(95, race.weaponAbility(itemTypeRepository.get(7))); // Hammer
+        assertEquals(100, race.weaponAbility(itemTypeRepository.get(8))); // Shovel
     }
 }

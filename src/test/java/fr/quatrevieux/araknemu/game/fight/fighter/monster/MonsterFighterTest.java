@@ -115,7 +115,7 @@ class MonsterFighterTest extends FightBaseCase {
         assertEquals(-1, fighter.id());
         assertEquals(Direction.SOUTH_EAST, fighter.orientation());
         assertFalse(fighter.dead());
-        assertThrows(FightException.class, fighter::closeCombat);
+        assertFalse(fighter.closeCombat().isPresent());
         assertInstanceOf(BuffList.class, fighter.buffs());
         assertInstanceOf(States.class, fighter.states());
         assertTrue(fighter.ready());

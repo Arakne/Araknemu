@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WeaponEffectTest extends TestCase {
     @Test
@@ -36,6 +38,18 @@ class WeaponEffectTest extends TestCase {
         assertEquals(1, effect.min());
         assertEquals(2, effect.max());
         assertEquals(3, effect.extra());
+        assertTrue(effect.canBeBoosted());
+    }
+
+    @Test
+    void canBeBoosted() {
+        assertTrue(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 2, 3).canBeBoosted());
+        assertTrue(new WeaponEffect(Effect.INFLICT_DAMAGE_WATER, 1, 2, 3).canBeBoosted());
+        assertTrue(new WeaponEffect(Effect.STOLEN_EARTH, 1, 2, 3).canBeBoosted());
+        assertTrue(new WeaponEffect(Effect.HEAL2, 1, 2, 3).canBeBoosted());
+        assertTrue(new WeaponEffect(Effect.HEAL, 1, 2, 3).canBeBoosted());
+        assertFalse(new WeaponEffect(Effect.STOLEN_KAMAS, 1, 2, 3).canBeBoosted());
+        assertFalse(new WeaponEffect(Effect.SUB_ACTION_POINTS_DODGE, 1, 2, 3).canBeBoosted());
     }
 
     @Test

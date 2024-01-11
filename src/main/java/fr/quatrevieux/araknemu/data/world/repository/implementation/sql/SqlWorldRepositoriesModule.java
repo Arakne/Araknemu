@@ -65,6 +65,7 @@ import fr.quatrevieux.araknemu.data.world.transformer.MapCellsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.MonsterListTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.RaceBaseStatsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.SpellTemplateLevelTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.WeaponsAbilitiesTransformer;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -89,7 +90,8 @@ public final class SqlWorldRepositoriesModule implements ContainerModule {
                     executor,
                     container.get(RaceBaseStatsTransformer.class),
                     container.get(BoostStatsDataTransformer.class),
-                    container.get(SpellTemplateLevelTransformer.class)
+                    container.get(SpellTemplateLevelTransformer.class),
+                    container.get(WeaponsAbilitiesTransformer.class)
                 )
             )
         );
@@ -283,5 +285,7 @@ public final class SqlWorldRepositoriesModule implements ContainerModule {
             ExchangeItemsTransformer.class,
             container -> new ExchangeItemsTransformer()
         );
+
+        configurator.persist(WeaponsAbilitiesTransformer.class, container -> new WeaponsAbilitiesTransformer());
     }
 }

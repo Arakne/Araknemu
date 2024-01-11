@@ -74,6 +74,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveSta
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RevealInvisibleHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.BoostSpellHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.IncreaseWeaponSkillHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MaximizeTargetEffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MinimizeCastedEffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MultiplyDamageHandler;
@@ -245,6 +246,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(135, new DecreaseCasterSightHandler(fight));
         handler.register(136, new BoostCasterSightHandler(fight));
 
+        handler.register(165, new IncreaseWeaponSkillHandler());
         handler.register(284, new BoostSpellHandler(SpellsBoosts.Modifier.HEAL));
         handler.register(285, new BoostSpellHandler(SpellsBoosts.Modifier.AP_COST));
         handler.register(286, new BoostSpellHandler(SpellsBoosts.Modifier.REDUCE_DELAY));

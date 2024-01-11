@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractPlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
@@ -33,6 +32,8 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import org.checkerframework.checker.index.qual.Positive;
+
+import java.util.Optional;
 
 /**
  * Fighter for a monster
@@ -85,8 +86,8 @@ public final class MonsterFighter extends AbstractPlayableFighter {
     }
 
     @Override
-    public Castable closeCombat() {
-        throw new FightException("The fighter do not have any weapon");
+    public Optional<Castable> closeCombat() {
+        return Optional.empty();
     }
 
     @Override
