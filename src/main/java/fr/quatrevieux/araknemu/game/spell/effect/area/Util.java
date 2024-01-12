@@ -14,37 +14,40 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2024 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.spell.effect.area;
 
+import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.MapCell;
-import fr.quatrevieux.araknemu.data.value.EffectArea;
-import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * Resolve cells from area and target cell
+ * Utility methods for resolving effect areas
  */
-public interface SpellEffectArea {
-    /**
-     * Resolve the cells from an effect area
-     * Cells must be sorted by distance from the target cell, nearest cells first
-     *
-     * @param target The target cell
-     * @param source The source cell (caster cell)
-     */
-    public <C extends MapCell> Set<C> resolve(C target, C source);
+final class Util {
+    private Util() {
+        // Disable constructor
+    }
 
     /**
-     * The area type
+     * Create a set with cells ordered by distance from target cell
      */
-    public EffectArea.Type type();
+    public static <C extends MapCell> Set<C> createOrderedSet(C target) {
+        final CoordinateCell<C> center = target.coordinate();
 
-    /**
-     * The area size
-     */
-    public @NonNegative int size();
+        return new TreeSet<>((o1, o2) -> {
+            final int firstDistance = center.distance(o1);
+            final int secondDistance = center.distance(o2);
+
+            if (firstDistance == secondDistance) {
+                return o1.id() - o2.id();
+            }
+
+            return firstDistance - secondDistance;
+        });
+    }
 }

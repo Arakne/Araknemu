@@ -22,12 +22,15 @@ package fr.quatrevieux.araknemu.game.spell.effect.area;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LineAreaTest extends GameBaseCase {
@@ -95,6 +98,23 @@ class LineAreaTest extends GameBaseCase {
 
             map.get(405),
             map.get(420)
+        );
+    }
+
+    @Test
+    void resolveShouldSortByDistanceFromCenter() {
+        assertCellIds(map.get(152), map.get(167), 0, new int[] {167});
+        assertCellIds(map.get(152), map.get(167), 1, new int[] {167, 182});
+        assertCellIds(map.get(152), map.get(167), 2, new int[] {167, 182, 197});
+        assertCellIds(map.get(152), map.get(167), 3, new int[] {167, 182, 197, 212});
+    }
+
+    private void assertCellIds(FightCell from, FightCell center, int size, int[] cellIds) {
+        Set<FightCell> cells = new LineArea(new EffectArea(EffectArea.Type.LINE, size)).resolve(center, from);
+
+        assertArrayEquals(
+            cellIds,
+            cells.stream().mapToInt(FightCell::id).toArray()
         );
     }
 }

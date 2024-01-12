@@ -24,7 +24,6 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -39,7 +38,7 @@ public final class CrossArea implements SpellEffectArea {
 
     @Override
     public <C extends MapCell> Set<C> resolve(C target, C source) {
-        final Set<C> cells = new HashSet<>(area.size() * 4 + 1);
+        final Set<C> cells = Util.createOrderedSet(target);
 
         cells.add(target);
 
