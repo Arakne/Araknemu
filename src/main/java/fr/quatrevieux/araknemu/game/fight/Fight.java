@@ -44,6 +44,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 import org.checkerframework.dataflow.qual.Pure;
 
 import java.time.Duration;
@@ -54,6 +55,7 @@ import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -77,11 +79,12 @@ public final class Fight implements Dispatcher, Sender {
     private final FighterList fighters;
 
     private final Lock executorLock = new ReentrantLock();
-    private final EffectsHandler effects = new EffectsHandler();
+    private final EffectsHandler effects;
     private @MonotonicNonNull FightTurnList turnList;
 
     private final StopWatch duration = new StopWatch();
     private volatile boolean alive = true;
+    private final AtomicBoolean active = new AtomicBoolean(false);
 
     @SuppressWarnings({"assignment", "argument"})
     public Fight(int id, FightType type, FightMap map, List<FightTeam.Factory> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory.Factory actions) {
@@ -96,6 +99,7 @@ public final class Fight implements Dispatcher, Sender {
         this.spectators = new Spectators(this);
         this.fighters = new FighterList(this);
         this.actions = actions.createForFight(this);
+        this.effects = new EffectsHandler(this);
     }
 
     /**
@@ -289,18 +293,20 @@ public final class Fight implements Dispatcher, Sender {
         dispatch(new FightStarted(this));
 
         duration.start();
+        active.set(true);
     }
 
     /**
      * Stop the fight
      */
     public void stop() {
-        if (turnList == null) {
+        if (!active.getAndSet(false)) {
+            // @todo do not throw exception ?
             throw new IllegalStateException("Fight not started");
         }
 
         duration.stop();
-        turnList.stop();
+        NullnessUtil.castNonNull(turnList).stop();
 
         dispatch(new FightStopped(this));
     }
@@ -344,7 +350,7 @@ public final class Fight implements Dispatcher, Sender {
      * @see Fight#alive()
      */
     public boolean active() {
-        return duration.isStarted();
+        return active.get();
     }
 
     /**
@@ -382,6 +388,7 @@ public final class Fight implements Dispatcher, Sender {
      */
     public void destroy() {
         alive = false;
+        active.set(false);
         teams.clear();
         map.destroy();
         attachments.clear();

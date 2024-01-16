@@ -37,6 +37,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 class EffectValueTest extends FightBaseCase {
@@ -352,5 +353,82 @@ class EffectValueTest extends FightBaseCase {
         assertCount(2, values);
         assertBetween(0, 9999, values.get(0).value()); // Exclude 10 000
         assertEquals(10000, values.get(1).value());
+    }
+
+    @Test
+    void preRoll() throws Exception {
+        Fight fight = createFight(true);
+
+        Fighter caster = player.fighter();
+        Fighter target = other.fighter();
+
+        BuffHook casterHook = Mockito.mock(BuffHook.class);
+        BuffHook targetHook = Mockito.mock(BuffHook.class);
+
+        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+
+        caster.buffs().add(casterBuff);
+        target.buffs().add(targetBuff);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(5);
+
+        EffectValue.Context context = EffectValue.preRoll(effect, caster);
+
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(Mockito.eq(casterBuff), Mockito.any());
+
+        EffectValue value1 = context.forTarget(caster);
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueTarget(casterBuff, value1);
+        assertEquals(5, value1.value());
+
+        EffectValue value2 = context.forTarget(target);
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, value2);
+        assertEquals(5, value2.value());
+        assertNotSame(value1, value2);
+    }
+
+    @Test
+    void preRollWithMaximizeOnOneTarget() throws Exception {
+        Fight fight = createFight(true);
+
+        Fighter caster = player.fighter();
+        Fighter target = other.fighter();
+
+        Buff maximuzeBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+            @Override
+            public void onEffectValueTarget(Buff buff, EffectValue value) {
+                value.maximize();
+            }
+        });
+        target.buffs().add(maximuzeBuff);
+
+        BuffHook casterHook = Mockito.mock(BuffHook.class);
+        BuffHook targetHook = Mockito.mock(BuffHook.class);
+
+        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+
+        caster.buffs().add(casterBuff);
+        target.buffs().add(targetBuff);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(0);
+        Mockito.when(effect.max()).thenReturn(10000);
+
+        EffectValue.Context context = EffectValue.preRoll(effect, caster);
+
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueCast(Mockito.eq(casterBuff), Mockito.any());
+
+        EffectValue value1 = context.forTarget(caster);
+        Mockito.verify(casterHook, Mockito.times(1)).onEffectValueTarget(casterBuff, value1);
+        assertNotEquals(10000, value1.value());
+
+        EffectValue value2 = context.forTarget(target);
+        Mockito.verify(targetHook, Mockito.times(1)).onEffectValueTarget(targetBuff, value2);
+        assertEquals(10000, value2.value());
+        assertNotSame(value1, value2);
     }
 }

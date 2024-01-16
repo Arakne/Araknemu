@@ -19,11 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
  * Handle steal a fixed amount of like
@@ -33,15 +35,31 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
  * Applied damage are same as {@link FixedDamageHandler}
  */
 public final class FixedStealLifeHandler implements EffectHandler {
+    private final Fight fight;
+
+    public FixedStealLifeHandler(Fight fight) {
+        this.fight = fight;
+    }
+
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fight fight = this.fight;
         final Fighter caster = cast.caster();
+        final SpellEffect spellEffect = effect.effect();
+        final EffectValue.Context context = EffectValue.preRoll(spellEffect, caster);
         final FighterLife casterLife = caster.life();
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
         for (Fighter target : effect.targets()) {
-            casterLife.alter(caster, -target.life().alter(caster, -EffectValue.create(effect.effect(), caster, target).value()));
+            if (!fight.active()) {
+                break;
+            }
+
+            final int damage = context.forTarget(target).value();
+            final int actualDamage = target.life().alter(caster, -damage);
+
+            casterLife.alter(caster, -actualDamage);
         }
     }
 

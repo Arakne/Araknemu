@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
  * Handle damage based on the current caster life
@@ -36,19 +37,30 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
  */
 public final class IndirectPercentLifeDamageHandler implements EffectHandler {
     private final DamageApplier applier;
+    private final Fight fight;
 
     public IndirectPercentLifeDamageHandler(Element element, Fight fight) {
         this.applier = new DamageApplier(element, fight);
+        this.fight = fight;
     }
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fight fight = this.fight;
         final Fighter caster = cast.caster();
+        final SpellEffect spellEffect = effect.effect();
+        final EffectValue.Context context = EffectValue.preRoll(spellEffect, caster);
         final int currentLife = caster.life().current();
 
-        EffectValue.forEachTargets(effect.effect(), caster, effect.targets(), (target, effectValue) -> {
-            applier.applyIndirectFixed(caster, currentLife * effectValue.value() / 100, target);
-        });
+        for (Fighter target : effect.targets()) {
+            if (!fight.active()) {
+                break;
+            }
+
+            final int percent = context.forTarget(target).value();
+
+            applier.applyIndirectFixed(caster, currentLife * percent / 100, target);
+        }
     }
 
     @Override

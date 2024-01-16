@@ -63,7 +63,7 @@ class FixedDamageHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = new FixedDamageHandler();
+        handler = new FixedDamageHandler(fight);
 
         requestStack.clear();
     }
@@ -217,6 +217,29 @@ class FixedDamageHandlerTest extends FightBaseCase {
 
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -10));
+    }
+
+    @Test
+    void applyWithAreaMultipleFightersShouldStopApplyingDamageIfFightEnds() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(1000);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 63)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.handle(scope, scope.effects().get(0));
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -50));
+        requestStack.assertNotContainsPrefix("GA;100;1;1");
+
+        assertTrue(target.dead());
+        assertFalse(caster.dead());
+        assertTrue(caster.life().isFull());
     }
 
     @Test

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
@@ -72,8 +73,9 @@ class DamageApplierTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        EffectValue effectValue = EffectValue.create(effect, caster, target);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, effectValue);
 
         assertEquals(-10, value);
         assertEquals(10, target.life().max() - target.life().current());
@@ -89,8 +91,9 @@ class DamageApplierTest extends FightBaseCase {
         Mockito.when(effect.max()).thenReturn(15);
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        EffectValue effectValue = EffectValue.create(effect, caster, target);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, effectValue);
 
         assertBetween(-15, -10, value);
         assertEquals(value, target.life().current() - target.life().max());
@@ -105,12 +108,13 @@ class DamageApplierTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        EffectValue effectValue = EffectValue.create(effect, caster, target);
 
         player.properties().characteristics().base().set(Characteristic.AGILITY, 50);
         player.properties().characteristics().base().set(Characteristic.PERCENT_DAMAGE, 25);
         player.properties().characteristics().base().set(Characteristic.FIXED_DAMAGE, 10);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, effectValue);
 
         assertEquals(-27, value);
     }
@@ -125,11 +129,13 @@ class DamageApplierTest extends FightBaseCase {
         player.properties().characteristics().base().set(Characteristic.PHYSICAL_DAMAGE, 10);
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
-        int value = applier.apply(caster, effect, target);
+        EffectValue effectValue = EffectValue.create(effect, caster, target);
+        int value = applier.apply(caster, effect, target, effectValue);
         assertEquals(-15, value);
 
         applier = new DamageApplier(Element.EARTH, fight);
-        value = applier.apply(caster, effect, target);
+        effectValue = EffectValue.create(effect, caster, target);
+        value = applier.apply(caster, effect, target, effectValue);
         assertEquals(-25, value);
     }
 
@@ -145,10 +151,10 @@ class DamageApplierTest extends FightBaseCase {
         player.properties().characteristics().base().set(Characteristic.PERCENT_TRAP_BOOST, 25);
         player.properties().characteristics().base().set(Characteristic.TRAP_BOOST, 10);
 
-        assertEquals(-15, applier.apply(caster, effect, target)); // Without trap boost
+        assertEquals(-15, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target))); // Without trap boost
 
         Mockito.when(effect.trap()).thenReturn(true);
-        assertEquals(-27, applier.apply(caster, effect, target)); // With trap boost
+        assertEquals(-27, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target))); // With trap boost
     }
 
     @Test
@@ -162,7 +168,7 @@ class DamageApplierTest extends FightBaseCase {
         other.properties().characteristics().base().set(Characteristic.RESISTANCE_PERCENT_AIR, 25);
         other.properties().characteristics().base().set(Characteristic.RESISTANCE_AIR, 5);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target));
 
         assertEquals(-2, value);
     }
@@ -177,7 +183,7 @@ class DamageApplierTest extends FightBaseCase {
 
         other.properties().characteristics().base().set(Characteristic.RESISTANCE_AIR, 100);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target));
 
         assertEquals(0, value);
     }
@@ -190,7 +196,7 @@ class DamageApplierTest extends FightBaseCase {
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target));
 
         assertEquals(-50, value);
         assertTrue(target.dead());
@@ -215,7 +221,7 @@ class DamageApplierTest extends FightBaseCase {
             })
         );
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target));
 
         assertEquals(-3, value);
 
@@ -256,7 +262,7 @@ class DamageApplierTest extends FightBaseCase {
 
         target.buffs().add(buff);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target));
 
         assertEquals(-10, value);
 
@@ -332,7 +338,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target)));
         assertEquals(-10, target.life().current() - target.life().max());
         assertEquals(-5, caster.life().current() - caster.life().max());
 
@@ -357,7 +363,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target)));
         assertEquals(-10, target.life().current() - target.life().max());
         assertEquals(-5, caster.life().current() - caster.life().max());
 
@@ -380,7 +386,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(-20, applier.apply(caster, effect, target));
+        assertEquals(-20, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target)));
         assertEquals(-20, target.life().current() - target.life().max());
         assertEquals(-7, caster.life().current() - caster.life().max());
 
@@ -415,7 +421,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target)));
         assertEquals(-10, target.life().current() - target.life().max());
         assertEquals(caster.life().current(), caster.life().max());
         assertEquals(-5, newTarget.life().current() - newTarget.life().max());
@@ -437,7 +443,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(-10, applier.apply(caster, effect, caster));
+        assertEquals(-10, applier.apply(caster, effect, caster, EffectValue.create(effect, caster, target)));
         assertEquals(-10, caster.life().current() - caster.life().max());
 
         requestStack.assertAll(
@@ -461,7 +467,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(0, applier.apply(caster, effect, target));
+        assertEquals(0, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target)));
         assertEquals(0, target.life().current() - target.life().max());
         assertEquals(0, caster.life().current() - caster.life().max());
 
@@ -492,7 +498,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target)));
         assertEquals(-10, target.life().current() - target.life().max());
         assertEquals(-5, caster.life().current() - caster.life().max());
 
@@ -529,7 +535,7 @@ class DamageApplierTest extends FightBaseCase {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
         requestStack.clear();
 
-        assertEquals(10, applier.apply(caster, effect, target));
+        assertEquals(10, applier.apply(caster, effect, target, EffectValue.create(effect, caster, target)));
         assertEquals(-10, target.life().current() - target.life().max());
         assertFalse(appliedDamageHookCalled.get());
 
@@ -807,7 +813,7 @@ class DamageApplierTest extends FightBaseCase {
 
         caster.buffs().add(buff);
 
-        int value = applier.apply(caster, effect, target);
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target));
 
         assertEquals(-10, value);
 

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageApplier;
@@ -128,7 +129,7 @@ class MaximizeTargetEffectsHandlerTest extends FightBaseCase {
         Mockito.when(damageEffect.min()).thenReturn(5);
         Mockito.when(damageEffect.max()).thenReturn(10);
 
-        assertEquals(-10, new DamageApplier(Element.AIR, fight).apply(caster, damageEffect, target));
+        assertEquals(-10, new DamageApplier(Element.AIR, fight).apply(caster, damageEffect, target, EffectValue.create(damageEffect, caster, target)));
         assertEquals(10, target.life().max() - target.life().current());
     }
 }

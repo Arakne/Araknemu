@@ -225,17 +225,52 @@ public final class EffectValue implements Cloneable {
      * @param action Action to perform on each target, with their related effect value
      */
     public static <F extends FighterData> void forEachTargets(SpellEffect effect, FighterData caster, Iterable<F> targets, BiConsumer<F, EffectValue> action) {
+        final Context context = preRoll(effect, caster);
+
+        for (F target : targets) {
+            action.accept(target, context.forTarget(target));
+        }
+    }
+
+    /**
+     * Initialise a context for multiple effect values for multiple targets
+     *
+     * The "dice" will be rolled and configured for the caster, and a factory will be returned
+     * to configure the effect value for each target.
+     * The final effect value is configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)}.
+     *
+     * So {@link EffectValue#minimize()} and {@link EffectValue#maximize()} are effective, without change the effects value of others targets
+     *
+     * Usage:
+     * <pre>{@code
+     * public void handle(CastScope cast, CastScope.EffectScope effect) {
+     *     final EffectValueContext context = EffectValue.preRoll(effect, caster);
+     *
+     *     for (Fighter target : effect.targets()) {
+     *         // Configure the effect value for the target
+     *         final EffectValue targetValue = context.forTarget(target);
+     *
+     *         // Apply the effect (effectValue) on target
+     *         target.life().alter(cast.caster(), effectValue.value());
+     *     }
+     * }
+     * }</pre>
+     *
+     * @param effect The spell effect
+     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
+     */
+    public static Context preRoll(SpellEffect effect, FighterData caster) {
         final EffectValue value = new EffectValue(effect);
 
         caster.buffs().onEffectValueCast(value);
         value.roll();
 
-        for (F target : targets) {
+        return (target) -> {
             final EffectValue targetValue = value.clone();
             target.buffs().onEffectValueTarget(targetValue);
 
-            action.accept(target, targetValue);
-        }
+            return targetValue;
+        };
     }
 
     private @NonNegative int jet() {
@@ -260,5 +295,20 @@ public final class EffectValue implements Cloneable {
             ((boost + value) * percent / 100 + fixed + effect.boost()) * multiply,
             0
         );
+    }
+
+    /**
+     * A factory to create effect value with a given context
+     */
+    public interface Context {
+        /**
+         * Create the effect value instance for a given target
+         * A new instance should be created by each call
+         *
+         * @param target The target
+         *
+         * @return The new instance of effect value, configured for the target
+         */
+        public EffectValue forTarget(FighterData target);
     }
 }

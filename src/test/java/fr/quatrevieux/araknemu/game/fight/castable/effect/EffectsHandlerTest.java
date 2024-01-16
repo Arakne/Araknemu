@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Optional;
@@ -62,7 +64,7 @@ class EffectsHandlerTest extends FightBaseCase {
 
         fight = createFight();
         fight.nextState();
-        handler = new EffectsHandler();
+        handler = new EffectsHandler(fight);
 
         new CommonEffectsModule(fight).effects(handler);
 
@@ -199,6 +201,31 @@ class EffectsHandlerTest extends FightBaseCase {
 
         requestStack.assertLast(ActionEffect.teleport(player.fighter(), player.fighter(), fight.map().get(123)));
         assertEquals(123, player.fighter().cell().id());
+    }
+
+    @Test
+    void applyShouldStopWhenFightEnd() throws SQLException {
+        dataSet.pushFunctionalSpells();
+        Spell spell = container.get(SpellService.class).get(447).level(5);
+
+        player.fighter().move(fight.map().get(166));
+        other.fighter().move(fight.map().get(152));
+        other.fighter().life().alter(other.fighter(), -45);
+        requestStack.clear();
+
+        handler.apply(FightCastScope.simple(
+            spell,
+            player.fighter(),
+            other.fighter().cell(),
+            spell.effects()
+        ));
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(player.fighter(), other.fighter(), -5),
+            ActionEffect.fighterDie(player.fighter(), other.fighter())
+        );
+
+        assertEquals(0, player.fighter().buffs().stream().count());
     }
 
     @Test

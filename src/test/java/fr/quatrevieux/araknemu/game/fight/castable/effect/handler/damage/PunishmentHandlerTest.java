@@ -42,7 +42,9 @@ import org.mockito.Mockito;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PunishmentHandlerTest extends FightBaseCase {
     private Fight fight;
@@ -255,6 +257,29 @@ class PunishmentHandlerTest extends FightBaseCase {
 
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -29));
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -29));
+    }
+
+    @Test
+    void applyWithAreaMultipleFightersShouldStopApplyingDamageIfFightEnds() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(1000);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 63)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.handle(scope, scope.effects().get(0));
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -50));
+        requestStack.assertNotContainsPrefix("GA;100;1;1");
+
+        assertTrue(target.dead());
+        assertFalse(caster.dead());
+        assertEquals(150, caster.life().max() - caster.life().current());
     }
 
     @Test

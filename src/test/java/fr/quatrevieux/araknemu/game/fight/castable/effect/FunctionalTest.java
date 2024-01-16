@@ -1996,6 +1996,20 @@ public class FunctionalTest extends FightBaseCase {
         assertBetween(8, 16, damage);
     }
 
+    @Test
+    void shouldNotApplyingEffectWhenFightEnds() {
+        fighter1.move(fight.map().get(166));
+        fighter2.move(fight.map().get(152));
+
+        fighter2.life().alter(fighter2, 10 - fighter2.life().current());
+
+        castNormal(157, fight.map().get(152)); // épée céleste
+
+        assertFalse(fight.active());
+        assertTrue(fighter2.dead());
+        assertTrue(fighter1.life().isFull());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
