@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
@@ -47,13 +48,18 @@ public final class DamageApplier {
     }
 
     /**
-     * Apply a direct damage effect to a fighter
+     * Apply a direct damage effect to a fighter, using pre-roll value
+     *
+     * The pre-roll value should be created using {@link EffectValue#create(SpellEffect, FighterData, FighterData)},
+     * or {@link EffectValue#forEachTargets(SpellEffect, FighterData, Iterable, java.util.function.BiConsumer)}
+     * with same caster and target as this method.
      *
      * Note: do not use this method for a buff, it will call the invalid buff hook
      *
      * @param caster The spell caster
      * @param effect The effect to apply
      * @param target The target
+     * @param value The pre-roll value. Must be configured for the given caster and target.
      *
      * @return The real damage value
      *
@@ -61,8 +67,8 @@ public final class DamageApplier {
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(Fighter, Damage) The called buff hook
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(Fighter, int) Buff called when damage are applied
      */
-    public int apply(Fighter caster, SpellEffect effect, Fighter target) {
-        final Damage damage = computeDamage(caster, effect, target);
+    public int apply(Fighter caster, SpellEffect effect, Fighter target, EffectValue value) {
+        final Damage damage = computeDamage(caster, effect, target, value);
 
         return applyDirectDamage(caster, damage, target);
     }
@@ -70,7 +76,7 @@ public final class DamageApplier {
     /**
      * Apply a fixed (i.e. precomputed) amount of damage on the target
      *
-     * Like {@link DamageApplier#apply(Fighter, SpellEffect, Fighter)} :
+     * Like {@link DamageApplier#apply(Fighter, SpellEffect, Fighter, EffectValue)} :
      * - resistance are applied
      * - direct damage buff are called
      * - returned damage are applied
@@ -160,7 +166,14 @@ public final class DamageApplier {
      * Create the damage object
      */
     private Damage computeDamage(Fighter caster, SpellEffect effect, Fighter target) {
-        final EffectValue value = EffectValue.create(effect, caster, target)
+        return computeDamage(caster, effect, target, EffectValue.create(effect, caster, target));
+    }
+
+    /**
+     * Create the damage object, using pre-roll value
+     */
+    private Damage computeDamage(Fighter caster, SpellEffect effect, Fighter target, EffectValue value) {
+        value
             .percent(caster.characteristics().get(element.boost()))
             .percent(caster.characteristics().get(Characteristic.PERCENT_DAMAGE))
             .fixed(caster.characteristics().get(Characteristic.FIXED_DAMAGE))

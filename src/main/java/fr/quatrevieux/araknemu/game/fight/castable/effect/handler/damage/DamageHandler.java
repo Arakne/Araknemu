@@ -21,27 +21,30 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractPreRollEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
  * Handle simple damage effect
  */
-public final class DamageHandler implements EffectHandler, BuffHook {
+public final class DamageHandler extends AbstractPreRollEffectHandler implements EffectHandler, BuffHook {
     private final DamageApplier applier;
 
     public DamageHandler(Element element, Fight fight) {
+        super(fight);
+
         this.applier = new DamageApplier(element, fight);
     }
 
     @Override
-    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        for (Fighter target : effect.targets()) {
-            applier.apply(cast.caster(), effect.effect(), target);
-        }
+    protected void applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value) {
+        applier.apply(cast.caster(), effect, target, value);
     }
 
     @Override

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -47,7 +47,7 @@ public final class LineArea implements SpellEffectArea {
         }
 
         final Direction direction = source.coordinate().directionTo(target.coordinate());
-        final Set<C> cells = new HashSet<>(area.size() + 1);
+        final Set<C> cells = new LinkedHashSet<>(area.size() + 1); // Cell are added in order, so no need to sort using a TreeSet
 
         cells.add(target);
         addCells(cells, target, direction, area.size());

@@ -133,9 +133,9 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(276, new PercentLifeLostDamageHandler(Element.EARTH, fight));
         handler.register(279, new PercentLifeLostDamageHandler(Element.NEUTRAL, fight));
 
-        handler.register(82, new FixedStealLifeHandler());
+        handler.register(82, new FixedStealLifeHandler(fight));
         handler.register(109, new FixedCasterDamageHandler());
-        handler.register(144, new FixedDamageHandler());
+        handler.register(144, new FixedDamageHandler(fight));
         handler.register(672, new PunishmentHandler(fight));
 
         handler.register(81, new HealOnDamageHandler());

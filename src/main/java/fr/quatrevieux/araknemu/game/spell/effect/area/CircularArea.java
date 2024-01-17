@@ -25,7 +25,6 @@ import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -43,9 +42,9 @@ public final class CircularArea implements SpellEffectArea {
 
     @Override
     public <C extends MapCell> Set<C> resolve(C target, C source) {
-        final Set<C> cells = new HashSet<>();
         final DofusMap<C> map = target.map();
         final CoordinateCell<C> center = target.coordinate();
+        final Set<C> cells = Util.createOrderedSet(target);
 
         for (int i = 0; i < map.size(); ++i) {
             final CoordinateCell<C> cell = map.get(i).coordinate();

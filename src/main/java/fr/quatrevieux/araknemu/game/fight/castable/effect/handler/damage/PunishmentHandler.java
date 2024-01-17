@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
  * Handle effect of punishment spell
@@ -45,14 +46,19 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
  */
 public final class PunishmentHandler implements EffectHandler {
     private final DamageApplier applier;
+    private final Fight fight;
 
     public PunishmentHandler(Fight fight) {
         this.applier = new DamageApplier(Element.NEUTRAL, fight);
+        this.fight = fight;
     }
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fight fight = this.fight;
         final Fighter caster = cast.caster();
+        final SpellEffect spellEffect = effect.effect();
+        final EffectValue.Context context = EffectValue.preRoll(spellEffect, caster);
         final FighterLife casterLife = caster.life();
 
         final double percentLife = (double) casterLife.current() / casterLife.max();
@@ -60,7 +66,11 @@ public final class PunishmentHandler implements EffectHandler {
         final double factor = base * base / 4 * casterLife.max();
 
         for (Fighter target : effect.targets()) {
-            final double percent = EffectValue.create(effect.effect(), caster, target).value() / 100d;
+            if (!fight.active()) {
+                break;
+            }
+
+            final double percent = context.forTarget(target).value() / 100d;
             final int value = (int) (factor * percent);
 
             applier.applyFixed(caster, value, target);

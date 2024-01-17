@@ -20,13 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Remove vitality with buff effect
  * The vitality will be removed from current and max fighter life
  *
- * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alterMax(FighterData, int)
+ * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alterMax(fr.quatrevieux.araknemu.game.fight.fighter.Fighter, int)
  */
 public final class RemoveVitalityHandler extends AbstractAlterCharacteristicHandler {
     public RemoveVitalityHandler(Fight fight) {

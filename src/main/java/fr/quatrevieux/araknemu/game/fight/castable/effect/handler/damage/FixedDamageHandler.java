@@ -19,27 +19,30 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractPreRollEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
  * Handle fixed damage, which cannot be boosted nor reduced
  * This effect has no related element, and do not call buffs
  */
-public final class FixedDamageHandler implements EffectHandler, BuffHook {
-    @Override
-    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final Fighter caster = cast.caster();
+public final class FixedDamageHandler extends AbstractPreRollEffectHandler implements EffectHandler, BuffHook {
+    public FixedDamageHandler(Fight fight) {
+        super(fight);
+    }
 
+    @Override
+    protected void applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value) {
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
-        for (Fighter target : effect.targets()) {
-            target.life().alter(caster, -EffectValue.create(effect.effect(), caster, target).value());
-        }
+        target.life().alter(cast.caster(), -value.value());
     }
 
     @Override

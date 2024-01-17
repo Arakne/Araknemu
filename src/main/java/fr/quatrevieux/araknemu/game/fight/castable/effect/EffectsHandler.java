@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
@@ -41,7 +42,12 @@ import java.util.Set;
  * Handle fight effects
  */
 public final class EffectsHandler implements CastConstraintValidator<Castable> {
+    private final Fight fight;
     private final Map<Integer, EffectHandler> handlers = new HashMap<>();
+
+    public EffectsHandler(Fight fight) {
+        this.fight = fight;
+    }
 
     @Override
     public boolean check(Turn turn, Castable castable, BattlefieldCell target) {
@@ -102,6 +108,11 @@ public final class EffectsHandler implements CastConstraintValidator<Castable> {
                     handler.handle(cast, effect);
                 } else {
                     handler.buff(cast, effect);
+                }
+
+                // Do not apply next effects if the fight is finished
+                if (!fight.active()) {
+                    break;
                 }
             }
         }

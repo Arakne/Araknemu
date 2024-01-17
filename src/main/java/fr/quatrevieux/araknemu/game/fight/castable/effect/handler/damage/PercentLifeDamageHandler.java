@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
  * Handle damage based on the current caster life
@@ -36,19 +37,32 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
  */
 public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
     private final DamageApplier applier;
+    private final Fight fight;
 
     public PercentLifeDamageHandler(Element element, Fight fight) {
         this.applier = new DamageApplier(element, fight);
+        this.fight = fight;
     }
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
+        final Fight fight = this.fight;
         final Fighter caster = cast.caster();
+        final SpellEffect spellEffect = effect.effect();
+        final EffectValue.Context context = EffectValue.preRoll(spellEffect, caster);
         final int currentLife = caster.life().current();
 
-        EffectValue.forEachTargets(effect.effect(), caster, effect.targets(), (target, effectValue) -> {
-            applier.applyFixed(caster, currentLife * effectValue.value() / 100, target);
-        });
+        // Do not use AbstractPreRollEffectHandler to ensure that current life is not changed
+        // during the loop, so that damage are computed on the same life value
+        for (Fighter target : effect.targets()) {
+            if (!fight.active()) {
+                break;
+            }
+
+            final int percent = context.forTarget(target).value();
+
+            applier.applyFixed(caster, currentLife * percent / 100, target);
+        }
     }
 
     @Override
