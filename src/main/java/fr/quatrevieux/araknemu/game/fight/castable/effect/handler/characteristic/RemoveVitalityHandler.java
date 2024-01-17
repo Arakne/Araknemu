@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Remove vitality with buff effect

@@ -53,6 +53,8 @@ public final class PercentLifeLostDamageHandler implements EffectHandler {
         final FighterLife casterLife = caster.life();
         final int lostLife = casterLife.max() - casterLife.current();
 
+        // Do not use AbstractPreRollEffectHandler to ensure that current life is not changed
+        // during the loop, so that damage are computed on the same life value
         for (Fighter target : effect.targets()) {
             if (!fight.active()) {
                 break;

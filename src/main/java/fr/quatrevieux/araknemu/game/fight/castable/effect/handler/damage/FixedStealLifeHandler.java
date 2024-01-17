@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractPreRollEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
@@ -34,33 +35,22 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  *
  * Applied damage are same as {@link FixedDamageHandler}
  */
-public final class FixedStealLifeHandler implements EffectHandler {
-    private final Fight fight;
-
+public final class FixedStealLifeHandler extends AbstractPreRollEffectHandler implements EffectHandler {
     public FixedStealLifeHandler(Fight fight) {
-        this.fight = fight;
+        super(fight);
     }
 
     @Override
-    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        final Fight fight = this.fight;
+    protected void applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value) {
         final Fighter caster = cast.caster();
-        final SpellEffect spellEffect = effect.effect();
-        final EffectValue.Context context = EffectValue.preRoll(spellEffect, caster);
         final FighterLife casterLife = caster.life();
+
+        final int damage = value.value();
+        final int actualDamage = target.life().alter(caster, -damage);
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
-        for (Fighter target : effect.targets()) {
-            if (!fight.active()) {
-                break;
-            }
-
-            final int damage = context.forTarget(target).value();
-            final int actualDamage = target.life().alter(caster, -damage);
-
-            casterLife.alter(caster, -actualDamage);
-        }
+        casterLife.alter(caster, -actualDamage);
     }
 
     @Override

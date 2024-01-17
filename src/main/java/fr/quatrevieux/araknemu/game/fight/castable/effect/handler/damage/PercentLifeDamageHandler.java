@@ -52,6 +52,8 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
         final EffectValue.Context context = EffectValue.preRoll(spellEffect, caster);
         final int currentLife = caster.life().current();
 
+        // Do not use AbstractPreRollEffectHandler to ensure that current life is not changed
+        // during the loop, so that damage are computed on the same life value
         for (Fighter target : effect.targets()) {
             if (!fight.active()) {
                 break;
