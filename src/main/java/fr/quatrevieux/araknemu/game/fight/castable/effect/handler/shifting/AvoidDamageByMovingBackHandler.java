@@ -60,7 +60,7 @@ public final class AvoidDamageByMovingBackHandler implements EffectHandler, Buff
 
     @Override
     public boolean onCastTarget(Buff buff, FightCastScope cast) {
-        if (!isDamageCast(cast) || buff.target().cell().coordinate().distance(cast.caster().cell()) != 1) {
+        if (!isDamageCast(cast) || buff.target().cell().coordinate().distance(cast.from()) != 1) {
             return true;
         }
 

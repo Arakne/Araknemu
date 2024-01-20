@@ -52,7 +52,7 @@ public final class RaulebaqueHandler implements EffectHandler {
                 return;
             }
 
-            fighter.move(null);
+            lastCell.removeFighter(fighter);
 
             final Fighter other = startCell.fighter();
 

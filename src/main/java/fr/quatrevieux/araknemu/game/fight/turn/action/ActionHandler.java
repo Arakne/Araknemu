@@ -85,6 +85,7 @@ public final class ActionHandler {
      */
     public void terminate() {
         final PendingAction action = pending;
+        pending = null;
 
         if (action == null) {
             return;
@@ -98,9 +99,13 @@ public final class ActionHandler {
         }
 
         try {
-            action.result.apply(turn);
+            // Do not apply the result if the caster is dead
+            // This can happen if the caster leave the fight before the action is terminated
+            // See: https://github.com/Arakne/Araknemu/issues/327
+            if (!action.action.performer().dead()) {
+                action.result.apply(turn);
+            }
         } finally {
-            pending = null;
             fight.dispatch(new FightActionTerminated(action.action));
 
             termination.forEach(Runnable::run);

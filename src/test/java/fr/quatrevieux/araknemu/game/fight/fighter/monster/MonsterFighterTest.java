@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -49,6 +50,7 @@ import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentServic
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -248,17 +250,6 @@ class MonsterFighterTest extends FightBaseCase {
     }
 
     @Test
-    void moveRemoveCell() throws Exception {
-        Fight fight = createFight();
-
-        fighter.move(fight.map().get(123));
-        fighter.move(null);
-
-        assertThrows(IllegalStateException.class, fighter::cell);
-        assertFalse(fight.map().get(123).hasFighter());
-    }
-
-    @Test
     void moveShouldDispatchFighterMoved() throws Exception {
         Fight fight = createFight();
         fighter.joinFight(fight, fight.map().get(123));
@@ -270,19 +261,6 @@ class MonsterFighterTest extends FightBaseCase {
 
         assertSame(fighter, ref.get().fighter());
         assertSame(fight.map().get(126), ref.get().cell());
-    }
-
-    @Test
-    void moveShouldNotDispatchFighterMovedWhenNullCellIsGiven() throws Exception {
-        Fight fight = createFight();
-        fighter.joinFight(fight, fight.map().get(123));
-
-        AtomicReference<FighterMoved> ref = new AtomicReference<>();
-        fight.dispatcher().add(FighterMoved.class, ref::set);
-
-        fighter.move(null);
-
-        assertNull(ref.get());
     }
 
     @Test
@@ -301,7 +279,7 @@ class MonsterFighterTest extends FightBaseCase {
         assertFalse(map.get(123).hasFighter());
         assertNull(ref.get());
 
-        fighter.move(null);
+        fighter.cell().removeFighter(fighter);
         fighter.setCell(map.get(125));
 
         assertSame(map.get(125), fighter.cell());

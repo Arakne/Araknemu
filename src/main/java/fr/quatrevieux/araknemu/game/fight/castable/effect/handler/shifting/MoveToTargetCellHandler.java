@@ -49,7 +49,7 @@ public final class MoveToTargetCellHandler implements EffectHandler {
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final Fighter caster = cast.caster();
-        final FightCell casterCell = caster.cell();
+        final FightCell casterCell = cast.from();
         final CoordinateCell<BattlefieldCell> casterCellCoordinate = casterCell.coordinate();
 
         // Remove 1 because the distance should be computed from the target fighter cell

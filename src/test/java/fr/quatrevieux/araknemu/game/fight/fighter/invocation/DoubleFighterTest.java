@@ -253,17 +253,6 @@ class DoubleFighterTest extends FightBaseCase {
     }
 
     @Test
-    void moveRemoveCell() throws Exception {
-        Fight fight = createFight();
-
-        fighter.move(fight.map().get(123));
-        fighter.move(null);
-
-        assertThrows(IllegalStateException.class, fighter::cell);
-        assertFalse(fight.map().get(123).hasFighter());
-    }
-
-    @Test
     void moveShouldDispatchFighterMoved() {
         fighter.joinFight(fight, fight.map().get(123));
 
@@ -274,18 +263,6 @@ class DoubleFighterTest extends FightBaseCase {
 
         assertSame(fighter, ref.get().fighter());
         assertSame(fight.map().get(126), ref.get().cell());
-    }
-
-    @Test
-    void moveShouldNotDispatchFighterMovedWhenNullCellIsGiven() {
-        fighter.joinFight(fight, fight.map().get(123));
-
-        AtomicReference<FighterMoved> ref = new AtomicReference<>();
-        fight.dispatcher().add(FighterMoved.class, ref::set);
-
-        fighter.move(null);
-
-        assertNull(ref.get());
     }
 
     @Test
@@ -303,7 +280,7 @@ class DoubleFighterTest extends FightBaseCase {
         assertFalse(map.get(123).hasFighter());
         assertNull(ref.get());
 
-        fighter.move(null);
+        fighter.cell().removeFighter(fighter);
         fighter.setCell(map.get(125));
 
         assertSame(map.get(125), fighter.cell());

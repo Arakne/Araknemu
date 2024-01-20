@@ -63,11 +63,15 @@ public final class KillAndReplaceByInvocationHandler implements EffectHandler {
         final Fighter caster = cast.caster();
 
         for (Fighter target : effect.targets()) {
+            if (!fight.active()) {
+                break;
+            }
+
             final FightCell cell = target.cell();
 
             target.life().kill(caster);
 
-            if (validator.check(caster)) {
+            if (fight.active() && validator.check(caster)) {
                 addInvocation(caster, effect.effect(), cell);
             }
         }
