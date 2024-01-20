@@ -147,6 +147,7 @@ class ActionHandlerTest extends FightBaseCase {
         Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(100));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -195,6 +196,7 @@ class ActionHandlerTest extends FightBaseCase {
         Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -217,6 +219,7 @@ class ActionHandlerTest extends FightBaseCase {
         Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(200));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -236,6 +239,7 @@ class ActionHandlerTest extends FightBaseCase {
         Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -280,6 +284,7 @@ class ActionHandlerTest extends FightBaseCase {
         Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -325,5 +330,32 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.verify(result, Mockito.never()).apply(turn);
         assertNull(ref.get());
+    }
+
+    /**
+     * See: https://github.com/Arakne/Araknemu/issues/327
+     */
+    @Test
+    void terminateWithDeadFighterShouldNotApplyResults() {
+        FightAction action = Mockito.mock(FightAction.class);
+        ActionResult result = Mockito.mock(ActionResult.class);
+
+        Mockito.when(action.validate(turn)).thenReturn(true);
+        Mockito.when(action.start()).thenReturn(result);
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
+        Mockito.when(action.performer()).thenReturn(turn.fighter());
+
+        Mockito.when(result.success()).thenReturn(true);
+
+        actionHandler.start(action);
+        turn.fighter().life().kill(turn.fighter());
+
+        AtomicReference<FightActionTerminated> ref = new AtomicReference<>();
+        fight.dispatcher().add(FightActionTerminated.class, ref::set);
+
+        actionHandler.terminate();
+
+        Mockito.verify(result, Mockito.never()).apply(turn);
+        assertSame(action, ref.get().action());
     }
 }

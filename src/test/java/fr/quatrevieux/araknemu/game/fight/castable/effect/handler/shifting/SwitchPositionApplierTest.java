@@ -76,6 +76,72 @@ class SwitchPositionApplierTest extends FightBaseCase {
         assertSame(lastCell, other.cell());
     }
 
+    @Test
+    void applyShouldIgnoreDeadCaster() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(150))
+            .addAlly(b -> b.cell(151))
+            .addEnemy(b -> b.cell(250))
+        );
+
+        PlayerFighter caster = player.fighter();
+        Fighter other = getFighter(1);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCell target = fight.map().get(250);
+
+        caster.life().kill(caster);
+        requestStack.clear();
+
+        applier.apply(caster, target.fighter());
+
+        requestStack.assertEmpty();
+
+        assertSame(other, target.fighter());
+    }
+
+    @Test
+    void applyShouldIgnoreDeadTarget() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(150))
+            .addAlly(b -> b.cell(151))
+            .addEnemy(b -> b.cell(250))
+            .addEnemy(b -> b.cell(251))
+        );
+
+        PlayerFighter caster = player.fighter();
+        Fighter other = getFighter(1);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCell lastCell = caster.cell();
+        FightCell target = fight.map().get(250);
+
+        other.life().kill(other);
+        requestStack.clear();
+
+        applier.apply(caster, other);
+
+        requestStack.assertEmpty();
+
+        assertSame(lastCell, caster.cell());
+    }
+
     private void configureFight(Consumer<FightBuilder> configurator) {
         FightBuilder builder = fightBuilder();
         configurator.accept(builder);

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
@@ -37,6 +38,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
@@ -48,6 +50,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -119,6 +122,66 @@ class KillAndReplaceByInvocationHandlerTest extends FightBaseCase {
             new FighterTurnOrder(fight.turnList()),
             new ActionEffect(181, caster, "+" + invoc.sprite()),
             new ActionEffect(999, caster, (new FighterTurnOrder(fight.turnList())).toString())
+        );
+    }
+
+    @Test
+    void handleShouldNotInvocIfFightIfTerminated() {
+        Fighter target = fight.map().get(196).fighter();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.min()).thenReturn(36); // bouftou
+        Mockito.when(effect.max()).thenReturn(1); // grade 1
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+
+        fight.map().get(167).fighter().life().kill(caster);
+        fight.map().get(168).fighter().life().kill(caster);
+        fight.map().get(197).fighter().life().kill(caster);
+        requestStack.clear();
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(196));
+        handler.handle(scope, scope.effects().get(0));
+
+        assertNull(fight.map().get(196).fighter());
+        assertTrue(target.dead());
+
+        requestStack.assertAll(
+            ActionEffect.fighterDie(caster, target)
+        );
+    }
+
+    @Test
+    void handleShouldStopApplyEffectOnFightEnd() {
+        Fighter target = fight.map().get(196).fighter();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 20)));
+        Mockito.when(effect.min()).thenReturn(36); // bouftou
+        Mockito.when(effect.max()).thenReturn(1); // grade 1
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+
+        fight.map().get(167).fighter().life().kill(caster);
+        fight.map().get(168).fighter().life().kill(caster);
+        fight.map().get(197).fighter().life().kill(caster);
+        requestStack.clear();
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(196));
+        handler.handle(scope, scope.effects().get(0));
+
+        assertTrue(target.dead());
+        assertFalse(caster.dead());
+
+        requestStack.assertAll(
+            ActionEffect.fighterDie(caster, target)
         );
     }
 

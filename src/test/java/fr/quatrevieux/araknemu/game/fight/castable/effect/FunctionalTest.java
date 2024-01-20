@@ -2010,6 +2010,47 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(fighter1.life().isFull());
     }
 
+    /**
+     * See: https://github.com/Arakne/Araknemu/issues/327
+     */
+    @Test
+    void killCasterThenSwitch() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).currentLife(10).charac(Characteristic.INTELLIGENCE, 1000000))
+            .addAlly(fb -> fb.cell(165))
+            .addEnemy(fb -> fb.cell(122).charac(Characteristic.COUNTER_DAMAGE, 100).currentLife(1000).maxLife(1000))
+        );
+
+        fight.turnList().current().get().points().addActionPoints(10);
+        requestStack.clear();
+
+        castNormal(319, fight.map().get(122)); // Oniside
+
+        assertTrue(player.fighter().dead());
+        assertFalse(fighters.get(2).life().isFull());
+        assertEquals(122, fighters.get(2).cell().id());
+    }
+
+    /**
+     * See: https://github.com/Arakne/Araknemu/issues/327
+     */
+    @Test
+    void killTargetThenSwitch() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136))
+            .addAlly(fb -> fb.cell(165))
+            .addEnemy(fb -> fb.cell(122).currentLife(10))
+        );
+
+        fight.turnList().current().get().points().addActionPoints(10);
+        requestStack.clear();
+
+        castNormal(319, fight.map().get(122)); // Oniside
+
+        assertTrue(fighters.get(2).life().dead());
+        assertEquals(136, player.fighter().cell().id());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

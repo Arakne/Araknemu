@@ -149,18 +149,6 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
-    void moveShouldNotDispatchFighterMovedWhenNullCellIsGiven() {
-        fighter.joinFight(fight, map.get(123));
-
-        AtomicReference<FighterMoved> ref = new AtomicReference<>();
-        fight.dispatcher().add(FighterMoved.class, ref::set);
-
-        fighter.move(null);
-
-        assertNull(ref.get());
-    }
-
-    @Test
     void moveWillLeaveLastCell() {
         fighter.move(map.get(123));
         fighter.move(map.get(124));
@@ -168,15 +156,6 @@ class PlayerFighterTest extends FightBaseCase {
         assertSame(map.get(124), fighter.cell());
         assertSame(fighter, map.get(124).fighter());
 
-        assertFalse(map.get(123).hasFighter());
-    }
-
-    @Test
-    void moveRemoveCell() {
-        fighter.move(map.get(123));
-        fighter.move(null);
-
-        assertThrows(IllegalStateException.class, fighter::cell);
         assertFalse(map.get(123).hasFighter());
     }
 
@@ -194,7 +173,7 @@ class PlayerFighterTest extends FightBaseCase {
         assertFalse(map.get(123).hasFighter());
         assertNull(ref.get());
 
-        fighter.move(null);
+        fighter.cell().removeFighter(fighter);
         fighter.setCell(map.get(125));
 
         assertSame(map.get(125), fighter.cell());

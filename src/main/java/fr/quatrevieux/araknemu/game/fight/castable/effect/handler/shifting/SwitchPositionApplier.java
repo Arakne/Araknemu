@@ -37,16 +37,22 @@ public final class SwitchPositionApplier {
     /**
      * Apply the switch effect
      *
+     * If one of the fighter is dead, nothing is done (because the fighter is not on a cell anymore)
+     *
      * @param caster The switch spell caster
      * @param target The other fighter to switch with
      */
     public void apply(Fighter caster, Fighter target) {
+        if (caster.dead() || target.dead()) {
+            return;
+        }
+
         final FightCell casterCell = caster.cell();
         final FightCell targetCell = target.cell();
 
         // Unset cells
-        caster.move(null);
-        target.move(null);
+        casterCell.removeFighter(caster);
+        targetCell.removeFighter(target);
 
         // Switch cells
         caster.move(targetCell);

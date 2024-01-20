@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -70,13 +71,14 @@ public final class ApplySpellOnStartTurnHandler implements EffectHandler, BuffHo
     @Override
     public boolean onStartTurn(Buff buff) {
         final Fighter target = buff.target();
+        final FightCell cell = target.cell();
         final Spell spell = spellService.get(buff.effect().min())
             .level(Asserter.assertPositive(buff.effect().max()))
         ;
 
-        final FightCastScope castScope = FightCastScope.probable(spell, target, target.cell(), spell.effects());
+        final FightCastScope castScope = FightCastScope.probable(spell, target, cell, spell.effects());
 
-        fight.send(ActionEffect.launchVisualEffect(target, target.cell(), spell));
+        fight.send(ActionEffect.launchVisualEffect(target, cell, spell));
         fight.effects().apply(castScope);
 
         return !target.dead();

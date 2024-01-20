@@ -194,6 +194,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofSeconds(30));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
         Mockito.when(result.success()).thenReturn(true);
 
         turn.perform(action);
@@ -215,6 +216,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofSeconds(30));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
         Mockito.when(result.success()).thenReturn(true);
 
         turn.perform(action);
@@ -410,6 +412,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(result.success()).thenReturn(true);
         Mockito.when(action.duration()).thenReturn(Duration.ofSeconds(30));
+        Mockito.when(action.performer()).thenReturn(player.fighter());
 
         Runnable runnable = Mockito.mock(Runnable.class);
 

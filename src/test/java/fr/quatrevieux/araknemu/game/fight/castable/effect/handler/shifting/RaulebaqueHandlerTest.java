@@ -144,7 +144,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
         requestStack.assertLast(new FighterPositions(fight.fighters()));
 
         assertEquals(123, caster.cell().id());
-        assertThrows(IllegalStateException.class, other.fighter()::cell);
+        assertEquals(fight.map().get(124), other.fighter().cell());
         assertFalse(fight.map().get(124).hasFighter());
     }
 

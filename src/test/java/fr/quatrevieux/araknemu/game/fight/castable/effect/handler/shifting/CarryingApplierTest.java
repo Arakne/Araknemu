@@ -147,7 +147,7 @@ class CarryingApplierTest extends FightBaseCase {
         fight.dispatcher().add(FighterMoved.class, ref::set);
 
         applier.carry(caster, target);
-        caster.move(null); // free cell
+        caster.cell().removeFighter(caster); // free cell
         applier.stop(target);
 
         assertFalse(applier.active(caster));
@@ -167,7 +167,7 @@ class CarryingApplierTest extends FightBaseCase {
         FightCell cell = caster.cell();
 
         applier.carry(caster, target);
-        caster.move(null); // free cell
+        caster.cell().removeFighter(caster); // free cell
         target.life().kill(target);
         applier.stop(target);
 

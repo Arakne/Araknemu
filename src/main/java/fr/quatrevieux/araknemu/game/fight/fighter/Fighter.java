@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -66,14 +66,14 @@ public interface Fighter extends Dispatcher, ActiveFighter {
      *
      * If the fighter is already on a cell, it will be removed from it
      */
-    public void setCell(@Nullable FightCell cell);
+    public void setCell(FightCell cell);
 
     /**
      * Go to the given cell
      *
      * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved Trigger when the fighter is actually moved
      */
-    public void move(@Nullable FightCell cell);
+    public void move(FightCell cell);
 
     /**
      * Change the hidden state of the fighter
