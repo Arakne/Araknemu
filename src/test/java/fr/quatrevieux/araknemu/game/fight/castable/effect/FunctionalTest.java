@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
-import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
@@ -65,7 +64,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -1841,7 +1839,7 @@ public class FunctionalTest extends FightBaseCase {
         castNormal(223, fight.map().get(284)); // Météorite
 
         assertTrue(target.life().isFull());
-        assertBetween(11, 40, caster.life().max() - caster.life().current());
+        assertBetween(9, 36, caster.life().max() - caster.life().current()); // target is 1 cell away from the center, so -10% damage is applied
     }
 
     @Test

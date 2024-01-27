@@ -170,9 +170,9 @@ class DamageHandlerTest extends FightBaseCase {
 
         int damage = target.life().max() - target.life().current();
 
-        assertEquals(10, damage);
+        assertEquals(8, damage);
 
-        requestStack.assertLast(ActionEffect.alterLifePoints(caster, target, -10));
+        requestStack.assertLast(ActionEffect.alterLifePoints(caster, target, -8));
     }
 
     @Test
@@ -190,8 +190,97 @@ class DamageHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
-        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -8));
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -10));
+    }
+
+    @Test
+    void applyWithAreaShouldReduceDamageOnHigherDistance() {
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(152))
+            .addEnemy(fb -> fb.cell(166)) // 1
+            .addEnemy(fb -> fb.cell(151)) // 2
+            .addEnemy(fb -> fb.cell(165)) // 3
+            .addEnemy(fb -> fb.cell(179)) // 4
+            .addEnemy(fb -> fb.cell(222)) // 5
+            .addEnemy(fb -> fb.cell(250)) // 7
+            .addEnemy(fb -> fb.cell(292)) // 10
+            .addEnemy(fb -> fb.cell(320)) // 12
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        handler = new DamageHandler(Element.AIR, fight);
+        caster = (PlayerFighter) fight.map().get(152).fighter();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(20);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 20)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.handle(scope, scope.effects().get(0));
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -20));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(166).fighter(), -18));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(151).fighter(), -16));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(165).fighter(), -14));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(179).fighter(), -13));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(222).fighter(), -11));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(250).fighter(), -9));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(292).fighter(), -6));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, fight.map().get(320).fighter(), -5));
+    }
+
+    @Test
+    void applyWithAreaShouldApplySameDamageOnSameDistanceFromTarget() {
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(298))
+            .addEnemy(fb -> fb.cell(312)) // 1
+            .addEnemy(fb -> fb.cell(313)) // 1
+            .addEnemy(fb -> fb.cell(340)) // 3
+            .addEnemy(fb -> fb.cell(342)) // 3
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        handler = new DamageHandler(Element.AIR, fight);
+        caster = (PlayerFighter) fight.map().get(298).fighter();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.max()).thenReturn(20);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 20)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.handle(scope, scope.effects().get(0));
+
+        int centerDamage = caster.life().max() - caster.life().current();
+        int firstDamage = fight.map().get(312).fighter().life().max() - fight.map().get(312).fighter().life().current();
+        int secondDamage = fight.map().get(313).fighter().life().max() - fight.map().get(313).fighter().life().current();
+        int thirdDamage = fight.map().get(340).fighter().life().max() - fight.map().get(340).fighter().life().current();
+        int fourthDamage = fight.map().get(342).fighter().life().max() - fight.map().get(342).fighter().life().current();
+
+        assertBetween(10, 20, centerDamage);
+
+        assertEquals(firstDamage, secondDamage);
+        assertTrue(centerDamage > secondDamage);
+
+        assertEquals(thirdDamage, fourthDamage);
+        assertTrue(secondDamage > fourthDamage);
     }
 
     @Test

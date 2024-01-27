@@ -129,7 +129,7 @@ class MaximizeTargetEffectsHandlerTest extends FightBaseCase {
         Mockito.when(damageEffect.min()).thenReturn(5);
         Mockito.when(damageEffect.max()).thenReturn(10);
 
-        assertEquals(-10, new DamageApplier(Element.AIR, fight).apply(caster, damageEffect, target, EffectValue.create(damageEffect, caster, target)));
+        assertEquals(-10, new DamageApplier(Element.AIR, fight).apply(caster, damageEffect, target, EffectValue.create(damageEffect, caster, target), 0));
         assertEquals(10, target.life().max() - target.life().current());
     }
 }

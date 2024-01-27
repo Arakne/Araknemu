@@ -34,11 +34,13 @@ import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.LineArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -110,11 +112,12 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         assertCount(1, scope.effects());
         assertEquals(effect, scope.effects().get(0).effect());
         assertEquals(Collections.singleton(target), scope.effects().get(0).targets());
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(target, 0));
         assertEquals(Collections.singleton(target.cell()), scope.effects().get(0).cells());
     }
 
@@ -129,11 +132,12 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, fight.map().get(123), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, fight.map().get(123), Collections.singletonList(effect));
 
         assertCount(1, scope.effects());
         assertEquals(effect, scope.effects().get(0).effect());
         assertEquals(Collections.emptyList(), scope.effects().get(0).targets());
+        assertForEachTargetAndDistance(scope.effects().get(0));
     }
 
     @Test
@@ -214,9 +218,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, fight.map().get(123), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, fight.map().get(123), Collections.singletonList(effect));
 
         assertEquals(Arrays.asList(caster, target), scope.effects().get(0).targets());
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(caster, 2), Pair.of(target, 4));
     }
 
     @Test
@@ -230,9 +235,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         assertEquals(Collections.singleton(target), scope.effects().get(0).targets());
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(target, 0));
     }
 
     @Test
@@ -246,9 +252,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, fight.map().get(2), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, fight.map().get(2), Collections.singletonList(effect));
 
         assertEquals(Collections.emptyList(), scope.effects().get(0).targets());
+        assertForEachTargetAndDistance(scope.effects().get(0));
     }
 
     @Test
@@ -427,10 +434,87 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         assertCollectionEquals(scope.targets(), target, caster);
-        assertCollectionEquals(scope.effects().get(0).targets(), target, caster);
+        assertEquals(Arrays.asList(target, caster), scope.effects().get(0).targets());
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(target, 0), Pair.of(caster, 6));
+    }
+
+    @Test
+    void targetsMultipleShouldBeOrderedByDistance() {
+        Fight fight = fightBuilder()
+            .addSelf(fb -> fb.cell(277))
+            .addEnemy(fb -> fb.cell(263))
+            .addEnemy(fb -> fb.cell(249))
+            .addEnemy(fb -> fb.cell(234))
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        List<PlayableFighter> fighters = fight.turnList().fighters();
+
+        FightCastScope scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
+
+        assertCollectionEquals(scope.targets(), fighters.get(0), fighters.get(1), fighters.get(2), fighters.get(3));
+        assertEquals(
+            Arrays.asList(
+                fighters.get(1), fighters.get(3), fighters.get(0), fighters.get(2)
+            ),
+            scope.effects().get(0).targets()
+        );
+        assertForEachTargetAndDistance(
+            scope.effects().get(0),
+            Pair.of(fighters.get(1), 0),
+            Pair.of(fighters.get(3), 1),
+            Pair.of(fighters.get(0), 1),
+            Pair.of(fighters.get(2), 2)
+        );
+    }
+
+    @Test
+    void forEachTargetWithReturnFalse() {
+        Fight fight = fightBuilder()
+            .addSelf(fb -> fb.cell(277))
+            .addEnemy(fb -> fb.cell(263))
+            .addEnemy(fb -> fb.cell(249))
+            .addEnemy(fb -> fb.cell(234))
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        List<PlayableFighter> fighters = fight.turnList().fighters();
+
+        FightCastScope scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
+
+        List<Pair<Fighter, Integer>> actual = new ArrayList<>();
+
+        scope.effects().get(0).forEachTargetAndDistance((fighter, distance) -> {
+            actual.add(Pair.of(fighter, distance));
+            return false;
+        });
+
+        assertEquals(Arrays.asList(Pair.of(fighters.get(1), 0)), actual);
     }
 
     @Test
@@ -444,12 +528,13 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         target.init();
         target.life().kill(caster);
 
         assertCollectionEquals(scope.effects().get(0).targets(), caster);
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(caster, 6));
     }
 
     @Test
@@ -463,12 +548,13 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         scope.replaceTarget(target, caster);
 
         assertCollectionEquals(scope.targets(), caster, target);
         assertCollectionEquals(scope.effects().get(0).targets(), caster, caster);
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(caster, 0), Pair.of(caster, 6));
     }
 
     @Test
@@ -494,13 +580,14 @@ class CastScopeTest extends FightBaseCase {
 
         List<PlayableFighter> fighters = fight.turnList().fighters();
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
         scope.replaceTarget(fighters.get(1), fighters.get(2));
         scope.replaceTarget(fighters.get(2), fighters.get(3));
 
         assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
         assertCollectionEquals(scope.effects().get(0).targets(), fighters.get(3));
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(fighters.get(3), 0));
     }
 
     @Test
@@ -526,7 +613,7 @@ class CastScopeTest extends FightBaseCase {
 
         List<PlayableFighter> fighters = fight.turnList().fighters();
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
         scope.replaceTarget(fighters.get(1), fighters.get(2));
         scope.replaceTarget(fighters.get(2), fighters.get(3));
@@ -534,6 +621,7 @@ class CastScopeTest extends FightBaseCase {
 
         assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
         assertCollectionEquals(scope.effects().get(0).targets(), fighters.get(1));
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(fighters.get(1), 0));
     }
 
     @Test
@@ -559,7 +647,7 @@ class CastScopeTest extends FightBaseCase {
 
         List<PlayableFighter> fighters = fight.turnList().fighters();
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
         scope.replaceTarget(fighters.get(1), fighters.get(2));
         scope.replaceTarget(fighters.get(2), fighters.get(3));
@@ -567,6 +655,7 @@ class CastScopeTest extends FightBaseCase {
 
         assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
         assertCollectionEquals(scope.effects().get(0).targets(), fighters.get(2));
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(fighters.get(2), 0));
     }
 
     @Test
@@ -592,7 +681,7 @@ class CastScopeTest extends FightBaseCase {
 
         List<PlayableFighter> fighters = fight.turnList().fighters();
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, fighters.get(0), fight.map().get(263), Collections.singletonList(effect));
 
         scope.replaceTarget(fighters.get(1), fighters.get(2));
         scope.replaceTarget(fighters.get(2), fighters.get(3));
@@ -600,6 +689,7 @@ class CastScopeTest extends FightBaseCase {
 
         assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
         assertTrue(scope.effects().get(0).targets().isEmpty());
+        assertForEachTargetAndDistance(scope.effects().get(0));
     }
 
     @Test
@@ -613,17 +703,19 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         scope.removeTarget(target);
 
         assertCollectionEquals(scope.targets(), caster, target);
         assertCollectionEquals(scope.effects().get(0).targets(), caster);
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(caster, 6));
 
         scope.removeTarget(caster);
 
         assertCollectionEquals(scope.targets(), caster, target);
         assertTrue(scope.effects().get(0).targets().isEmpty());
+        assertForEachTargetAndDistance(scope.effects().get(0));
     }
 
     @Test
@@ -637,9 +729,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         assertCollectionEquals(scope.effects().get(0).targets(), target);
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(target, 0));
     }
 
     @Test
@@ -653,8 +746,21 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope<Fighter, FightCell> scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
+        FightCastScope scope = FightCastScope.simple(spell, caster, target.cell(), Collections.singletonList(effect));
 
         assertEquals(Collections.singleton(caster), scope.effects().get(0).targets());
+        assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(caster, 0));
+    }
+
+    private void assertForEachTargetAndDistance(FightCastScope.EffectScope effectScope, Pair<Fighter, Integer> ... targets) {
+        final List<Pair<Fighter, Integer>> actual = new ArrayList<>();
+
+        effectScope.forEachTargetAndDistance((fighter, distance) -> {
+            actual.add(Pair.of(fighter, distance));
+
+            return true;
+        });
+
+        assertEquals(Arrays.asList(targets), actual);
     }
 }

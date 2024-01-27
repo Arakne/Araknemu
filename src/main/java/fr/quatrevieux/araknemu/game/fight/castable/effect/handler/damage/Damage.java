@@ -19,7 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Compute suffered damage
@@ -36,6 +38,7 @@ public final class Damage implements MultipliableDamage {
     private int percent = 100;
     private int reduce = 0;
     private int returned = 0;
+    private @NonNegative int distance = 0;
 
     public Damage(int value, Element element) {
         this.value = value;
@@ -57,7 +60,7 @@ public final class Damage implements MultipliableDamage {
             return 0;
         }
 
-        return base * multiply;
+        return EffectsUtils.applyDistanceAttenuation(base, distance) * multiply;
     }
 
     /**
@@ -103,6 +106,17 @@ public final class Damage implements MultipliableDamage {
      */
     public Damage reflect(int value) {
         this.returned += value;
+
+        return this;
+    }
+
+    /**
+     * Set the distance between the center of the effect and target
+     *
+     * Each distance reduce damage by 10% (cumulated), so distance 1 reduce damage by 10%, distance 2 by 19%, etc...
+     */
+    public Damage distance(@NonNegative int distance) {
+        this.distance = distance;
 
         return this;
     }

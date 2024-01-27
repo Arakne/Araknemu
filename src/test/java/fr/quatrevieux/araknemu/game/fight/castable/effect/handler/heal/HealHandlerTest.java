@@ -64,7 +64,7 @@ class HealHandlerTest extends FightBaseCase {
         target.life().alter(target, -30);
         lastTargetLife = target.life().current();
 
-        handler = new HealHandler();
+        handler = new HealHandler(fight);
 
         player.properties().characteristics().base().set(Characteristic.INTELLIGENCE, 0);
 
@@ -165,7 +165,7 @@ class HealHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
-        assertEquals(10, computeHeal());
+        assertEquals(8, computeHeal());
 
         requestStack.assertLast(ActionEffect.alterLifePoints(caster, target, computeHeal()));
     }
@@ -188,7 +188,7 @@ class HealHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
-        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, 10));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, 8));
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 10));
     }
 

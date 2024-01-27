@@ -25,15 +25,16 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractPreRollEffectHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractAttenuableAreaEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Handle simple damage effect
  */
-public final class DamageHandler extends AbstractPreRollEffectHandler implements EffectHandler, BuffHook {
+public final class DamageHandler extends AbstractAttenuableAreaEffectHandler implements EffectHandler, BuffHook {
     private final DamageApplier applier;
 
     public DamageHandler(Element element, Fight fight) {
@@ -43,8 +44,10 @@ public final class DamageHandler extends AbstractPreRollEffectHandler implements
     }
 
     @Override
-    protected void applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value) {
-        applier.apply(cast.caster(), effect, target, value);
+    protected boolean applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value, @NonNegative int distance) {
+        applier.apply(cast.caster(), effect, target, value, distance);
+
+        return true;
     }
 
     @Override

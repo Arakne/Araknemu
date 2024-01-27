@@ -20,25 +20,40 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractAttenuableAreaEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Handle basic heal effect
  *
  * This effect is boosted by {@link Characteristic#INTELLIGENCE} and {@link Characteristic#HEALTH_BOOST}
  */
-public final class HealHandler implements EffectHandler, BuffHook {
+public final class HealHandler extends AbstractAttenuableAreaEffectHandler implements EffectHandler, BuffHook {
+    public HealHandler(Fight fight) {
+        super(fight);
+    }
+
     @Override
-    public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        for (Fighter target : effect.targets()) {
-            apply(cast.caster(), effect.effect(), target);
-        }
+    protected boolean applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value, @NonNegative int distance) {
+        final Fighter caster = cast.caster();
+
+        value
+            .percent(caster.characteristics().get(Characteristic.INTELLIGENCE))
+            .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))
+        ;
+
+        target.life().alter(caster, EffectsUtils.applyDistanceAttenuation(value.value(), distance));
+
+        return true;
     }
 
     @Override
@@ -50,17 +65,16 @@ public final class HealHandler implements EffectHandler, BuffHook {
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        apply(buff.caster(), buff.effect(), buff.target());
+        final Fighter caster = buff.caster();
+        final SpellEffect effect = buff.effect();
+        final Fighter target = buff.target();
 
-        return true;
-    }
-
-    private void apply(Fighter caster, SpellEffect effect, Fighter target) {
         final EffectValue value = EffectValue.create(effect, caster, target)
             .percent(caster.characteristics().get(Characteristic.INTELLIGENCE))
             .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))
         ;
 
         target.life().alter(caster, value.value());
+        return true;
     }
 }

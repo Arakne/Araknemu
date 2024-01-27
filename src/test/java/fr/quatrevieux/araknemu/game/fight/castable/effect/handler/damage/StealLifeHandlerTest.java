@@ -240,8 +240,8 @@ class StealLifeHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
-        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
-        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 5));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -8));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 4));
     }
 
     @Test
@@ -259,8 +259,8 @@ class StealLifeHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.handle(scope, scope.effects().get(0));
 
-        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
-        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 5));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -8));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 4));
 
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -10));
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 5));

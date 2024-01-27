@@ -140,7 +140,7 @@ public final class CommonEffectsModule implements FightModule {
 
         handler.register(81, new HealOnDamageHandler());
         handler.register(90, new GivePercentLifeHandler());
-        handler.register(108, new HealHandler());
+        handler.register(108, new HealHandler(fight));
         handler.register(143, new FixedHealHandler());
         handler.register(786, new HealOnAttackHandler());
 

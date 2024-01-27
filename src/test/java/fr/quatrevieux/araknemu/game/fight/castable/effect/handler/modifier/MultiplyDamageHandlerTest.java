@@ -131,7 +131,7 @@ class MultiplyDamageHandlerTest extends FightBaseCase {
         SpellEffect damageEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(damageEffect.min()).thenReturn(5);
 
-        assertEquals(-21, new DamageApplier(Element.EARTH, fight).apply(caster, damageEffect, target, EffectValue.create(damageEffect, caster, target)));
+        assertEquals(-21, new DamageApplier(Element.EARTH, fight).apply(caster, damageEffect, target, EffectValue.create(damageEffect, caster, target), 0));
         assertEquals(21, target.life().max() - target.life().current());
     }
 }
