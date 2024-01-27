@@ -78,4 +78,23 @@ class DamageTest {
         assertEquals(7, damage.percent(20).reduce(5).value());
         assertEquals(5, damage.reducedDamage());
     }
+
+    @Test
+    void distance() {
+        assertEquals(15, damage.distance(0).value());
+        assertEquals(13, damage.distance(1).value());
+        assertEquals(12, damage.distance(2).value());
+        assertEquals(10, damage.distance(3).value());
+        assertEquals(9, damage.distance(4).value());
+        assertEquals(8, damage.distance(5).value());
+        assertEquals(7, damage.distance(6).value());
+        assertEquals(7, damage.distance(7).value());
+        assertEquals(6, damage.distance(8).value());
+        assertEquals(5, damage.distance(9).value());
+        assertEquals(5, damage.distance(10).value());
+        assertEquals(3, damage.distance(15).value());
+        assertEquals(1, damage.distance(20).value());
+        assertEquals(1, damage.distance(25).value());
+        assertEquals(0, damage.distance(26).value());
+    }
 }

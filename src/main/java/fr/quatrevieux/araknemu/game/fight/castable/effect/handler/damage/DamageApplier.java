@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Apply simple damage to fighter
@@ -60,6 +61,7 @@ public final class DamageApplier {
      * @param effect The effect to apply
      * @param target The target
      * @param value The pre-roll value. Must be configured for the given caster and target.
+     * @param distance The distance between the center of the effect and the current target. Should be 0 for single cell effect.
      *
      * @return The real damage value
      *
@@ -67,8 +69,10 @@ public final class DamageApplier {
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(Fighter, Damage) The called buff hook
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(Fighter, int) Buff called when damage are applied
      */
-    public int apply(Fighter caster, SpellEffect effect, Fighter target, EffectValue value) {
+    public int apply(Fighter caster, SpellEffect effect, Fighter target, EffectValue value, @NonNegative int distance) {
         final Damage damage = computeDamage(caster, effect, target, value);
+
+        damage.distance(distance);
 
         return applyDirectDamage(caster, damage, target);
     }
@@ -76,7 +80,7 @@ public final class DamageApplier {
     /**
      * Apply a fixed (i.e. precomputed) amount of damage on the target
      *
-     * Like {@link DamageApplier#apply(Fighter, SpellEffect, Fighter, EffectValue)} :
+     * Like {@link DamageApplier#apply(Fighter, SpellEffect, Fighter, EffectValue, int)} :
      * - resistance are applied
      * - direct damage buff are called
      * - returned damage are applied

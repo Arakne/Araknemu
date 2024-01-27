@@ -19,10 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable;
 
+import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
@@ -179,9 +181,9 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
 
     public final class EffectScope implements CastScope.EffectScope<F, C> {
         private final SpellEffect effect;
-        private final Collection<F> targets;
+        private final CastTargets<F> targets;
 
-        public EffectScope(SpellEffect effect, Collection<F> targets) {
+        public EffectScope(SpellEffect effect, CastTargets<F> targets) {
             this.effect = effect;
             this.targets = targets;
         }
@@ -235,5 +237,40 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
         public Set<C> cells() {
             return effect.area().resolve(target, from);
         }
+
+        /**
+         * Iterate over each target and distance from the center of the area effect
+         * Like {@link #targets()}, target mapping is resolved, and dead targets are ignored
+         *
+         * @param consumer The callback. Takes as first argument the target, and as second argument the distance. Return false to stop iteration
+         */
+        public void forEachTargetAndDistance(TargetDistanceConsumer<F> consumer) {
+            final CoordinateCell<BattlefieldCell> baseCell = target.coordinate();
+
+            targets.forEach((target, cell) -> {
+                final F actualTarget = resolveTarget(target);
+
+                if (actualTarget == null || actualTarget.dead()) {
+                    return true;
+                }
+
+                final int distance = baseCell.distance(cell);
+
+                return consumer.accept(actualTarget, distance);
+            });
+        }
+    }
+
+    @FunctionalInterface
+    public interface TargetDistanceConsumer<F extends FighterData> {
+        /**
+         * Handle a target
+         *
+         * @param target The target
+         * @param distance The distance from the center of the area effect
+         *
+         * @return true to continue the iteration, false to stop
+         */
+        public boolean accept(F target, @NonNegative int distance);
     }
 }

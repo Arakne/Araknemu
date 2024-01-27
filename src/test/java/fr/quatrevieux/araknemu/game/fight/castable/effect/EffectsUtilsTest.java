@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,5 +36,23 @@ class EffectsUtilsTest {
     void isLooseApEffect() {
         assertTrue(EffectsUtils.isLooseApEffect(101));
         assertFalse(EffectsUtils.isLooseApEffect(123));
+    }
+
+    @Test
+    void applyDistanceAttenuation() {
+        assertEquals(1000, EffectsUtils.applyDistanceAttenuation(1000, 0));
+        assertEquals(900, EffectsUtils.applyDistanceAttenuation(1000, 1));
+        assertEquals(810, EffectsUtils.applyDistanceAttenuation(1000, 2));
+        assertEquals(729, EffectsUtils.applyDistanceAttenuation(1000, 3));
+        assertEquals(656, EffectsUtils.applyDistanceAttenuation(1000, 4));
+        assertEquals(590, EffectsUtils.applyDistanceAttenuation(1000, 5));
+        assertEquals(531, EffectsUtils.applyDistanceAttenuation(1000, 6));
+        assertEquals(478, EffectsUtils.applyDistanceAttenuation(1000, 7));
+        assertEquals(430, EffectsUtils.applyDistanceAttenuation(1000, 8));
+        assertEquals(387, EffectsUtils.applyDistanceAttenuation(1000, 9));
+        assertEquals(348, EffectsUtils.applyDistanceAttenuation(1000, 10));
+        assertEquals(205, EffectsUtils.applyDistanceAttenuation(1000, 15));
+        assertEquals(98, EffectsUtils.applyDistanceAttenuation(1000, 22));
+        assertEquals(11, EffectsUtils.applyDistanceAttenuation(1000, 42));
     }
 }

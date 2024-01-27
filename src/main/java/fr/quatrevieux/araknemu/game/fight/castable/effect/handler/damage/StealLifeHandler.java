@@ -25,15 +25,16 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractPreRollEffectHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractAttenuableAreaEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Handle steal life
  */
-public final class StealLifeHandler extends AbstractPreRollEffectHandler implements EffectHandler, BuffHook {
+public final class StealLifeHandler extends AbstractAttenuableAreaEffectHandler implements EffectHandler, BuffHook {
     private final DamageApplier applier;
 
     public StealLifeHandler(Element element, Fight fight) {
@@ -43,10 +44,12 @@ public final class StealLifeHandler extends AbstractPreRollEffectHandler impleme
     }
 
     @Override
-    protected void applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value) {
+    protected boolean applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value, @NonNegative int distance) {
         final Fighter caster = cast.caster();
 
-        applyCasterHeal(applier.apply(caster, effect, target, value), caster);
+        applyCasterHeal(applier.apply(caster, effect, target, value, distance), caster);
+
+        return true;
     }
 
     @Override

@@ -24,10 +24,6 @@ import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
 /**
  * Perform target resolution for a casted effect
  */
@@ -36,22 +32,6 @@ public final class CastTargetResolver {
      * Utility class : disable constructor
      */
     private CastTargetResolver() {}
-
-    /**
-     * Resolve targets of an effect
-     *
-     * @param caster The action caster
-     * @param target The target cell
-     * @param action Action to perform
-     * @param effect The effect to resolve
-     *
-     * @return List of fighters
-     *
-     * @see fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget
-     */
-    public static <F extends FighterData> Collection<F> resolveFromEffect(F caster, BattlefieldCell target, Castable action, SpellEffect effect) {
-        return resolveFromEffect(caster, caster.cell(), target, action, effect);
-    }
 
     /**
      * Resolve targets of an effect
@@ -66,13 +46,13 @@ public final class CastTargetResolver {
      *
      * @see fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget
      */
-    public static <F extends FighterData> Collection<F> resolveFromEffect(F caster, BattlefieldCell from, BattlefieldCell target, Castable action, SpellEffect effect) {
+    public static <F extends FighterData> CastTargets<F> resolveFromEffect(F caster, BattlefieldCell from, BattlefieldCell target, Castable action, SpellEffect effect) {
         if (effect.target().onlyCaster()) {
-            return Collections.singleton(caster);
+            return CastTargets.one(caster, target);
         }
 
         if (action.constraints().freeCell()) {
-            return Collections.emptyList();
+            return CastTargets.empty();
         }
 
         return resolveFromEffectArea(caster, from, target, effect);
@@ -82,10 +62,9 @@ public final class CastTargetResolver {
      * Perform resolution from effect target and effect area
      */
     @SuppressWarnings("cast.unsafe") // @Nullable cast cause a compiler crash on java 8
-    private static <F extends FighterData> Collection<F> resolveFromEffectArea(F caster, BattlefieldCell from, BattlefieldCell target, SpellEffect effect) {
-        // Use lazy instantiation and do not use stream API to optimise memory allocations
-        F firstTarget = null;
-        Collection<F> targets = null;
+    private static <F extends FighterData> CastTargets<F> resolveFromEffectArea(F caster, BattlefieldCell from, BattlefieldCell target, SpellEffect effect) {
+        // Do not use stream API to optimise memory allocations
+        final CastTargets.Builder<F> builder = new CastTargets.Builder<>();
 
         for (BattlefieldCell cell : effect.area().resolve(target, from)) {
             final @Nullable F resolvedTarget = (/*@Nullable*/ F) cell.fighter();
@@ -94,32 +73,9 @@ public final class CastTargetResolver {
                 continue;
             }
 
-            // Found the first target
-            if (firstTarget == null) {
-                firstTarget = resolvedTarget;
-                continue;
-            }
-
-            // Multiple targets are found : instantiate the collection
-            if (targets == null) {
-                targets = new ArrayList<>();
-                targets.add(firstTarget);
-            }
-
-            targets.add(resolvedTarget);
+            builder.add(resolvedTarget, cell);
         }
 
-        // There is multiple targets
-        if (targets != null) {
-            return targets;
-        }
-
-        // There is only one target : create a singleton
-        if (firstTarget != null) {
-            return Collections.singleton(firstTarget);
-        }
-
-        // No targets are resolved
-        return Collections.emptyList();
+        return builder.build();
     }
 }
