@@ -38,6 +38,11 @@ public final class CrossArea implements SpellEffectArea {
 
     @Override
     public <C extends MapCell> Set<C> resolve(C target, C source) {
+        // Optimization for size 1
+        if (size() == 1) {
+            return Util.resolveCenterAndAdjacent(target);
+        }
+
         final Set<C> cells = Util.createOrderedSet(target);
 
         cells.add(target);
