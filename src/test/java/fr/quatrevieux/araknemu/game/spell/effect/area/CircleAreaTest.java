@@ -87,11 +87,11 @@ class CircleAreaTest extends GameBaseCase {
     @Test
     void resolveShouldSortByDistanceFromCenter() {
         assertCellIds(map.get(152), 0, new int[] {152});
-        assertCellIds(map.get(152), 1, new int[] {152, 137, 138, 166, 167});
+        assertCellIds(map.get(152), 1, new int[] {152, 138, 167, 166, 137});
         assertCellIds(map.get(152), 2, new int[] {
             152,
-            137, 138, 166, 167,
-            122, 123, 124, 151, 153, 180, 181, 182
+            138, 167, 166, 137,
+            124, 153, 182, 181, 180, 151, 122, 123,
         });
     }
 

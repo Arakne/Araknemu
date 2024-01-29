@@ -23,6 +23,7 @@ import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -37,7 +38,18 @@ public final class CircleArea implements SpellEffectArea {
 
     @Override
     public <C extends MapCell> Set<C> resolve(C target, C source) {
-        return area.resolve(target, source);
+        final @NonNegative int size = area.size();
+
+        switch (size) {
+            case 0:
+                return Collections.singleton(target);
+
+            case 1:
+                return Util.resolveCenterAndAdjacent(target);
+
+            default:
+                return area.resolve(target, source);
+        }
     }
 
     @Override
