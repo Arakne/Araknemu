@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import org.junit.jupiter.api.BeforeEach;
@@ -199,6 +200,43 @@ class PvmItemDropProviderTest extends FightBaseCase {
 
         assertEquals(1, items.size());
         assertTrue(items.containsKey(14));
+    }
+
+    @Test
+    void withInvocation() {
+        Fighter invoc = new DoubleFighter(-10, player.fighter());
+        invoc.characteristics().alterDiscernment(50);
+
+        monsterFighters.get(0).reward().items().clear();
+
+        monsterFighters.get(0).reward().items().add(new MonsterRewardItem(0, 12, 2, 100, 100));
+        monsterFighters.get(0).reward().items().add(new MonsterRewardItem(0, 13, 1, 100, 100));
+        monsterFighters.get(0).reward().items().add(new MonsterRewardItem(0, 14, 4, 100, 100));
+        monsterFighters.get(0).reward().items().add(new MonsterRewardItem(0, 15, 1, 100, 100));
+
+        EndFightResults results = new EndFightResults(
+            fight,
+            Arrays.asList(player.fighter(), invoc),
+            Collections.singletonList(monsterFighters.get(0))
+        );
+
+        DropRewardProvider.Scope scope = formula.initialize(results);
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        scope.provide(reward);
+        Map<Integer, Integer> items = reward.items();
+
+        assertEquals(2, items.size());
+        assertTrue(items.containsKey(12));
+        assertTrue(items.containsKey(15));
+
+        reward = new DropReward(RewardType.WINNER, invoc, Collections.emptyList());
+        scope.provide(reward);
+        items = reward.items();
+
+        assertEquals(2, items.size());
+        assertTrue(items.containsKey(12));
+        assertTrue(items.containsKey(13));
     }
 
     @Test

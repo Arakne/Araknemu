@@ -283,6 +283,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
             )
         );
 
+        rewardsSheet.apply();
         fighter.dispatch(new FightLeaved(rewardsSheet.rewards().get(0)));
     }
 

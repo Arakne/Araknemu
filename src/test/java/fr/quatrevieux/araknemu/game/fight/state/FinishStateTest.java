@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.state;
 
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
@@ -26,13 +27,17 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.FightEnd;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -84,6 +89,42 @@ class FinishStateTest extends FightBaseCase {
     }
 
     @Test
+    void startShouldFilterInvocations() {
+        fight.fighters().join(
+            new DoubleFighter(-10, player.fighter()),
+            fight.map().get(142)
+        );
+
+        other.fighter().life().alter(player.fighter(), -1000);
+
+        Fighter winner = player.fighter();
+        Fighter looser = other.fighter();
+
+        state.start(fight);
+
+        assertFalse(player.isFighting());
+        assertFalse(other.isFighting());
+        assertCount(0, fight.teams());
+
+        requestStack.assertLast(
+            new FightEnd(
+                new FightRewardsSheet(
+                    new EndFightResults(
+                        fight,
+                        Collections.singletonList(winner),
+                        Collections.singletonList(looser)
+                    ),
+                    FightRewardsSheet.Type.NORMAL,
+                    Arrays.asList(
+                        new DropReward(RewardType.WINNER, winner, Collections.emptyList()),
+                        new DropReward(RewardType.LOOSER, looser, Collections.emptyList())
+                    )
+                )
+            )
+        );
+    }
+
+    @Test
     void startOnWinningPvmFight() throws Exception {
         fight = createPvmFight();
         fight.nextState();
@@ -101,6 +142,66 @@ class FinishStateTest extends FightBaseCase {
         assertCount(0, fight.teams());
 
         assertBetween(100, 140, player.inventory().kamas() - lastKamas);
+        assertEquals(241, player.properties().experience().current() - lastXp);
+    }
+
+    @Test
+    void startShouldSavePlayerInDatabase() throws Exception {
+        fight = createPvmFight();
+        fight.nextState();
+
+        player.fighter().life().alter(player.fighter(), -100);
+
+        Collection<Fighter> monsters = fight.team(1).fighters();
+
+        long lastXp = player.properties().experience().current();
+        long lastKamas = player.inventory().kamas();
+
+        monsters.forEach(fighter -> fighter.life().kill(fighter));
+
+        state.start(fight);
+
+        assertFalse(player.isFighting());
+        assertCount(0, fight.teams());
+
+        assertBetween(100, 140, player.inventory().kamas() - lastKamas);
+        assertEquals(241, player.properties().experience().current() - lastXp);
+
+        Player entity = dataSet.refresh(new Player(player.id()));
+        assertEquals(player.inventory().kamas(), entity.kamas());
+        assertEquals(195, entity.life());
+        assertEquals(player.properties().experience().current(), entity.experience());
+    }
+
+    @Test
+    void startOnPvmFightShouldKeepInvocationWithDiscerment() throws Exception {
+        fight = createPvmFight();
+        fight.nextState();
+
+        final DoubleFighter invocation = new DoubleFighter(-10, player.fighter());
+
+        fight.fighters().join(
+            invocation,
+            fight.map().get(142)
+        );
+
+        invocation.characteristics().alterDiscernment(50);
+
+        Collection<Fighter> monsters = fight.team(1).fighters();
+
+        long lastXp = player.properties().experience().current();
+        long lastKamas = player.inventory().kamas();
+
+        monsters.forEach(fighter -> fighter.life().kill(fighter));
+
+        state.start(fight);
+
+        requestStack.assertLastMatches("^GE\\d+\\|1\\|0\\|2;1;Bob;50;0;5350000;5481700;5860000;\\d+;;;;\\d+\\|2;-10;Bob;50;0;0;0;0;;;;;\\d+\\|0;-1;31;4;1;0;0;0;;;;;\\|0;-2;34;9;1;0;0;0;;;;;$");
+
+        assertFalse(player.isFighting());
+        assertCount(0, fight.teams());
+
+        assertBetween(200, 280, player.inventory().kamas() - lastKamas);
         assertEquals(241, player.properties().experience().current() - lastXp);
     }
 

@@ -56,6 +56,15 @@ class DoubleFighterCharacteristicsTest extends FightBaseCase {
     @Test
     void discernment() {
         assertEquals(0, characteristics.discernment());
+
+        characteristics.alterDiscernment(50);
+        assertEquals(50, characteristics.discernment());
+
+        characteristics.alterDiscernment(-20);
+        assertEquals(30, characteristics.discernment());
+
+        characteristics.alterDiscernment(-50);
+        assertEquals(0, characteristics.discernment());
     }
 
     @Test

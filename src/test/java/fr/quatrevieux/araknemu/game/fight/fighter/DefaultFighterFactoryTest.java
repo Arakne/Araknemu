@@ -28,8 +28,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.PlayerFighterCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyLeaveReward;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.LeaveOnDisconnect;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFightLeaved;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendSpellBoosted;
@@ -76,11 +74,10 @@ class DefaultFighterFactoryTest extends FightBaseCase {
         assertSame(player, fighter.player());
 
         assertTrue(fighter.dispatcher().has(SendFightJoined.class));
-        assertTrue(fighter.dispatcher().has(ApplyEndFightReward.class));
-        assertTrue(fighter.dispatcher().has(StopFightSession.class));
+        assertTrue(fighter.dispatcher().has(StopFightSession.OnLeave.class));
+        assertTrue(fighter.dispatcher().has(StopFightSession.OnFinish.class));
         assertTrue(fighter.dispatcher().has(SendFightLeaved.class));
         assertTrue(fighter.dispatcher().has(LeaveOnDisconnect.class));
-        assertTrue(fighter.dispatcher().has(ApplyLeaveReward.class));
         assertTrue(fighter.dispatcher().has(SendStats.class));
         assertTrue(fighter.dispatcher().has(SendSpellBoosted.class));
     }

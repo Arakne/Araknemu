@@ -138,6 +138,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.regex.Pattern;
 
 public class GameBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack {
@@ -153,6 +154,16 @@ public class GameBaseCase extends DatabaseTestCase {
 
         public void assertLast(String packet) {
             Assertions.assertEquals(packet, channel.getMessages().peek().toString());
+        }
+
+        public void assertLastMatches(String regex) {
+            final boolean matches = Pattern.matches(regex, channel.getMessages().peek().toString());
+
+            if (matches) {
+                return;
+            }
+
+            Assertions.fail("Packet '" + channel.getMessages().peek() + "' does not match regex '" + regex + "'");
         }
 
         public void assertCount(int count) {

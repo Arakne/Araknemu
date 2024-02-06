@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.EmptySpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighterSprite;
@@ -117,7 +116,7 @@ public final class StaticInvocationFighter extends AbstractFighter {
     }
 
     @Override
-    public @NonNull FighterData invoker() {
+    public @NonNull Fighter invoker() {
         return NullnessUtil.castNonNull(super.invoker());
     }
 

@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Characteristics for an invocation
@@ -38,6 +39,7 @@ public final class InvocationFighterCharacteristics implements FighterCharacteri
     private final Fighter fighter;
     private final MutableCharacteristics boost;
     private final float rate;
+    private @NonNegative int discernmentBoost = 0;
 
     public InvocationFighterCharacteristics(Monster monster, Fighter fighter, FighterData invoker) {
         this.base = monster.characteristics();
@@ -52,8 +54,13 @@ public final class InvocationFighterCharacteristics implements FighterCharacteri
     }
 
     @Override
-    public int discernment() {
-        return 0;
+    public @NonNegative int discernment() {
+        return discernmentBoost;
+    }
+
+    @Override
+    public void alterDiscernment(int value) {
+        discernmentBoost = Math.max(discernmentBoost + value, 0);
     }
 
     @Override

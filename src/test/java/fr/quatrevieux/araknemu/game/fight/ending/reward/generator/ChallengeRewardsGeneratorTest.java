@@ -27,15 +27,22 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeRewardsGeneratorTest extends FightBaseCase {
     private Fight fight;
@@ -77,5 +84,25 @@ class ChallengeRewardsGeneratorTest extends FightBaseCase {
         assertEquals(0, DropReward.class.cast(rewards.get(1)).guildXp());
         assertEquals(0, DropReward.class.cast(rewards.get(1)).mountXp());
         assertEquals(0, DropReward.class.cast(rewards.get(1)).kamas());
+    }
+
+    @Test
+    void supports() throws SQLException {
+        dataSet
+            .pushMonsterTemplates()
+            .pushMonsterSpells()
+        ;
+
+        assertTrue(generator.supports(player.fighter()));
+        assertTrue(generator.supports(new MonsterFighter(
+            -10, container.get(MonsterService.class).load(36).get(1),
+            player.fighter().team()
+        )));
+        assertFalse(generator.supports(new DoubleFighter(-10, player.fighter())));
+
+        Fighter invoc = new DoubleFighter(-10, player.fighter());
+        invoc.characteristics().alterDiscernment(10);
+
+        assertFalse(generator.supports(invoc));
     }
 }

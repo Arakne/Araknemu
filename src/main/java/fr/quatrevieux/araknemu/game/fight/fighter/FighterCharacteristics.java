@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Characteristics for a fighter
@@ -34,7 +35,7 @@ public interface FighterCharacteristics extends Characteristics {
     /**
      * Get the total discernment of the fighter
      */
-    public int discernment();
+    public @NonNegative int discernment();
 
     /**
      * Change a buff characteristic
@@ -49,4 +50,15 @@ public interface FighterCharacteristics extends Characteristics {
      * Those characteristics ignore fight buffs, and corresponds to characteristics of the fighter before start the fight
      */
     public Characteristics initial();
+
+    /**
+     * Modify the fighter discernment
+     *
+     * In case of invocation, this will allow the creature to get items on end fight
+     * The discernment cannot be negative, so if the sum of the value and the current discernment is negative,
+     * the discernment will be set to 0
+     *
+     * @param value The value to add to the discernment. If negative, remove the value.
+     */
+    public void alterDiscernment(int value);
 }

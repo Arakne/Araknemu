@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Monster fighter characteristics
@@ -48,8 +49,13 @@ public final class MonsterFighterCharacteristics implements FighterCharacteristi
     }
 
     @Override
-    public int discernment() {
+    public @NonNegative int discernment() {
         return 0; // monster do not have discernment
+    }
+
+    @Override
+    public void alterDiscernment(int value) {
+        // No-op: monster can't have discernment
     }
 
     @Override

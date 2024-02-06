@@ -109,4 +109,26 @@ class InvocationFighterCharacteristicsTest extends FightBaseCase {
         assertEquals(140, characteristics.get(Characteristic.STRENGTH));
         assertEquals(70, characteristics.get(Characteristic.INTELLIGENCE));
     }
+
+    @Test
+    void discernment() {
+        Fighter invoc = Mockito.mock(Fighter.class);
+
+        InvocationFighterCharacteristics characteristics = new InvocationFighterCharacteristics(
+            container.get(MonsterService.class).load(36).get(1),
+            invoc,
+            player.fighter()
+        );
+
+        assertEquals(0, characteristics.discernment());
+
+        characteristics.alterDiscernment(50);
+        assertEquals(50, characteristics.discernment());
+
+        characteristics.alterDiscernment(-20);
+        assertEquals(30, characteristics.discernment());
+
+        characteristics.alterDiscernment(-50);
+        assertEquals(0, characteristics.discernment());
+    }
 }

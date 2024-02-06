@@ -235,6 +235,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
                 }
 
                 @Override
+                public void alterDiscernment(int value) {
+
+                }
+
+                @Override
                 public Characteristics initial() {
                     return null;
                 }
@@ -309,7 +314,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public FighterData invoker() {
+        public Fighter invoker() {
             return null;
         }
 

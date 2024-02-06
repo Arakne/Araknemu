@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.player.characteristic.CharacterCharacteristi
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Player fighter characteristics
@@ -35,6 +36,7 @@ public final class PlayerFighterCharacteristics implements FighterCharacteristic
     private final PlayerFighter fighter;
 
     private final MutableCharacteristics buffs = new DefaultCharacteristics();
+    private int discernmentBoost = 0;
 
     public PlayerFighterCharacteristics(CharacterCharacteristics baseCharacteristics, PlayerFighter fighter) {
         this.baseCharacteristics = baseCharacteristics;
@@ -77,9 +79,13 @@ public final class PlayerFighterCharacteristics implements FighterCharacteristic
     }
 
     @Override
-    public int discernment() {
-        // @todo Add buff discernment
-        return baseCharacteristics.discernment();
+    public @NonNegative int discernment() {
+        return Math.max(baseCharacteristics.discernment() + discernmentBoost, 0);
+    }
+
+    @Override
+    public void alterDiscernment(int value) {
+        discernmentBoost += value;
     }
 
     @Override

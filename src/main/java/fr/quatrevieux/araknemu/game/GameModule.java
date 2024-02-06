@@ -983,6 +983,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(125, new AlterCharacteristicSimulator()); // vitality
             simulator.register(126, new AlterCharacteristicSimulator()); // intelligence
             simulator.register(138, new AlterCharacteristicSimulator(2)); // percent damage
+            simulator.register(176, new AlterCharacteristicSimulator(20)); // discernment
             simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
             simulator.register(182, new AddMaxSummonedCreatureSimulator(10)); // summoned creature
             simulator.register(606, new AlterCharacteristicSimulator()); // Wisdom not dispellable

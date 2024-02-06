@@ -65,4 +65,13 @@ public final class FightRewardsSheet {
     public List<DropReward> rewards() {
         return rewards;
     }
+
+    /**
+     * Apply all rewards
+     */
+    public void apply() {
+        for (DropReward reward : rewards) {
+            reward.apply();
+        }
+    }
 }

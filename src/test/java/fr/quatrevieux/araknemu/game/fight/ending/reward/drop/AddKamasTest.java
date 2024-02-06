@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddKamas;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,5 +81,18 @@ class AddKamasTest extends FightBaseCase {
         reward.setKamas(1000);
 
         action.apply(reward, fighter);
+    }
+
+    @Test
+    void applyOnInvocationShouldForwardToInvoker() {
+        DoubleFighter fighter = new DoubleFighter(-10, player.fighter());
+
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.setKamas(1000);
+
+        long lastKamas = player.properties().kamas();
+
+        action.apply(reward, fighter);
+        assertEquals(1000, player.properties().kamas() - lastKamas);
     }
 }

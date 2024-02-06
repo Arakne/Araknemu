@@ -2049,6 +2049,14 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(136, player.fighter().cell().id());
     }
 
+    @Test
+    void addDiscernment() {
+        castNormal(495, fighter1.cell()); // Prospection
+
+        assertBetween(111, 120, fighter1.characteristics().discernment());
+        assertEquals(6, fighter1.buffs().stream().filter(b -> b.effect().effect() == 176).findFirst().get().remainingTurns());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

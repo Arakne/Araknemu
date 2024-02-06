@@ -26,10 +26,12 @@ import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,6 +67,26 @@ class PvmXpProviderTest extends FightBaseCase {
         formula.initialize(results).provide(reward);
 
         assertEquals(25, reward.xp());
+    }
+
+    @Test
+    void shouldIgnoreInvocations() {
+        final DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+
+        EndFightResults results = new EndFightResults(
+            fight,
+            Arrays.asList(player.fighter(), invoc),
+            Arrays.asList(monsterFighters.get(0), new DoubleFighter(-11, monsterFighters.get(0)))
+        );
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+        assertEquals(25, reward.xp());
+
+
+        DropReward invocReward = new DropReward(RewardType.WINNER, invoc, Collections.emptyList());
+        formula.initialize(results).provide(invocReward);
+        assertEquals(0, invocReward.xp());
     }
 
     @Test

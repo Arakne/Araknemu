@@ -19,27 +19,55 @@
 
 package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.fight.event.FightFinished;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
 /**
- * Stop the fight session on leave fight
+ * Stop the fight session on leave or fight end, and save the player
  */
-public final class StopFightSession implements Listener<FightLeaved> {
+public final class StopFightSession implements EventsSubscriber {
     private final PlayerFighter fighter;
+    private final Listener[] listeners;
 
     public StopFightSession(PlayerFighter fighter) {
         this.fighter = fighter;
+        this.listeners = new Listener[] { new OnLeave(), new OnFinish() };
     }
 
-    @Override
-    public void on(FightLeaved event) {
+    private void apply() {
         fighter.player().stop(fighter);
+        fighter.player().save();
     }
 
     @Override
-    public Class<FightLeaved> event() {
-        return FightLeaved.class;
+    public Listener[] listeners() {
+        return listeners;
+    }
+
+    public final class OnLeave implements Listener<FightLeaved> {
+        @Override
+        public void on(FightLeaved event) {
+            apply();
+        }
+
+        @Override
+        public Class<FightLeaved> event() {
+            return FightLeaved.class;
+        }
+    }
+
+    public final class OnFinish implements Listener<FightFinished> {
+        @Override
+        public void on(FightFinished event) {
+            apply();
+        }
+
+        @Override
+        public Class<FightFinished> event() {
+            return FightFinished.class;
+        }
     }
 }

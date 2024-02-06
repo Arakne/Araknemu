@@ -23,11 +23,13 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
@@ -78,7 +80,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ActiveStateTest extends GameBaseCase {
+class ActiveStateTest extends FightBaseCase {
     private ActiveState state;
     private Fight fight;
     private PlayerFighter fighter;
@@ -93,7 +95,7 @@ class ActiveStateTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         final GamePlayer me = gamePlayer(true);
-        final GamePlayer enemy = makeOtherPlayer();
+        final GamePlayer enemy = super.other;
 
         FightMap map;
         fight = new Fight(
@@ -101,7 +103,7 @@ class ActiveStateTest extends GameBaseCase {
             new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
-                fight -> new SimpleTeam(fight, fighter = new PlayerFighter(me), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> new SimpleTeam(fight, fighter = container.get(FighterFactory.class).create(me), Arrays.asList(map.get(123), map.get(222)), 0),
                 fight -> new SimpleTeam(fight, other = new PlayerFighter(enemy), Arrays.asList(map.get(321)), 1)
             ),
             new StatesFlow(
@@ -273,5 +275,26 @@ class ActiveStateTest extends GameBaseCase {
         assertNotNull(ref.get());
         assertInstanceOf(DropReward.class, ref.get().reward().get());
         assertEquals(RewardType.LOOSER, ref.get().reward().get().type());
+    }
+
+    @Test
+    void leavePvmFightShouldApplyLooseReward() throws Exception {
+        AtomicReference<FightLeaved> ref = new AtomicReference<>();
+        PlayerFighter teammate = new PlayerFighter(makeSimpleGamePlayer(10));
+
+        fight = createPvmFight();
+        fight.state(PlacementState.class).joinTeam(
+            teammate,
+            player.fighter().team()
+        );
+        player.fighter().dispatcher().add(FightLeaved.class, ref::set);
+
+        state.start(fight);
+        state.leave(player.fighter());
+
+        assertNotNull(ref.get());
+        assertInstanceOf(DropReward.class, ref.get().reward().get());
+        assertEquals(RewardType.LOOSER, ref.get().reward().get().type());
+        assertEquals(0, gamePlayer().properties().life().current(), 2); // Add a delta to ensure that life regeneration will fail the test
     }
 }
