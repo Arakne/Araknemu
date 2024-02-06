@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddItems;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -110,5 +112,20 @@ class AddItemsTest extends FightBaseCase {
         reward.addItem(39);
 
         action.apply(reward, fighter);
+    }
+
+    @Test
+    void applyOnInvocationShouldForwardToInvoker() {
+        Fighter invoc = new DoubleFighter(-10, fighter);
+
+        DropReward reward = new DropReward(RewardType.WINNER, invoc, Collections.emptyList());
+        reward.addItem(39);
+        reward.addItem(40);
+        reward.addItem(2425);
+
+        action.apply(reward, invoc);
+        assertEquals(39, player.inventory().get(1).item().template().id());
+        assertEquals(40, player.inventory().get(2).item().template().id());
+        assertEquals(2425, player.inventory().get(3).item().template().id());
     }
 }

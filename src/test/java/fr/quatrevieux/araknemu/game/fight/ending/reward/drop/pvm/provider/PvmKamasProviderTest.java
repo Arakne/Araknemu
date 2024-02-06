@@ -25,10 +25,12 @@ import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,6 +92,32 @@ class PvmKamasProviderTest extends FightBaseCase {
         formula.initialize(results).provide(otherReward);
 
         assertNotEquals(reward.kamas(), otherReward.kamas());
+    }
+
+    @Test
+    void withInvocation() {
+        Fighter invoc = new DoubleFighter(-10, player.fighter());
+
+        EndFightResults results = new EndFightResults(
+            fight,
+            Arrays.asList(player.fighter(), invoc),
+            monsterFighters
+        );
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertBetween(100, 140, reward.kamas());
+
+        DropReward otherReward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(otherReward);
+
+        assertNotEquals(reward.kamas(), otherReward.kamas());
+
+        DropReward invocReward = new DropReward(RewardType.WINNER, invoc, Collections.emptyList());
+        formula.initialize(results).provide(invocReward);
+
+        assertBetween(100, 140, invocReward.kamas());
     }
 
     @Test

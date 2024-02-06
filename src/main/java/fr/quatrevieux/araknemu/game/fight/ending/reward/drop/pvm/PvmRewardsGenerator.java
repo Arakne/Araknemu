@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.DropRewardAction;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.DropRewardProvider;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,5 +73,11 @@ public final class PvmRewardsGenerator implements RewardsGenerator {
         ;
 
         return new FightRewardsSheet(results, FightRewardsSheet.Type.NORMAL, rewards);
+    }
+
+    @Override
+    public boolean supports(Fighter fighter) {
+        // Keep invocations (e.g. living chest)
+        return !fighter.invoked() || fighter.characteristics().discernment() > 0;
     }
 }

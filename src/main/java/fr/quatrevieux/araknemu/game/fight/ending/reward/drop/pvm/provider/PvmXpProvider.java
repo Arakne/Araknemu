@@ -25,12 +25,18 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.checkerframework.checker.index.qual.NonNegative;
+
+import java.util.Collection;
+import java.util.stream.IntStream;
 
 /**
  * Base formula for compute the Pvm experience
  */
 public final class PvmXpProvider implements DropRewardProvider {
+    private static final double[] LVL_DEV_BONUS = { 3.5, 1.0, 1.1, 1.3, 2.2, 2.5, 2.8, 3.1 };
+
     private final double rate;
 
     public PvmXpProvider() {
@@ -47,7 +53,7 @@ public final class PvmXpProvider implements DropRewardProvider {
             totalXp(results),
             teamsLevelsRate(results),
             teamLevelDeviationBonus(results),
-            results.winners().stream().mapToInt(Fighter::level).sum()
+            levels(results.winners()).sum()
         );
     }
 
@@ -56,51 +62,31 @@ public final class PvmXpProvider implements DropRewardProvider {
     }
 
     private double teamLevelDeviationBonus(EndFightResults results) {
-        final int level = results.winners().stream().mapToInt(Fighter::level).max().orElse(0) / 3;
+        final int level = levels(results.winners()).max().orElse(0) / 3;
 
         int number = 0;
 
         for (Fighter winner : results.winners()) {
-            if (winner.level() > level) {
+            if (!winner.invoked() && winner.level() > level) {
                 ++number;
             }
         }
 
-        switch (number) {
-            case 1:
-                return 1.0;
-
-            case 2:
-                return 1.1;
-
-            case 3:
-                return 1.3;
-
-            case 4:
-                return 2.2;
-
-            case 5:
-                return 2.5;
-
-            case 6:
-                return 2.8;
-
-            case 7:
-                return 3.1;
-
-            default:
-                return 3.5;
-        }
+        return number >= LVL_DEV_BONUS.length ? LVL_DEV_BONUS[0] : LVL_DEV_BONUS[number];
     }
 
     private double teamsLevelsRate(EndFightResults results) {
-        final double winnersLevel = results.winners().stream().mapToInt(Fighter::level).sum();
-        final double loosersLevel = results.loosers().stream().mapToInt(Fighter::level).sum();
+        final double winnersLevel = levels(results.winners()).sum();
+        final double loosersLevel = levels(results.loosers()).sum();
 
         return Math.min(
             1.3,
             1 + loosersLevel / winnersLevel
         );
+    }
+
+    private IntStream levels(Collection<Fighter> fighters) {
+        return fighters.stream().filter(fighter -> !fighter.invoked()).mapToInt(Fighter::level);
     }
 
     private static class Scope implements DropRewardProvider.Scope {
@@ -118,15 +104,23 @@ public final class PvmXpProvider implements DropRewardProvider {
 
         @Override
         public void provide(DropReward reward) {
-            final long winXp = (long) (
-                totalXp
-                    * teamsLevelsRate
-                    * teamLevelDeviationBonus
-                    * (1 + ((double) reward.fighter().level() / winnersLevel))
-                    * (1 + (double) reward.fighter().characteristics().get(Characteristic.WISDOM) / 100)
-            );
+            reward.fighter().apply(new FighterOperation() {
+                @Override
+                public void onPlayer(PlayerFighter fighter) {
+                    final long winXp = computeXp(fighter.level(), fighter.characteristics().get(Characteristic.WISDOM));
 
-            reward.setXp(Math.max(winXp, 0));
+                    reward.setXp(Math.max(winXp, 0));
+                }
+            });
+        }
+
+        private long computeXp(int level, int wisdom) {
+            return (long) (totalXp
+                * teamsLevelsRate
+                * teamLevelDeviationBonus
+                * (1 + ((double) level / winnersLevel))
+                * (1 + (double) wisdom / 100)
+            );
         }
     }
 

@@ -38,17 +38,40 @@ public final class AddItems implements DropRewardAction {
 
     @Override
     public void apply(DropReward reward, Fighter fighter) {
-        fighter.apply(new FighterOperation() {
-            @Override
-            public void onPlayer(PlayerFighter fighter) {
-                final PlayerInventory inventory = fighter.player().inventory();
+        fighter.apply(new Operation(reward));
+    }
 
-                reward.items().forEach((itemId, quantity) -> {
-                    for (int q = 0; q < quantity; ++q) {
-                        inventory.add(service.create(itemId));
-                    }
-                });
+    private class Operation implements FighterOperation {
+        private final DropReward reward;
+
+        public Operation(DropReward reward) {
+            this.reward = reward;
+        }
+
+        @Override
+        public void onPlayer(PlayerFighter fighter) {
+            final PlayerInventory inventory = fighter.player().inventory();
+
+            reward.items().forEach((itemId, quantity) -> {
+                for (int q = 0; q < quantity; ++q) {
+                    inventory.add(service.create(itemId));
+                }
+            });
+        }
+
+        @Override
+        public void onGenericFighter(Fighter fighter) {
+            if (!fighter.invoked()) {
+                return;
             }
-        });
+
+            final Fighter invoker = fighter.invoker();
+
+            if (invoker == null) {
+                return;
+            }
+
+            invoker.apply(this);
+        }
     }
 }

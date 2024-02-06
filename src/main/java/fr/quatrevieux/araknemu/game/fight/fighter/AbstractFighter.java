@@ -193,7 +193,7 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
-    public @Nullable FighterData invoker() {
+    public @Nullable Fighter invoker() {
         return invoker;
     }
 

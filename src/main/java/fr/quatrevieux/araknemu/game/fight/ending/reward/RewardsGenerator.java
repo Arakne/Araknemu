@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ending.reward;
 
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * Generate rewards for end fight
@@ -31,4 +32,14 @@ public interface RewardsGenerator {
      * @param results The end fight results
      */
     public FightRewardsSheet generate(EndFightResults results);
+
+    /**
+     * Check if the given fighter can be rewarded
+     * Generally, it will check if the fighter is not a summon creature
+     *
+     * @param fighter The fighter to check
+     *
+     * @return true if the fighter can be rewarded (so it will be in the rewards sheet), false to ignore it
+     */
+    public boolean supports(Fighter fighter);
 }

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicCha
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Characteristics for a double
@@ -37,6 +38,7 @@ public final class DoubleFighterCharacteristics implements FighterCharacteristic
     private final Characteristics base;
 
     private final MutableCharacteristics buffs = new DefaultCharacteristics();
+    private @NonNegative int discernmentBoost = 0;
 
     /**
      * @param fighter The double fighter
@@ -53,8 +55,13 @@ public final class DoubleFighterCharacteristics implements FighterCharacteristic
     }
 
     @Override
-    public int discernment() {
-        return 0; // monster do not have discernment
+    public @NonNegative int discernment() {
+        return discernmentBoost;
+    }
+
+    @Override
+    public void alterDiscernment(int value) {
+        discernmentBoost = Math.max(discernmentBoost + value, 0);
     }
 
     @Override

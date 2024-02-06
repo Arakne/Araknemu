@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,5 +41,10 @@ public final class ChallengeRewardsGenerator implements RewardsGenerator {
         results.loosers().stream().map(fighter -> new DropReward(RewardType.LOOSER, fighter, Collections.emptyList())).forEach(rewards::add);
 
         return new FightRewardsSheet(results, FightRewardsSheet.Type.NORMAL, rewards);
+    }
+
+    @Override
+    public boolean supports(Fighter fighter) {
+        return !fighter.invoked();
     }
 }

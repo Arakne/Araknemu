@@ -93,6 +93,23 @@ class PlayerFighterCharacteristicsTest extends FightBaseCase {
     }
 
     @Test
+    void discernment() {
+        assertEquals(100, fighterCharacteristics.discernment());
+
+        fighterCharacteristics.alterDiscernment(50);
+        assertEquals(150, fighterCharacteristics.discernment());
+
+        fighterCharacteristics.alterDiscernment(-50);
+        assertEquals(100, fighterCharacteristics.discernment());
+
+        fighterCharacteristics.alterDiscernment(-20);
+        assertEquals(80, fighterCharacteristics.discernment());
+
+        fighterCharacteristics.alterDiscernment(-100);
+        assertEquals(0, fighterCharacteristics.discernment());
+    }
+
+    @Test
     void initial() {
         assertSame(baseCharacteristics, fighterCharacteristics.initial());
     }

@@ -64,6 +64,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.GivePerce
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnAttackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.AddDiscernmentHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ChangeAppearanceHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.InvisibilityHandler;
@@ -254,6 +255,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(290, new BoostSpellHandler(SpellsBoosts.Modifier.LAUNCH_PER_TURN));
         handler.register(293, new BoostSpellHandler(SpellsBoosts.Modifier.BASE_DAMAGE));
 
+        handler.register(176, new AddDiscernmentHandler());
         handler.register(788, new AddCharacteristicOnDamageHandler(fight)
             .register(108, AlterVitalityHook.add(fight))
             .register(118, Characteristic.STRENGTH)

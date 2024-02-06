@@ -58,6 +58,9 @@ public interface Fighter extends Dispatcher, ActiveFighter {
         return life().dead();
     }
 
+    @Override
+    public @Nullable Fighter invoker();
+
     /**
      * Change the fighter cell
      *

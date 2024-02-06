@@ -25,8 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyLeaveReward;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.LeaveOnDisconnect;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFightLeaved;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendSpellBoosted;
@@ -61,11 +59,9 @@ public final class DefaultFighterFactory implements FighterFactory {
         final PlayerFighter fighter = new PlayerFighter(player);
 
         fighter.dispatcher().add(new SendFightJoined(fighter));
-        fighter.dispatcher().add(new ApplyEndFightReward(fighter));
-        fighter.dispatcher().add(new StopFightSession(fighter));
+        fighter.dispatcher().register(new StopFightSession(fighter));
         fighter.dispatcher().add(new SendFightLeaved(fighter));
         fighter.dispatcher().add(new LeaveOnDisconnect(fighter));
-        fighter.dispatcher().add(new ApplyLeaveReward(fighter));
         fighter.dispatcher().add(new SendStats(fighter));
         fighter.dispatcher().add(new SendSpellBoosted(fighter));
 

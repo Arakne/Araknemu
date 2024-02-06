@@ -101,6 +101,12 @@ class MonsterFighterCharacteristicsTest extends FightBaseCase {
     @Test
     void discernment() {
         assertEquals(0, characteristics.discernment());
+
+        characteristics.alterDiscernment(10);
+        assertEquals(0, characteristics.discernment());
+
+        characteristics.alterDiscernment(-10);
+        assertEquals(0, characteristics.discernment());
     }
 
     @Test
