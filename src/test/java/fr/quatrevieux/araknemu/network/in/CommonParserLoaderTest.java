@@ -32,7 +32,7 @@ class CommonParserLoaderTest {
     void packets() {
         ParserLoader loader = new CommonParserLoader();
 
-        Collection<SinglePacketParser> parsers = loader.load();
+        Collection<SinglePacketParser<?>> parsers = loader.load();
 
         assertContainsInstance(PingResponse.Parser.class, parsers);
         assertContainsInstance(AskQueuePosition.Parser.class, parsers);

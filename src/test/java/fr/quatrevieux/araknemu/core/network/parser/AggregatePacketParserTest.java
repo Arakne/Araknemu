@@ -43,6 +43,29 @@ class AggregatePacketParserTest {
         }
     }
 
+    static public class ParserCodeStub implements SinglePacketParser<Packet> {
+        private final String code;
+
+        public ParserCodeStub(String code) {
+            this.code = code;
+        }
+
+        @Override
+        public Packet parse(String input) throws ParsePacketException {
+            return new Packet() {
+                @Override
+                public String toString() {
+                    return code + "+" + input;
+                }
+            };
+        }
+
+        @Override
+        public String code() {
+            return code;
+        }
+    }
+
     @Test
     public void packetNotFound() {
         AggregatePacketParser parser = new AggregatePacketParser(new SinglePacketParser[]{});
@@ -79,5 +102,40 @@ class AggregatePacketParserTest {
 
         parser.register(new AskQueuePosition.Parser());
         assertTrue(parser.parse("Af") instanceof AskQueuePosition);
+    }
+
+    @Test
+    void withSamePrefix() {
+        AggregatePacketParser parser = new AggregatePacketParser(new SinglePacketParser[]{
+            new ParserCodeStub("A"),
+            new ParserCodeStub("AA"),
+            new ParserCodeStub("AB"),
+        });
+
+        assertEquals("A+", parser.parse("A").toString());
+        assertEquals("AA+", parser.parse("AA").toString());
+        assertEquals("AA+AA", parser.parse("AAAA").toString());
+        assertEquals("AB+AA", parser.parse("ABAA").toString());
+        assertEquals("A+CAA", parser.parse("ACAA").toString());
+    }
+
+    @Test
+    void registerOutOfCharset() {
+        AggregatePacketParser parser = new AggregatePacketParser(new SinglePacketParser[]{});
+
+        assertThrows(IllegalArgumentException.class, () -> parser.register(new ParserCodeStub("00000")));
+        assertThrows(IllegalArgumentException.class, () -> parser.register(new ParserCodeStub("||")));
+    }
+
+    @Test
+    void shouldStopResolveOnOutOfCharset() {
+        AggregatePacketParser parser = new AggregatePacketParser(new SinglePacketParser[]{
+            new ParserCodeStub("GA"),
+            new ParserCodeStub("GKK"),
+            new ParserCodeStub("GKE"),
+        });
+
+        assertEquals("GA+500", parser.parse("GA500").toString());
+        assertEquals("GKE+|12", parser.parse("GKE|12").toString());
     }
 }

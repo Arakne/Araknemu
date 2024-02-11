@@ -28,5 +28,5 @@ public interface ParserLoader {
     /**
      * Load parsers
      */
-    public Collection<SinglePacketParser> load();
+    public Collection<SinglePacketParser<?>> load();
 }

@@ -79,7 +79,7 @@ import java.util.Collection;
  */
 public final class GameParserLoader implements ParserLoader {
     @Override
-    public Collection<SinglePacketParser> load() {
+    public Collection<SinglePacketParser<?>> load() {
         return Arrays.asList(
             new LoginToken.Parser(),
             new AskCharacterList.Parser(),
