@@ -30,7 +30,7 @@ import java.util.Collection;
  */
 public final class RealmParserLoader implements ParserLoader {
     @Override
-    public Collection<SinglePacketParser> load() {
+    public Collection<SinglePacketParser<?>> load() {
         return Arrays.asList(
             new AskServerList.Parser(),
             new ChooseServer.Parser(),

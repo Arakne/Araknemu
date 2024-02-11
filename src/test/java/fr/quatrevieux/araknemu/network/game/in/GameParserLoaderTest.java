@@ -76,7 +76,7 @@ class GameParserLoaderTest {
     void packets() {
         ParserLoader loader = new GameParserLoader();
 
-        Collection<SinglePacketParser> parsers = loader.load();
+        Collection<SinglePacketParser<?>> parsers = loader.load();
 
         assertContainsInstance(LoginToken.Parser.class, parsers);
         assertContainsInstance(AskCharacterList.Parser.class, parsers);

@@ -30,7 +30,7 @@ import java.util.Collection;
  */
 public final class CommonParserLoader implements ParserLoader {
     @Override
-    public Collection<SinglePacketParser> load() {
+    public Collection<SinglePacketParser<?>> load() {
         return Arrays.asList(
             new PingResponse.Parser(),
             new AskQueuePosition.Parser()

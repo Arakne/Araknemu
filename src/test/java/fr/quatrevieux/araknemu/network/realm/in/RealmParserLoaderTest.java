@@ -32,7 +32,7 @@ class RealmParserLoaderTest {
     void packets() {
         ParserLoader loader = new RealmParserLoader();
 
-        Collection<SinglePacketParser> parsers = loader.load();
+        Collection<SinglePacketParser<?>> parsers = loader.load();
 
         assertContainsInstance(AskServerList.Parser.class, parsers);
         assertContainsInstance(ChooseServer.Parser.class, parsers);

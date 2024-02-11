@@ -33,8 +33,8 @@ public final class AggregateParserLoader implements ParserLoader {
     }
 
     @Override
-    public Collection<SinglePacketParser> load() {
-        final Collection<SinglePacketParser> parsers = new ArrayList<>();
+    public Collection<SinglePacketParser<?>> load() {
+        final Collection<SinglePacketParser<?>> parsers = new ArrayList<>();
 
         for (ParserLoader loader : loaders) {
             parsers.addAll(loader.load());
