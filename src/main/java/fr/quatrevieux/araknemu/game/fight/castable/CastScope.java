@@ -117,6 +117,6 @@ public interface CastScope<F extends FighterData, C extends BattlefieldCell> {
         /**
          * Get list of cells into the effect area
          */
-        public Set<C> cells();
+        public List<C> cells();
     }
 }

@@ -21,15 +21,21 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -104,5 +110,52 @@ class PlayerSpriteTest extends GameBaseCase {
             "200;4;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;8;",
             new PlayerSprite(exploration).toString()
         );
+    }
+
+    @Test
+    void generateTwiceWithoutChangeConstantPart() throws SQLException {
+        ExplorationPlayer exploration = new ExplorationPlayer(gamePlayer());
+
+        assertEquals(
+            "200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;8;",
+            new PlayerSprite(exploration).toString()
+        );
+
+        exploration.setOrientation(Direction.WEST);
+
+        assertEquals(
+            "200;4;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;8;",
+            new PlayerSprite(exploration).toString()
+        );
+    }
+
+    @Test
+    void shouldRegenerateOnChange() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        ExplorationPlayer exploration = new ExplorationPlayer(gamePlayer());
+
+        assertEquals("200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;8;", new PlayerSprite(exploration).toString());
+
+        exploration.player().restrictions().unset(Restrictions.Restriction.ALLOW_MOVE_ALL_DIRECTION);
+        exploration.player().restrictions().set(Restrictions.Restriction.DENY_MERCHANT);
+        exploration.player().restrictions().set(Restrictions.Restriction.DENY_ASSAULT);
+        exploration.player().restrictions().set(Restrictions.Restriction.DENY_EXCHANGE);
+
+        exploration.restrictions().refresh();
+        assertEquals("200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;d;", new PlayerSprite(exploration).toString());
+
+        exploration.player().inventory()
+            .add(container.get(ItemService.class).create(2411))
+            .move(HelmetSlot.SLOT_ID, 1)
+        ;
+        assertEquals("200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,96b,,,;;;;;;d;", new PlayerSprite(exploration).toString());
+
+        exploration.player().inventory()
+            .add(container.get(ItemService.class).create(2416))
+            .move(WeaponSlot.SLOT_ID, 1)
+        ;
+        assertEquals("200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,96b,,,;;;;;;d;", new PlayerSprite(exploration).toString());
+
+        exploration.player().inventory().bySlot(HelmetSlot.SLOT_ID).ifPresent(InventoryEntry::unequip);
+        assertEquals("200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,,,,;;;;;;d;", new PlayerSprite(exploration).toString());
     }
 }

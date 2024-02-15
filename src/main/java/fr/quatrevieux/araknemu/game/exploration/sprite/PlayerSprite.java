@@ -20,8 +20,13 @@
 package fr.quatrevieux.araknemu.game.exploration.sprite;
 
 import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.player.sprite.SpriteSize;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Sprite for exploration player
@@ -32,6 +37,17 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  */
 public final class PlayerSprite implements Sprite {
     private final ExplorationPlayer exploration;
+
+    /**
+     * Cached constant part of the sprite
+     * The integrity of this field is ensured by the constantPartHash field
+     */
+    private @Nullable String constantPart = null;
+
+    /**
+     * Store a hash code of the last computed constant part
+     */
+    private int constPartHash = 0;
 
     public PlayerSprite(ExplorationPlayer exploration) {
         this.exploration = exploration;
@@ -75,19 +91,56 @@ public final class PlayerSprite implements Sprite {
         return
             cell() + ";" +
             orientation().ordinal() + ";" +
-            "0;" + // bonus
-            id() + ";" +
-            name() + ";" +
-            exploration.player().spriteInfo().race().ordinal() + ";" + // @todo title
-            gfxId() + "^" + exploration.player().spriteInfo().size() + ";" +
-            exploration.player().spriteInfo().gender().ordinal() + ";" +
+            constantPart()
+        ;
+    }
+
+    /**
+     * Get the part of the sprite which change rarely
+     * This value is cached to avoid recomputation and allocation
+     */
+    private String constantPart() {
+        final int id = id();
+        final String name = name();
+        final Race race = exploration.player().spriteInfo().race();
+        final int gfxId = gfxId();
+        final SpriteSize size = exploration.player().spriteInfo().size();
+        final Gender gender = exploration.player().spriteInfo().gender();
+        final Colors colors = exploration.player().spriteInfo().colors();
+        final String accessories = exploration.player().spriteInfo().accessories().toString();
+        final int restrictions = exploration.restrictions().toInt();
+        final String lastResult = constantPart;
+
+        int newHash = 17 * id;
+
+        newHash = 31 * newHash + name.hashCode();
+        newHash = 31 * newHash + race.hashCode();
+        newHash = 31 * newHash + gfxId;
+        newHash = 31 * newHash + size.hashCode();
+        newHash = 31 * newHash + gender.hashCode();
+        newHash = 31 * newHash + colors.hashCode();
+        newHash = 31 * newHash + accessories.hashCode();
+        newHash = 31 * newHash + restrictions;
+
+        if (lastResult != null && newHash == constPartHash) {
+            return lastResult;
+        }
+
+        constPartHash = newHash;
+
+        return constantPart = "0;" + // bonus
+            id + ";" +
+            name + ";" +
+            race.ordinal() + ";" + // @todo title
+            gfxId + "^" + size + ";" +
+            gender.ordinal() + ";" +
             ";" + // @todo alignment
-            exploration.player().spriteInfo().colors().toHexString(";") + ";" +
-            exploration.player().spriteInfo().accessories() + ";" +
+            colors.toHexString(";") + ";" +
+            accessories + ";" +
             ";" + // @todo aura
             ";;" + // @todo emote; emote timer
             ";;" + // @todo guild; guild emblem
-            Integer.toString(exploration.restrictions().toInt(), 36) + ";"
+            Integer.toString(restrictions, 36) + ";"
         // @todo mount
         ;
     }

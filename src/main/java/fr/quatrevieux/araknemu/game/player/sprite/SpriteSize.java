@@ -19,12 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.player.sprite;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Store size of the sprite
  */
 public final class SpriteSize {
+    public static final SpriteSize DEFAULT = new SpriteSize(100, 100);
+
     private final int x;
     private final int y;
+    private @Nullable String stringCache = null;
 
     public SpriteSize(int x, int y) {
         this.x = x;
@@ -41,6 +46,32 @@ public final class SpriteSize {
 
     @Override
     public String toString() {
-        return x + "x" + y;
+        final String stringCache = this.stringCache;
+
+        if (stringCache != null) {
+            return stringCache;
+        }
+
+        return this.stringCache = x + "x" + y;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final SpriteSize that = (SpriteSize) o;
+
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return (17 + x) * 31 + y;
     }
 }

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Reveal all invisible objects and fighters
@@ -61,7 +61,7 @@ public final class RevealInvisibleHandler implements EffectHandler {
     }
 
     private void revealObjects(Fighter caster, FightCastScope.EffectScope effect) {
-        final Set<FightCell> cells = effect.cells();
+        final List<FightCell> cells = effect.cells();
 
         for (BattlefieldObject object : fight.map().objects()) {
             if (cells.contains(object.cell()) && !object.visible(caster)) {

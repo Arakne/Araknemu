@@ -56,7 +56,7 @@ public abstract class AbstractPlayerSpriteInfo implements SpriteInfo {
 
     @Override
     public SpriteSize size() {
-        return new SpriteSize(100, 100);
+        return SpriteSize.DEFAULT;
     }
 
     @Override

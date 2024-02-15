@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -56,7 +57,7 @@ class CrossAreaTest extends GameBaseCase {
     @Test
     void resolveSize0() {
         assertEquals(
-            Collections.singleton(map.get(123)),
+            Collections.singletonList(map.get(123)),
             new CrossArea(new EffectArea(EffectArea.Type.LINE, 0)).resolve(map.get(123), map.get(123))
         );
     }
@@ -104,7 +105,7 @@ class CrossAreaTest extends GameBaseCase {
     }
 
     private void assertCellIds(FightCell from, FightCell center, int size, int[] cellIds) {
-        Set<FightCell> cells = new CrossArea(new EffectArea(EffectArea.Type.CROSS, size)).resolve(center, from);
+        List<FightCell> cells = new CrossArea(new EffectArea(EffectArea.Type.CROSS, size)).resolve(center, from);
 
         assertArrayEquals(
             cellIds,

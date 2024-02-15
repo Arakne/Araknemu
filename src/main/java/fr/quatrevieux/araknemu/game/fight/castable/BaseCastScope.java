@@ -234,7 +234,7 @@ public class BaseCastScope<F extends FighterData, C extends BattlefieldCell> imp
         }
 
         @Override
-        public Set<C> cells() {
+        public List<C> cells() {
             return effect.area().resolve(target, from);
         }
 

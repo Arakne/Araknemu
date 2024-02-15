@@ -28,7 +28,7 @@ import java.util.List;
 public final class EmptyAccessories implements Accessories {
     @Override
     public Accessory get(AccessoryType type) {
-        return new NullAccessory(type);
+        return NullAccessory.from(type);
     }
 
     @Override

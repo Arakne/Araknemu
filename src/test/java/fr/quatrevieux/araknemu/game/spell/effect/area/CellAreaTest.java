@@ -44,7 +44,7 @@ class CellAreaTest extends GameBaseCase {
     @Test
     void resolve() {
         assertEquals(
-            Collections.singleton(map.get(123)),
+            Collections.singletonList(map.get(123)),
             new CellArea().resolve(map.get(123), map.get(456))
         );
     }

@@ -23,7 +23,7 @@ import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Resolve cells from area and target cell
@@ -31,12 +31,14 @@ import java.util.Set;
 public interface SpellEffectArea {
     /**
      * Resolve the cells from an effect area
-     * Cells must be sorted by distance from the target cell, nearest cells first
+     *
+     * Cells must be sorted by distance from the target cell, nearest cells first,
+     * and then sorted by direction, clockwise from the north-east
      *
      * @param target The target cell
      * @param source The source cell (caster cell)
      */
-    public <C extends MapCell> Set<C> resolve(C target, C source);
+    public <C extends MapCell> List<C> resolve(C target, C source);
 
     /**
      * The area type

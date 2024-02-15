@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Resolve single cell
@@ -33,8 +33,8 @@ public final class CellArea implements SpellEffectArea {
     public static final CellArea INSTANCE = new CellArea();
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
-        return Collections.singleton(target);
+    public <C extends MapCell> List<C> resolve(C target, C source) {
+        return Collections.singletonList(target);
     }
 
     @Override

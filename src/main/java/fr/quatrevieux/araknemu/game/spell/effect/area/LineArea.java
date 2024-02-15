@@ -26,9 +26,9 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Resolve in line area
@@ -41,13 +41,13 @@ public final class LineArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell> List<C> resolve(C target, C source) {
         if (area.size() == 0) {
-            return Collections.singleton(target);
+            return Collections.singletonList(target);
         }
 
         final Direction direction = source.coordinate().directionTo(target.coordinate());
-        final Set<C> cells = new LinkedHashSet<>(area.size() + 1); // Cell are added in order, so no need to sort using a TreeSet
+        final List<C> cells = new ArrayList<>(area.size() + 1);
 
         cells.add(target);
         addCells(cells, target, direction, area.size());
@@ -65,7 +65,7 @@ public final class LineArea implements SpellEffectArea {
         return area.size();
     }
 
-    static <C extends MapCell<C>> void addCells(Set<C> cells, C start, Direction direction, int size) {
+    static <C extends MapCell<C>> void addCells(List<C> cells, C start, Direction direction, int size) {
         final DofusMap<C> map = start.map();
         final int inc = direction.nextCellIncrement(map.dimensions().width());
 

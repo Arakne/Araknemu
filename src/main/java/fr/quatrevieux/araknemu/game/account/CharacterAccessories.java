@@ -47,7 +47,7 @@ public final class CharacterAccessories extends AbstractAccessories {
     public Accessory get(AccessoryType type) {
         final Accessory accessory = accessories.get(type);
 
-        return accessory != null ? accessory : new NullAccessory(type);
+        return accessory != null ? accessory : NullAccessory.from(type);
     }
 
     private void set(Accessory accessory) {

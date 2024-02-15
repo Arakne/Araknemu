@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.player.sprite;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class SpriteSizeTest {
     @Test
@@ -31,5 +33,29 @@ class SpriteSizeTest {
         assertEquals(150, size.x());
         assertEquals(120, size.y());
         assertEquals("150x120", size.toString());
+    }
+
+    @Test
+    void defaultSize() {
+        assertEquals(100, SpriteSize.DEFAULT.x());
+        assertEquals(100, SpriteSize.DEFAULT.y());
+        assertEquals("100x100", SpriteSize.DEFAULT.toString());
+    }
+
+    @Test
+    void equalsAndHash() {
+        SpriteSize size = new SpriteSize(150, 120);
+
+        assertEquals(size, size);
+        assertEquals(size, new SpriteSize(150, 120));
+        assertNotEquals(size, new SpriteSize(150, 130));
+        assertNotEquals(size, new SpriteSize(140, 120));
+        assertNotEquals(size, new Object());
+        assertFalse(size.equals(null));
+
+        assertEquals(size.hashCode(), size.hashCode());
+        assertEquals(size.hashCode(), new SpriteSize(150, 120).hashCode());
+        assertNotEquals(size.hashCode(), new SpriteSize(150, 130).hashCode());
+        assertNotEquals(size.hashCode(), new SpriteSize(140, 120).hashCode());
     }
 }

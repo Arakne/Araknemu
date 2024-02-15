@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -56,7 +57,7 @@ class PerpendicularLineAreaTest extends GameBaseCase {
     @Test
     void resolveSize0() {
         assertEquals(
-            Collections.singleton(map.get(123)),
+            Collections.singletonList(map.get(123)),
             new PerpendicularLineArea(new EffectArea(EffectArea.Type.LINE, 0)).resolve(map.get(123), map.get(123))
         );
     }
@@ -86,7 +87,7 @@ class PerpendicularLineAreaTest extends GameBaseCase {
     }
 
     private void assertCellIds(FightCell from, FightCell center, int size, int[] cellIds) {
-        Set<FightCell> cells = new PerpendicularLineArea(new EffectArea(EffectArea.Type.PERPENDICULAR_LINE, size)).resolve(center, from);
+        List<FightCell> cells = new PerpendicularLineArea(new EffectArea(EffectArea.Type.PERPENDICULAR_LINE, size)).resolve(center, from);
 
         assertArrayEquals(
             cellIds,
