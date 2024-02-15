@@ -19,14 +19,43 @@
 
 package fr.quatrevieux.araknemu.game.world.creature.accessory;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base accessories class
  */
 public abstract class AbstractAccessories implements Accessories {
+    private static final AccessoryType[] ACCESSORY_TYPES = AccessoryType.values();
+
+    /**
+     * Get all accessories
+     */
+    public final List<Accessory> all() {
+        final List<Accessory> accessories = new ArrayList<>(ACCESSORY_TYPES.length);
+
+        for (AccessoryType type : ACCESSORY_TYPES) {
+            accessories.add(get(type));
+        }
+
+        return accessories;
+    }
+
     @Override
-    public String toString() {
-        return StringUtils.join(all(), ",");
+    public final String toString() {
+        final StringBuilder sb = new StringBuilder();
+        boolean first = true;
+
+        for (AccessoryType type : ACCESSORY_TYPES) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(",");
+            }
+
+            sb.append(get(type));
+        }
+
+        return sb.toString();
     }
 }

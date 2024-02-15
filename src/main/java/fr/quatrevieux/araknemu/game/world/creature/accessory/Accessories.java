@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.world.creature.accessory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,13 +33,5 @@ public interface Accessories {
     /**
      * Get all accessories
      */
-    public default List<Accessory> all() {
-        final ArrayList<Accessory> accessories = new ArrayList<>(AccessoryType.values().length);
-
-        for (AccessoryType type : AccessoryType.values()) {
-            accessories.add(get(type));
-        }
-
-        return accessories;
-    }
+    public List<Accessory> all();
 }

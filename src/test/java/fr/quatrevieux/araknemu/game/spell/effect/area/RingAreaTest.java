@@ -53,7 +53,7 @@ class RingAreaTest extends GameBaseCase {
     @Test
     void resolveSize0() {
         assertEquals(
-            Collections.singleton(map.get(123)),
+            Collections.singletonList(map.get(123)),
             new RingArea(new EffectArea(EffectArea.Type.RING, 0)).resolve(map.get(123), map.get(123))
         );
     }

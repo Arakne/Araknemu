@@ -23,7 +23,7 @@ import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Resolve ring area (circle border)
@@ -38,7 +38,7 @@ public final class CheckboardArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell> List<C> resolve(C target, C source) {
         return area.resolve(target, source);
     }
 

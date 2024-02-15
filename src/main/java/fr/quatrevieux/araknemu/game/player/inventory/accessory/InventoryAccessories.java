@@ -39,7 +39,7 @@ public final class InventoryAccessories extends AbstractAccessories {
     public Accessory get(AccessoryType type) {
         return slots.get(type.slot()).entry()
             .<Accessory>map(InventoryAccessory::new)
-            .orElseGet(() -> new NullAccessory(type))
+            .orElseGet(() -> NullAccessory.from(type))
         ;
     }
 }

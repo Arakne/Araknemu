@@ -24,7 +24,8 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import org.checkerframework.checker.index.qual.NonNegative;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Resolver for cross area
@@ -37,13 +38,13 @@ public final class CrossArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell> List<C> resolve(C target, C source) {
         // Optimization for size 1
         if (size() == 1) {
             return Util.resolveCenterAndAdjacent(target);
         }
 
-        final Set<C> cells = Util.createOrderedSet(target);
+        final List<C> cells = new ArrayList<>(size() * 4 + 1);
 
         cells.add(target);
 
@@ -54,6 +55,8 @@ public final class CrossArea implements SpellEffectArea {
 
             LineArea.addCells(cells, target, direction, area.size());
         }
+
+        Util.sortCells(target, cells);
 
         return cells;
     }

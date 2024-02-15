@@ -22,16 +22,25 @@ package fr.quatrevieux.araknemu.game.world.creature.accessory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class NullAccessoryTest {
     @Test
     void data() {
-        NullAccessory accessory = new NullAccessory(AccessoryType.HELMET);
+        NullAccessory accessory = NullAccessory.from(AccessoryType.HELMET);
 
         assertEquals(AccessoryType.HELMET, accessory.type());
         assertEquals(0, accessory.appearance());
         assertEquals(-1, accessory.itemType());
         assertEquals(0, accessory.frame());
         assertEquals("", accessory.toString());
+    }
+
+    @Test
+    void from() {
+        assertSame(NullAccessory.from(AccessoryType.HELMET), NullAccessory.from(AccessoryType.HELMET));
+        assertSame(NullAccessory.from(AccessoryType.WEAPON), NullAccessory.from(AccessoryType.WEAPON));
+        assertNotSame(NullAccessory.from(AccessoryType.HELMET), NullAccessory.from(AccessoryType.WEAPON));
     }
 }

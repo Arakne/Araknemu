@@ -25,9 +25,8 @@ import fr.arakne.utils.maps.MapCell;
 import fr.arakne.utils.maps.constant.Direction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility methods for resolving effect areas
@@ -45,12 +44,20 @@ final class Util {
     }
 
     /**
-     * Create a set with cells ordered by distance from target cell
+     * Sort all cells of the given list by distance from the target cell,
+     * and then by direction, clockwise starting from the north-east
+     *
+     * Note: this method will modify the given list
+     *
+     * @param target the target cell (i.e. center of the area)
+     * @param cells the cells to sort
+     *
+     * @param <C> the cell type
      */
-    public static <C extends MapCell> Set<C> createOrderedSet(C target) {
-        final CoordinateCell<C> center = target.coordinate();
+    public static <C extends MapCell> void sortCells(C target, List<C> cells) {
+        final @SuppressWarnings("unchecked") CoordinateCell<C> center = target.coordinate();
 
-        return new TreeSet<>((o1, o2) -> {
+        cells.sort((o1, o2) -> {
             final int firstDistance = center.distance(o1);
             final int secondDistance = center.distance(o2);
 
@@ -71,12 +78,11 @@ final class Util {
      *
      * @param <C> the cell type
      */
-    @SuppressWarnings("unchecked")
-    public static <C extends MapCell> Set<C> resolveCenterAndAdjacent(C center) {
-        final Set<C> set = new LinkedHashSet<>();
+    public static <C extends MapCell> List<C> resolveCenterAndAdjacent(C center) {
+        final List<C> set = new ArrayList<>(5);
 
         final int targetId = center.id();
-        final DofusMap<C> map = center.map();
+        final @SuppressWarnings("unchecked") DofusMap<C> map = center.map();
         final int mapWidth = map.dimensions().width();
         final int mapSize = map.size();
 

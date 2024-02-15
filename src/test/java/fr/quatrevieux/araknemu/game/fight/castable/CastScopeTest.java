@@ -118,7 +118,7 @@ class CastScopeTest extends FightBaseCase {
         assertEquals(effect, scope.effects().get(0).effect());
         assertEquals(Collections.singleton(target), scope.effects().get(0).targets());
         assertForEachTargetAndDistance(scope.effects().get(0), Pair.of(target, 0));
-        assertEquals(Collections.singleton(target.cell()), scope.effects().get(0).cells());
+        assertEquals(Collections.singletonList(target.cell()), scope.effects().get(0).cells());
     }
 
     @Test

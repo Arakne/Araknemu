@@ -53,7 +53,7 @@ class CheckboardAreaTest extends GameBaseCase {
     @Test
     void resolveSize0() {
         assertEquals(
-            Collections.singleton(map.get(123)),
+            Collections.singletonList(map.get(123)),
             new CheckboardArea(new EffectArea(EffectArea.Type.CHECKERBOARD, 0)).resolve(map.get(123), map.get(123))
         );
     }

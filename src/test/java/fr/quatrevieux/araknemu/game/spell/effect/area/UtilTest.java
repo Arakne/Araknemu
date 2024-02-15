@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,7 @@ class UtilTest extends GameBaseCase {
     }
 
     @Test
-    void orderedSet() {
+    void sortCells() {
         assertOrder(
             map.get(124),
             new int[]{94, 95, 96, 109, 110, 123, 124, 125, 138, 139, 152, 154},
@@ -158,11 +159,13 @@ class UtilTest extends GameBaseCase {
 
 
     private void assertOrder(MapCell center, int[] cellIds, int[] orderedCells) {
-        Set<MapCell> cells = Util.createOrderedSet(center);
+        List<MapCell> cells = new ArrayList<>();
 
         for (int cellId : cellIds) {
             cells.add(map.get(cellId));
         }
+
+        Util.sortCells(center, cells);
 
         assertEquals(
             new ArrayList<>(cells),
