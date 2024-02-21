@@ -65,7 +65,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         target = other.fighter();
         target.move(fight.map().get(123));
 
-        caster.life().alter(caster, -50);
+        caster.life().damage(caster, 50);
         baseLife = caster.life().current();
 
         handler = new StealLifeHandler(Element.AIR, fight);
@@ -130,7 +130,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        caster.life().alter(caster, 50);
+        caster.life().heal(caster, 50);
         requestStack.clear();
 
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
@@ -166,7 +166,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
-        caster.life().alter(caster, 45);
+        caster.life().heal(caster, 45);
         requestStack.clear();
 
         Mockito.when(effect.min()).thenReturn(20);

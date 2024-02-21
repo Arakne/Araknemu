@@ -64,7 +64,7 @@ class RemoveDeadFighterTest extends FightBaseCase {
     void onFighterDieCurrentTurn() {
         FightCell cell = player.fighter().cell();
 
-        player.fighter().life().alter(player.fighter(), -1000);
+        player.fighter().life().damage(player.fighter(), 1000);
         listener.on(new FighterDie(player.fighter(), player.fighter()));
 
         assertFalse(cell.hasFighter());

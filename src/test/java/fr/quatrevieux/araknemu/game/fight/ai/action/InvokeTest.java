@@ -94,7 +94,7 @@ class InvokeTest extends AiBaseCase {
         assertCast(39, 108);
 
         // Allies are low life : bonus for healing
-        player.fighter().life().alter(player.fighter(), -95);
+        player.fighter().life().damage(player.fighter(), 95);
         action.initialize(ai); // Recompute allies life ratio
         assertCast(190, 107);
     }

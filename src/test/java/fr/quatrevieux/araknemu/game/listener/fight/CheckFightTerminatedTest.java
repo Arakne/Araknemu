@@ -54,7 +54,7 @@ class CheckFightTerminatedTest extends FightBaseCase {
 
     @Test
     void onFighterDieWillTerminateFight() {
-        player.fighter().life().alter(player.fighter(), -1000);
+        player.fighter().life().damage(player.fighter(), 1000);
 
         listener.on(new FighterDie(player.fighter(), player.fighter()));
 

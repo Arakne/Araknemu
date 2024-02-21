@@ -60,7 +60,7 @@ class InvokeMonsterSimulatorTest extends FightBaseCase {
         fighter.init();
         target.init();
 
-        fighter.life().alter(fighter, -40);
+        fighter.life().damage(fighter, 40);
         target.life().alterMax(target, 500);
         ai = new FighterAI(fighter, fight, new NullGenerator());
 

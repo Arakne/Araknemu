@@ -61,8 +61,8 @@ class HealSimulatorTest extends FightBaseCase {
         fighter.init();
         target.init();
 
-        target.life().alter(target, -40);
-        fighter.life().alter(fighter, -40);
+        target.life().damage(target, 40);
+        fighter.life().damage(fighter, 40);
         ai = new FighterAI(fighter, fight, new NullGenerator());
     }
 
@@ -70,7 +70,7 @@ class HealSimulatorTest extends FightBaseCase {
     void simulateSimple() {
         assertEquals(25, simulate());
 
-        target.life().alter(target, 30);
+        target.life().heal(target, 30);
         assertEquals(10, simulate());
     }
 
@@ -123,7 +123,7 @@ class HealSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateWithBuffCappedByCurrentLife() {
-        fighter.life().alter(fighter, 30);
+        fighter.life().heal(fighter, 30);
 
         HealSimulator simulator = new HealSimulator();
 

@@ -120,7 +120,7 @@ class PercentLifeDamageHandlerTest extends FightBaseCase {
     @ParameterizedTest
     @MethodSource("provideLifeAndExpectedDamage")
     void applyShouldConsiderCurrentLife(int life, int expectedDamage) {
-        caster.life().alter(caster, life - caster.life().current());
+        caster.life().heal(caster, life - caster.life().current());
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);

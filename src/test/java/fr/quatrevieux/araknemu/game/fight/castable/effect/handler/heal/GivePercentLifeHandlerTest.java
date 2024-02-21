@@ -57,7 +57,7 @@ class GivePercentLifeHandlerTest extends FightBaseCase {
         target = other.fighter();
 
         target.move(fight.map().get(123));
-        target.life().alter(target, -30);
+        target.life().damage(target, 30);
         lastTargetLife = target.life().current();
 
         handler = new GivePercentLifeHandler();
@@ -158,7 +158,7 @@ class GivePercentLifeHandlerTest extends FightBaseCase {
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
-        caster.life().alter(caster, -30);
+        caster.life().damage(caster, 30);
         requestStack.clear();
 
         Mockito.when(effect.min()).thenReturn(10);

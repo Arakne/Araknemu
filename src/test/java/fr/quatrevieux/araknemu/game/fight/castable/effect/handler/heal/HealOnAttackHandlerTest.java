@@ -66,7 +66,7 @@ class HealOnAttackHandlerTest extends FightBaseCase {
         target = other.fighter();
 
         target.move(fight.map().get(123));
-        caster.life().alter(caster, -30);
+        caster.life().damage(caster, 30);
         lastCasterLife = caster.life().current();
 
         handler = new HealOnAttackHandler();

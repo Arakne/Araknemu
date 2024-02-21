@@ -61,7 +61,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         target = other.fighter();
 
         target.move(fight.map().get(123));
-        target.life().alter(target, -30);
+        target.life().damage(target, 30);
         lastTargetLife = target.life().current();
 
         handler = new HealOnDamageHandler();
@@ -173,7 +173,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
-        target.life().alter(caster, -10);
+        target.life().damage(caster, 10);
 
         int heal = computeHeal() + 10;
         assertBetween(10, 15, heal);
@@ -197,7 +197,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
-        target.life().alter(caster, 10);
+        target.life().heal(caster, 10);
 
         int heal = computeHeal() - 10;
         assertEquals(0, heal);
@@ -221,7 +221,7 @@ class HealOnDamageHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
         handler.buff(scope, scope.effects().get(0));
 
-        target.life().alter(caster, -10);
+        target.life().damage(caster, 10);
 
         int heal = computeHeal() + 10;
         assertEquals(17, heal);

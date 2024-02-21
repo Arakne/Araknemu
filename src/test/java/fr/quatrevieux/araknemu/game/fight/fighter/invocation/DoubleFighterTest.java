@@ -97,7 +97,7 @@ class DoubleFighterTest extends FightBaseCase {
     @Test
     void shouldCopyLife() {
         player.fighter().init();
-        player.fighter().life().alter(player.fighter(), -50);
+        player.fighter().life().damage(player.fighter(), 50);
         assertEquals(245, player.fighter().life().current());
         assertEquals(295, player.fighter().life().max());
 
@@ -106,11 +106,11 @@ class DoubleFighterTest extends FightBaseCase {
         assertEquals(245, fighter.life().current());
         assertEquals(295, fighter.life().max());
 
-        player.fighter().life().alter(player.fighter(), -100);
+        player.fighter().life().damage(player.fighter(), 100);
         assertEquals(145, player.fighter().life().current());
         assertEquals(245, fighter.life().current());
 
-        fighter.life().alter(fighter, -50);
+        fighter.life().damage(fighter, 50);
         assertEquals(145, player.fighter().life().current());
         assertEquals(195, fighter.life().current());
     }
@@ -190,7 +190,7 @@ class DoubleFighterTest extends FightBaseCase {
         fighter.init();
         assertFalse(fighter.dead());
 
-        fighter.life().alter(fighter, -10000);
+        fighter.life().damage(fighter, 10000);
 
         assertTrue(fighter.dead());
     }

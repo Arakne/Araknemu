@@ -155,7 +155,7 @@ class FightTurnListTest extends FightBaseCase {
         fight.fighters().forEach(Fighter::init);
         turnList.start();
 
-        other.fighter().life().alter(other.fighter(), -1000);
+        other.fighter().life().damage(other.fighter(), 1000);
         assertTrue(other.fighter().dead());
 
         turnList.next();

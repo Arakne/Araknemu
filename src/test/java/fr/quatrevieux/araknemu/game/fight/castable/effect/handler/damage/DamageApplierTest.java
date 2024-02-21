@@ -99,7 +99,7 @@ class DamageApplierTest extends FightBaseCase {
         requestStack.assertLast(ActionEffect.alterLifePoints(caster, target, -10));
 
         target.life().alterMax(target, 1000);
-        target.life().alter(target, 1000);
+        target.life().heal(target, 1000);
 
         assertEquals(-9, applier.apply(caster, effect, target, effectValue, 1));
         assertEquals(-8, applier.apply(caster, effect, target, effectValue, 2));
@@ -259,6 +259,52 @@ class DamageApplierTest extends FightBaseCase {
     }
 
     @Test
+    void applyWithReduceBuffShouldBeIgnoredForErosion() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(100);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        target.life().alterErosion(10);
+
+        target.buffs().add(
+            new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+                @Override
+                public void onDamage(Buff buff, Damage value) {
+                    value.reduce(80);
+                }
+            })
+        );
+
+        int previousMaxLife = target.life().max();
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target), 0);
+
+        assertEquals(-20, value);
+        assertEquals(10, previousMaxLife - target.life().max());
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -20));
+        requestStack.assertOne(ActionEffect.reducedDamage(target, 80));
+    }
+
+    @Test
+    void applyWithErosion() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(30);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        target.life().alterErosion(10);
+
+        int previousMaxLife = target.life().max();
+        int value = applier.apply(caster, effect, target, EffectValue.create(effect, caster, target), 0);
+
+        assertEquals(-30, value);
+        assertEquals(3, previousMaxLife - target.life().max());
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -30));
+    }
+
+    @Test
     void applyDirectDamageShouldCallBuffHook() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
@@ -342,6 +388,24 @@ class DamageApplierTest extends FightBaseCase {
         assertSame(toApply, calledPoison.get());
         assertEquals(10, calledDamage.get().value());
         assertFalse(appliedDamageHookCalled.get());
+    }
+
+    @Test
+    void applyBuffWithErosion() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(30);
+        target.life().alterErosion(10);
+
+        int maxLife = target.life().max();
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+
+        Buff toApply = new Buff(effect, Mockito.mock(Spell.class), caster, target, Mockito.mock(BuffHook.class));
+        int value = applier.apply(toApply);
+
+        assertEquals(-30, value);
+        assertEquals(3, maxLife - target.life().max());
     }
 
     @Test
@@ -510,7 +574,7 @@ class DamageApplierTest extends FightBaseCase {
     @Test
     void applyWithCounterDamageAndNegativeMultiplierShouldHealTarget() {
         target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
-        caster.life().alter(caster, -10);
+        caster.life().damage(caster, 10);
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
@@ -540,7 +604,7 @@ class DamageApplierTest extends FightBaseCase {
 
     @Test
     void applyWithNegativeMultiplierShouldHealTargetAndNotCallDirectDamageAppliedHook() {
-        target.life().alter(target, -20);
+        target.life().damage(target, 20);
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         AtomicBoolean appliedDamageHookCalled = new AtomicBoolean();
@@ -615,6 +679,20 @@ class DamageApplierTest extends FightBaseCase {
         assertSame(buff, appliedDamageBuff.get());
         assertSame(caster, appliedDamageCaster.get());
         assertEquals(10, appliedDamageValue.get());
+    }
+
+    @Test
+    void applyFixedWithErosion() {
+        DamageApplier applier = new DamageApplier(Element.EARTH, fight);
+
+        int maxLife = target.life().max();
+        target.life().alterErosion(10);
+
+        requestStack.clear();
+
+        assertEquals(-30, applier.applyFixed(caster, 30, target));
+        assertEquals(30, maxLife - target.life().current());
+        assertEquals(3, maxLife - target.life().max());
     }
 
     @Test

@@ -95,7 +95,7 @@ public final class DamageApplier {
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(Fighter, Damage) The called buff hook
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(Fighter, int) Buff called when damage are applied
      */
-    public int applyFixed(Fighter caster, int value, Fighter target) {
+    public int applyFixed(Fighter caster, @NonNegative int value, Fighter target) {
         final Damage damage = createDamage(caster, target, value);
 
         return applyDirectDamage(caster, damage, target);
@@ -119,7 +119,7 @@ public final class DamageApplier {
      * @see DamageApplier#applyFixed(Buff, int) Apply damage with the same way
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onIndirectDamage(Fighter, Damage) The called buff hook
      */
-    public int applyIndirectFixed(Fighter caster, int value, Fighter target) {
+    public int applyIndirectFixed(Fighter caster, @NonNegative int value, Fighter target) {
         final Damage damage = createDamage(caster, target, value);
 
         target.buffs().onIndirectDamage(caster, damage);
@@ -159,7 +159,7 @@ public final class DamageApplier {
      *
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onBuffDamage(Buff, Damage) The called buff hook
      */
-    public int applyFixed(Buff buff, int value) {
+    public int applyFixed(Buff buff, @NonNegative int value) {
         final Fighter target = buff.target();
         final Damage damage = createDamage(buff.caster(), target, value);
 
@@ -208,7 +208,7 @@ public final class DamageApplier {
         target.buffs().onDirectDamage(caster, damage);
 
         if (!caster.equals(target)) {
-            damage.reflect(target.characteristics().get(Characteristic.COUNTER_DAMAGE));
+            damage.reflect(Math.max(target.characteristics().get(Characteristic.COUNTER_DAMAGE), 0));
         }
 
         final int actualDamage = applyDamage(caster, damage, target);
@@ -243,13 +243,20 @@ public final class DamageApplier {
             fight.send(ActionEffect.reducedDamage(target, damage.reducedDamage()));
         }
 
-        final int lifeChange = target.life().alter(caster, -damage.value());
+        final int damageValue = damage.value();
 
-        if (lifeChange < 0 && !target.equals(caster) && damage.reflectedDamage() > 0) {
+        // Damage has been transformed to heal
+        if (damageValue < 0) {
+            return target.life().heal(caster, Asserter.castNonNegative(-damageValue));
+        }
+
+        final int actualDamage = target.life().damage(caster, damageValue, damage.baseDamage());
+
+        if (actualDamage > 0 && !target.equals(caster) && damage.reflectedDamage() > 0) {
             applyReflectedDamage(target, caster, damage);
         }
 
-        return lifeChange;
+        return -actualDamage;
     }
 
     /**
@@ -268,7 +275,14 @@ public final class DamageApplier {
 
         if (returnedDamage.baseValue() > 0) {
             fight.send(ActionEffect.reflectedDamage(castTarget, returnedDamage.baseValue()));
-            returnedDamage.target().life().alter(castTarget, -returnedDamage.value());
+
+            final int actualReturnedDamage = returnedDamage.value();
+
+            if (actualReturnedDamage > 0) {
+                returnedDamage.target().life().damage(castTarget, actualReturnedDamage);
+            } else {
+                returnedDamage.target().life().heal(castTarget, Asserter.castNonNegative(-actualReturnedDamage));
+            }
         }
     }
 
@@ -281,7 +295,7 @@ public final class DamageApplier {
      *
      * @return The damage object to apply
      */
-    private Damage createDamage(Fighter caster, Fighter target, int value) {
+    private Damage createDamage(Fighter caster, Fighter target, @NonNegative int value) {
         final Damage damage = new Damage(value, element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))

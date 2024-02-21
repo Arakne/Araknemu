@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
+import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
@@ -70,6 +71,7 @@ class EndFighterTurnTest extends FightBaseCase {
         requestStack.assertAll(
             new FinishTurn(turn),
             new TurnMiddle(fight.fighters()),
+            new Stats(player.fighter().properties()),
             new StartTurn(other.fighter().turn())
         );
     }

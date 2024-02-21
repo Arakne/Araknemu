@@ -40,6 +40,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.module.FighterInitializationModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
 import fr.quatrevieux.araknemu.game.fight.state.FinishState;

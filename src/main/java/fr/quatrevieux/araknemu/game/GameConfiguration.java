@@ -440,5 +440,15 @@ public final class GameConfiguration {
         public double dropRate() {
             return pool.decimal("fight.rate.drop", 1.0);
         }
+
+        /**
+         * Get the initial erosion rate for fighters
+         * This value is a percentage, representing the percent of damage that will be transformed to permanent life loss
+         * It must be between 0 and 100, where 0 means no erosion and 100 means all damage are permanent
+         * Default value : 10
+         */
+        public @NonNegative int initialErosion() {
+            return pool.nonNegativeInteger("fight.initialErosion", 10);
+        }
     }
 }

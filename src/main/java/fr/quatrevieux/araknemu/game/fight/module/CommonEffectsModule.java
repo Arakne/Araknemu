@@ -65,6 +65,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealHandl
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnAttackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.AddDiscernmentHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.AddErosionHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ChangeAppearanceHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.InvisibilityHandler;
@@ -264,6 +265,7 @@ public final class CommonEffectsModule implements FightModule {
             .register(126, Characteristic.INTELLIGENCE)
             .register(138, Characteristic.PERCENT_DAMAGE)
         );
+        handler.register(776, new AddErosionHandler());
 
         handler.register(666, new NoEffectHandler());
     }

@@ -39,7 +39,7 @@ class FightEndTest extends FightBaseCase {
         Fight fight = createFight();
         fight.nextState();
 
-        other.fighter().life().alter(player.fighter(), -1000);
+        other.fighter().life().damage(player.fighter(), 1000);
 
         Fighter winner = player.fighter();
         Fighter looser = other.fighter();
@@ -68,7 +68,7 @@ class FightEndTest extends FightBaseCase {
         Fight fight = createFight();
         fight.nextState();
 
-        other.fighter().life().alter(player.fighter(), -1000);
+        other.fighter().life().damage(player.fighter(), 1000);
 
         Fighter winner = player.fighter();
         Fighter looser = other.fighter();

@@ -64,6 +64,6 @@ public final class HealOnDamageHandler implements EffectHandler, BuffHook {
             .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))
         ;
 
-        target.life().alter(caster, value.value());
+        target.life().heal(caster, value.value());
     }
 }

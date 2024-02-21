@@ -36,47 +36,56 @@ class DamageTest {
     @Test
     void defaultValue() {
         assertEquals(15, damage.value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void fixed() {
         assertEquals(10, damage.fixed(5).value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void fixedHigherThanValue() {
         assertEquals(0, damage.fixed(20).value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void percent() {
         assertEquals(12, damage.percent(20).value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void percentHigherThan100() {
         assertEquals(0, damage.percent(75).percent(30).value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void fixedAndPercent() {
         assertEquals(7, damage.percent(20).fixed(5).value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void multiplyPositive() {
         assertEquals(21, damage.percent(20).fixed(5).multiply(3).value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void multiplyNegative() {
         assertEquals(-7, damage.percent(20).fixed(5).multiply(-1).value());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
     void reduce() {
         assertEquals(7, damage.percent(20).reduce(5).value());
         assertEquals(5, damage.reducedDamage());
+        assertEquals(15, damage.baseDamage());
     }
 
     @Test
@@ -96,5 +105,16 @@ class DamageTest {
         assertEquals(1, damage.distance(20).value());
         assertEquals(1, damage.distance(25).value());
         assertEquals(0, damage.distance(26).value());
+
+        assertEquals(10, damage.distance(3).baseDamage());
+    }
+
+    @Test
+    void allValues() {
+        // 15 * 0.81 (distance) = 12
+        // 12 * 0.7 (percent) = 8
+        // 8 - 4 - 2 (reduce) = 2
+        assertEquals(2, damage.fixed(4).percent(30).reduce(2).distance(2).value());
+        assertEquals(12, damage.baseDamage());
     }
 }

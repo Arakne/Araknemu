@@ -38,7 +38,7 @@ public final class FixedCasterDamageHandler implements EffectHandler {
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
-        caster.life().alter(caster, -EffectValue.create(effect.effect(), caster, caster).value());
+        caster.life().damage(caster, EffectValue.create(effect.effect(), caster, caster).value());
     }
 
     @Override

@@ -27,7 +27,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -173,7 +172,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        player.fighter().life().alter(player.fighter(), -20);
+        player.fighter().life().damage(player.fighter(), 20);
         requestStack.clear();
 
         handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
@@ -210,7 +209,7 @@ class EffectsHandlerTest extends FightBaseCase {
 
         player.fighter().move(fight.map().get(166));
         other.fighter().move(fight.map().get(152));
-        other.fighter().life().alter(other.fighter(), -45);
+        other.fighter().life().damage(other.fighter(), 45);
         requestStack.clear();
 
         handler.apply(FightCastScope.simple(

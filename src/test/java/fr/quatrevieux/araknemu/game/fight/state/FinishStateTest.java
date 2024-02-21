@@ -32,12 +32,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FightEnd;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -59,7 +56,7 @@ class FinishStateTest extends FightBaseCase {
 
     @Test
     void start() {
-        other.fighter().life().alter(player.fighter(), -1000);
+        other.fighter().life().damage(player.fighter(), 1000);
 
         Fighter winner = player.fighter();
         Fighter looser = other.fighter();
@@ -95,7 +92,7 @@ class FinishStateTest extends FightBaseCase {
             fight.map().get(142)
         );
 
-        other.fighter().life().alter(player.fighter(), -1000);
+        other.fighter().life().damage(player.fighter(), 1000);
 
         Fighter winner = player.fighter();
         Fighter looser = other.fighter();
@@ -150,7 +147,7 @@ class FinishStateTest extends FightBaseCase {
         fight = createPvmFight();
         fight.nextState();
 
-        player.fighter().life().alter(player.fighter(), -100);
+        player.fighter().life().damage(player.fighter(), 100);
 
         Collection<Fighter> monsters = fight.team(1).fighters();
 
@@ -216,7 +213,7 @@ class FinishStateTest extends FightBaseCase {
             player.properties().experience().max() - player.properties().experience().current() - 1
         );
 
-        player.fighter().life().alter(player.fighter(), -100);
+        player.fighter().life().damage(player.fighter(), 100);
         Collection<Fighter> monsters = fight.team(1).fighters();
 
         monsters.forEach(fighter -> fighter.life().kill(fighter));

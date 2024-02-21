@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Handle effect of punishment spell
@@ -71,7 +72,7 @@ public final class PunishmentHandler implements EffectHandler {
             }
 
             final double percent = context.forTarget(target).value() / 100d;
-            final int value = (int) (factor * percent);
+            final int value = Asserter.castNonNegative((int) (factor * percent));
 
             applier.applyFixed(caster, value, target);
         }

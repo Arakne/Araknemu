@@ -65,9 +65,9 @@ class CastSimulationTest extends FightBaseCase {
 
     @Test
     void heal() {
-        fighter.life().alter(fighter, -10);
-        allie.life().alter(fighter, -10);
-        ennemy.life().alter(fighter, -10);
+        fighter.life().damage(fighter, 10);
+        allie.life().damage(fighter, 10);
+        ennemy.life().damage(fighter, 10);
 
         simulation.addHeal(new Interval(5, 5), fighter);
         simulation.addHeal(new Interval(4, 4), allie);
@@ -81,7 +81,7 @@ class CastSimulationTest extends FightBaseCase {
     @ParameterizedTest
     @MethodSource("provideHeal")
     void healLimitByLostLife(Interval value, double expectedValue) {
-        fighter.life().alter(fighter, -10);
+        fighter.life().damage(fighter, 10);
 
         simulation.addHeal(value, fighter);
 
@@ -288,7 +288,7 @@ class CastSimulationTest extends FightBaseCase {
 
     @Test
     void addHealBuff() {
-        fighter.life().alter(fighter, -10);
+        fighter.life().damage(fighter, 10);
         simulation.addHealBuff(new Interval(5, 10), 3, fighter);
 
         assertEquals(7.5, simulation.selfLife());
@@ -305,7 +305,7 @@ class CastSimulationTest extends FightBaseCase {
 
     @Test
     void addHealBuffOnlyOneTurnShouldNotSetAsBuff() {
-        fighter.life().alter(fighter, -10);
+        fighter.life().damage(fighter, 10);
         simulation.addHealBuff(new Interval(5, 10), 1, fighter);
 
         assertEquals(7.5, simulation.selfLife());

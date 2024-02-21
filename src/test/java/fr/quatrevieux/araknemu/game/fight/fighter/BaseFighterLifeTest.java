@@ -111,13 +111,13 @@ class BaseFighterLifeTest extends FightBaseCase {
     }
 
     @Test
-    void alterOnDamage() {
+    void damage() {
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterLifeChanged.class, ref::set);
 
         Fighter caster = Mockito.mock(Fighter.class);
 
-        assertEquals(-10, life.alter(caster, -10));
+        assertEquals(10, life.damage(caster, 10));
         assertEquals(90, life.current());
 
         assertSame(caster, ref.get().caster());
@@ -126,13 +126,99 @@ class BaseFighterLifeTest extends FightBaseCase {
     }
 
     @Test
-    void alterOnDamageHigherThanCurrentLife() {
+    void damageWithErosion() {
+        life.alterErosion(10);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(10, life.damage(caster, 10));
+        assertEquals(90, life.current());
+        assertEquals(99, life.max());
+    }
+
+    @Test
+    void damageWithErosionShouldTakeBaseDamageInAccount() {
+        life.alterErosion(10);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(0, life.damage(caster, 0, 100));
+        assertEquals(90, life.current());
+        assertEquals(90, life.max());
+    }
+
+    @Test
+    void damageWithErosionHigherThanActualDamage() {
+        life.alterErosion(10);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(5, life.damage(caster, 5, 100));
+        assertEquals(90, life.current());
+        assertEquals(90, life.max());
+    }
+
+    @Test
+    void damageWithErosionCantKill() {
+        life.alterErosion(10);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(0, life.damage(caster, 0, 100000));
+        assertEquals(1, life.current());
+        assertEquals(1, life.max());
+    }
+
+    @Test
+    void erosionCappedTo100() {
+        life.alterErosion(1000);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(0, life.damage(caster, 0, 50));
+        assertEquals(50, life.current());
+        assertEquals(50, life.max());
+    }
+
+    @Test
+    void erosionCappedTo0() {
+        life.alterErosion(-1000);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(0, life.damage(caster, 0, 50));
+        assertEquals(100, life.current());
+        assertEquals(100, life.max());
+    }
+
+    @Test
+    void alterErosion() {
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        life.alterErosion(10);
+
+        assertEquals(0, life.damage(caster, 0, 100));
+        assertEquals(90, life.max());
+
+        life.alterErosion(5);
+
+        assertEquals(0, life.damage(caster, 0, 100));
+        assertEquals(75, life.max());
+
+        life.alterErosion(-10);
+
+        assertEquals(0, life.damage(caster, 0, 100));
+        assertEquals(70, life.max());
+    }
+
+    @Test
+    void damageHigherThanCurrentLife() {
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterLifeChanged.class, ref::set);
 
         Fighter caster = Mockito.mock(Fighter.class);
 
-        assertEquals(-100, life.alter(caster, -150));
+        assertEquals(100, life.damage(caster, 150));
         assertEquals(0, life.current());
 
         assertSame(caster, ref.get().caster());
@@ -141,15 +227,15 @@ class BaseFighterLifeTest extends FightBaseCase {
     }
 
     @Test
-    void alterOnHeal() {
-        life.alter(fighter, -50);
+    void heal() {
+        life.damage(fighter, 50);
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterLifeChanged.class, ref::set);
 
         Fighter caster = Mockito.mock(Fighter.class);
 
-        assertEquals(10, life.alter(caster, 10));
+        assertEquals(10, life.heal(caster, 10));
         assertEquals(60, life.current());
 
         assertSame(caster, ref.get().caster());
@@ -158,15 +244,15 @@ class BaseFighterLifeTest extends FightBaseCase {
     }
 
     @Test
-    void alterOnHealHigherThanMax() {
-        life.alter(fighter, -50);
+    void healHigherThanMax() {
+        life.damage(fighter, 50);
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterLifeChanged.class, ref::set);
 
         Fighter caster = Mockito.mock(Fighter.class);
 
-        assertEquals(50, life.alter(caster, 1000));
+        assertEquals(50, life.heal(caster, 1000));
         assertEquals(life.max(), life.current());
 
         assertSame(caster, ref.get().caster());
@@ -178,15 +264,15 @@ class BaseFighterLifeTest extends FightBaseCase {
      * #56 : Dot not heal when dead
      */
     @Test
-    void alterHealIfDead() {
-        life.alter(fighter, -1000);
+    void healIfDead() {
+        life.damage(fighter, 1000);
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterLifeChanged.class, ref::set);
 
         Fighter caster = Mockito.mock(Fighter.class);
 
-        assertEquals(0, life.alter(caster, 1000));
+        assertEquals(0, life.heal(caster, 1000));
         assertEquals(0, life.current());
         assertTrue(life.dead());
         assertNull(ref.get());
@@ -196,28 +282,28 @@ class BaseFighterLifeTest extends FightBaseCase {
      * #56 : Dot not heal when dead
      */
     @Test
-    void alterDamageIfDead() {
-        life.alter(fighter, -1000);
+    void damageIfDead() {
+        life.damage(fighter, 1000);
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterLifeChanged.class, ref::set);
 
         Fighter caster = Mockito.mock(Fighter.class);
 
-        assertEquals(0, life.alter(caster, -1000));
+        assertEquals(0, life.damage(caster, 1000));
         assertEquals(0, life.current());
         assertTrue(life.dead());
         assertNull(ref.get());
     }
 
     @Test
-    void alterOnDie() {
+    void damageOnDie() {
         AtomicReference<FighterDie> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterDie.class, ref::set);
 
         Fighter caster = Mockito.mock(Fighter.class);
 
-        life.alter(caster, -1000);
+        life.damage(caster, 1000);
 
         assertEquals(0, life.current());
         assertSame(caster, ref.get().caster());
@@ -226,25 +312,36 @@ class BaseFighterLifeTest extends FightBaseCase {
     }
 
     @Test
-    void alterShouldCallOnLifeAlteredBuffs() {
-        life.alter(fighter, -50);
+    void healShouldCallOnLifeAlteredBuffs() {
+        life.damage(fighter, 50);
 
         BuffHook hook = Mockito.mock(BuffHook.class);
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
-        life.alter(fighter, 10);
+        life.heal(fighter, 10);
 
         Mockito.verify(hook).onLifeAltered(buff, 10);
     }
 
     @Test
-    void alterShouldNotCallOnLifeAlteredBuffsWhenDie() {
+    void damageShouldCallOnLifeAlteredBuffs() {
         BuffHook hook = Mockito.mock(BuffHook.class);
         Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
-        life.alter(fighter, -1000);
+        life.damage(fighter, 10);
+
+        Mockito.verify(hook).onLifeAltered(buff, -10);
+    }
+
+    @Test
+    void damageShouldNotCallOnLifeAlteredBuffsWhenDie() {
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        fighter.buffs().add(buff);
+
+        life.damage(fighter, 1000);
 
         Mockito.verify(hook, Mockito.never()).onLifeAltered(Mockito.any(), Mockito.anyInt());
     }
@@ -266,7 +363,7 @@ class BaseFighterLifeTest extends FightBaseCase {
 
     @Test
     void alterMaxNotFullLife() {
-        life.alter(fighter, -50);
+        life.damage(fighter, 50);
 
         Fighter caster = Mockito.mock(Fighter.class);
         life.alterMax(caster, 100);

@@ -155,7 +155,7 @@ class InvocationFighterTest extends FightBaseCase {
         fighter.init();
         assertFalse(fighter.dead());
 
-        fighter.life().alter(fighter, -10000);
+        fighter.life().damage(fighter, 10000);
 
         assertTrue(fighter.dead());
     }

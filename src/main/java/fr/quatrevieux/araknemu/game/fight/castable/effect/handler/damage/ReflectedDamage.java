@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Compute reflected damage of a cast
@@ -52,7 +53,13 @@ public final class ReflectedDamage implements MultipliableDamage {
      * This value is the effectively reflected value, not the applied one.
      * A buff can change the real applied damage by using {@link ReflectedDamage#multiply(int)}
      */
-    public int baseValue() {
+    public @NonNegative int baseValue() {
+        final int baseCastDamage = castDamage.value();
+
+        if (baseCastDamage <= 0) {
+            return 0;
+        }
+
         final Characteristics characteristics = target.characteristics();
         final int percentResistance = characteristics.get(castDamage.element().percentResistance());
         final int fixedResistance = characteristics.get(castDamage.element().fixedResistance());
@@ -65,7 +72,7 @@ public final class ReflectedDamage implements MultipliableDamage {
         }
 
         // Returned damage can be at most half of hit damage
-        return Math.min(base, castDamage.value() / 2);
+        return Math.min(base, baseCastDamage / 2);
     }
 
     @Override

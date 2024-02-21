@@ -96,7 +96,7 @@ class SimpleTeamTest extends FightBaseCase {
         Fight fight = createFight();
         fighter.joinFight(fight, fight.map().get(123));
         fighter.init();
-        fighter.life().alter(fighter, -1000);
+        fighter.life().damage(fighter, 1000);
 
         assertFalse(team.alive());
     }

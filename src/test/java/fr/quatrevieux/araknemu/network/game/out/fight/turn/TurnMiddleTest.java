@@ -73,7 +73,7 @@ class TurnMiddleTest extends FightBaseCase {
     @Test
     void generateWithDeadFighter() {
         player.fighter().init();
-        player.fighter().life().alter(player.fighter(), -1000);
+        player.fighter().life().damage(player.fighter(), 1000);
 
         assertEquals(
             "GTM|1;1|2;0;50;6;3;125;;50",

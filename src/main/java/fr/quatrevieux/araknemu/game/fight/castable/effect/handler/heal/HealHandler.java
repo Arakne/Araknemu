@@ -51,7 +51,7 @@ public final class HealHandler extends AbstractAttenuableAreaEffectHandler imple
             .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))
         ;
 
-        target.life().alter(caster, EffectsUtils.applyDistanceAttenuation(value.value(), distance));
+        target.life().heal(caster, EffectsUtils.applyDistanceAttenuation(value.value(), distance));
 
         return true;
     }
@@ -74,7 +74,7 @@ public final class HealHandler extends AbstractAttenuableAreaEffectHandler imple
             .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))
         ;
 
-        target.life().alter(caster, value.value());
+        target.life().heal(caster, value.value());
         return true;
     }
 }

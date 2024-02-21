@@ -27,7 +27,6 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldObject;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
@@ -175,7 +174,7 @@ class FightTurnTest extends FightBaseCase {
     void performDead() {
         turn.start();
 
-        turn.fighter().life().alter(turn.fighter(), -1000);
+        turn.fighter().life().damage(turn.fighter(), 1000);
         assertTrue(turn.fighter().dead());
 
         FightAction action = Mockito.mock(FightAction.class);
