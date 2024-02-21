@@ -70,7 +70,7 @@ class PercentLifeDamageSimulatorTest extends FightBaseCase {
         assertEquals(-29, simulate().enemiesLife());
         assertEquals(0, simulate().selfLife());
 
-        fighter.life().alter(fighter, -100);
+        fighter.life().damage(fighter, 100);
         assertEquals(-19, simulate().enemiesLife());
     }
 
@@ -82,7 +82,7 @@ class PercentLifeDamageSimulatorTest extends FightBaseCase {
         assertEquals(-16, simulate().enemiesLife());
         assertEquals(0, simulate().selfLife());
 
-        fighter.life().alter(fighter, -100);
+        fighter.life().damage(fighter, 100);
         assertEquals(-9, simulate().enemiesLife());
 
         simulator = new PercentLifeDamageSimulator(Element.WATER);

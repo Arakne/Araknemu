@@ -33,11 +33,11 @@ public final class GivePercentLifeHandler implements EffectHandler {
         final Fighter caster = cast.caster();
         final int heal = EffectValue.create(effect.effect(), caster, caster).value() * caster.life().current() / 100;
 
-        caster.life().alter(caster, -heal);
+        caster.life().damage(caster, heal);
 
         for (Fighter target : effect.targets()) {
             if (!target.equals(caster)) {
-                target.life().alter(caster, heal);
+                target.life().heal(caster, heal);
             }
         }
     }

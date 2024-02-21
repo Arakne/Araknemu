@@ -27,20 +27,20 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * Compute suffered damage
  *
  * Formula :
- * (value * percent / 100 - fixed - reduce) * multiply
+ * ((value * percent / 100) * (0.9 ^ distance) - fixed - reduce) * multiply
  */
 public final class Damage implements MultipliableDamage {
-    private final int value;
+    private final @NonNegative int value;
     private final Element element;
 
     private int multiply = 1;
     private int fixed = 0;
-    private int percent = 100;
-    private int reduce = 0;
-    private int returned = 0;
+    private @NonNegative int percent = 100;
+    private @NonNegative int reduce = 0;
+    private @NonNegative int returned = 0;
     private @NonNegative int distance = 0;
 
-    public Damage(int value, Element element) {
+    public Damage(@NonNegative int value, Element element) {
         this.value = value;
         this.element = element;
     }
@@ -54,24 +54,34 @@ public final class Damage implements MultipliableDamage {
 
     @Override
     public int value() {
-        final int base = (value * percent / 100 - fixed - reduce);
+        final int reducedDamage = (baseDamage() * percent / 100) - fixed - reduce;
 
-        if (base <= 0) {
+        if (reducedDamage <= 0) {
             return 0;
         }
 
-        return EffectsUtils.applyDistanceAttenuation(base, distance) * multiply;
+        return reducedDamage * multiply;
+    }
+
+    /**
+     * Get the base damage, before applying any reduction or multiplication
+     * Only the distance attenuation is applied
+     */
+    public @NonNegative int baseDamage() {
+        final int value = this.value;
+
+        if (value == 0) {
+            return 0;
+        }
+
+        return EffectsUtils.applyDistanceAttenuation(value, distance);
     }
 
     /**
      * Reduce damage in percent
      */
     public Damage percent(int percent) {
-        if (percent > this.percent) {
-            this.percent = 0;
-        } else {
-            this.percent -= percent;
-        }
+        this.percent = Math.max(this.percent - percent, 0);
 
         return this;
     }
@@ -95,7 +105,7 @@ public final class Damage implements MultipliableDamage {
     /**
      * Reduce fixed damage with buff effect
      */
-    public Damage reduce(int value) {
+    public Damage reduce(@NonNegative int value) {
         this.reduce += value;
 
         return this;
@@ -104,7 +114,7 @@ public final class Damage implements MultipliableDamage {
     /**
      * Add reflected damage
      */
-    public Damage reflect(int value) {
+    public Damage reflect(@NonNegative int value) {
         this.returned += value;
 
         return this;
@@ -124,14 +134,14 @@ public final class Damage implements MultipliableDamage {
     /**
      * Get the damage reduction value from armor buff effects
      */
-    public int reducedDamage() {
+    public @NonNegative int reducedDamage() {
         return reduce;
     }
 
     /**
      * How much damage has been reflected by the target ?
      */
-    public int reflectedDamage() {
+    public @NonNegative int reflectedDamage() {
         return returned;
     }
 }

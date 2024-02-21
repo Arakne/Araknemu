@@ -63,7 +63,7 @@ class FixedStealLifeSimulatorTest extends FightBaseCase {
         fighter.init();
 
         target.life().alterMax(target, 1000);
-        fighter.life().alter(fighter, -50);
+        fighter.life().damage(fighter, 50);
 
         ai = new FighterAI(fighter, fight, new NullGenerator());
         simulator = new FixedStealLifeSimulator();

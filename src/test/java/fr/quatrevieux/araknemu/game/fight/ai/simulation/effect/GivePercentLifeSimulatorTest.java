@@ -26,14 +26,12 @@ import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
-import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +58,7 @@ class GivePercentLifeSimulatorTest extends FightBaseCase {
         fighter.init();
         target.init();
 
-        target.life().alter(target, -30);
+        target.life().damage(target, 30);
 
         ai = new FighterAI(fighter, fight, new NullGenerator());
     }

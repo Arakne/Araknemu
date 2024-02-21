@@ -58,7 +58,7 @@ class FixedStealLifeHandlerTest extends FightBaseCase {
         fight.nextState();
 
         caster = player.fighter();
-        caster.life().alter(caster, -50);
+        caster.life().damage(caster, 50);
 
         target = other.fighter();
         target.move(fight.map().get(123));

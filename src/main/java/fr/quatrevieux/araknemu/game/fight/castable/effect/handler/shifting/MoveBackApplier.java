@@ -119,7 +119,7 @@ public final class MoveBackApplier {
             return;
         }
 
-        target.life().alter(caster, -damage);
+        target.life().damage(caster, damage);
 
         // Divide damage by 2 on each fighter
         for (damage /= 2; damage > 0; damage /= 2) {
@@ -134,7 +134,7 @@ public final class MoveBackApplier {
             }
 
             lastCell = nextCell.get();
-            NullnessUtil.castNonNull(lastCell.fighter()).life().alter(caster, -damage);
+            NullnessUtil.castNonNull(lastCell.fighter()).life().damage(caster, damage);
         }
     }
 

@@ -46,11 +46,11 @@ public final class FixedStealLifeHandler extends AbstractPreRollEffectHandler im
         final FighterLife casterLife = caster.life();
 
         final int damage = value.value();
-        final int actualDamage = target.life().alter(caster, -damage);
+        final int actualDamage = target.life().damage(caster, damage);
 
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
-        casterLife.alter(caster, -actualDamage);
+        casterLife.heal(caster, actualDamage);
     }
 
     @Override

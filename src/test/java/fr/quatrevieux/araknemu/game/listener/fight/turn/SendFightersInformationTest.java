@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.listener.fight.turn;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
+import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,10 +42,12 @@ class SendFightersInformationTest extends FightBaseCase {
 
     @Test
     void onNextTurnInitiated() {
+        requestStack.clear();
         listener.on(new NextTurnInitiated());
 
-        requestStack.assertLast(
-            new TurnMiddle(fight.fighters())
+        requestStack.assertAll(
+            new TurnMiddle(fight.fighters()),
+            new Stats(player.fighter().properties())
         );
     }
 }

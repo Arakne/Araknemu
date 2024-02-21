@@ -63,7 +63,7 @@ class RevealInvisibleHandlerTest extends FightBaseCase {
         fight.nextState();
 
         caster = player.fighter();
-        caster.life().alter(caster, -150);
+        caster.life().damage(caster, 150);
 
         target = other.fighter();
         target.move(fight.map().get(123));

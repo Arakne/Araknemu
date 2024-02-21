@@ -80,7 +80,7 @@ class CreateDoubleHandlerTest extends FightBaseCase {
 
     @Test
     void handle() {
-        caster.life().alter(caster, -50);
+        caster.life().damage(caster, 50);
         requestStack.clear();
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);

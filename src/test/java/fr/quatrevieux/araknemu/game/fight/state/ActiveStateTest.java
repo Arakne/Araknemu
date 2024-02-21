@@ -56,6 +56,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
@@ -168,6 +169,7 @@ class ActiveStateTest extends FightBaseCase {
             new BeginFight(),
             new FighterTurnOrder(fight.turnList()),
             new TurnMiddle(fight.fighters()),
+            new Stats(fighter.properties()),
             new StartTurn(fight.turnList().current().get())
         );
     }

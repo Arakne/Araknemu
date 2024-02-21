@@ -59,12 +59,21 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public int alter(Fighter caster, int value) {
+    public @NonNegative int heal(Fighter caster, @NonNegative int value) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");
         }
 
-        return delegate.alter(caster, value);
+        return delegate.heal(caster, value);
+    }
+
+    @Override
+    public @NonNegative int damage(Fighter caster, @NonNegative int value, @NonNegative int baseDamage) {
+        if (delegate == null) {
+            throw new IllegalStateException("PlayerFighterLife must be initialized");
+        }
+
+        return delegate.damage(caster, value, baseDamage);
     }
 
     @Override
@@ -92,6 +101,15 @@ public final class PlayerFighterLife implements FighterLife {
         }
 
         delegate.resuscitate(caster, value);
+    }
+
+    @Override
+    public void alterErosion(int value) {
+        if (delegate == null) {
+            throw new IllegalStateException("PlayerFighterLife must be initialized");
+        }
+
+        delegate.alterErosion(value);
     }
 
     /**

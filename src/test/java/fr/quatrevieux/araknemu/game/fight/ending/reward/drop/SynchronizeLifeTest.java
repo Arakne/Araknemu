@@ -48,7 +48,7 @@ class SynchronizeLifeTest extends FightBaseCase {
 
     @Test
     void applyOnPlayer() {
-        player.fighter().life().alter(player.fighter(), -100);
+        player.fighter().life().damage(player.fighter(), 100);
 
         DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
 

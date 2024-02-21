@@ -42,7 +42,7 @@ public final class FixedDamageHandler extends AbstractPreRollEffectHandler imple
     protected void applyOnTarget(FightCastScope cast, SpellEffect effect, Fighter target, EffectValue value) {
         // This is a fixed effect, without any elements
         // So it does not call any buff hooks
-        target.life().alter(cast.caster(), -value.value());
+        target.life().damage(cast.caster(), value.value());
     }
 
     @Override
@@ -54,7 +54,7 @@ public final class FixedDamageHandler extends AbstractPreRollEffectHandler imple
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        buff.target().life().alter(buff.caster(), -EffectValue.create(buff.effect(), buff.caster(), buff.target()).value());
+        buff.target().life().damage(buff.caster(), EffectValue.create(buff.effect(), buff.caster(), buff.target()).value());
 
         return !buff.target().dead();
     }

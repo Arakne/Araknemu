@@ -55,6 +55,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrate
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FightEnd;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
@@ -182,6 +183,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertAll(
             new FinishTurn(currentTurn),
             new TurnMiddle(fight.fighters()),
+            new Stats(player.fighter().properties()),
             new StartTurn(currentTurn = fight.turnList().current().get())
         );
 

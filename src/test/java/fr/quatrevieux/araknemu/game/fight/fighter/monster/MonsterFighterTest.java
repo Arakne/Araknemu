@@ -39,7 +39,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMoved;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -50,7 +49,6 @@ import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentServic
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -190,7 +188,7 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.init();
         assertFalse(fighter.dead());
 
-        fighter.life().alter(fighter, -10000);
+        fighter.life().damage(fighter, 10000);
 
         assertTrue(fighter.dead());
     }

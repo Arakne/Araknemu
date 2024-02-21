@@ -52,7 +52,7 @@ public final class HealOnAttackHandler implements EffectHandler, BuffHook {
         final int heal = value.value() * percent / 100;
 
         if (heal > 0) {
-            caster.life().alter(buff.target(), heal);
+            caster.life().heal(buff.target(), heal);
         }
     }
 }

@@ -51,7 +51,7 @@ public final class PercentLifeLostDamageHandler implements EffectHandler {
         final SpellEffect spellEffect = effect.effect();
         final EffectValue.Context context = EffectValue.preRoll(spellEffect, caster);
         final FighterLife casterLife = caster.life();
-        final int lostLife = casterLife.max() - casterLife.current();
+        final int lostLife = Math.max(casterLife.max() - casterLife.current(), 0);
 
         // Do not use AbstractPreRollEffectHandler to ensure that current life is not changed
         // during the loop, so that damage are computed on the same life value

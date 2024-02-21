@@ -258,7 +258,7 @@ class ApplySpellOnStartTurnHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
-        target.life().alter(target, -49);
+        target.life().damage(target, 49);
         handler.buff(scope, scope.effects().get(0));
         requestStack.clear();
 

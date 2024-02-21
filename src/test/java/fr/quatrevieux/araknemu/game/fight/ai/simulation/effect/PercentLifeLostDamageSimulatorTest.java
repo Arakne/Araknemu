@@ -61,7 +61,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
         target.init();
         fighter.init();
         target.life().alterMax(target, 1000);
-        fighter.life().alter(target, -100);
+        fighter.life().damage(target, 100);
         ai = new FighterAI(fighter, fight, new NullGenerator());
         simulator = new PercentLifeLostDamageSimulator(Element.EARTH);
     }
@@ -71,7 +71,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
         assertEquals(-10, simulate().enemiesLife());
         assertEquals(0, simulate().selfLife());
 
-        fighter.life().alter(fighter, 50);
+        fighter.life().heal(fighter, 50);
         assertEquals(-5, simulate().enemiesLife());
     }
 
@@ -83,7 +83,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
         assertEquals(-2, simulate().enemiesLife());
         assertEquals(0, simulate().selfLife());
 
-        fighter.life().alter(fighter, -100);
+        fighter.life().damage(fighter, 100);
         assertEquals(-10, simulate().enemiesLife());
 
         simulator = new PercentLifeLostDamageSimulator(Element.WATER);

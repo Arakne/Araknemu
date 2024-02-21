@@ -60,7 +60,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
         target = other.fighter();
 
         fighter.init();
-        fighter.life().alter(fighter, -30);
+        fighter.life().damage(fighter, 30);
         ai = new FighterAI(fighter, fight, new NullGenerator());
     }
 

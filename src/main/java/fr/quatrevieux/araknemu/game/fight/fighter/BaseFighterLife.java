@@ -22,8 +22,10 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
 
 /**
  * Handle life points for fighters
@@ -33,6 +35,7 @@ public final class BaseFighterLife implements FighterLife {
 
     private @NonNegative int max;
     private @NonNegative int current;
+    private @IntRange(from = 0, to = 100) int erosion = 0;
     private boolean dead = false;
 
     public BaseFighterLife(Fighter fighter, @NonNegative int life, @NonNegative int max) {
@@ -61,30 +64,47 @@ public final class BaseFighterLife implements FighterLife {
     }
 
     @Override
-    @SuppressWarnings("compound.assignment") // bound of value is not resolved
-    public int alter(Fighter caster, int value) {
+    public @NonNegative int heal(Fighter caster, @NonNegative int value) {
         if (dead) {
             return 0;
         }
 
-        if (value < -current) {
-            value = -current;
-        } else if (value > max - current) {
-            value = max - current;
+        final int current = this.current;
+        final int left = Math.max(max - current, 0);
+        final int actualHeal = Math.min(value, left);
+
+        this.current = current + actualHeal;
+
+        fighter.fight().dispatch(new FighterLifeChanged(fighter, caster, actualHeal));
+        fighter.buffs().onLifeAltered(actualHeal);
+
+        return actualHeal;
+    }
+
+    @Override
+    public @NonNegative int damage(Fighter caster, @NonNegative int value, @NonNegative int baseDamage) {
+        if (dead) {
+            return 0;
         }
 
-        current += value;
+        final int current = this.current;
+        final int actualDamage = Math.min(value, current);
+        final int newLife = Asserter.castNonNegative(current - actualDamage);
 
-        fighter.fight().dispatch(new FighterLifeChanged(fighter, caster, value));
+        // Apply erosion
+        max = Math.max(max - (erosion * baseDamage / 100), 1);
 
-        if (current == 0) {
+        this.current = Math.min(newLife, max);
+        fighter.fight().dispatch(new FighterLifeChanged(fighter, caster, -actualDamage));
+
+        if (newLife == 0) {
             dead = true;
             fighter.fight().dispatch(new FighterDie(fighter, caster));
         } else {
-            fighter.buffs().onLifeAltered(value);
+            fighter.buffs().onLifeAltered(-actualDamage);
         }
 
-        return value;
+        return actualDamage;
     }
 
     @Override
@@ -123,5 +143,10 @@ public final class BaseFighterLife implements FighterLife {
 
         current = Math.min(value, max);
         dead = false;
+    }
+
+    @Override
+    public void alterErosion(int value) {
+        erosion = Math.max(0, Math.min(100, erosion + value));
     }
 }

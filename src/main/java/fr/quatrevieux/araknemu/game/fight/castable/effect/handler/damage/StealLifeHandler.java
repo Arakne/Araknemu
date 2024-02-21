@@ -73,6 +73,6 @@ public final class StealLifeHandler extends AbstractAttenuableAreaEffectHandler 
         }
 
         // Minimal heal is 1
-        caster.life().alter(caster, Math.max(-damage / 2, 1));
+        caster.life().heal(caster, Math.max(-damage / 2, 1));
     }
 }

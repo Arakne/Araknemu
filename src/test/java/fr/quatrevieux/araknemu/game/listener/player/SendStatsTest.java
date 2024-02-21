@@ -56,7 +56,7 @@ class SendStatsTest extends FightBaseCase {
         PlayerFighter fighter = player.fighter();
 
         fighter.init();
-        fighter.life().alter(fighter, -100);
+        fighter.life().heal(fighter, -100);
 
         listener.on(new CharacteristicsChanged());
 

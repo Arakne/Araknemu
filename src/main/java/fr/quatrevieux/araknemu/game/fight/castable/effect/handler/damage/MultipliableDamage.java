@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * Base type for damage object which can be multiplied
@@ -31,7 +31,8 @@ public interface MultipliableDamage {
      * @return The damage value. If negative, the damage is transformed to heal.
      *     If positive the number of life point to remove
      *
-     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(FighterData, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#damage(Fighter, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
      */
     public int value();
 

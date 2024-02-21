@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
-import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.EmptySpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
@@ -159,7 +158,7 @@ class StaticInvocationFighterTest extends FightBaseCase {
         fighter.init();
         assertFalse(fighter.dead());
 
-        fighter.life().alter(fighter, -10000);
+        fighter.life().damage(fighter, 10000);
 
         assertTrue(fighter.dead());
     }

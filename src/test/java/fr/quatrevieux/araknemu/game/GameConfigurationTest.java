@@ -114,6 +114,7 @@ class GameConfigurationTest extends GameBaseCase {
 
         assertEquals(1.0, configuration.fight().xpRate());
         assertEquals(1.0, configuration.fight().dropRate());
+        assertEquals(10, configuration.fight().initialErosion());
     }
 
     @Test

@@ -72,7 +72,7 @@ class SendFightActionTerminatedTest extends FightBaseCase {
 
     @Test
     void onFightActionTerminatedWithDeadFighter() {
-        player.fighter().life().alter(player.fighter(), -1000);
+        player.fighter().life().damage(player.fighter(), 1000);
 
         Move move = new Move(
             player.fighter(),

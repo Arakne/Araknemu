@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
@@ -42,6 +43,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CarryingModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.module.FighterInitializationModule;
 import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import fr.quatrevieux.araknemu.game.fight.module.SpiritualLeashModule;
@@ -107,6 +109,7 @@ public class FunctionalTest extends FightBaseCase {
         fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
         fight.register(new SpiritualLeashModule(fight));
         fight.register(new AiModule(container.get(AiFactory.class)));
+        fight.register(new FighterInitializationModule(container.get(GameConfiguration.class).fight()));
 
         fighter1 = player.fighter();
         fighter2 = other.fighter();
@@ -136,9 +139,13 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(fighter1.life().current(), fighter1.life().max());
         assertEquals(fighter2.life().current(), fighter2.life().max());
 
+        int maxBefore = fighter2.life().max();
+        int lifeBefore = fighter2.life().current();
+
         fighter1.turn().stop();
 
-        assertEquals(12, fighter2.life().max() - fighter2.life().current());
+        assertEquals(12, lifeBefore - fighter2.life().current());
+        assertEquals(1, maxBefore - fighter2.life().max());
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -12));
 
         assertEquals(4, buff1.get().remainingTurns());
@@ -189,9 +196,10 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void probableEffectSpell() {
+        int lifeBefore = fighter2.life().current();
         Spell spell = castNormal(109, fighter2.cell()); // Bluff
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
 
         assertBetween(1, 50, damage);
 
@@ -206,12 +214,14 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void returnSpell() {
+        int lifeBefore = fighter2.life().current();
+
         castNormal(4, fighter1.cell()); // Return spell
         fighter1.turn().stop();
 
         castNormal(109, fighter1.cell()); // Bluff
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
 
         assertBetween(1, 50, damage);
 
@@ -320,7 +330,7 @@ public class FunctionalTest extends FightBaseCase {
         int healCount = 0;
 
         for (int i = 0; i < 15; ++i) {
-            fighter1.life().alter(fighter1, fighter1.life().max() - fighter1.life().current() - 15); // Fighter1 has -15 LP
+            fighter1.life().heal(fighter1, fighter1.life().max() - fighter1.life().current() - 15); // Fighter1 has -15 LP
             int lifeBefore = fighter1.life().current();
 
             castNormal(103, fighter1.cell()); // Chance d'Ecaflip
@@ -388,7 +398,7 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void heal() {
-        fighter1.life().alter(fighter1, -50);
+        fighter1.life().damage(fighter1, 50, 0); // ignore erosion
 
         castNormal(121, fighter1.cell()); // Mot curatif
 
@@ -400,7 +410,7 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void healAsBuff() {
-        fighter1.life().alter(fighter1, -50);
+        fighter1.life().damage(fighter1, 50, 0); // ignore erosion
 
         castNormal(131, fighter1.cell()); // Mot de Régénération
 
@@ -419,7 +429,7 @@ public class FunctionalTest extends FightBaseCase {
     void healOnDamage() {
         castNormal(1556, fighter1.cell()); // Fourberie
 
-        fighter1.life().alter(fighter1, -50);
+        fighter1.life().damage(fighter1, 50, 0); // ignore erosion
 
         int heal = 50 + fighter1.life().current() - fighter1.life().max();
         assertEquals(37, heal);
@@ -787,9 +797,11 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void casterFixedDamage() {
+        int lifeBefore = fighter1.life().current();
+
         castNormal(135, fighter2.cell()); // Mot de Sacrifice
 
-        int damage = fighter1.life().max() - fighter1.life().current();
+        int damage = lifeBefore - fighter1.life().current();
 
         assertBetween(31, 40, damage);
         assertTrue(fighter2.life().isFull());
@@ -822,19 +834,21 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void percentLifeDamage() {
+        int lifeBefore = fighter2.life().current();
         castNormal(951, fighter2.cell()); // Rocaille
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
 
         assertEquals(44, damage);
     }
 
     @Test
     void percentLifeLostDamage() {
-        fighter1.life().alter(fighter1, -100);
+        fighter1.life().damage(fighter1, 100, 0); // ignore erosion
+        int lifeBefore = fighter2.life().current();
         castNormal(1708, fighter2.cell()); // Correction Bwork
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
 
         assertEquals(30, damage);
     }
@@ -855,7 +869,7 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void motlotov() {
-        fighter1.life().alter(fighter1, -195); // Set life to 100LP
+        fighter1.life().damage(fighter1, 195); // Set life to 100LP
         castNormal(427, fighter1.cell()); // Mot Lotof
 
         requestStack.assertOne(ActionEffect.changeAppearance(fighter1, fighter1, 7032, 2));
@@ -895,11 +909,13 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void maximizeTargetEffects() {
+        int lifeBefore = fighter2.life().current();
+
         castNormal(410, fighter2.cell()); // Brokle
         passTurns(1);
         castNormal(109, fighter2.cell()); // Bluff
 
-        assertEquals(45, fighter2.life().max() - fighter2.life().current());
+        assertEquals(45, lifeBefore - fighter2.life().current());
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -45));
     }
 
@@ -926,13 +942,14 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void damageOnActionPointUse() {
+        int lifeBefore = fighter2.life().current();
         castNormal(200, fighter2.cell()); // Poison Paralysant
         fighter1.turn().stop();
 
         fighter2.turn().points().useActionPoints(5);
         fighter2.turn().stop();
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
         assertEquals(12, damage);
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -12));
     }
@@ -1004,7 +1021,7 @@ public class FunctionalTest extends FightBaseCase {
         );
 
         castNormal(155, fighters.get(0).cell()); // Vitality
-        fighters.get(0).life().alter(fighters.get(0), -110);
+        fighters.get(0).life().damage(fighters.get(0), 110);
 
         fighters.get(0).buffs().removeAll();
 
@@ -1016,7 +1033,7 @@ public class FunctionalTest extends FightBaseCase {
     @Test
     void dieOnBuffRefresh() {
         castNormal(155, fighter1.cell()); // Vitality
-        fighter1.life().alter(fighter1, -300);
+        fighter1.life().damage(fighter1, 300);
 
         passTurns(20);
         fighter1.turn().stop();
@@ -1109,15 +1126,17 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void healOnAttack() {
+        int lifeBefore = fighter1.life().current();
+
         castNormal(1687, fighter1.cell()); // Soin Sylvestre
-        fighter2.life().alter(fighter2, -20);
+        fighter2.life().damage(fighter2, 20);
         fighter1.turn().stop();
 
         int lastLife = fighter2.life().current();
 
         castNormal(183, fighter1.cell()); // Simple attack
 
-        int damage = fighter1.life().max() - fighter1.life().current();
+        int damage = lifeBefore - fighter1.life().current();
 
         assertEquals(damage, fighter2.life().current() - lastLife);
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, damage));
@@ -1125,12 +1144,14 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void addCharacteristicOnDamage() {
+        int lifeBefore = fighter1.life().current();
+
         castNormal(433, fighter1.cell()); // Châtiment Osé
         fighter1.turn().stop();
 
         castNormal(183, fighter1.cell()); // Simple attack
 
-        int damage = fighter1.life().max() - fighter1.life().current();
+        int damage = lifeBefore - fighter1.life().current();
         Buff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
 
         assertEquals(damage, fighter1.characteristics().get(Characteristic.LUCK));
@@ -1142,6 +1163,8 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void addVitalityOnDamage() {
+        fighter1.life().alterErosion(-10); // Disable erosion, to make sure it doesn't affect the test
+
         castNormal(441, fighter1.cell()); // Châtiment Vitalesque
         fighter1.turn().stop();
 
@@ -1359,11 +1382,15 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(1, fight.map().objects().stream().count());
         requestStack.clear();
 
+        int lifeBefore = fighter2.life().current();
+        int maxBefore = fighter2.life().max();
+
         fighter2.move(fight.map().get(126)); // Move on trap
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
 
         assertBetween(13, 19, damage);
+        assertEquals(1, maxBefore - fighter2.life().max());
         assertFalse(fight.map().objects().stream().findFirst().isPresent());
         requestStack.assertOne(new RemoveZone(trap));
         requestStack.assertOne(new UpdateCells(UpdateCells.Data.reset(126)));
@@ -1388,6 +1415,8 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void trapChain() {
+        int lifeBefore = fighter2.life().current();
+
         fighter1.move(fight.map().get(123));
         fighter1.turn().points().addActionPoints(10);
 
@@ -1401,7 +1430,7 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(125), service.get(73).level(5)));
         requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(80), service.get(65).level(5)));
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
 
         assertBetween(13, 19, damage);
         assertEquals(80, fighter2.cell().id());
@@ -1429,6 +1458,11 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void areaTrapShouldApplyEffectToAllFightersInArea() {
+        int lifeBefore1 = fighter1.life().current();
+        int lifeBefore2 = fighter2.life().current();
+        int maxBefore1 = fighter1.life().max();
+        int maxBefore2 = fighter2.life().max();
+
         fighter1.move(fight.map().get(167));
 
         castNormal(79, fight.map().get(197)); // piège de masse
@@ -1436,30 +1470,35 @@ public class FunctionalTest extends FightBaseCase {
         fighter2.move(fight.map().get(226)); // Move in trap area
 
 
-        int damage1 = fighter1.life().max() - fighter1.life().current();
-        int damage2 = fighter2.life().max() - fighter2.life().current();
+        int damage1 = lifeBefore1 - fighter1.life().current();
+        int damage2 = lifeBefore2 - fighter2.life().current();
 
         assertBetween(13, 25, damage1);
         assertBetween(13, 25, damage2);
+        assertBetween(1, 2, maxBefore1 - fighter1.life().max());
+        assertBetween(1, 2, maxBefore2 - fighter2.life().max());
 
         requestStack.assertOne(ActionEffect.trapTriggered(fighter1, fighter2, fight.map().get(197), service.get(79).level(5)));
     }
 
     @Test
     void addPhysicalDamage() {
+        int lifeBefore = fighter2.life().current();
+
         fighter1.turn().points().addActionPoints(10);
 
         castNormal(16, fighter1.cell()); // Science du bâton
         castNormal(183, fighter2.cell()); // Ronce
 
-        int damage = fighter2.life().max() - fighter2.life().current();
+        int damage = lifeBefore - fighter2.life().current();
         assertBetween(30, 40, damage); // +15 damage
 
-        fighter2.life().alter(fighter2, 100);
+        fighter2.life().heal(fighter2, 1000);
+        lifeBefore = fighter2.life().current();
 
         castNormal(3, fighter2.cell()); // Attaque naturelle
 
-        damage = fighter2.life().max() - fighter2.life().current();
+        damage = lifeBefore - fighter2.life().current();
         assertBetween(17, 27, damage); // Boost not applied
     }
 
@@ -1978,7 +2017,7 @@ public class FunctionalTest extends FightBaseCase {
         int damage = fighter2.life().max() - fighter2.life().current();
         assertBetween(1, 12, damage);
 
-        fighter2.life().alter(fighter2, 100);
+        fighter2.life().heal(fighter2, 100);
 
         castCloseCombatCritical(fighter2.cell());
         damage = fighter2.life().max() - fighter2.life().current();
@@ -1987,7 +2026,7 @@ public class FunctionalTest extends FightBaseCase {
         passTurns(5);
         assertEquals(90, CastableWeapon.class.cast(fighter1.closeCombat().get()).ability());
 
-        fighter2.life().alter(fighter2, 100);
+        fighter2.life().heal(fighter2, 100);
 
         castCloseCombatCritical(fighter2.cell());
         damage = fighter2.life().max() - fighter2.life().current();
@@ -1999,7 +2038,7 @@ public class FunctionalTest extends FightBaseCase {
         fighter1.move(fight.map().get(166));
         fighter2.move(fight.map().get(152));
 
-        fighter2.life().alter(fighter2, 10 - fighter2.life().current());
+        fighter2.life().heal(fighter2, 10 - fighter2.life().current());
 
         castNormal(157, fight.map().get(152)); // épée céleste
 
@@ -2055,6 +2094,48 @@ public class FunctionalTest extends FightBaseCase {
 
         assertBetween(111, 120, fighter1.characteristics().discernment());
         assertEquals(6, fighter1.buffs().stream().filter(b -> b.effect().effect() == 176).findFirst().get().remainingTurns());
+    }
+
+    @Test
+    void erosionSimpleDamage() {
+        int lastLife = fighter2.life().current();
+        int lastMax = fighter2.life().max();
+
+        fighter1.characteristics().alter(Characteristic.STRENGTH, 100);
+
+        castNormal(183, fighter2.cell()); // Ronce
+        assertBetween(25, 42, lastLife - fighter2.life().current());
+        assertBetween(2, 4, lastMax - fighter2.life().max());
+    }
+
+    @Test
+    void erosionIgnoreArmor() {
+        int lastLife = fighter2.life().current();
+        int lastMax = fighter2.life().max();
+
+        fighter1.characteristics().alter(Characteristic.STRENGTH, 100);
+        fighter2.characteristics().alter(Characteristic.INTELLIGENCE, 1000);
+        fighter1.turn().stop();
+
+        castNormal(6, fighter2.cell()); // Armure terrestre
+        fighter2.turn().stop();
+
+        castNormal(183, fighter2.cell()); // Ronce
+        assertBetween(2, 4, lastLife - fighter2.life().max());
+        assertBetween(2, 4, lastMax - fighter2.life().max());
+    }
+
+    @Test
+    void erosionCantKill() {
+        fighter1.characteristics().alter(Characteristic.STRENGTH, 10000);
+        fighter2.characteristics().alter(Characteristic.INTELLIGENCE, 1000000);
+        fighter1.turn().stop();
+
+        castNormal(6, fighter2.cell()); // Armure terrestre
+        fighter2.turn().stop();
+
+        castNormal(183, fighter2.cell()); // Ronce
+        assertEquals(1, fighter2.life().max());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
