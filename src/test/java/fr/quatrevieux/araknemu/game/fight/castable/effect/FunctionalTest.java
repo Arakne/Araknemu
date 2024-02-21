@@ -2138,6 +2138,21 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(1, fighter2.life().max());
     }
 
+    @Test
+    void addErosion() {
+        castNormal(433, fighter1.cell()); // châtiment +5% érosion
+
+        int max = fighter1.life().max();
+        fighter1.life().damage(fighter1, 100);
+        assertEquals(max - 15, fighter1.life().max());
+
+        passTurns(6);
+
+        max = fighter1.life().max();
+        fighter1.life().damage(fighter1, 100);
+        assertEquals(max - 10, fighter1.life().max());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
