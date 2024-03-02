@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.util.SafeLinkedList;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Iterator;
@@ -141,9 +142,16 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onLifeAltered(int value) {
+    public void onHealApplied(@NonNegative int value) {
         for (Buff buff : buffs) {
-            buff.hook().onLifeAltered(buff, value);
+            buff.hook().onHealApplied(buff, value);
+        }
+    }
+
+    @Override
+    public void onDamageApplied(@NonNegative int value) {
+        for (Buff buff : buffs) {
+            buff.hook().onDamageApplied(buff, value);
         }
     }
 

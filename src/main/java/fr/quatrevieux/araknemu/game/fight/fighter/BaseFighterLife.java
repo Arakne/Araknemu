@@ -76,7 +76,7 @@ public final class BaseFighterLife implements FighterLife {
         this.current = current + actualHeal;
 
         fighter.fight().dispatch(new FighterLifeChanged(fighter, caster, actualHeal));
-        fighter.buffs().onLifeAltered(actualHeal);
+        fighter.buffs().onHealApplied(actualHeal);
 
         return actualHeal;
     }
@@ -101,7 +101,7 @@ public final class BaseFighterLife implements FighterLife {
             dead = true;
             fighter.fight().dispatch(new FighterDie(fighter, caster));
         } else {
-            fighter.buffs().onLifeAltered(-actualDamage);
+            fighter.buffs().onDamageApplied(actualDamage);
         }
 
         return actualDamage;

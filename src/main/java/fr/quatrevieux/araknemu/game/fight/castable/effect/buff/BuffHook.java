@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Reflect
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
 /**
@@ -176,6 +177,42 @@ public interface BuffHook {
      * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
      */
     public default void onLifeAltered(Buff buff, int value) {}
+
+    /**
+     * The fighter has suffered a damage, so its life has been altered
+     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(Buff, int)}
+     *
+     * This buff is always called when damage is applied, even if the damage is completely absorbed,
+     * or in case of direct or indirect damage.
+     *
+     * Unlike {@link BuffHook#onDamage(Buff, Damage)}, the effects has already been applied
+     *
+     * Note: this hook is not called if the attack has killed the fighter
+     *
+     * @param buff The active buff
+     * @param value Altered life value. Can be 0 when the effect is completely absorbed
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#damage(Fighter, int)
+     * @see #onDirectDamageApplied(Buff, Fighter, int) To hook only damage applied by direct attack
+     */
+    public default void onDamageApplied(Buff buff, @NonNegative int value) {
+        onLifeAltered(buff, -value);
+    }
+
+    /**
+     * The fighter life has been healed
+     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(Buff, int)}
+     *
+     * This hook is called after heal is applied.
+     *
+     * @param buff The active buff
+     * @param value Altered life value. Can be 0 when the fighter is already full life, so heal has no effect
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
+     */
+    public default void onHealApplied(Buff buff, @NonNegative int value) {
+        onLifeAltered(buff, value);
+    }
 
     /**
      * Damage has been reflected by the cast target

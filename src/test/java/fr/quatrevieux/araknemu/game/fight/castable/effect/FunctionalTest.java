@@ -2171,6 +2171,23 @@ public class FunctionalTest extends FightBaseCase {
     }
 
     @Test
+    void applyEffectOnHealWithNonEffectiveHeal() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(500).currentLife(500))
+            .addEnemy(fb -> fb.cell(122).maxLife(1000).currentLife(1000))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castNormal(1009, target.cell()); // Peste noire
+        assertEquals(1000, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 87));
+
+        castNormal(130, target.cell()); // Mot revitalisant
+        assertEquals(750, target.life().current()); // 250 damage
+    }
+
+    @Test
     void applyEffectOnHealShouldIgnoreArmor() {
         List<Fighter> fighters = configureFight(builder -> builder
             .addSelf(fb -> fb.cell(136).maxLife(500).currentLife(500))

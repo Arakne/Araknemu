@@ -110,6 +110,45 @@ class ApplyOnHealTest extends FightBaseCase {
     }
 
     @Test
+    void applyWithNonEffectiveHeal() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(96);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.max()).thenReturn(15);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(new SpellEffectTarget(64));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
+
+        assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
+
+        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        requestStack.assertLast(new AddBuff(buff));
+        requestStack.clear();
+
+        target.life().heal(target, 1);
+
+        int damage = target.life().max() - target.life().current();
+        assertBetween(10, 15, damage);
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(target, target, 0),
+            ActionEffect.alterLifePoints(caster, target, -damage)
+        );
+
+        int life = target.life().current();
+
+        requestStack.clear();
+        target.life().damage(target, 0);
+
+        assertEquals(life, target.life().current()); // Not triggered by damage
+    }
+
+    @Test
     void applyArea() {
         target.life().damage(target, 1);
 

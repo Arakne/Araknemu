@@ -119,6 +119,8 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(0, weapon.effects().get(0).duration());
         assertEquals(0, weapon.effects().get(0).probability());
         assertEquals(WeaponEffectTarget.INSTANCE, weapon.effects().get(0).target());
+        assertFalse(weapon.effects().get(0).target().isHook());
+        assertEquals(0, weapon.effects().get(0).target().hookId());
         assertEquals(0, weapon.effects().get(0).boost());
         assertEquals(1, weapon.effects().get(0).area().size());
         assertInstanceOf(CrossArea.class, weapon.effects().get(0).area());
@@ -150,6 +152,8 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(0, weapon.effects().get(0).duration());
         assertEquals(0, weapon.effects().get(0).probability());
         assertEquals(WeaponEffectTarget.INSTANCE, weapon.effects().get(0).target());
+        assertFalse(weapon.effects().get(0).target().isHook());
+        assertEquals(0, weapon.effects().get(0).target().hookId());
         assertEquals(0, weapon.effects().get(0).boost());
         assertEquals(0, weapon.effects().get(0).area().size());
         assertInstanceOf(CellArea.class, weapon.effects().get(0).area());
@@ -169,6 +173,8 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(0, weapon.criticalEffects().get(0).duration());
         assertEquals(0, weapon.criticalEffects().get(0).probability());
         assertEquals(WeaponEffectTarget.INSTANCE, weapon.criticalEffects().get(0).target());
+        assertFalse(weapon.criticalEffects().get(0).target().isHook());
+        assertEquals(0, weapon.criticalEffects().get(0).target().hookId());
         assertEquals(0, weapon.criticalEffects().get(0).boost());
         assertEquals(0, weapon.criticalEffects().get(0).area().size());
         assertInstanceOf(CellArea.class, weapon.criticalEffects().get(0).area());

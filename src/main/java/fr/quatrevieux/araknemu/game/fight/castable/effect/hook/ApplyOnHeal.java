@@ -31,12 +31,7 @@ public final class ApplyOnHeal extends AbstractEffectHookHandler {
     protected BuffHook createHook(EffectHandler handler) {
         return new BuffHook() {
             @Override
-            public void onLifeAltered(Buff buff, int value) {
-                // @todo should be triggered even if heal is 0
-                if (value <= 0) {
-                    return;
-                }
-
+            public void onHealApplied(Buff buff, int value) {
                 handler.applyFromHook(buff);
             }
         };
