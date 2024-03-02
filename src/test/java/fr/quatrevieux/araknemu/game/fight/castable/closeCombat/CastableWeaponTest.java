@@ -63,6 +63,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(50, weapon.criticalHit());
         assertEquals(100, weapon.ability());
         assertEquals(service.create(40).type(), weapon.weaponType());
+        assertEquals("Weapon{id=40, name=Petite Epée de Boisaille}", weapon.toString());
     }
 
     @Test

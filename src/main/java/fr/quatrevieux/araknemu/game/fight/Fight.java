@@ -99,7 +99,7 @@ public final class Fight implements Dispatcher, Sender {
         this.spectators = new Spectators(this);
         this.fighters = new FighterList(this);
         this.actions = actions.createForFight(this);
-        this.effects = new EffectsHandler(this);
+        this.effects = new EffectsHandler(this, logger);
     }
 
     /**

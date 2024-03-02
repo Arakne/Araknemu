@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -40,6 +41,7 @@ import org.mockito.Mockito;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FixedHealHandlerTest extends FightBaseCase {
@@ -248,6 +250,30 @@ class FixedHealHandlerTest extends FightBaseCase {
         assertBetween(10, 15, computeHeal());
 
         requestStack.assertLast(ActionEffect.alterLifePoints(caster, target, computeHeal()));
+    }
+
+    @Test
+    void onStartTurnKillByHookShouldReturnFalse() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        // Kill on heal
+        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, new BuffHook() {
+            @Override
+            public void onLifeAltered(Buff buff, int value) {
+                buff.target().life().kill(buff.caster());
+            }
+        }));
+        requestStack.clear();
+
+        assertFalse(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+
+        assertTrue(target.dead());
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, 10),
+            ActionEffect.fighterDie(caster, target)
+        );
     }
 
     private int computeHeal() {

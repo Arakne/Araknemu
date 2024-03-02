@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.spell.effect.target;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Handle effect targets
@@ -39,4 +40,23 @@ public interface EffectTarget {
      * @return true if the fighter is a valid target, or false
      */
     public boolean test(FighterData caster, FighterData fighter);
+
+    /**
+     * Does the effect is applied through a hook?
+     * An effect with a hook is not applied directly, but triggered by a hook (for example, when a fighter is hit)
+     *
+     * @see #hookId() To get the hook id to use
+     */
+    public default boolean isHook() {
+        return false;
+    }
+
+    /**
+     * Get the hook id
+     *
+     * @see #isHook() To check if the effect is applied through a hook
+     */
+    public default @NonNegative int hookId() {
+        return 0;
+    }
 }

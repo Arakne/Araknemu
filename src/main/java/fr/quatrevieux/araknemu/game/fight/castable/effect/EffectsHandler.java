@@ -25,12 +25,15 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.hook.EffectHookHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collections;
@@ -43,10 +46,13 @@ import java.util.Set;
  */
 public final class EffectsHandler implements CastConstraintValidator<Castable> {
     private final Fight fight;
+    private final Logger logger;
     private final Map<Integer, EffectHandler> handlers = new HashMap<>();
+    private final Map<Integer, EffectHookHandler> hooks = new HashMap<>();
 
-    public EffectsHandler(Fight fight) {
+    public EffectsHandler(Fight fight, Logger logger) {
         this.fight = fight;
+        this.logger = logger;
     }
 
     @Override
@@ -85,6 +91,10 @@ public final class EffectsHandler implements CastConstraintValidator<Castable> {
         handlers.put(effectId, applier);
     }
 
+    public void registerHook(int hookId, EffectHookHandler applier) {
+        hooks.put(hookId, applier);
+    }
+
     /**
      * Apply a cast to the fight
      *
@@ -92,6 +102,9 @@ public final class EffectsHandler implements CastConstraintValidator<Castable> {
      * Then call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCastTarget(Buff, FightCastScope)} to all targets
      *
      * After that, all effects will be applied by calling :
+     * - Checking if the effect has a hook with {@link EffectTarget#isHook()}
+     * - If the hook is found, call {@link EffectHookHandler#apply(EffectHandler, FightCastScope, FightCastScope.EffectScope)}
+     * - If no hook, or if the hook returns true, call the effect handler :
      * - {@link EffectHandler#handle(FightCastScope, FightCastScope.EffectScope)} if duration is 0
      * - {@link EffectHandler#buff(FightCastScope, FightCastScope.EffectScope)} if the effect has a duration
      */
@@ -101,19 +114,32 @@ public final class EffectsHandler implements CastConstraintValidator<Castable> {
         applyCastTarget(cast);
 
         for (FightCastScope.EffectScope effect : cast.effects()) {
-            final EffectHandler handler = handlers.get(effect.effect().effect());
-            // @todo Warning if handler is not found
-            if (handler != null) {
-                if (effect.effect().duration() == 0) {
-                    handler.handle(cast, effect);
-                } else {
-                    handler.buff(cast, effect);
-                }
+            final SpellEffect spellEffect = effect.effect();
+            final int effectId = spellEffect.effect();
+            final EffectHandler handler = handlers.get(effectId);
 
-                // Do not apply next effects if the fight is finished
-                if (!fight.active()) {
-                    break;
-                }
+            if (handler == null) {
+                logger.warn(
+                    "No handler found for effect {} when casting {}. Ignoring...",
+                    effectId,
+                    cast.action()
+                );
+                continue;
+            }
+
+            if (spellEffect.target().isHook() && !applyHook(handler, cast, effect)) {
+                continue;
+            }
+
+            if (spellEffect.duration() == 0) {
+                handler.handle(cast, effect);
+            } else {
+                handler.buff(cast, effect);
+            }
+
+            // Do not apply next effects if the fight is finished
+            if (!fight.active()) {
+                break;
             }
         }
     }
@@ -152,5 +178,31 @@ public final class EffectsHandler implements CastConstraintValidator<Castable> {
             // so simple change visitedTargets by this value is enough to keep track of all already called fighters
             visitedTargets = currentTargets;
         }
+    }
+
+    /**
+     * Apply the effect through the hook
+     *
+     * @param handler The resolved effect handler, which will be used to apply the effect
+     * @param cast The cast action
+     * @param effect The effect scope
+     *
+     * @return true if the effect should be applied directly, false to ignore it
+     */
+    private boolean applyHook(EffectHandler handler, FightCastScope cast, FightCastScope.EffectScope effect) {
+        final int hookId = effect.effect().target().hookId();
+        final EffectHookHandler hook = hooks.get(hookId);
+
+        if (hook == null) {
+            logger.warn(
+                "Hook {} not found when casting {}. Ignoring...",
+                hookId,
+                cast.action()
+            );
+
+            return true;
+        }
+
+        return hook.apply(handler, cast, effect);
     }
 }

@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -39,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -375,5 +378,55 @@ class DamageHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(100000);
 
         assertFalse(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+    }
+
+    @Test
+    void applyFromHook() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.max()).thenReturn(15);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+
+        int damage = target.life().max() - target.life().current();
+
+        assertBetween(10, 15, damage);
+
+        requestStack.assertLast(ActionEffect.alterLifePoints(caster, target, -damage));
+    }
+
+    @Test
+    void applyFromHookShouldApplyIndirectDamage() {
+        AtomicBoolean called = new AtomicBoolean(false);
+
+        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, new BuffHook() {
+            @Override
+            public void onIndirectDamage(Buff buff, Fighter caster, Damage value) {
+                called.set(true);
+            }
+        }));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.max()).thenReturn(15);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+
+        assertBetween(10, 15, target.life().max() - target.life().current());
+        assertTrue(called.get());
     }
 }

@@ -140,4 +140,30 @@ class RemoveCharacteristicHandlerTest extends FightBaseCase {
         handler.onBuffTerminated(buff);
         assertEquals(0, target.characteristics().get(Characteristic.LUCK));
     }
+
+    @Test
+    void applyFromHook() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.effect()).thenReturn(123);
+        Mockito.when(effect.min()).thenReturn(50);
+        Mockito.when(effect.max()).thenReturn(60);
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, handler));
+
+        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
+
+        assertBetween(50, 60, buff.effect().min());
+        assertEquals(0,buff.effect().max());
+        assertEquals(5, buff.remainingTurns());
+        assertTrue(buff.canBeDispelled());
+        assertBetween(-60, -50, target.characteristics().get(Characteristic.LUCK));
+    }
 }

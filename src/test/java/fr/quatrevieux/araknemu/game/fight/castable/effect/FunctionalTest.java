@@ -2153,6 +2153,72 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(max - 10, fighter1.life().max());
     }
 
+    @Test
+    void applyEffectOnHeal() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(500).currentLife(500))
+            .addEnemy(fb -> fb.cell(122).maxLife(1000).currentLife(900))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castNormal(1009, target.cell()); // Peste noire
+        assertEquals(900, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 87));
+
+        castNormal(130, target.cell()); // Mot revitalisant
+        assertBetween(650 + 2, 650 + 22, target.life().current()); // 250 damage + [2-22] heal
+    }
+
+    @Test
+    void applyEffectOnHealShouldIgnoreArmor() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(500).currentLife(500))
+            .addEnemy(fb -> fb.cell(122).maxLife(1000).currentLife(900))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castCritical(320, target.cell()); // Incurable (critical to ensure that poison is applied)
+        assertEquals(900, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 100));
+
+        fight.turnList().current().get().stop();
+
+        castNormal(20, target.cell()); // Immunité
+        fight.turnList().current().get().stop();
+
+        castNormal(130, target.cell()); // Mot revitalisant
+        assertBetween(692, 786, target.life().current()); // [136-210] damage + [2-22] heal
+    }
+
+    @Test
+    void applyEffectOnHealWithBuffHeal() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136))
+            .addEnemy(fb -> fb.cell(122).maxLife(350).currentLife(300))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castCritical(320, target.cell()); // Incurable (critical to ensure that poison is applied)
+        assertEquals(300, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 100));
+        fight.turnList().current().get().stop();
+
+        castNormal(131, target.cell()); // Mot de régénération
+        fight.turnList().current().get().stop();
+        fight.turnList().current().get().stop();
+
+        assertBetween(91, 168, target.life().current()); // [136-210] damage + [1-4] heal
+
+        fight.turnList().current().get().stop();
+        fight.turnList().current().get().stop();
+
+        assertTrue(target.dead());
+        assertFalse(fight.active());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

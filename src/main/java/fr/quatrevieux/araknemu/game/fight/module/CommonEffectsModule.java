@@ -87,6 +87,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveT
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionOnAttackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.hook.ApplyOnHeal;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 
 /**
@@ -268,6 +269,9 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(776, new AddErosionHandler());
 
         handler.register(666, new NoEffectHandler());
+
+        // Hooks
+        handler.registerHook(1, new ApplyOnHeal()); // 64 on effect target
     }
 
     @Override

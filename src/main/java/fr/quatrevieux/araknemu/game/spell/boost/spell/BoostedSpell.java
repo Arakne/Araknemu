@@ -113,4 +113,9 @@ public final class BoostedSpell implements Spell {
     public SpellConstraints constraints() {
         return new BoostedSpellConstraints(spell.constraints(), modifiers);
     }
+
+    @Override
+    public String toString() {
+        return spell.toString();
+    }
 }

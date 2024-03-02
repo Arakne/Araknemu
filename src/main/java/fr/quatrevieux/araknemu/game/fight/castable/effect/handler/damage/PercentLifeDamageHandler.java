@@ -73,13 +73,22 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
+    public void applyFromHook(Buff buff) {
+        applyBuff(buff);
+    }
+
+    @Override
     public boolean onStartTurn(Buff buff) {
+        applyBuff(buff);
+
+        return !buff.target().dead();
+    }
+
+    private void applyBuff(Buff buff) {
         final FighterData caster = buff.caster();
         final FighterData target = buff.target();
         final int damage = caster.life().current() * (EffectValue.create(buff.effect(), caster, target)).value() / 100;
 
         applier.applyFixed(buff, damage);
-
-        return !target.dead();
     }
 }

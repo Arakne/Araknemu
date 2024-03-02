@@ -172,14 +172,15 @@ public interface BuffHook {
      * @param buff The active buff
      * @param value Altered life value. Negative for a damage, positive for a heal
      *
-     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(FighterData, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#damage(Fighter, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
      */
     public default void onLifeAltered(Buff buff, int value) {}
 
     /**
      * Damage has been reflected by the cast target
      *
-     * The target can be changed using {@link ReflectedDamage#changeTarget(FighterData)}
+     * The target can be changed using {@link ReflectedDamage#changeTarget(Fighter)}
      * Or modified using {@link ReflectedDamage#multiply(int)}
      *
      * @param buff The active buff

@@ -27,8 +27,12 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.sql.SQLException;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -148,5 +152,42 @@ class SpellEffectTargetTest extends FightBaseCase {
 
         assertEquals(et.hashCode(), new SpellEffectTarget(SpellEffectTarget.NOT_ENEMY | SpellEffectTarget.NOT_SELF).hashCode());
         assertNotEquals(et.hashCode(), new SpellEffectTarget(SpellEffectTarget.NOT_ENEMY).hashCode());
+    }
+
+    @ParameterizedTest
+    @MethodSource("hookIds")
+    void withHook(int flag, int hookId) {
+        SpellEffectTarget et = new SpellEffectTarget(flag);
+
+        assertTrue(et.isHook());
+        assertEquals(hookId, et.hookId());
+
+        assertTrue(et.test(caster, caster));
+        assertTrue(et.test(caster, enemy));
+        assertTrue(et.test(caster, teammate));
+    }
+
+    @ParameterizedTest
+    @MethodSource("hookIds")
+    void withHookAndOtherFlag(int flag, int hookId) {
+        SpellEffectTarget et = new SpellEffectTarget(flag | SpellEffectTarget.NOT_SELF | SpellEffectTarget.NOT_ENEMY);
+
+        assertTrue(et.isHook());
+        assertEquals(hookId, et.hookId());
+
+        assertFalse(et.test(caster, caster));
+        assertFalse(et.test(caster, enemy));
+        assertTrue(et.test(caster, teammate));
+    }
+
+    public static Stream<Arguments> hookIds() {
+        return Stream.of(
+            Arguments.of(64, 1),
+            Arguments.of(128, 2),
+            Arguments.of(192, 3),
+            Arguments.of(256, 4),
+            Arguments.of(320, 5),
+            Arguments.of(2688, 42)
+        );
     }
 }

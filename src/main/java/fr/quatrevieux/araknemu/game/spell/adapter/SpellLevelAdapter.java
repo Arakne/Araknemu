@@ -112,4 +112,9 @@ public final class SpellLevelAdapter implements Spell {
     public SpellConstraints constraints() {
         return constraints;
     }
+
+    @Override
+    public String toString() {
+        return "Spell{id=" + id() + ", level=" + level() + ", name=" + template.name() + "}";
+    }
 }

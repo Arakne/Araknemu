@@ -83,6 +83,7 @@ class SpellLevelAdapterTest extends GameBaseCase {
 
         assertEquals(0, spell.spriteId());
         assertEquals("0,1,1", spell.spriteArgs());
+        assertEquals("Spell{id=202, level=1, name=Morsure du Bouftou}", spell.toString());
     }
 
     @Test
