@@ -988,6 +988,11 @@ public final class GameModule implements ContainerModule {
             simulator.register(176, new AlterCharacteristicSimulator(20)); // discernment
             simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
             simulator.register(182, new AddMaxSummonedCreatureSimulator(10)); // summoned creature
+            simulator.register(210, new AlterCharacteristicSimulator(5)); // %res earth
+            simulator.register(211, new AlterCharacteristicSimulator(5)); // %res water
+            simulator.register(212, new AlterCharacteristicSimulator(5)); // %res air
+            simulator.register(213, new AlterCharacteristicSimulator(5)); // %res fire
+            simulator.register(214, new AlterCharacteristicSimulator(5)); // %res neutral
             simulator.register(606, new AlterCharacteristicSimulator()); // Wisdom not dispellable
             simulator.register(607, new AlterCharacteristicSimulator()); // Strength not dispellable
             simulator.register(608, new AlterCharacteristicSimulator()); // Luck not dispellable
@@ -1007,6 +1012,11 @@ public final class GameModule implements ContainerModule {
             simulator.register(171, new AlterCharacteristicSimulator(-5)); // -critical
             simulator.register(179, new AlterCharacteristicSimulator(-8)); // -heal
             simulator.register(186, new AlterCharacteristicSimulator(-2)); // -percent damage
+            simulator.register(215, new AlterCharacteristicSimulator(5)); // - %res earth
+            simulator.register(216, new AlterCharacteristicSimulator(5)); // - %res water
+            simulator.register(217, new AlterCharacteristicSimulator(5)); // - %res air
+            simulator.register(218, new AlterCharacteristicSimulator(5)); // - %res fire
+            simulator.register(219, new AlterCharacteristicSimulator(5)); // - %res neutral
 
             // Steal characteristics
             simulator.register(267, new StealCharacteristicSimulator()); // vitality

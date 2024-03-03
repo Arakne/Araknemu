@@ -22,11 +22,13 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.hook.HookedSpellEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collections;
@@ -58,8 +60,9 @@ public interface EffectHandler extends CastConstraintValidator<Castable> {
         final Fighter target = buff.target();
         final FightCell cell = target.cell();
         final Castable spell = buff.action();
+        final SpellEffect effect = new HookedSpellEffect(buff.effect());
 
-        final FightCastScope castScope = FightCastScope.simple(spell, buff.caster(), cell, Collections.singletonList(buff.effect()));
+        final FightCastScope castScope = FightCastScope.simple(spell, buff.caster(), cell, Collections.singletonList(effect));
 
         handle(castScope, castScope.effects().get(0));
     }

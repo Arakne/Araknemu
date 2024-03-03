@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
@@ -2234,6 +2235,46 @@ public class FunctionalTest extends FightBaseCase {
 
         assertTrue(target.dead());
         assertFalse(fight.active());
+    }
+
+    @Test
+    void applyOnElementDamage() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(1000).currentLife(1000))
+            .addEnemy(fb -> fb.cell(122).charac(Characteristic.ACTION_POINT, 100))
+        );
+
+        Fighter me = fighters.get(0);
+
+        castNormal(1010, me.cell()); // Rascasse
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 210));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 211));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 212));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 213));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 214));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_FIRE));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_AIR));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_EARTH));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_WATER));
+        fight.turnList().current().get().stop();
+
+        castNormal(183, me.cell()); // Ronce
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_FIRE));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_AIR));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        assertEquals(50, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_EARTH));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_WATER));
+
+        castNormal(170, me.cell()); // flèche d'immobilisation
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_FIRE));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_AIR));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        assertEquals(50, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_EARTH));
+        assertEquals(50, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_WATER));
+
+        assertEquals(2, me.buffs().stream().filter(b -> b.effect().effect() == 210 && b.hook() instanceof AddCharacteristicHandler).findFirst().get().remainingTurns());
+        assertEquals(2, me.buffs().stream().filter(b -> b.effect().effect() == 211 && b.hook() instanceof AddCharacteristicHandler).findFirst().get().remainingTurns());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

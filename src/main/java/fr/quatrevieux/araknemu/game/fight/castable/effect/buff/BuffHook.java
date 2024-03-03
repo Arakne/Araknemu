@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -198,6 +199,18 @@ public interface BuffHook {
     public default void onDamageApplied(Buff buff, @NonNegative int value) {
         onLifeAltered(buff, -value);
     }
+
+    /**
+     * Elemental damage has been applied to the current fighter
+     *
+     * This hook is called after {@link BuffHook#onDamageApplied(Buff, int)}, but only in case
+     * of damage related to an element (e.i. fire, water, air, earth, neutral)
+     *
+     * @param buff The active buff
+     * @param element The element of the damage
+     * @param value The damage value. Can be 0 if the damage is completely absorbed
+     */
+    public default void onElementDamageApplied(Buff buff, Element element, @NonNegative int value) {}
 
     /**
      * The fighter life has been healed

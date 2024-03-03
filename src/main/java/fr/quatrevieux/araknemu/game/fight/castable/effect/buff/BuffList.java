@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -152,6 +153,13 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     public void onDamageApplied(@NonNegative int value) {
         for (Buff buff : buffs) {
             buff.hook().onDamageApplied(buff, value);
+        }
+    }
+
+    @Override
+    public void onElementDamageApplied(Element element, @NonNegative int actualDamage) {
+        for (Buff buff : buffs) {
+            buff.hook().onElementDamageApplied(buff, element, actualDamage);
         }
     }
 
