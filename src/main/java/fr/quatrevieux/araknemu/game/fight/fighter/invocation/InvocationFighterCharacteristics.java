@@ -20,32 +20,22 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Characteristics for an invocation
  * Element characteristics (i.e. strength, intelligence, agility, luck) are altered by the invoker level, each level given 1% boost
  */
-public final class InvocationFighterCharacteristics implements FighterCharacteristics {
-    private final Characteristics base;
-    private final Fighter fighter;
-    private final MutableCharacteristics boost;
-    private final float rate;
+public final class InvocationFighterCharacteristics extends AbstractFighterCharacteristics {
     private @NonNegative int discernmentBoost = 0;
 
     public InvocationFighterCharacteristics(Monster monster, Fighter fighter, FighterData invoker) {
-        this.base = monster.characteristics();
-        this.fighter = fighter;
-        this.boost = new DefaultCharacteristics();
-        rate = modifier(invoker);
+        super(fighter, new ModifiedCharacteristics(monster.characteristics(), modifier(invoker)));
     }
 
     @Override
@@ -63,37 +53,36 @@ public final class InvocationFighterCharacteristics implements FighterCharacteri
         discernmentBoost = Math.max(discernmentBoost + value, 0);
     }
 
-    @Override
-    public void alter(Characteristic characteristic, int value) {
-        boost.add(characteristic, value);
-        fighter.dispatch(new FighterCharacteristicChanged(characteristic, value));
-    }
-
-    @Override
-    public Characteristics initial() {
-        return base;
-    }
-
-    @Override
-    public int get(Characteristic characteristic) {
-        int value = base.get(characteristic);
-
-        if (characteristic == Characteristic.STRENGTH
-            || characteristic == Characteristic.INTELLIGENCE
-            || characteristic == Characteristic.LUCK
-            || characteristic == Characteristic.AGILITY
-        ) {
-            value *= rate;
-        }
-
-        return value + boost.get(characteristic);
-    }
-
     /**
      * Get the characteristics modifier for the given invoke
      * The value is always higher than 1
      */
     public static float modifier(FighterData invoker) {
         return 1 + invoker.level() / 100f;
+    }
+
+    private static final class ModifiedCharacteristics implements Characteristics {
+        private final Characteristics base;
+        private final float rate;
+
+        public ModifiedCharacteristics(Characteristics base, float rate) {
+            this.base = base;
+            this.rate = rate;
+        }
+
+        @Override
+        public int get(Characteristic characteristic) {
+            int value = base.get(characteristic);
+
+            if (characteristic == Characteristic.STRENGTH
+                || characteristic == Characteristic.INTELLIGENCE
+                || characteristic == Characteristic.LUCK
+                || characteristic == Characteristic.AGILITY
+            ) {
+                value *= rate;
+            }
+
+            return value;
+        }
     }
 }

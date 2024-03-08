@@ -19,12 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
 /**
@@ -74,9 +77,19 @@ public interface Buffs extends Iterable<Buff> {
     public void onDirectDamageApplied(Fighter caster, @Positive int value);
 
     /**
-     * @see BuffHook#onLifeAltered(Buff, int)
+     * @see BuffHook#onElementDamageApplied(Buff, Element element, int)
      */
-    public void onLifeAltered(int value);
+    public void onElementDamageApplied(Element element, @NonNegative int actualDamage);
+
+    /**
+     * @see BuffHook#onDamageApplied(Buff, int)
+     */
+    public void onDamageApplied(@NonNegative int value);
+
+    /**
+     * @see BuffHook#onHealApplied(Buff, int)
+     */
+    public void onHealApplied(@NonNegative int value);
 
     /**
      * @see BuffHook#onReflectedDamage(Buff, ReflectedDamage)
@@ -107,6 +120,11 @@ public interface Buffs extends Iterable<Buff> {
      * @see BuffHook#onEffectValueTarget(Buff, EffectValue)
      */
     public void onEffectValueTarget(EffectValue value);
+
+    /**
+     * @see BuffHook#onCharacteristicAltered(Buff, Characteristic, int)
+     */
+    public void onCharacteristicAltered(Characteristic characteristic, int value);
 
     /**
      * Refresh the buff list after turn end

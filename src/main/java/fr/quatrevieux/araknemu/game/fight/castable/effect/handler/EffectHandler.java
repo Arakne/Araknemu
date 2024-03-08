@@ -21,10 +21,17 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.hook.HookedSpellEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.Collections;
 
 /**
  * Handle a fight effect
@@ -42,6 +49,23 @@ public interface EffectHandler extends CastConstraintValidator<Castable> {
      * @param effect The effect to apply
      */
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect);
+
+    /**
+     * Apply the effect through a hook
+     *
+     * @param buff The buff to apply
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.hook.EffectHookHandler for more details
+     */
+    public default void applyFromHook(Buff buff) {
+        final Fighter target = buff.target();
+        final FightCell cell = target.cell();
+        final Castable spell = buff.action();
+        final SpellEffect effect = new HookedSpellEffect(buff.effect());
+
+        final FightCastScope castScope = FightCastScope.simple(spell, buff.caster(), cell, Collections.singletonList(effect));
+
+        handle(castScope, castScope.effects().get(0));
+    }
 
     @Override
     public default boolean check(Turn turn, Castable castable, BattlefieldCell target) {

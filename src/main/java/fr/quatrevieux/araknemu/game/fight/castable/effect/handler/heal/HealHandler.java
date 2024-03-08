@@ -75,6 +75,6 @@ public final class HealHandler extends AbstractAttenuableAreaEffectHandler imple
         ;
 
         target.life().heal(caster, value.value());
-        return true;
+        return !target.dead(); // Fighter may be killed by a hook after heal
     }
 }

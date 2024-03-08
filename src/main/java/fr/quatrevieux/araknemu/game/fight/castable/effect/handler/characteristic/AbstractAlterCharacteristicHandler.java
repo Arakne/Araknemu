@@ -70,6 +70,23 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
     }
 
     @Override
+    public void applyFromHook(Buff buff) {
+        final SpellEffect spellEffect = buff.effect();
+        final Fighter caster = buff.caster();
+        final Fighter target = buff.target();
+        final EffectValue effectValue = EffectValue.create(spellEffect, caster, target);
+
+        target.buffs().add(new Buff(
+            BuffEffect.fixed(spellEffect, effectValue.value()),
+            buff.action(),
+            caster,
+            target,
+            this,
+            canBeDispelled
+        ));
+    }
+
+    @Override
     public void onBuffStarted(Buff buff) {
         hook.onBuffStarted(buff);
     }

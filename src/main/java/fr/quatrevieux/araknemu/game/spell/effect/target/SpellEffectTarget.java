@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.spell.effect.target;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
@@ -55,6 +56,16 @@ public final class SpellEffectTarget implements EffectTarget {
             && checkTeam(caster.team(), fighter.team())
             && checkInvocation(fighter)
         ;
+    }
+
+    @Override
+    public boolean isHook() {
+        return flags >= 64;
+    }
+
+    @Override
+    public @NonNegative int hookId() {
+        return Math.max(flags >> 6, 0);
     }
 
     private boolean check(int flag) {

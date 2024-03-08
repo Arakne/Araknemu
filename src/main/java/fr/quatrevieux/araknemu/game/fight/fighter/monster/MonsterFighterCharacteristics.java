@@ -19,28 +19,21 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.monster.Monster;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Monster fighter characteristics
  */
-public final class MonsterFighterCharacteristics implements FighterCharacteristics {
+public final class MonsterFighterCharacteristics extends AbstractFighterCharacteristics {
     private final Monster monster;
-    private final Fighter fighter;
-
-    private final MutableCharacteristics buffs = new DefaultCharacteristics();
 
     public MonsterFighterCharacteristics(Monster monster, Fighter fighter) {
+        super(fighter, monster.characteristics());
+
         this.monster = monster;
-        this.fighter = fighter;
     }
 
     @Override
@@ -56,21 +49,5 @@ public final class MonsterFighterCharacteristics implements FighterCharacteristi
     @Override
     public void alterDiscernment(int value) {
         // No-op: monster can't have discernment
-    }
-
-    @Override
-    public int get(Characteristic characteristic) {
-        return monster.characteristics().get(characteristic) + buffs.get(characteristic);
-    }
-
-    @Override
-    public void alter(Characteristic characteristic, int value) {
-        buffs.add(characteristic, value);
-        fighter.dispatch(new FighterCharacteristicChanged(characteristic, value));
-    }
-
-    @Override
-    public Characteristics initial() {
-        return monster.characteristics();
     }
 }

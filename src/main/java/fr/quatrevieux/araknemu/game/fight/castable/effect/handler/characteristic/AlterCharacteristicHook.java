@@ -56,11 +56,13 @@ public class AlterCharacteristicHook implements BuffHook {
 
     @Override
     public final void onBuffStarted(Buff buff) {
+        final Fighter target = buff.target();
         final int effectValue = buff.effect().min();
         final int appliedValue = effectValue * multiplier;
 
-        apply(buff, buff.target(), appliedValue);
+        apply(buff, target, appliedValue);
         fight.send(ActionEffect.buff(buff, applyMultiplierOnPacketValue ? appliedValue : effectValue));
+        target.buffs().onCharacteristicAltered(characteristic, appliedValue);
     }
 
     @Override

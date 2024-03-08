@@ -138,6 +138,8 @@ class GamePlayerRaceTest extends GameBaseCase {
     void closeCombat() {
         GamePlayerRace race = service.get(Race.ENUTROF);
 
+        assertEquals("DefaultCloseCombat{}", race.closeCombat().toString());
+
         assertCount(1, race.closeCombat().effects());
         assertCount(1, race.closeCombat().criticalEffects());
 

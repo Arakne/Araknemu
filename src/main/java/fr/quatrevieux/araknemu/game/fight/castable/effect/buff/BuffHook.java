@@ -19,14 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
 /**
@@ -172,14 +175,63 @@ public interface BuffHook {
      * @param buff The active buff
      * @param value Altered life value. Negative for a damage, positive for a heal
      *
-     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(FighterData, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#damage(Fighter, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
      */
     public default void onLifeAltered(Buff buff, int value) {}
 
     /**
+     * The fighter has suffered a damage, so its life has been altered
+     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(Buff, int)}
+     *
+     * This buff is always called when damage is applied, even if the damage is completely absorbed,
+     * or in case of direct or indirect damage.
+     *
+     * Unlike {@link BuffHook#onDamage(Buff, Damage)}, the effects has already been applied
+     *
+     * Note: this hook is not called if the attack has killed the fighter
+     *
+     * @param buff The active buff
+     * @param value Altered life value. Can be 0 when the effect is completely absorbed
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#damage(Fighter, int)
+     * @see #onDirectDamageApplied(Buff, Fighter, int) To hook only damage applied by direct attack
+     */
+    public default void onDamageApplied(Buff buff, @NonNegative int value) {
+        onLifeAltered(buff, -value);
+    }
+
+    /**
+     * Elemental damage has been applied to the current fighter
+     *
+     * This hook is called after {@link BuffHook#onDamageApplied(Buff, int)}, but only in case
+     * of damage related to an element (e.i. fire, water, air, earth, neutral)
+     *
+     * @param buff The active buff
+     * @param element The element of the damage
+     * @param value The damage value. Can be 0 if the damage is completely absorbed
+     */
+    public default void onElementDamageApplied(Buff buff, Element element, @NonNegative int value) {}
+
+    /**
+     * The fighter life has been healed
+     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(Buff, int)}
+     *
+     * This hook is called after heal is applied.
+     *
+     * @param buff The active buff
+     * @param value Altered life value. Can be 0 when the fighter is already full life, so heal has no effect
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
+     */
+    public default void onHealApplied(Buff buff, @NonNegative int value) {
+        onLifeAltered(buff, value);
+    }
+
+    /**
      * Damage has been reflected by the cast target
      *
-     * The target can be changed using {@link ReflectedDamage#changeTarget(FighterData)}
+     * The target can be changed using {@link ReflectedDamage#changeTarget(Fighter)}
      * Or modified using {@link ReflectedDamage#multiply(int)}
      *
      * @param buff The active buff
@@ -218,4 +270,13 @@ public interface BuffHook {
      * @param value The effect value which will be applied
      */
     public default void onEffectValueTarget(Buff buff, EffectValue value) {}
+
+    /**
+     * A characteristic of the fighter has been altered
+     *
+     * @param buff The active buff
+     * @param characteristic The altered characteristic
+     * @param value The characteristic modifier. Positive for add the characteristic, or negative to remove.
+     */
+    public default void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {}
 }

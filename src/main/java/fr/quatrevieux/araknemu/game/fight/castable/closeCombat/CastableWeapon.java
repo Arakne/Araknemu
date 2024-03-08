@@ -138,4 +138,9 @@ public final class CastableWeapon implements Castable {
         criticalEffects = null;
         effects = null;
     }
+
+    @Override
+    public String toString() {
+        return "Weapon{id=" + weapon.template().id() + ", name=" + weapon.template().name() + "}";
+    }
 }

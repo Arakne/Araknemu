@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -137,6 +138,38 @@ class StealVitalityHandlerTest extends FightBaseCase {
 
         assertEquals(295, caster.life().max());
         assertEquals(50, target.life().max());
+    }
+
+    @Test
+    void buffShouldCallOnCharacteristicAltered() {
+        AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
+        AtomicReference<Integer> hookValue = new AtomicReference<>();
+
+        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+            @Override
+            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+                hookCharacteristic.set(characteristic);
+                hookValue.set(value);
+            }
+        }, true));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        assertEquals(Characteristic.VITALITY, hookCharacteristic.get());
+        assertEquals(-10, hookValue.get());
     }
 
     @Test

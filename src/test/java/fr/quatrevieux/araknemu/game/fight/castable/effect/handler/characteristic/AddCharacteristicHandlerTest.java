@@ -34,12 +34,16 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
+import fr.quatrevieux.araknemu.game.world.creature.Life;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -127,6 +131,38 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void buffShouldCallOnCharacteristicAltered() {
+        AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
+        AtomicReference<Integer> hookValue = new AtomicReference<>();
+
+        caster.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, new BuffHook() {
+            @Override
+            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+                hookCharacteristic.set(characteristic);
+                hookValue.set(value);
+            }
+        }, true));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.min()).thenReturn(50);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        assertEquals(Characteristic.LUCK, hookCharacteristic.get());
+        assertEquals(50, hookValue.get());
+    }
+
+    @Test
     void buffWithOneTargetMaximized() {
         target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
@@ -178,5 +214,31 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
 
         handler.onBuffTerminated(buff);
         assertEquals(0, target.characteristics().get(Characteristic.LUCK));
+    }
+
+    @Test
+    void applyFromHook() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.effect()).thenReturn(123);
+        Mockito.when(effect.min()).thenReturn(50);
+        Mockito.when(effect.max()).thenReturn(60);
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, handler));
+
+        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
+
+        assertBetween(50, 60, buff.effect().min());
+        assertEquals(0,buff.effect().max());
+        assertEquals(5, buff.remainingTurns());
+        assertTrue(buff.canBeDispelled());
+        assertBetween(50, 60, target.characteristics().get(Characteristic.LUCK));
     }
 }

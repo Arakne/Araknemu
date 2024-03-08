@@ -78,4 +78,9 @@ public final class DefaultCloseCombat implements Castable {
     public SpellConstraints constraints() {
         return constraints;
     }
+
+    @Override
+    public String toString() {
+        return "DefaultCloseCombat{}";
+    }
 }

@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
@@ -76,6 +77,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -2151,6 +2153,151 @@ public class FunctionalTest extends FightBaseCase {
         max = fighter1.life().max();
         fighter1.life().damage(fighter1, 100);
         assertEquals(max - 10, fighter1.life().max());
+    }
+
+    @Test
+    void applyEffectOnHeal() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(500).currentLife(500))
+            .addEnemy(fb -> fb.cell(122).maxLife(1000).currentLife(900))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castNormal(1009, target.cell()); // Peste noire
+        assertEquals(900, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 87));
+
+        castNormal(130, target.cell()); // Mot revitalisant
+        assertBetween(650 + 2, 650 + 22, target.life().current()); // 250 damage + [2-22] heal
+    }
+
+    @Test
+    void applyEffectOnHealWithNonEffectiveHeal() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(500).currentLife(500))
+            .addEnemy(fb -> fb.cell(122).maxLife(1000).currentLife(1000))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castNormal(1009, target.cell()); // Peste noire
+        assertEquals(1000, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 87));
+
+        castNormal(130, target.cell()); // Mot revitalisant
+        assertEquals(750, target.life().current()); // 250 damage
+    }
+
+    @Test
+    void applyEffectOnHealShouldIgnoreArmor() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(500).currentLife(500))
+            .addEnemy(fb -> fb.cell(122).maxLife(1000).currentLife(900))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castCritical(320, target.cell()); // Incurable (critical to ensure that poison is applied)
+        assertEquals(900, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 100));
+
+        fight.turnList().current().get().stop();
+
+        castNormal(20, target.cell()); // Immunité
+        fight.turnList().current().get().stop();
+
+        castNormal(130, target.cell()); // Mot revitalisant
+        assertBetween(692, 786, target.life().current()); // [136-210] damage + [2-22] heal
+    }
+
+    @Test
+    void applyEffectOnHealWithBuffHeal() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136))
+            .addEnemy(fb -> fb.cell(122).maxLife(350).currentLife(300))
+        );
+
+        Fighter target = fighters.get(1);
+
+        castCritical(320, target.cell()); // Incurable (critical to ensure that poison is applied)
+        assertEquals(300, target.life().current());
+        assertTrue(target.buffs().stream().anyMatch(b -> b.effect().effect() == 100));
+        fight.turnList().current().get().stop();
+
+        castNormal(131, target.cell()); // Mot de régénération
+        fight.turnList().current().get().stop();
+        fight.turnList().current().get().stop();
+
+        assertBetween(91, 168, target.life().current()); // [136-210] damage + [1-4] heal
+
+        fight.turnList().current().get().stop();
+        fight.turnList().current().get().stop();
+
+        assertTrue(target.dead());
+        assertFalse(fight.active());
+    }
+
+    @Test
+    void applyOnElementDamage() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(136).maxLife(1000).currentLife(1000))
+            .addEnemy(fb -> fb.cell(122).charac(Characteristic.ACTION_POINT, 100))
+        );
+
+        Fighter me = fighters.get(0);
+
+        castNormal(1010, me.cell()); // Rascasse
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 210));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 211));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 212));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 213));
+        assertTrue(me.buffs().stream().anyMatch(b -> b.effect().effect() == 214));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_FIRE));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_AIR));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_EARTH));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_WATER));
+        fight.turnList().current().get().stop();
+
+        castNormal(183, me.cell()); // Ronce
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_FIRE));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_AIR));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        assertEquals(50, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_EARTH));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_WATER));
+
+        castNormal(170, me.cell()); // flèche d'immobilisation
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_FIRE));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_AIR));
+        assertEquals(0, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        assertEquals(50, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_EARTH));
+        assertEquals(50, me.characteristics().get(Characteristic.RESISTANCE_PERCENT_WATER));
+
+        assertEquals(2, me.buffs().stream().filter(b -> b.effect().effect() == 210 && b.hook() instanceof AddCharacteristicHandler).findFirst().get().remainingTurns());
+        assertEquals(2, me.buffs().stream().filter(b -> b.effect().effect() == 211 && b.hook() instanceof AddCharacteristicHandler).findFirst().get().remainingTurns());
+    }
+
+    @Test
+    void applyOnActionPointLost() {
+        fighter1.move(fight.map().get(122));
+        fighter2.move(fight.map().get(182));
+
+        fighter2.characteristics().alter(Characteristic.WISDOM, 1000); // Ensure that all AP will be removed
+
+        castNormal(1038, fighter1.cell()); // Rasage
+        fighter1.turn().stop();
+
+        castNormal(81, fighter1.cell()); // Ralentissement
+
+        assertEquals(8, fighter1.characteristics().get(Characteristic.ACTION_POINT));
+        List<Buff> buffs = fighter1.buffs().stream().filter(b -> b.effect().effect() == 111).collect(Collectors.toList());
+
+        assertCount(3, buffs);
+        assertEquals(2, buffs.get(1).effect().min());
+        assertEquals(4, buffs.get(1).remainingTurns());
+        assertEquals(2, buffs.get(2).effect().min());
+        assertEquals(4, buffs.get(2).remainingTurns());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

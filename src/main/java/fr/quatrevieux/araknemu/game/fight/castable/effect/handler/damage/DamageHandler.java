@@ -58,6 +58,11 @@ public final class DamageHandler extends AbstractAttenuableAreaEffectHandler imp
     }
 
     @Override
+    public void applyFromHook(Buff buff) {
+        applier.apply(buff);
+    }
+
+    @Override
     public boolean onStartTurn(Buff buff) {
         applier.apply(buff);
 

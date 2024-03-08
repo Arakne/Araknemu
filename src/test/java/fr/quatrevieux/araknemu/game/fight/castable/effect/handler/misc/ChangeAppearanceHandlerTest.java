@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -65,6 +66,23 @@ class ChangeAppearanceHandlerTest extends FightBaseCase {
         handler = new ChangeAppearanceHandler(fight);
 
         requestStack.clear();
+    }
+
+    @Test
+    void applyFromHook() {
+        requestStack.clear();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.special()).thenReturn(1234);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(Mockito.mock(SpellConstraints.class));
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+
+        requestStack.assertOne(new ActionEffect(149, caster, target.id(), 90, 1234, 1));
     }
 
     @Test

@@ -38,7 +38,7 @@ public interface FighterLife extends Life {
      * If the fighter is dead, or is full life, this method will do nothing
      * If the value is higher that the current life left, the life will be set to the max life
      *
-     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onLifeAltered(int)}
+     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onHealApplied(int)}
      *
      * @param caster The caster of the heal effect
      * @param value The heal value
@@ -53,7 +53,7 @@ public interface FighterLife extends Life {
      * If the fighter is dead, this method will do nothing
      * If the value is higher that the current life, the fighter will be considered as dead, and its life will be set to 0
      *
-     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onLifeAltered(int)}
+     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDamageApplied(int)}
      *
      * @param caster The caster of the damage effect
      * @param value The damage value
@@ -72,7 +72,7 @@ public interface FighterLife extends Life {
      * If the fighter is dead, this method will do nothing
      * If the value is higher that the current life, the fighter will be considered as dead, and its life will be set to 0
      *
-     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onLifeAltered(int)}
+     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDamageApplied(int)}
      *
      * @param caster The caster of the damage effect
      * @param value The damage value

@@ -47,9 +47,12 @@ public final class FixedHealHandler implements EffectHandler, BuffHook {
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        apply(buff.caster(), buff.effect(), buff.target());
+        final Fighter target = buff.target();
 
-        return true;
+        apply(buff.caster(), buff.effect(), target);
+
+        // Fighter may be killed by a hook after heal
+        return !target.dead();
     }
 
     private void apply(Fighter caster, SpellEffect effect, Fighter target) {

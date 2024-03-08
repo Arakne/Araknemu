@@ -67,6 +67,7 @@ public final class DamageApplier {
      *
      * @see DamageApplier#apply(Buff) For apply a buff damage (i.e. poison)
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(Fighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onElementDamageApplied(Element, int) Hook called after damage are applied
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(Fighter, int) Buff called when damage are applied
      */
     public int apply(Fighter caster, SpellEffect effect, Fighter target, EffectValue value, @NonNegative int distance) {
@@ -93,6 +94,7 @@ public final class DamageApplier {
      *
      * @see DamageApplier#applyFixed(Buff, int) For apply a precomputed damage buff
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(Fighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onElementDamageApplied(Element, int) Hook called after damage are applied
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(Fighter, int) Buff called when damage are applied
      */
     public int applyFixed(Fighter caster, @NonNegative int value, Fighter target) {
@@ -118,6 +120,7 @@ public final class DamageApplier {
      *
      * @see DamageApplier#applyFixed(Buff, int) Apply damage with the same way
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onIndirectDamage(Fighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onElementDamageApplied(Element, int) Hook called after damage are applied
      */
     public int applyIndirectFixed(Fighter caster, @NonNegative int value, Fighter target) {
         final Damage damage = createDamage(caster, target, value);
@@ -135,6 +138,7 @@ public final class DamageApplier {
      * @return The real damage value
      *
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onBuffDamage(Buff, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onElementDamageApplied(Element, int) Hook called after damage are applied
      */
     public int apply(Buff buff) {
         final Fighter target = buff.target();
@@ -158,6 +162,7 @@ public final class DamageApplier {
      * @return The applied damage value. Negative for damage, or positive for heal.
      *
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onBuffDamage(Buff, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onElementDamageApplied(Element, int) Hook called after damage are applied
      */
     public int applyFixed(Buff buff, @NonNegative int value) {
         final Fighter target = buff.target();
@@ -251,6 +256,8 @@ public final class DamageApplier {
         }
 
         final int actualDamage = target.life().damage(caster, damageValue, damage.baseDamage());
+
+        target.buffs().onElementDamageApplied(element, actualDamage);
 
         if (actualDamage > 0 && !target.equals(caster) && damage.reflectedDamage() > 0) {
             applyReflectedDamage(target, caster, damage);

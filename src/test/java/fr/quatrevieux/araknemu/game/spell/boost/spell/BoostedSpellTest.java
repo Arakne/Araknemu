@@ -62,6 +62,7 @@ class BoostedSpellTest extends GameBaseCase {
         assertEquals(6, spell.minPlayerLevel());
         assertFalse(spell.endsTurnOnFailure());
         assertInstanceOf(BoostedSpellConstraints.class, spell.constraints());
+        assertEquals("Spell{id=2, level=1, name=Aveuglement}", spell.toString());
     }
 
     @Test
