@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -210,6 +212,27 @@ class GivePercentLifeHandlerTest extends FightBaseCase {
             ActionEffect.alterLifePoints(caster, getFighter(2), 25),
             ActionEffect.alterLifePoints(caster, getFighter(3), 25)
         );
+    }
+
+    @Test
+    void applyFromHook() {
+        requestStack.clear();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(Mockito.mock(SpellConstraints.class));
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, caster, -29),
+            ActionEffect.alterLifePoints(caster, target, 29)
+        );
+        assertEquals(29, computeHeal());
     }
 
     @Test

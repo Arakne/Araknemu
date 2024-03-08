@@ -48,6 +48,7 @@ class HookedSpellEffectTest extends GameBaseCase {
         assertEquals(effect.text(), hookedSpellEffect.text());
         assertEquals(effect.trap(), hookedSpellEffect.trap());
         assertEquals(effect.duration(), hookedSpellEffect.duration());
+        assertEquals(effect.boost(), hookedSpellEffect.boost());
         assertInstanceOf(CellArea.class, hookedSpellEffect.area());
         assertSame(SpellEffectTarget.DEFAULT, hookedSpellEffect.target());
     }

@@ -195,6 +195,24 @@ class HealHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void applyFromHook() {
+        requestStack.clear();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(Mockito.mock(SpellConstraints.class));
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+
+        requestStack.assertAll(ActionEffect.alterLifePoints(caster, target, 10));
+        assertEquals(10, computeHeal());
+    }
+
+    @Test
     void buffWillAddBuffToList() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);

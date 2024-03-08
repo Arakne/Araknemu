@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,6 +41,7 @@ import org.mockito.Mockito;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -84,6 +86,27 @@ class DispelHandlerTest extends FightBaseCase {
             "GA;132;1;2",
             new AddBuff(buff1.get())
         );
+    }
+
+    @Test
+    void applyFromHook() {
+        // can be debuff
+        Buff toDispel = makeLuckBuffThatcanBeDispelled();
+        target.buffs().add(toDispel);
+        requestStack.clear();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(Mockito.mock(SpellConstraints.class));
+
+        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+
+        requestStack.assertAll("GA;132;1;2");
+        assertFalse(target.buffs().stream().anyMatch(x -> x.equals(toDispel)));
     }
 
     @Test
