@@ -42,6 +42,7 @@ import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,6 +128,38 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
         assertEquals(buff1.get().effect().min(), buff2.get().effect().min());
         assertTrue(buff1.get().canBeDispelled());
         assertTrue(buff2.get().canBeDispelled());
+    }
+
+    @Test
+    void buffShouldCallOnCharacteristicAltered() {
+        AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
+        AtomicReference<Integer> hookValue = new AtomicReference<>();
+
+        caster.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, new BuffHook() {
+            @Override
+            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+                hookCharacteristic.set(characteristic);
+                hookValue.set(value);
+            }
+        }, true));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.min()).thenReturn(50);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        assertEquals(Characteristic.LUCK, hookCharacteristic.get());
+        assertEquals(50, hookValue.get());
     }
 
     @Test

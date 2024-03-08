@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
@@ -119,6 +120,11 @@ public interface Buffs extends Iterable<Buff> {
      * @see BuffHook#onEffectValueTarget(Buff, EffectValue)
      */
     public void onEffectValueTarget(EffectValue value);
+
+    /**
+     * @see BuffHook#onCharacteristicAltered(Buff, Characteristic, int)
+     */
+    public void onCharacteristicAltered(Characteristic characteristic, int value);
 
     /**
      * Refresh the buff list after turn end

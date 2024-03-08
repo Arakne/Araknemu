@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageApplier;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -40,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,6 +129,17 @@ class AddCharacteristicOnDamageHandlerTest extends FightBaseCase {
 
     @Test
     void functionalOnDamage() {
+        AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
+        AtomicReference<Integer> hookValue = new AtomicReference<>();
+
+        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+            @Override
+            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+                hookCharacteristic.set(characteristic);
+                hookValue.set(value);
+            }
+        }, true));
+
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
@@ -154,6 +167,8 @@ class AddCharacteristicOnDamageHandlerTest extends FightBaseCase {
         assertEquals(3, characBuff.effect().duration());
         assertTrue(characBuff.canBeDispelled());
         assertEquals(10, target.characteristics().get(Characteristic.LUCK));
+        assertEquals(Characteristic.LUCK, hookCharacteristic.get());
+        assertEquals(10, hookValue.get());
 
         requestStack.assertOne(ActionEffect.buff(characBuff, 10));
         requestStack.clear();

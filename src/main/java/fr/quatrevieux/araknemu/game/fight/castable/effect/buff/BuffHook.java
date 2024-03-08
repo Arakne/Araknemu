@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
@@ -269,4 +270,13 @@ public interface BuffHook {
      * @param value The effect value which will be applied
      */
     public default void onEffectValueTarget(Buff buff, EffectValue value) {}
+
+    /**
+     * A characteristic of the fighter has been altered
+     *
+     * @param buff The active buff
+     * @param characteristic The altered characteristic
+     * @param value The characteristic modifier. Positive for add the characteristic, or negative to remove.
+     */
+    public default void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {}
 }

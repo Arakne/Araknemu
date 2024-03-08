@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
@@ -188,6 +189,13 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     public void onEffectValueTarget(EffectValue value) {
         for (Buff buff : buffs) {
             buff.hook().onEffectValueTarget(buff, value);
+        }
+    }
+
+    @Override
+    public void onCharacteristicAltered(Characteristic characteristic, int value) {
+        for (Buff buff : buffs) {
+            buff.hook().onCharacteristicAltered(buff, characteristic, value);
         }
     }
 

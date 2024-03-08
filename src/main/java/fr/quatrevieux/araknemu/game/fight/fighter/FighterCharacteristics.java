@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -39,6 +40,9 @@ public interface FighterCharacteristics extends Characteristics {
 
     /**
      * Change a buff characteristic
+     *
+     * The event {@link FighterCharacteristicChanged} will be dispatched on the fighter, with the modified characteristic
+     * and the modifier value as parameters.
      *
      * @param characteristic Characteristic to add
      * @param value The value of the effect. Positive valuer for add the characteristic, or negative to remove

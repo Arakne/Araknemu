@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -38,12 +40,16 @@ import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentServic
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
+import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

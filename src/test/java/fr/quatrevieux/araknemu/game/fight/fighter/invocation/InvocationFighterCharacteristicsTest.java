@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -29,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 class InvocationFighterCharacteristicsTest extends FightBaseCase {
     @Override
@@ -84,12 +84,31 @@ class InvocationFighterCharacteristicsTest extends FightBaseCase {
 
         assertEquals(0, characteristics.discernment());
         assertEquals(0, characteristics.initiative());
-        assertSame(container.get(MonsterService.class).load(36).get(1).characteristics(), characteristics.initial());
+    }
+
+    @Test
+    void initial() {
+        Fighter invoc = Mockito.mock(Fighter.class);
+        Mockito.when(invoc.buffs()).thenReturn(new BuffList(invoc));
+        InvocationFighterCharacteristics characteristics = new InvocationFighterCharacteristics(
+            container.get(MonsterService.class).load(36).get(1),
+            invoc,
+            player.fighter()
+        );
+
+        characteristics.alter(Characteristic.STRENGTH, 100);
+
+        assertEquals(120, characteristics.initial().get(Characteristic.STRENGTH));
+        assertEquals(120, characteristics.initial().get(Characteristic.INTELLIGENCE));
+        assertEquals(120, characteristics.initial().get(Characteristic.LUCK));
+        assertEquals(105, characteristics.initial().get(Characteristic.AGILITY));
+        assertEquals(60, characteristics.initial().get(Characteristic.WISDOM));
     }
 
     @Test
     void alter() {
         Fighter invoc = Mockito.mock(Fighter.class);
+        Mockito.when(invoc.buffs()).thenReturn(new BuffList(invoc));
 
         InvocationFighterCharacteristics characteristics = new InvocationFighterCharacteristics(
             container.get(MonsterService.class).load(36).get(1),

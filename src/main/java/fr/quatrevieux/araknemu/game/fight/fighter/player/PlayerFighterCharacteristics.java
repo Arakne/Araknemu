@@ -19,38 +19,28 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighterCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.CharacterCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Player fighter characteristics
  */
-public final class PlayerFighterCharacteristics implements FighterCharacteristics, CharacterCharacteristics {
+public final class PlayerFighterCharacteristics extends AbstractFighterCharacteristics implements CharacterCharacteristics {
     private final CharacterCharacteristics baseCharacteristics;
-    private final PlayerFighter fighter;
-
-    private final MutableCharacteristics buffs = new DefaultCharacteristics();
     private int discernmentBoost = 0;
 
     public PlayerFighterCharacteristics(CharacterCharacteristics baseCharacteristics, PlayerFighter fighter) {
+        super(fighter, baseCharacteristics);
+
         this.baseCharacteristics = baseCharacteristics;
-        this.fighter = fighter;
     }
 
     @Override
     public int initiative() {
         return baseCharacteristics.initiative();
-    }
-
-    @Override
-    public int get(Characteristic characteristic) {
-        return baseCharacteristics.get(characteristic) + buffs.get(characteristic);
     }
 
     @Override
@@ -70,7 +60,7 @@ public final class PlayerFighterCharacteristics implements FighterCharacteristic
 
     @Override
     public Characteristics boost() {
-        return buffs;
+        return buffs();
     }
 
     @Override
@@ -91,16 +81,5 @@ public final class PlayerFighterCharacteristics implements FighterCharacteristic
     @Override
     public int pods() {
         return baseCharacteristics.pods();
-    }
-
-    @Override
-    public void alter(Characteristic characteristic, int value) {
-        buffs.add(characteristic, value);
-        fighter.dispatch(new FighterCharacteristicChanged(characteristic, value));
-    }
-
-    @Override
-    public Characteristics initial() {
-        return baseCharacteristics;
     }
 }

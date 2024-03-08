@@ -77,6 +77,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -2275,6 +2276,28 @@ public class FunctionalTest extends FightBaseCase {
 
         assertEquals(2, me.buffs().stream().filter(b -> b.effect().effect() == 210 && b.hook() instanceof AddCharacteristicHandler).findFirst().get().remainingTurns());
         assertEquals(2, me.buffs().stream().filter(b -> b.effect().effect() == 211 && b.hook() instanceof AddCharacteristicHandler).findFirst().get().remainingTurns());
+    }
+
+    @Test
+    void applyOnActionPointLost() {
+        fighter1.move(fight.map().get(122));
+        fighter2.move(fight.map().get(182));
+
+        fighter2.characteristics().alter(Characteristic.WISDOM, 1000); // Ensure that all AP will be removed
+
+        castNormal(1038, fighter1.cell()); // Rasage
+        fighter1.turn().stop();
+
+        castNormal(81, fighter1.cell()); // Ralentissement
+
+        assertEquals(8, fighter1.characteristics().get(Characteristic.ACTION_POINT));
+        List<Buff> buffs = fighter1.buffs().stream().filter(b -> b.effect().effect() == 111).collect(Collectors.toList());
+
+        assertCount(3, buffs);
+        assertEquals(2, buffs.get(1).effect().min());
+        assertEquals(4, buffs.get(1).remainingTurns());
+        assertEquals(2, buffs.get(2).effect().min());
+        assertEquals(4, buffs.get(2).remainingTurns());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

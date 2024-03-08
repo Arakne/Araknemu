@@ -19,13 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter.invocation;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterCharacteristicChanged;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -33,11 +29,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * This implements will simply retrieve the base characteristics from the invoker (i.e. {@link FighterCharacteristics#initial()})
  * and handle buffs.
  */
-public final class DoubleFighterCharacteristics implements FighterCharacteristics {
-    private final Fighter fighter;
-    private final Characteristics base;
-
-    private final MutableCharacteristics buffs = new DefaultCharacteristics();
+public final class DoubleFighterCharacteristics extends AbstractFighterCharacteristics {
     private @NonNegative int discernmentBoost = 0;
 
     /**
@@ -45,8 +37,7 @@ public final class DoubleFighterCharacteristics implements FighterCharacteristic
      * @param invoker The invoker
      */
     public DoubleFighterCharacteristics(Fighter fighter, Fighter invoker) {
-        this.fighter = fighter;
-        this.base = invoker.characteristics().initial();
+        super(fighter, invoker.characteristics().initial());
     }
 
     @Override
@@ -62,21 +53,5 @@ public final class DoubleFighterCharacteristics implements FighterCharacteristic
     @Override
     public void alterDiscernment(int value) {
         discernmentBoost = Math.max(discernmentBoost + value, 0);
-    }
-
-    @Override
-    public int get(Characteristic characteristic) {
-        return base.get(characteristic) + buffs.get(characteristic);
-    }
-
-    @Override
-    public void alter(Characteristic characteristic, int value) {
-        buffs.add(characteristic, value);
-        fighter.dispatch(new FighterCharacteristicChanged(characteristic, value));
-    }
-
-    @Override
-    public Characteristics initial() {
-        return base;
     }
 }

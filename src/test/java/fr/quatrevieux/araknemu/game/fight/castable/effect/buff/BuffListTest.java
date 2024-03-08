@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
@@ -542,6 +543,25 @@ class BuffListTest extends FightBaseCase {
         Mockito.verify(hook1).onEffectValueTarget(buff1, ev);
         Mockito.verify(hook2).onEffectValueTarget(buff2, ev);
         Mockito.verify(hook3).onEffectValueTarget(buff3, ev);
+    }
+
+    @Test
+    void onCharacteristicAltered() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        list.onCharacteristicAltered(Characteristic.ACTION_POINT, -2);
+
+        Mockito.verify(hook1).onCharacteristicAltered(buff1, Characteristic.ACTION_POINT, -2);
+        Mockito.verify(hook2).onCharacteristicAltered(buff2, Characteristic.ACTION_POINT, -2);
+        Mockito.verify(hook3).onCharacteristicAltered(buff3, Characteristic.ACTION_POINT, -2);
     }
 
     @Test
