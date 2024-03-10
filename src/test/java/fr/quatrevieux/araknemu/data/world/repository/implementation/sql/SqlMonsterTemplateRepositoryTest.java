@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SqlMonsterTemplateRepositoryTest extends GameBaseCase {
     private SqlMonsterTemplateRepository repository;
@@ -140,9 +142,27 @@ class SqlMonsterTemplateRepositoryTest extends GameBaseCase {
                 "(3, 'spells invalid', 1563, '-1,-1,-1', 'AGGRESSIVE', '2@v:1;13:5;1f:5;17:-9;1b:-9;s:5;t:3;a:2g;f:2g;d:2g;8:4;9:2;|3@v:2;13:6;1f:6;17:-8;1b:-8;s:6;t:4;a:2l;f:2l;d:2l;8:4;9:2;|4@v:3;13:7;1f:7;17:-7;1b:-7;s:7;t:5;a:2q;f:2q;d:2q;8:4;9:2;|5@v:4;13:8;1f:8;17:-6;1b:-6;s:8;t:6;a:2v;f:2v;d:2v;8:4;9:2;|6@v:5;13:9;1f:9;17:-5;1b:-5;s:9;t:7;a:34;f:34;d:34;8:4;9:2;', '10|15|20|25|30', '20|25|35|40|50', '213@1;212@1|213@2;212@2|213@3;212@3|213@4;212@4')"
         );
 
-        assertThrows(IllegalArgumentException.class, () -> repository.get(1));
-        assertThrows(IllegalArgumentException.class, () -> repository.get(2));
-        assertThrows(IllegalArgumentException.class, () -> repository.get(3));
+        assertThrows(RepositoryException.class, () -> repository.get(1));
+        assertThrows(RepositoryException.class, () -> repository.get(2));
+        assertThrows(RepositoryException.class, () -> repository.get(3));
+
+        try {
+            repository.get(3);
+            fail("expected exception");
+        } catch (RepositoryException e) {
+            assertEquals("Error while creating entity {MONSTER_ID=3, MONSTER_NAME=spells invalid, GFXID=1563, COLORS=-1,-1,-1, AI=AGGRESSIVE, CHARACTERISTICS=2@v:1;13:5;1f:5;17:-9;1b:-9;s:5;t:3;a:2g;f:2g;d:2g;8:4;9:2;|3@v:2;13:6;1f:6;17:-8;1b:-8;s:6;t:4;a:2l;f:2l;d:2l;8:4;9:2;|4@v:3;13:7;1f:7;17:-7;1b:-7;s:7;t:5;a:2q;f:2q;d:2q;8:4;9:2;|5@v:4;13:8;1f:8;17:-6;1b:-6;s:8;t:6;a:2v;f:2v;d:2v;8:4;9:2;|6@v:5;13:9;1f:9;17:-5;1b:-5;s:9;t:7;a:34;f:34;d:34;8:4;9:2;, LIFE_POINTS=10|15|20|25|30, INITIATIVES=20|25|35|40|50, SPELLS=213@1;212@1|213@2;212@2|213@3;212@3|213@4;212@4}", e.getMessage());
+            assertInstanceOf(IllegalArgumentException.class, e.getCause());
+            assertEquals("All grade characteristics must have the same length", e.getCause().getMessage());
+        }
+
+        try {
+            repository.all();
+            fail("expected exception");
+        } catch (RepositoryException e) {
+            assertEquals("Error while creating entity {MONSTER_ID=1, MONSTER_NAME=life invalid, GFXID=1563, COLORS=-1,-1,-1, AI=AGGRESSIVE, CHARACTERISTICS=2@v:1;13:5;1f:5;17:-9;1b:-9;s:5;t:3;a:2g;f:2g;d:2g;8:4;9:2;|3@v:2;13:6;1f:6;17:-8;1b:-8;s:6;t:4;a:2l;f:2l;d:2l;8:4;9:2;|4@v:3;13:7;1f:7;17:-7;1b:-7;s:7;t:5;a:2q;f:2q;d:2q;8:4;9:2;|5@v:4;13:8;1f:8;17:-6;1b:-6;s:8;t:6;a:2v;f:2v;d:2v;8:4;9:2;|6@v:5;13:9;1f:9;17:-5;1b:-5;s:9;t:7;a:34;f:34;d:34;8:4;9:2;, LIFE_POINTS=10|15|20|25, INITIATIVES=20|25|35|40|50, SPELLS=213@1;212@1|213@2;212@2|213@3;212@3|213@4;212@4|213@5;212@5}", e.getMessage());
+            assertInstanceOf(IllegalArgumentException.class, e.getCause());
+            assertEquals("All grade characteristics must have the same length", e.getCause().getMessage());
+        }
     }
 
     @Test
