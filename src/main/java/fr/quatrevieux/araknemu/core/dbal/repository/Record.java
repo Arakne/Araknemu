@@ -29,7 +29,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.OptionalInt;
 
 /**
@@ -366,5 +369,26 @@ public final class Record {
         } catch (IllegalArgumentException e) {
             throw new RecordException("Invalid int value for column " + column);
         }
+    }
+
+    /**
+     * Convert the record to a string map
+     *
+     * The keys are the column names, and the values are the corresponding values.
+     * The values can be null
+     *
+     * Map is ordered by column index
+     *
+     * @return The map
+     */
+    public Map<String, @Nullable String> toMap() throws SQLException {
+        final Map<String, @Nullable String> map = new LinkedHashMap<>();
+        final ResultSetMetaData metadata = resultSet.getMetaData();
+
+        for (int i = 1; i <= metadata.getColumnCount(); i++) {
+            map.put(metadata.getColumnName(i), resultSet.getString(i));
+        }
+
+        return map;
     }
 }

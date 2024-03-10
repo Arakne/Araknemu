@@ -73,7 +73,13 @@ public class RepositoryUtils<E> {
                         throw new EntityNotFoundException();
                     }
 
-                    return loader.create(new Record(rs));
+                    final Record record = new Record(rs);
+
+                    try {
+                        return loader.create(record);
+                    } catch (Exception e) {
+                        throw new RepositoryException("Error while creating entity " + record.toMap(), e);
+                    }
                 }
             );
         } catch (SQLException e) {
@@ -110,7 +116,11 @@ public class RepositoryUtils<E> {
                     final List<E> result = new ArrayList<>();
 
                     while (rs.next()) {
-                        result.add(loader.create(record));
+                        try {
+                            result.add(loader.create(record));
+                        } catch (Exception e) {
+                            throw new RepositoryException("Error while creating entity " + record.toMap(), e);
+                        }
                     }
 
                     return result;

@@ -38,6 +38,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.OptionalInt;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -360,6 +363,28 @@ class RecordTest extends TestCase {
         assertThrowsWithMessage(RecordException.class, "Invalid int value for column VALUE", () -> get(3, record -> record.getNullableIntArray("VALUE", ',')));
         assertArrayEquals(new int[] {15}, get(4, record -> record.getNullableIntArray("VALUE", ',')));
         assertArrayEquals(new int[] {15, 58, 63}, get(5, record -> record.getNullableIntArray("VALUE", ',')));
+    }
+
+    @Test
+    void toMap() throws SQLException {
+        push(1, null);
+        push(2, "");
+        push(3, "foo");
+
+        assertEquals(new HashMap<String, String> () {{
+            put("ID", "1");
+            put("VALUE", null);
+        }}, get(1, Record::toMap));
+        assertEquals(new HashMap<String, String> () {{
+            put("ID", "2");
+            put("VALUE", "");
+        }}, get(2, Record::toMap));
+        assertEquals(new HashMap<String, String> () {{
+            put("ID", "3");
+            put("VALUE", "foo");
+        }}, get(3, Record::toMap));
+
+        assertEquals(Arrays.asList("ID", "VALUE"), get(3, record -> new ArrayList<>(record.toMap().keySet())));
     }
 
     private void push(int id, String value) throws SQLException {
