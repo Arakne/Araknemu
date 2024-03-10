@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.spell.effect;
 
 import fr.quatrevieux.araknemu.data.value.EffectArea;
+import fr.quatrevieux.araknemu.data.value.SpellTarget;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CheckboardArea;
@@ -78,11 +79,31 @@ public final class SpellEffectService {
      * @param areas The effects areas
      * @param targets The effects targets
      */
-    public List<SpellEffect> makeAll(List<SpellTemplateEffect> templates, List<EffectArea> areas, int[] targets) {
+    public List<SpellEffect> makeAll(List<SpellTemplateEffect> templates, List<EffectArea> areas, SpellTarget[] targets) {
+        return makeAll(templates, areas, targets, false);
+    }
+
+    /**
+     * Make an effect list
+     *
+     * @param templates List of effects
+     * @param areas The effects areas
+     * @param targets The effects targets
+     * @param critical Is the effect critical
+     */
+    public List<SpellEffect> makeAll(List<SpellTemplateEffect> templates, List<EffectArea> areas, SpellTarget[] targets, boolean critical) {
         final List<SpellEffect> effects = new ArrayList<>(templates.size());
 
         for (int i = 0; i < templates.size(); ++i) {
-            effects.add(make(templates.get(i), areas.get(i), targets.length > i ? new SpellEffectTarget(targets[i]) : SpellEffectTarget.DEFAULT));
+            final SpellEffectTarget target;
+
+            if (targets.length > i) {
+                target = new SpellEffectTarget(critical ? targets[i].critical() : targets[i].normal());
+            } else {
+                target = SpellEffectTarget.DEFAULT;
+            }
+
+            effects.add(make(templates.get(i), areas.get(i), target));
         }
 
         return effects;

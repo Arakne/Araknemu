@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import fr.quatrevieux.araknemu.data.value.SpellTarget;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -41,10 +42,13 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
     private final RepositoryUtils<SpellTemplate> utils;
 
     private final Transformer<SpellTemplate.Level> levelTransformer;
+    private final Transformer<SpellTarget[]> spellTargetsTransformer;
 
-    public SqlSpellTemplateRepository(QueryExecutor executor, Transformer<SpellTemplate.Level> levelTransformer) {
+    public SqlSpellTemplateRepository(QueryExecutor executor, Transformer<SpellTemplate.Level> levelTransformer, Transformer<SpellTarget[]> spellTargetsTransformer) {
         this.executor = executor;
         this.levelTransformer = levelTransformer;
+        this.spellTargetsTransformer = spellTargetsTransformer;
+
         utils = new RepositoryUtils<>(this.executor, new SqlSpellTemplateRepository.Loader());
     }
 
@@ -126,7 +130,7 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
                     record.nullableUnserialize("SPELL_LVL_5", levelTransformer),
                     record.nullableUnserialize("SPELL_LVL_6", levelTransformer),
                 },
-                record.getIntArray("SPELL_TARGET", ';')
+                record.unserialize("SPELL_TARGET", spellTargetsTransformer)
             );
         }
 

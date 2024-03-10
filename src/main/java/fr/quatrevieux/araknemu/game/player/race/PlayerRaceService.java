@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.player.race;
 
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.data.value.SpellTarget;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
@@ -89,8 +90,8 @@ public final class PlayerRaceService implements PreloadableService {
     private DefaultCloseCombat createDefaultCloseCombat(SpellTemplate.Level characteristics) {
         return new DefaultCloseCombat(
             characteristics,
-            effectService.makeAll(characteristics.effects(), characteristics.effectAreas(), new int[0]),
-            effectService.makeAll(characteristics.criticalEffects(), characteristics.effectAreas(), new int[0])
+            effectService.makeAll(characteristics.effects(), characteristics.effectAreas(), new SpellTarget[0]),
+            effectService.makeAll(characteristics.criticalEffects(), characteristics.effectAreas(), new SpellTarget[0])
         );
     }
 }

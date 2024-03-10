@@ -100,11 +100,12 @@ public final class SpellService implements PreloadableService {
             level,
             template,
             data,
-            effectService.makeAll(data.effects(), data.effectAreas(), template.targets()),
+            effectService.makeAll(data.effects(), data.effectAreas(), template.targets(), false),
             effectService.makeAll(
                 data.criticalEffects(),
                 data.effectAreas().subList(data.effects().size(), data.effectAreas().size()),
-                template.targets()
+                template.targets(),
+                true
             )
         );
     }

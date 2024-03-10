@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.transformer.SpellTargetsTransformer;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
@@ -144,7 +145,8 @@ public final class SqlWorldRepositoriesModule implements ContainerModule {
             SpellTemplateRepository.class,
             container -> new SqlSpellTemplateRepository(
                 executor,
-                container.get(SpellTemplateLevelTransformer.class)
+                container.get(SpellTemplateLevelTransformer.class),
+                container.get(SpellTargetsTransformer.class)
             )
         );
 
@@ -287,5 +289,6 @@ public final class SqlWorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(WeaponsAbilitiesTransformer.class, container -> new WeaponsAbilitiesTransformer());
+        configurator.persist(SpellTargetsTransformer.class, container -> new SpellTargetsTransformer());
     }
 }
