@@ -27,7 +27,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpellServiceTest extends GameBaseCase {
     private SpellService service;
@@ -57,6 +61,27 @@ class SpellServiceTest extends GameBaseCase {
         assertEquals(3, levels.level(2).effects().get(0).min());
         assertEquals(7, levels.level(2).effects().get(0).max());
         assertEquals(5, levels.level(2).apCost());
+    }
+
+    @Test
+    void getDifferentTargetBetweenNormalAndCritical() throws SQLException {
+        dataSet.pushFunctionalSpells();
+        SpellLevels levels = service.get(320);
+
+        assertEquals(320, levels.id());
+        assertEquals("Incurable", levels.name());
+        assertEquals(5, levels.max());
+
+        assertEquals(132, levels.level(2).effects().get(0).effect());
+        assertEquals(0, levels.level(2).effects().get(0).min());
+        assertEquals(0, levels.level(2).effects().get(0).max());
+        assertFalse(levels.level(2).effects().get(0).target().isHook());
+        assertEquals(100, levels.level(2).criticalEffects().get(0).effect());
+        assertEquals(61, levels.level(2).criticalEffects().get(0).min());
+        assertEquals(110, levels.level(2).criticalEffects().get(0).max());
+        assertTrue(levels.level(2).criticalEffects().get(0).target().isHook());
+        assertEquals(1, levels.level(2).criticalEffects().get(0).target().hookId());
+        assertEquals(6, levels.level(2).apCost());
     }
 
     @Test

@@ -21,11 +21,15 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.data.transformer.SpellTargetsTransformer;
+import fr.quatrevieux.araknemu.data.value.SpellTarget;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.SpellTemplateLevelTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,7 +49,8 @@ class SqlSpellTemplateRepositoryTest extends GameBaseCase {
 
         repository = new SqlSpellTemplateRepository(
             new ConnectionPoolExecutor(app.database().get("game")),
-            container.get(SpellTemplateLevelTransformer.class)
+            container.get(SpellTemplateLevelTransformer.class),
+            container.get(SpellTargetsTransformer.class)
         );
     }
 
@@ -63,7 +68,7 @@ class SqlSpellTemplateRepositoryTest extends GameBaseCase {
         assertEquals(102, spell.sprite());
         assertEquals("11,1,1", spell.spriteArgs());
         assertCount(6, spell.levels());
-        assertArrayEquals(new int[0], spell.targets());
+        assertArrayEquals(new SpellTarget[0], spell.targets());
     }
 
     @Test
@@ -75,7 +80,33 @@ class SqlSpellTemplateRepositoryTest extends GameBaseCase {
         assertEquals(102, spell.sprite());
         assertEquals("11,1,1", spell.spriteArgs());
         assertCount(6, spell.levels());
-        assertArrayEquals(new int[0], spell.targets());
+        assertArrayEquals(new SpellTarget[0], spell.targets());
+    }
+
+    @Test
+    void getWithTarget() {
+        SpellTemplate spell = repository.get(6);
+
+        assertEquals(6, spell.id());
+        assertEquals("Armure Terrestre", spell.name());
+        assertCount(6, spell.levels());
+        assertCount(1, spell.targets());
+        assertEquals(4, spell.targets()[0].normal());
+        assertEquals(4, spell.targets()[0].critical());
+    }
+
+    @Test
+    void getWithTargetExplicitCritical() throws SQLException {
+        dataSet.pushFunctionalSpells();
+
+        SpellTemplate spell = repository.get(320);
+
+        assertEquals(320, spell.id());
+        assertEquals("Incurable", spell.name());
+        assertCount(6, spell.levels());
+        assertCount(1, spell.targets());
+        assertEquals(0, spell.targets()[0].normal());
+        assertEquals(64, spell.targets()[0].critical());
     }
 
     @Test
