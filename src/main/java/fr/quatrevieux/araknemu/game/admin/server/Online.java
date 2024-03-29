@@ -161,6 +161,12 @@ public final class Online extends AbstractCommand<Online.Arguments> {
         @Option(name = "--skip", usage = "Skip the first lines.")
         private int skip = 0;
 
+        @Option(name = "--fighting", aliases = {"-f"}, usage = "List only players in a fight.")
+        private boolean fighting = false;
+
+        @Option(name = "--exploring", aliases = {"-e"}, usage = "List only players in exploration.")
+        private boolean exploring = false;
+
         @Argument(metaVar = "SEARCH", usage = "Optional. Filter the online player name. Return only players containing the search term into the name.")
         private @MonotonicNonNull String search = null;
 
@@ -170,6 +176,14 @@ public final class Online extends AbstractCommand<Online.Arguments> {
         public Stream<GamePlayer> apply(Stream<GamePlayer> stream) {
             if (search != null) {
                 stream = stream.filter(player -> player.name().toLowerCase().contains(NullnessUtil.castNonNull(search)));
+            }
+
+            if (fighting) {
+                stream = stream.filter(GamePlayer::isFighting);
+            }
+
+            if (exploring) {
+                stream = stream.filter(GamePlayer::isExploring);
             }
 
             return stream.skip(skip).limit(limit);

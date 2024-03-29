@@ -101,7 +101,7 @@ public final class PlayerExperienceService implements PreloadableService, Events
      *
      * @param level Level to get
      */
-    PlayerExperience byLevel(int level) {
+    public PlayerExperience byLevel(int level) {
         return level <= levels.size()
             ? levels.get(level - 1)
             : levels.get(levels.size() - 1)

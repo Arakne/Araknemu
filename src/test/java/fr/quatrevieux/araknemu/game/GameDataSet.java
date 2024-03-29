@@ -1078,7 +1078,8 @@ public class GameDataSet extends TestingDataSet {
             "INSERT INTO `MONSTER_GROUP` (`MONSTER_GROUP_ID`, `MONSTERS`, `MAX_SIZE`, `MAX_COUNT`, `RESPAWN_TIME`, `COMMENT`, `WIN_FIGHT_TELEPORT_MAP_ID`, `WIN_FIGHT_TELEPORT_CELL_ID`, `FIXED_TEAM_NUMBER`) VALUES" +
                 "(1, '31|34,10', 4, 2, 30000, 'larves', 0, 0, 0)," +
                 "(2, '36,3,6', 6, 3, 75000, 'bouftous', 0, 0, 1)," +
-                "(3, '36', 1, 1, 100, 'reswpan', 10340, 125, 0);"
+                "(3, '36', 1, 1, 100, 'reswpan', 10340, 125, 0)," +
+                "(4, '31x2|34x4', 1, 1, 100, 'reswpan', 0, 0, 0);"
         );
 
         return this;

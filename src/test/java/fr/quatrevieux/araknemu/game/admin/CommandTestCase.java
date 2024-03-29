@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 abstract public class CommandTestCase extends GameBaseCase {
     protected Command command;
@@ -140,6 +141,30 @@ abstract public class CommandTestCase extends GameBaseCase {
                 .map(entry -> entry.message)
                 .toArray()
         );
+    }
+
+    public void assertOutputRegex(String... patterns) {
+        final String[] logs = performer.logs
+            .stream()
+            .map(entry -> entry.message)
+            .toArray(String[]::new)
+        ;
+
+        for (int i = 0; i < patterns.length; i++) {
+            if (i >= logs.length) {
+                fail("Line " + i + " not found in logs, expected : " + patterns[i]);
+                continue;
+            }
+
+            assertTrue(
+                logs[i].matches(patterns[i]),
+                "Line " + i + " does not match pattern : " + patterns[i] + "\nActual : " + logs[i]
+            );
+        }
+
+        if (patterns.length < logs.length) {
+            fail("Too many lines in logs, expected : " + patterns.length + ", actual : " + logs.length);
+        }
     }
 
     public void assertOutputContains(String line) {

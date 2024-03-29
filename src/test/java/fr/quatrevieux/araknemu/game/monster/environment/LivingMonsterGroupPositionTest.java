@@ -107,8 +107,9 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         monsterGroupPosition.populate(map);
         assertCount(2, monsterGroupPosition.available());
 
-        monsterGroupPosition.spawn();
+        MonsterGroup group = monsterGroupPosition.spawn();
         assertCount(3, monsterGroupPosition.available());
+        assertContains(group, monsterGroupPosition.available());
     }
 
     @Test

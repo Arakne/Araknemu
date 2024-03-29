@@ -119,7 +119,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         service.preload(logger);
 
         Mockito.verify(logger).info("Loading monster groups data...");
-        Mockito.verify(logger).info("{} monster groups loaded", 3);
+        Mockito.verify(logger).info("{} monster groups loaded", 4);
         Mockito.verify(logger).info("Loading monster groups positions...");
         Mockito.verify(logger).info("{} Map positions loaded", 2);
 

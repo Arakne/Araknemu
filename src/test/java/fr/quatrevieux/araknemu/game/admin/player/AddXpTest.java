@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.player;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ class AddXpTest extends CommandTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        command = new AddXp(gamePlayer(true));
+        command = new AddXp(gamePlayer(true), container.get(PlayerExperienceService.class));
     }
 
     @Test
@@ -57,6 +58,42 @@ class AddXpTest extends CommandTestCase {
     }
 
     @Test
+    void executeWithLevel() throws ContainerException, SQLException, AdminException {
+        execute("addxp", "--level", "69");
+
+        assertOutput("Add 15573541 xp to Bob (level = 69)");
+
+        assertEquals(21055000, gamePlayer().properties().experience().current());
+    }
+
+    @Test
+    void executeWithLevelAlias() throws ContainerException, SQLException, AdminException {
+        execute("addxp", "-l", "69");
+
+        assertOutput("Add 15573541 xp to Bob (level = 69)");
+
+        assertEquals(21055000, gamePlayer().properties().experience().current());
+    }
+
+    @Test
+    void executeWithLevelToLow() throws ContainerException, SQLException, AdminException {
+        execute("addxp", "--level", "20");
+
+        assertOutput("The player level (50) is already higher than the target level (20)");
+
+        assertEquals(50, gamePlayer().properties().experience().level());
+    }
+
+    @Test
+    void executeWithLevelSame() throws ContainerException, SQLException, AdminException {
+        execute("addxp", "--level", "50");
+
+        assertOutput("The player level (50) is already higher than the target level (50)");
+
+        assertEquals(50, gamePlayer().properties().experience().level());
+    }
+
+    @Test
     void executeWithLongNumber() throws ContainerException, SQLException, AdminException {
         execute("addxp", "10000000000");
 
@@ -71,11 +108,13 @@ class AddXpTest extends CommandTestCase {
             "addxp - Add experience to player",
             "========================================",
             "SYNOPSIS",
-                "\taddxp QUANTITY",
+                "\taddxp [QUANTITY] [--level (-l) N]",
             "OPTIONS",
                 "\tQUANTITY : The experience quantity to add. Must be an unsigned number.",
+                "\t--level (-l) : The target level. If set, the quantity will be calculated to reach this level. Must be a positive number.",
             "EXAMPLES",
-                "\t@John addxp 1000000 - Add 1 million xp to John",
+                "\t@John addxp 1000000     - Add 1 million xp to John",
+                "\t@John addxp --level 150 - Add xp to John to reach level 150",
             "PERMISSIONS",
                 "\t[ACCESS, MANAGE_PLAYER]"
         );

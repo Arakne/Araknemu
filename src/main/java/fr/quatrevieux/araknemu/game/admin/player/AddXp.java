@@ -23,17 +23,21 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import org.checkerframework.checker.index.qual.Positive;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.Option;
 
 /**
  * Add experience to player
  */
 public final class AddXp extends AbstractCommand<AddXp.Arguments> {
     private final GamePlayer player;
+    private final PlayerExperienceService service;
 
-    public AddXp(GamePlayer player) {
+    public AddXp(GamePlayer player, PlayerExperienceService service) {
         this.player = player;
+        this.service = service;
     }
 
     @Override
@@ -43,6 +47,7 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
                 formatter -> formatter
                     .description("Add experience to player")
                     .example("@John addxp 1000000", "Add 1 million xp to John")
+                    .example("@John addxp --level 150", "Add xp to John to reach level 150")
             )
             .requires(Permission.MANAGE_PLAYER)
             .arguments(Arguments::new)
@@ -56,17 +61,35 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
 
     @Override
     public void execute(AdminPerformer performer, Arguments arguments) {
-        player.properties().experience().add(arguments.quantity);
+        long quantity = arguments.quantity;
 
-        performer.success("Add {} xp to {} (level = {})", arguments.quantity, player.name(), player.properties().experience().level());
+        if (arguments.level > 0) {
+            if (arguments.level <= player.properties().experience().level()) {
+                performer.error("The player level ({}) is already higher than the target level ({})", player.properties().experience().level(), arguments.level);
+                return;
+            }
+
+            quantity = Math.max(service.byLevel(arguments.level).experience() - player.properties().experience().current(), 0);
+        }
+
+        player.properties().experience().add(quantity);
+
+        performer.success("Add {} xp to {} (level = {})", quantity, player.name(), player.properties().experience().level());
     }
 
     public static final class Arguments {
         @Argument(
-            required = true,
+            required = false,
             metaVar = "QUANTITY",
             usage = "The experience quantity to add. Must be an unsigned number."
         )
-        private @Positive long quantity;
+        private @NonNegative long quantity = 0;
+
+        @Option(
+            name = "--level",
+            aliases = {"-l"},
+            usage = "The target level. If set, the quantity will be calculated to reach this level. Must be a positive number."
+        )
+        private @NonNegative int level = 0;
     }
 }
