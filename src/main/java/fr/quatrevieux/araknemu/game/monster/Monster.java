@@ -57,6 +57,13 @@ public final class Monster {
     }
 
     /**
+     * Get the monster name, for display purpose
+     */
+    public String name() {
+        return template.name();
+    }
+
+    /**
      * The monster sprite
      */
     public int gfxId() {

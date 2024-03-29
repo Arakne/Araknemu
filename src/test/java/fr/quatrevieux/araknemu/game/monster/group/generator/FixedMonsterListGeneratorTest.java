@@ -59,4 +59,12 @@ class FixedMonsterListGeneratorTest extends GameBaseCase {
         assertBetween(2, 6, monsters.get(0).level());
         assertEquals(10, monsters.get(1).level());
     }
+
+    @Test
+    void generateShouldUseRateAsMultiplier() {
+        List<Monster> monsters = generator.generate(repository.get(4));
+
+        assertCount(6, monsters);
+        assertArrayEquals(new int[] {31, 31, 34, 34, 34, 34}, monsters.stream().mapToInt(Monster::id).toArray());
+    }
 }

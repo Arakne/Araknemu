@@ -81,13 +81,19 @@ public final class LivingMonsterGroupPosition {
      * Spawn a new group on the map
      *
      * Note: this method will not check the max count of monsters : if called manually, the group count can exceed max count
+     *
+     * @return The spawned group
      */
-    public void spawn() {
+    public MonsterGroup spawn() {
         if (map == null) {
             throw new IllegalStateException("Monster group is not on map");
         }
 
-        map.add(factory.create(data, this));
+        final MonsterGroup group = factory.create(data, this);
+
+        map.add(group);
+
+        return group;
     }
 
     /**

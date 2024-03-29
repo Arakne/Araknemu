@@ -52,9 +52,12 @@ import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.HydratorsAggregate;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import fr.quatrevieux.araknemu.game.admin.global.Help;
+import fr.quatrevieux.araknemu.game.admin.player.AddXp;
 import fr.quatrevieux.araknemu.game.admin.player.GetItem;
+import fr.quatrevieux.araknemu.game.admin.player.LearnSpell;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
+import fr.quatrevieux.araknemu.game.admin.player.Spawn;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.CellResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.LocationResolver;
@@ -74,7 +77,11 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
+import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.apache.logging.log4j.LogManager;
 
 import java.nio.file.Paths;
@@ -181,6 +188,9 @@ public final class AdminModule implements ContainerModule {
                             new PlayerResolver(container.get(PlayerService.class), container.get(ExplorationMapService.class)),
                             new CellResolver(),
                         }));
+                        add(new AddXp(context.player(), container.get(PlayerExperienceService.class)));
+                        add(new LearnSpell(context.player(), container.get(SpellService.class)));
+                        add(new Spawn(context.player(), container.get(FightService.class), container.get(MonsterEnvironmentService.class), container.get(MonsterGroupFactory.class)));
                     }
                 }),
                 ctx -> container.with(ctx.player()),

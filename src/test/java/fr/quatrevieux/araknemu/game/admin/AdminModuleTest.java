@@ -45,10 +45,15 @@ import fr.quatrevieux.araknemu.game.admin.executor.argument.HydratorsAggregate;
 import fr.quatrevieux.araknemu.game.admin.global.Echo;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import fr.quatrevieux.araknemu.game.admin.global.Help;
+import fr.quatrevieux.araknemu.game.admin.player.AddStats;
 import fr.quatrevieux.araknemu.game.admin.player.AddXp;
 import fr.quatrevieux.araknemu.game.admin.player.GetItem;
+import fr.quatrevieux.araknemu.game.admin.player.LearnSpell;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
+import fr.quatrevieux.araknemu.game.admin.player.Restriction;
+import fr.quatrevieux.araknemu.game.admin.player.SetLife;
+import fr.quatrevieux.araknemu.game.admin.player.Spawn;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
 import fr.quatrevieux.araknemu.game.admin.server.Banip;
 import fr.quatrevieux.araknemu.game.admin.server.Kick;
@@ -112,7 +117,15 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(GetItem.class, context.command("getitem"));
         assertInstanceOf(Goto.class, context.command("goto"));
         assertInstanceOf(AddXp.class, context.command("addxp"));
+        assertInstanceOf(AddStats.class, context.command("addstats"));
+        assertInstanceOf(fr.quatrevieux.araknemu.game.admin.player.Info.class, context.command("info"));
+        assertInstanceOf(fr.quatrevieux.araknemu.game.admin.player.Kick.class, context.command("kick"));
         assertInstanceOf(fr.quatrevieux.araknemu.game.admin.player.Message.class, context.command("msg"));
+        assertInstanceOf(Restriction.class, context.command("restriction"));
+        assertInstanceOf(fr.quatrevieux.araknemu.game.admin.player.Save.class, context.command("save"));
+        assertInstanceOf(SetLife.class, context.command("setlife"));
+        assertInstanceOf(LearnSpell.class, context.command("learnspell"));
+        assertInstanceOf(Spawn.class, context.command("spawn"));
     }
 
     @Test

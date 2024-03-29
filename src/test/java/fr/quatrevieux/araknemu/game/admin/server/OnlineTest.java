@@ -68,6 +68,20 @@ class OnlineTest extends CommandTestCase {
             "There is 1 online players with 1 active sessions",
             "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-4,3] in exploration [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,@Bob info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
         );
+
+        execute("online", "--exploring");
+
+        assertOutput(
+            "There is 1 online players with 1 active sessions",
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-4,3] in exploration [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,@Bob info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
+        );
+
+        execute("online", "--fighting");
+
+        assertOutput(
+            "There is 1 online players with 1 active sessions",
+            "No results found"
+        );
     }
 
     @Test
@@ -86,6 +100,20 @@ class OnlineTest extends CommandTestCase {
         assertOutput(
             "There is 1 online players with 1 active sessions",
             "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] in combat [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,@Bob info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
+        );
+
+        execute("online", "--fighting");
+
+        assertOutput(
+            "There is 1 online players with 1 active sessions",
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] in combat [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,@Bob info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
+        );
+
+        execute("online", "--exploring");
+
+        assertOutput(
+            "There is 1 online players with 1 active sessions",
+            "No results found"
         );
     }
 
@@ -169,9 +197,11 @@ class OnlineTest extends CommandTestCase {
             "online - List online players",
             "========================================",
             "SYNOPSIS",
-                "\tonline [SEARCH] [--limit N=20] [--skip N]",
+                "\tonline [SEARCH] [--exploring (-e)] [--fighting (-f)] [--limit N=20] [--skip N]",
             "OPTIONS",
                 "\tSEARCH : Optional. Filter the online player name. Return only players containing the search term into the name.",
+                "\t--exploring (-e) : List only players in exploration.",
+                "\t--fighting (-f) : List only players in a fight.",
                 "\t--limit : Limit the number of returned lines. By default the limit is set to 20.",
                 "\t--skip : Skip the first lines.",
             "EXAMPLES",

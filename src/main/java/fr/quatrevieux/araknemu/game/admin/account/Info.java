@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.formatter.Link;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
  * Info command for account
@@ -76,6 +78,15 @@ public final class Info extends AbstractCommand<Void> {
         } else {
             performer.error("Logged: No");
         }
+
+        account.session().map(GameSession::player).ifPresent(player -> {
+            performer.info(
+                "Player: {}",
+                Link.Type.EXECUTE
+                    .create("@" + player.name() + " info")
+                    .text(player.name())
+            );
+        });
 
         if (!account.isMaster()) {
             performer.error("Standard account");

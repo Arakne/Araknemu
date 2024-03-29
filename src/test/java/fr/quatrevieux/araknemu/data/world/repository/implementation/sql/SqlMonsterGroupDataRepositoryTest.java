@@ -116,7 +116,7 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
     @Test
     void all() {
         assertArrayEquals(
-            new int[] {1, 2, 3},
+            new int[] {1, 2, 3, 4},
             repository.all().stream().mapToInt(MonsterGroupData::id).toArray()
         );
     }

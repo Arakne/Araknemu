@@ -36,7 +36,7 @@ public final class MonsterGroupData {
     private final int id;
     private final Duration respawnTime;
     private final @NonNegative int maxSize;
-    private final @Positive int maxCount;
+    private final @NonNegative int maxCount;
     private final List<Monster> monsters;
     private final @Nullable String comment;
     private final Position winFightTeleport;
@@ -45,7 +45,7 @@ public final class MonsterGroupData {
     private final @Positive int totalRate;
 
     @SuppressWarnings("cast.unsafe") // @todo remove when nullable monsters list will be denied
-    public MonsterGroupData(int id, Duration respawnTime, @NonNegative int maxSize, @Positive int maxCount, List<Monster> monsters, @Nullable String comment, Position winFightTeleport, boolean fixedTeamNumber) {
+    public MonsterGroupData(int id, Duration respawnTime, @NonNegative int maxSize, @NonNegative int maxCount, List<Monster> monsters, @Nullable String comment, Position winFightTeleport, boolean fixedTeamNumber) {
         this.id = id;
         this.respawnTime = respawnTime;
         this.maxSize = maxSize;
@@ -108,10 +108,11 @@ public final class MonsterGroupData {
      * Maximum number of occurrence of the group
      *
      * If the value is 1, only one group is spawn, and can respawn only when the previous group has start a fight
+     * If this value is 0, the group will not spawn automatically
      *
      * For dungeon groups, this value should be 1
      */
-    public @Positive int maxCount() {
+    public @NonNegative int maxCount() {
         return maxCount;
     }
 

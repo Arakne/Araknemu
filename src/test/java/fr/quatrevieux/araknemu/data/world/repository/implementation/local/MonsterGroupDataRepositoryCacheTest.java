@@ -85,7 +85,7 @@ class MonsterGroupDataRepositoryCacheTest extends GameBaseCase {
     void all() {
         List<MonsterGroupData> groups = repository.all();
 
-        assertCount(3, groups);
+        assertCount(4, groups);
 
         for (MonsterGroupData template : groups) {
             assertSame(

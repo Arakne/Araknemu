@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.EnumSet;
+import java.util.stream.Collectors;
 
 class InfoTest extends CommandTestCase {
     @Test
@@ -70,6 +71,25 @@ class InfoTest extends CommandTestCase {
         execute("info");
 
         assertOutputContains("Logged: Yes");
+    }
+
+    @Test
+    void executeLoggedWithPlayer() throws ContainerException, AdminException, SQLException {
+        GameAccount account = container.get(AccountService.class).load(dataSet.push(new Account(-1, "azerty", "", "uiop")));
+
+        command = new Info(
+            account,
+            container.get(AccountRepository.class)
+        );
+
+        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
+        account.attach(session);
+        makeSimpleGamePlayer(42, session, true);
+
+        execute("info");
+
+        assertOutputContains("Logged: Yes");
+        assertOutputContains("Player: <u><a href='asfunction:onHref,ExecCmd,@PLAYER_42 info,true'>PLAYER_42</a></u>");
     }
 
     @Test
