@@ -19,8 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.map.util;
 
+import fr.arakne.utils.maps.serializer.CellData;
+import fr.arakne.utils.value.Dimensions;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
+import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -31,9 +39,11 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlacementCellsGeneratorTest extends GameBaseCase {
@@ -91,5 +101,39 @@ class PlacementCellsGeneratorTest extends GameBaseCase {
         assertNotEquals(123, cell.id());
         assertNotEquals(124, cell.id());
         assertNotEquals(125, cell.id());
+    }
+
+    @Test
+    void nextWithEmptyMap() {
+        map = new FightMap(
+            new MapTemplate(
+                0,
+                "",
+                new Dimensions(0, 0),
+                "",
+                new CellData[0],
+                new int[2][0],
+                new Geolocation(0, 0),
+                0,
+                false
+            )
+        );
+
+        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Collections.emptyList());
+
+        assertNull(generator.next());
+    }
+
+    @Test
+    void nextWithoutAvailableCell() {
+        PlacementCellsGenerator generator = new PlacementCellsGenerator(map, Arrays.asList(map.get(123), map.get(124), map.get(125)));
+
+        for (int i = 0; i < map.size(); ++i) {
+            if (map.get(i).walkable()) {
+                map.get(i).set(Mockito.mock(Fighter.class));
+            }
+        }
+
+        assertNull(generator.next());
     }
 }

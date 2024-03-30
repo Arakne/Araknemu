@@ -83,21 +83,18 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
         this.fight = fight;
         this.cellsGenerators = new HashMap<>();
 
-        for (FightTeam team : fight.teams()) {
-            cellsGenerators.put(
-                team,
-                randomize
-                    ? PlacementCellsGenerator.randomized(fight.map(), team.startPlaces())
-                    : new PlacementCellsGenerator(fight.map(), team.startPlaces())
-            );
-        }
-
         fight.dispatcher().register(this);
         startTime = System.currentTimeMillis();
 
-        // Add all fighters to fight
-        // Note: fight.fighters() cannot be used because at this state fighters are not yet on fight
-        addFighters(fight.teams().stream().flatMap(team -> team.fighters().stream()).collect(Collectors.toList()));
+        try {
+            // Add all fighters to fight
+            // Note: fight.fighters() cannot be used because at this state fighters are not yet on fight
+            addFighters(fight.teams().stream().flatMap(team -> team.fighters().stream()).collect(Collectors.toList()));
+        } catch (Exception e) {
+            fight.cancel();
+
+            throw new FightException("Cannot add fighters", e);
+        }
 
         if (fight.type().hasPlacementTimeLimit()) {
             timer = fight.schedule(this::innerStartFight, fight.type().placementDuration());
@@ -189,7 +186,13 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
         }
 
         team.join(fighter);
-        addFighters(Collections.singleton(fighter));
+
+        try {
+            addFighters(Collections.singleton(fighter));
+        } catch (FightException e) {
+            team.kick(fighter);
+            throw new JoinFightException(JoinFightError.CHALLENGE_FULL);
+        }
     }
 
     @Override
@@ -287,13 +290,38 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
         fighter.dispatch(new FightLeaved(rewardsSheet.rewards().get(0)));
     }
 
+    /**
+     * Add given fighters to the fight
+     *
+     * This method may fail, in this case the fighters list will be unchanged,
+     * so this method can be considered as atomic
+     *
+     * @throws FightException When cannot found a cell for a fighter
+     */
     @RequiresNonNull("fight")
-    @SuppressWarnings("dereference.of.nullable") // cellsGenerators.get(fighter.team()) cannot be null
     private void addFighters(Collection<Fighter> fighters) {
+        final Fight fight = this.fight;
+        final Map<FightTeam, PlacementCellsGenerator> cellsGenerators = NullnessUtil.castNonNull(this.cellsGenerators);
         final FighterList fightersList = fight.fighters();
 
         for (Fighter fighter : fighters) {
-            fightersList.join(fighter, NullnessUtil.castNonNull(cellsGenerators).get(fighter.team()).next());
+            final FightCell joinCell = cellsGenerators
+                .computeIfAbsent(fighter.team(), team -> randomize
+                    ? PlacementCellsGenerator.randomized(fight.map(), team.startPlaces())
+                    : new PlacementCellsGenerator(fight.map(), team.startPlaces())
+                )
+                .next()
+            ;
+
+            // No free cell available, so cancel the join
+            // Note: no events are triggers in this case and the state is unchanged
+            if (joinCell == null) {
+                fightersList.removeAll(fighters);
+
+                throw new FightException("Cannot found a cell for the fighter");
+            }
+
+            fightersList.join(fighter, joinCell);
         }
 
         for (Fighter fighter : fighters) {

@@ -19,9 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.state;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
+import fr.quatrevieux.araknemu.data.world.transformer.MonsterListTransformer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.event.FighterAdded;
@@ -30,9 +37,12 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
@@ -45,6 +55,12 @@ import fr.quatrevieux.araknemu.game.listener.fight.SendNewFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
+import fr.quatrevieux.araknemu.game.monster.environment.FixedCellSelector;
+import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
+import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
+import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
+import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
@@ -62,6 +78,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -72,6 +89,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class PlacementStateTest extends FightBaseCase {
     private Fight fight;
@@ -145,6 +163,74 @@ class PlacementStateTest extends FightBaseCase {
         assertEquals(fight, fight.team(1).leader().fight());
 
         assertCount(2, fight.fighters().all());
+    }
+
+    @Test
+    void startFailedWithNoFreeCellShouldBeCancelled() throws SQLException {
+        explorationPlayer();
+
+        FightMap map = loadFightMap(10340);
+        dataSet
+            .pushMonsterTemplates()
+            .pushMonsterSpells()
+        ;
+
+        final MonsterGroupData data = new MonsterGroupData(
+            -1,
+            Duration.ZERO,
+            0,
+            0,
+            container.get(MonsterListTransformer.class).unserialize("34x400"), // group of 400 monsters
+            "",
+            new Position(0, 0),
+            false
+        );
+
+        MonsterGroupFactory groupFactory = container.get(MonsterGroupFactory.class);
+
+        final LivingMonsterGroupPosition position = new LivingMonsterGroupPosition(
+            groupFactory,
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            data,
+            new RandomCellSelector(),
+            true
+        );
+
+        position.populate(container.get(ExplorationMapService.class).load(10340));
+
+        MonsterGroup group = groupFactory.create(data, position);
+        MonsterGroupTeam otherTeam = new MonsterGroupTeam(group, Collections.emptyList(), 1, container.get(FighterFactory.class));
+
+        fight = new Fight(
+            1,
+            new ChallengeType(configuration.fight()),
+            map,
+            new ArrayList<>(Arrays.asList(
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> otherTeam
+            )),
+            new StatesFlow(
+                new NullState(),
+                new InitialiseState(),
+                state = new PlacementState(false),
+                new ActiveState()
+            ),
+            container.get(Logger.class),
+            ExecutorFactory.createSingleThread(),
+            container.get(ActionsFactory.Factory.class)
+        );
+
+        requestStack.clear();
+
+        assertThrows(FightException.class, () -> state.start(fight));
+
+        assertFalse(fight.alive());
+        assertCount(0, fight.fighters().all());
+        requestStack.assertEmpty();
+
+        assertTrue(player.isExploring());
+        assertFalse(player.isFighting());
     }
 
     @Test
@@ -378,6 +464,92 @@ class PlacementStateTest extends FightBaseCase {
         assertSame(newFighter, ref.get().fighter());
 
         requestStack.assertLast(new AddSprites(Collections.singleton(newFighter.sprite())));
+    }
+
+    @Test
+    void joinFailedNoMoreFreeCellAvailable() throws SQLException {
+        FightMap map = loadFightMap(10340);
+        dataSet
+            .pushMonsterTemplates()
+            .pushMonsterSpells()
+        ;
+
+        // Get all cells except one for the player
+        List<FightCell> freeCells = new ArrayList<>();
+
+        for (int i = 0; i < map.size(); ++i) {
+            FightCell cell = map.get(i);
+
+            if (cell.walkable() && cell.id() != 123) {
+                freeCells.add(cell);
+            }
+        }
+
+        final MonsterGroupData data = new MonsterGroupData(
+            -1,
+            Duration.ZERO,
+            0,
+            0,
+            container.get(MonsterListTransformer.class).unserialize("34x" + freeCells.size()), // ensure that the map will be filled
+            "",
+            new Position(0, 0),
+            false
+        );
+
+        MonsterGroupFactory groupFactory = container.get(MonsterGroupFactory.class);
+
+        final LivingMonsterGroupPosition position = new LivingMonsterGroupPosition(
+            groupFactory,
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            data,
+            new RandomCellSelector(),
+            true
+        );
+
+        position.populate(container.get(ExplorationMapService.class).load(10340));
+
+        MonsterGroup group = groupFactory.create(data, position);
+        MonsterGroupTeam otherTeam = new MonsterGroupTeam(group, freeCells, 1, container.get(FighterFactory.class));
+
+        fight = new Fight(
+            1,
+            new ChallengeType(configuration.fight()),
+            map,
+            new ArrayList<>(Arrays.asList(
+                fight -> new SimpleTeam(fight, fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                fight -> otherTeam
+            )),
+            new StatesFlow(
+                new NullState(),
+                new InitialiseState(),
+                state = new PlacementState(false),
+                new ActiveState()
+            ),
+            container.get(Logger.class),
+            ExecutorFactory.createSingleThread(),
+            container.get(ActionsFactory.Factory.class)
+        );
+
+        fight.nextState();
+        requestStack.clear();
+
+        assertTrue(fight.alive());
+        assertCount(freeCells.size() + 1, fight.fighters().all());
+
+        PlayerFighter otherFighter = makePlayerFighter(other);
+
+        try {
+            state.joinTeam(otherFighter, fighter.team());
+            fail("Should not throw exception");
+        } catch (JoinFightException e) {
+            assertEquals(JoinFightError.CHALLENGE_FULL, e.error());
+        }
+
+        assertFalse(fight.fighters().all().contains(otherFighter));
+        assertTrue(fight.alive());
+        assertCount(freeCells.size() + 1, fight.fighters().all());
+        requestStack.assertEmpty();
     }
 
     @Test
