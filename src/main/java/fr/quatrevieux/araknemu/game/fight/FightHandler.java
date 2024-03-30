@@ -50,11 +50,13 @@ public final class FightHandler<B extends FightBuilder> implements EventsSubscri
         final Fight fight = builder.build(service.newFightId());
 
         service.modules(fight).forEach(fight::register);
-        fight.nextState();
 
-        fight.dispatcher().register(this);
-
-        service.created(fight);
+        // Execute the fight creation in another thread to avoid blocking the network thread
+        fight.execute(() -> {
+            fight.nextState();
+            fight.dispatcher().register(this);
+            service.created(fight);
+        });
 
         return fight;
     }

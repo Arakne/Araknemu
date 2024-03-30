@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.map.util;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -56,8 +57,9 @@ public final class PlacementCellsGenerator {
      * The next cell is free and walkable cell
      *
      * If there is no more available start place, a random cell will be taken from the entire map
+     * If there is no more free cell on the map, return null
      */
-    public FightCell next() {
+    public @Nullable FightCell next() {
         if (number >= available.size() - 1) {
             return randomFightCell();
         }
@@ -68,7 +70,7 @@ public final class PlacementCellsGenerator {
     /**
      * Returns the next available start cell
      */
-    private FightCell nextAvailableCell() {
+    private @Nullable FightCell nextAvailableCell() {
         final FightCell cell = available.get(++number);
 
         if (cell.walkable()) {
@@ -81,20 +83,22 @@ public final class PlacementCellsGenerator {
     /**
      * Get a random cell from the entire map
      */
-    private FightCell randomFightCell() {
+    private @Nullable FightCell randomFightCell() {
         final int size = map.size();
 
         if (size < 1) {
-            throw new IllegalStateException("The map " + map.id() + " is empty");
+            return null;
         }
 
-        for (;;) {
+        for (int i = 0; i < 10; ++i) {
             final FightCell cell = map.get(random.nextInt(size));
 
             if (cell.walkable()) {
                 return cell;
             }
         }
+
+        return null;
     }
 
     /**

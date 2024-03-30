@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
@@ -29,13 +30,16 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FighterListTest extends FightBaseCase {
@@ -201,5 +205,16 @@ class FighterListTest extends FightBaseCase {
         ai.set(0);
         fight.dispatchToAll(new Foo());
         assertEquals(1, ai.get());
+    }
+
+    @Test
+    void removeAll() throws SQLException {
+        Fighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        fighterList.join(fighter, fight.map().get(146));
+
+        fighterList.removeAll(Collections.singleton(fighter));
+
+        assertFalse(fighterList.all().contains(fighter));
+        assertFalse(fight.map().get(146).hasFighter());
     }
 }

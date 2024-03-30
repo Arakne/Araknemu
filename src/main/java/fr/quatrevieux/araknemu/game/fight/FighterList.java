@@ -129,6 +129,20 @@ public final class FighterList implements Iterable<Fighter>, Dispatcher {
     }
 
     /**
+     * Internal method for remove all given fighters.
+     *
+     * This method should only be used to roll back a call of {@link #join(Fighter, FightCell)},
+     * no events or other actions will be triggered.
+     */
+    public void removeAll(Collection<Fighter> fighters) {
+        for (Fighter fighter : fighters) {
+            if (this.fighters.remove(fighter)) {
+                fighter.cell().removeFighter(fighter);
+            }
+        }
+    }
+
+    /**
      * Internal method for clear all fighters objects.
      */
     void clear() {
