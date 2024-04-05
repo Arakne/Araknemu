@@ -7,12 +7,12 @@
 ; Server Configuration
 ; --------------------
 ; > The listened port for authentication server. Default 444
-server.port = 4444
+server.port = ${AUTH_PORT:-4444}
 
 ; Dofus client Configuration
 ; --------------------------
 ; > The required Dofus client version for logged in. Default "1.29.1"
-client.version = 1.29.1
+client.version = ${CLIENT_VERSION:-1.29.1}
 
 ; Password
 ; --------
@@ -83,14 +83,19 @@ client.version = 1.29.1
 ;connection_name.autoReconnect = true
 
 ; Configure database for authentication server
-realm.host = 127.0.0.1
-realm.user = araknemu
-realm.dbname = araknemu
+realm.type = ${DB_TYPE:-mysql}
+realm.host = ${DB_HOST:-127.0.0.1}
+realm.user = ${DB_USER:-araknemu}
+realm.password = $DB_PASSWORD
+realm.dbname = ${DB_NAME:-araknemu}
+realm.path = ${DB_NAME:-araknemu.db}
 
 ; Configure database for game server
-game.host = 127.0.0.1
-game.user = araknemu
-game.dbname = araknemu
+game.type = ${DB_TYPE:-mysql}
+game.host = ${DB_HOST:-127.0.0.1}
+game.user = ${DB_USER:-araknemu}
+game.password = $DB_PASSWORD
+game.dbname = ${DB_NAME:-araknemu}
 
 [game]
 ; Section for configure the game server
@@ -98,11 +103,11 @@ game.dbname = araknemu
 ; Server Configuration
 ; --------------------
 ; > The listened port for game server. Default 5555
-;server.port = 5555
+server.port = ${GAME_PORT:-5555}
 ; > Get the server IP address. Default 127.0.0.1
-;server.ip = 127.0.0.1
+server.ip = ${GAME_HOST:-127.0.0.1}
 ; > The timezone for game server. Default Europe/Paris
-;server.timezone = Europe/Paris
+server.timezone = ${TIMEZONE:-Europe/Paris}
 
 
 ; Antispam & other
@@ -224,13 +229,13 @@ game.dbname = araknemu
 ; > Get the XP multiplier
 ; > The value should be a positive decimal number.
 ; > Default value : 1.0
-;fight.rate.xp = 1.0
+fight.rate.xp = ${XP_RATE:-1.0}
 ; > Get the drop rate multiplier
 ; > The value should be a positive decimal number.
 ; > This value will modify the object drop chance, but not the maximum dropped items per monster
 ; > nor minimal discernment requirement.
 ; > Default value : 1.0
-;fight.rate.drop = 1.0
+fight.rate.drop = ${DROP_RATE:-1.0}
 ; > Get the initial erosion rate for fighters
 ; > This value is a percentage, representing the percent of damage that will be transformed to permanent life loss
 ; > It must be between 0 and 100, where 0 means no erosion and 100 means all damage are permanent
@@ -253,9 +258,9 @@ game.dbname = araknemu
 ; > By default this value is true
 ; > In case of submodule (i.e. preload.service.submodule), the preload will be checked on each part.
 ; > So if "preload.service" is false, "preload.service.submodule" will be considered as false
-;preload.map = false
-;preload.monster = false
-;preload.npc = false
+preload.map = ${PRELOAD:-true}
+preload.monster = ${PRELOAD:-true}
+preload.npc = ${PRELOAD:-true}
 
 [admin]
 ; Section for configure admin commands
@@ -272,7 +277,7 @@ game.dbname = araknemu
 ; > Get the commands scripts path
 ; > Should be a directory path
 ; > Default: "scripts/commands/[context]"
-;account.scripts.path = scripts/commands/account
-;player.scripts.path = scripts/commands/player
-;debug.scripts.path = scripts/commands/debug
-;server.scripts.path = scripts/commands/server
+account.scripts.path = "${ADMIN_COMMAND_SCRIPT_PATH:-scripts/commands}/account"
+player.scripts.path = "${ADMIN_COMMAND_SCRIPT_PATH:-scripts/commands}/player"
+debug.scripts.path = "${ADMIN_COMMAND_SCRIPT_PATH:-scripts/commands}/debug"
+server.scripts.path = "${ADMIN_COMMAND_SCRIPT_PATH:-scripts/commands}/server"

@@ -12,3 +12,4 @@ config.ini
 hs_err_*
 replay_*
 hotspot_*
+.env

@@ -58,6 +58,36 @@ class ConfigurationLoaderTest extends TestCase {
         assertEquals("sqlite", dbConfig.connection("realm").type());
         assertEquals("localhost", dbConfig.connection("test_mysql").host());
         assertEquals("araknemu", dbConfig.connection("test_mysql").user());
+        assertEquals("sqlite", dbConfig.connection("with_env").type());
+        assertEquals("/var/lib/araknemu/test.db", dbConfig.connection("with_env").path());
+    }
+
+    @Test
+    void loadCustomDotenvFile() throws IOException {
+        Files.copy(basePath.resolve("test_config.ini"), basePath.resolve("config.ini"));
+
+        Configuration config = loader.dotEnvFile(".env.other").load();
+        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.MODULE);
+
+        assertEquals("sqlite", dbConfig.connection("realm").type());
+        assertEquals("localhost", dbConfig.connection("test_mysql").host());
+        assertEquals("araknemu", dbConfig.connection("test_mysql").user());
+        assertEquals("mysql", dbConfig.connection("with_env").type());
+        assertEquals("./db/test.db", dbConfig.connection("with_env").path());
+    }
+
+    @Test
+    void loadDisableEnv() throws IOException {
+        Files.copy(basePath.resolve("test_config.ini"), basePath.resolve("config.ini"));
+
+        Configuration config = loader.enableDotEnv(false).load();
+        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.MODULE);
+
+        assertEquals("sqlite", dbConfig.connection("realm").type());
+        assertEquals("localhost", dbConfig.connection("test_mysql").host());
+        assertEquals("araknemu", dbConfig.connection("test_mysql").user());
+        assertEquals("$DB_ENV_TYPE", dbConfig.connection("with_env").type());
+        assertEquals("\"$DB_ENV_PATH/test.db\"", dbConfig.connection("with_env").path());
     }
 
     @Test
