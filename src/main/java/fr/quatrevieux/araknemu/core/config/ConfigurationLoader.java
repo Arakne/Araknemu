@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import fr.quatrevieux.araknemu.core.config.env.EnvDriver;
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvBuilder;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
@@ -41,6 +44,8 @@ public final class ConfigurationLoader {
     private final Path baseDirectory;
 
     private @MonotonicNonNull Path configFile;
+    private boolean enableDotEnv = true;
+    private String dotEnvFile = ".env";
 
     public ConfigurationLoader(Path baseDirectory, FileLoader[] loaders) {
         this.baseDirectory = baseDirectory;
@@ -85,6 +90,35 @@ public final class ConfigurationLoader {
     }
 
     /**
+     * Enable or disable usage of .env file and environment variables
+     *
+     * If enabled, {@link EnvDriver} will be used, so syntax like ${VAR}
+     * will be replaced by the environment variable value
+     *
+     * @param enableDotEnv true to enable, false to disable
+     *
+     * @return the current instance
+     */
+    public ConfigurationLoader enableDotEnv(boolean enableDotEnv) {
+        this.enableDotEnv = enableDotEnv;
+
+        return this;
+    }
+
+    /**
+     * Define the .env file name to load
+     *
+     * @param dotEnvFile The file name
+     *
+     * @return the current instance
+     */
+    public ConfigurationLoader dotEnvFile(String dotEnvFile) {
+        this.dotEnvFile = dotEnvFile;
+
+        return this;
+    }
+
+    /**
      * Register a new config file loader
      *
      * @param loader The file loader
@@ -120,13 +154,31 @@ public final class ConfigurationLoader {
     }
 
     private Optional<Configuration> load(Path file) throws IOException {
+        Optional<Driver> driver = loadDriver(file);
+
+        if (enableDotEnv) {
+            final Dotenv dotenv = new DotenvBuilder()
+                .filename(dotEnvFile)
+                .directory(baseDirectory.toAbsolutePath().toString())
+                .ignoreIfMalformed()
+                .ignoreIfMissing()
+                .load()
+            ;
+
+            driver = driver.map(d -> new EnvDriver(d, dotenv));
+        }
+
+        return driver.map(DefaultConfiguration::new);
+    }
+
+    private Optional<Driver> loadDriver(Path file) throws IOException {
         if (!Files.isRegularFile(file)) {
             return Optional.empty();
         }
 
         for (FileLoader loader : loaders) {
             if (loader.supports(file)) {
-                return Optional.of(new DefaultConfiguration(loader.load(file)));
+                return Optional.of(loader.load(file));
             }
         }
 
