@@ -153,6 +153,28 @@ class FightersHelperTest extends AiBaseCase {
     }
 
     @Test
+    void nearestFrom() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(123))
+            .addEnemy(b -> b.cell(125))
+            .addEnemy(b -> b.cell(135))
+        );
+
+        assertEquals(getEnemy(0), helper().nearestFrom(fight.map().get(123)).get());
+        assertEquals(getEnemy(1), helper().nearestFrom(fight.map().get(121)).get());
+
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(210))
+            .addEnemy(b -> b.cell(195).currentLife(50))
+            .addEnemy(b -> b.cell(196).currentLife(15))
+            .addEnemy(b -> b.cell(123))
+        );
+
+        assertEquals(getEnemy(1), helper().nearestFrom(fight.map().get(210)).get());
+        assertEquals(getEnemy(2), helper().nearestFrom(fight.map().get(109)).get());
+    }
+
+    @Test
     void nearestWithHiddenFighterShouldBeIgnored() {
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))

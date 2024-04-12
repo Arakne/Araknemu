@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
@@ -367,11 +368,33 @@ class AttackTest extends AiBaseCase {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))
             .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(150)) // Will be the main enemy
         );
 
         assertEquals(5.05, computeScore(183, 125), 0.001); // 20 * 98% + 30 * 2% / 4 AP
+        assertEquals(10.1, computeScore(183, 150), 0.001); // *2 (main enemy)
         assertEquals(-10.1, computeScore(183, 122), 0.001); // ^ * -2 (self damage)
         assertEquals(0, computeScore(183, 110), 0.001); // no target
+    }
+
+    @Test
+    void scoreWithInvocShouldPrioritizeEnemyNearInvoker() throws SQLException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(110)); // Adjacent to enemy 125
+        invoc.init();
+
+        configureFighterAi(invoc);
+
+        assertEquals(5.05, computeScore(183, 125), 0.001); // 20 * 98% + 30 * 2% / 4 AP
+        assertEquals(10.1, computeScore(183, 150), 0.001); // *2 (main enemy)
     }
 
     @Test
@@ -384,9 +407,13 @@ class AttackTest extends AiBaseCase {
                 .charac(Characteristic.STRENGTH, 0)
             )
             .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(150)) // Will be the main enemy
         );
 
         assertEquals(0.816, computeScore(3, 1, 125), 0.001); // 4 * 98% + 8 * 2% / 5 AP
         assertEquals(0.68, computeScore(2, 1, 125), 0.001); // (1 + 1) * 98% + (2 + 2) * 2% / 3 AP
+
+        assertEquals(2*0.816, computeScore(3, 1, 150), 0.001); // 4 * 98% + 8 * 2% / 5 AP
+        assertEquals(2*0.68, computeScore(2, 1, 150), 0.001); // (1 + 1) * 98% + (2 + 2) * 2% / 3 AP
     }
 }

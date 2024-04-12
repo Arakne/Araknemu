@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.FightAiActionFactoryAdapter;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
@@ -138,6 +139,14 @@ public final class FighterAI implements Runnable, AI {
 
     @Override
     public Optional<? extends FighterData> enemy() {
+        if (fighter.invoked()) {
+            final Fighter invoker = fighter.invoker();
+
+            if (invoker != null && !invoker.hidden()) {
+                return helper.enemies().nearestFrom(invoker.cell());
+            }
+        }
+
         return helper.enemies().nearest();
     }
 

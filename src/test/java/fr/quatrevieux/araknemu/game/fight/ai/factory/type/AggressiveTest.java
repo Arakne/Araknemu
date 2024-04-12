@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +43,33 @@ class AggressiveTest extends AiBaseCase {
 
         actionFactory = new Aggressive(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
+    }
+
+    @Test
+    void allowSuicideWhenInvoked() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(342))
+            .addEnemy(fb -> fb.cell(327))
+        );
+
+        action = null;
+
+        InvocationFighter invoc = new InvocationFighter(
+            -10,
+            container.get(MonsterService.class).load(116).get(1), // Sacrifiée
+            fighter.team(),
+            fighter
+        );
+        fight.fighters().joinTurnList(invoc, fight.map().get(341)); // Near 327
+
+        configureFighterAi(invoc);
+
+        assertCast(2006, 327);
     }
 
     @Test

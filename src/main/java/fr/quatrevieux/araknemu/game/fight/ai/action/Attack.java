@@ -107,11 +107,12 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
     }
 
     private double damageScore(CastSimulation simulation) {
-        return - simulation.enemiesLife() + simulation.alliesLife() + simulation.selfLife() * 2;
+        return - simulation.enemiesLife() - simulation.mainEnemyLife() + simulation.alliesLife() + simulation.selfLife() * 2;
     }
 
     private double killScore(CastSimulation simulation) {
         final double killRatio = simulation.killedEnemies()
+            + simulation.mainEnemyKill()
             - 1.5 * simulation.killedAllies()
             - 2 * simulation.suicideProbability()
         ;
@@ -128,7 +129,7 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
      *
      * @see CastSimulation#suicideProbability()
      */
-    enum SuicideStrategy {
+    public enum SuicideStrategy {
         /**
          * Always allow suicide
          * Should be used on The Sacrificial Doll AI

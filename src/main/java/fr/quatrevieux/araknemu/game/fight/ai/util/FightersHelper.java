@@ -96,7 +96,17 @@ public final class FightersHelper implements Iterable<FighterData> {
      * @return The nearest fighter
      */
     public Optional<? extends FighterData> nearest() {
-        final CoordinateCell<BattlefieldCell> currentCell = ai.fighter().cell().coordinate();
+        return nearestFrom(ai.fighter().cell());
+    }
+
+    /**
+     * Get the nearest fighter from the given cell
+     * If multiple fighters have the same distance, the fighter with lower HP will be returned
+     *
+     * @return The nearest fighter
+     */
+    public Optional<? extends FighterData> nearestFrom(BattlefieldCell cell) {
+        final CoordinateCell<BattlefieldCell> currentCell = cell.coordinate();
 
         return stream()
             .filter(fighter -> !fighter.hidden())

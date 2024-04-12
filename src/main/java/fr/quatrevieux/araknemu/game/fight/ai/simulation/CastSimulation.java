@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The simulation result of a cast
@@ -37,18 +38,22 @@ public final class CastSimulation {
     private final Spell spell;
     private final FighterData caster;
     private final BattlefieldCell target;
+    private @Nullable FighterData mainEnemy = null;
 
     private double enemiesLife;
     private double alliesLife;
     private double selfLife;
+    private double mainEnemyLife;
 
     private double enemiesBoost;
     private double alliesBoost;
     private double selfBoost;
+    private double mainEnemyBoost;
     private double invocation;
 
     private double killedAllies;
     private double killedEnemies;
+    private double mainEnemyKill;
     private double suicide;
 
     private double actionPointsModifier = 0;
@@ -206,6 +211,12 @@ public final class CastSimulation {
             killedEnemies += values.killProbability();
             enemiesBoost += values.boost();
         }
+
+        if (target.equals(mainEnemy)) {
+            mainEnemyLife += values.lifeChange();
+            mainEnemyKill += values.killProbability();
+            mainEnemyBoost += values.boost();
+        }
     }
 
     /**
@@ -237,6 +248,42 @@ public final class CastSimulation {
      */
     public double invocation() {
         return invocation;
+    }
+
+    /**
+     * Get the boost value applied to the main enemy
+     * If no main enemy is defined, this value will be 0
+     *
+     * @return Negative value for malus, and positive for bonus
+     *
+     * @see #setMainEnemy(FighterData) to define the main enemy
+     */
+    public double mainEnemyBoost() {
+        return mainEnemyBoost;
+    }
+
+    /**
+     * The probability to kill the main enemy
+     * If no main enemy is defined, this value will be 0
+     *
+     * @return The value is between 0 (no chance to kill) and 1 (sure to kill)
+     *
+     * @see #setMainEnemy(FighterData) to define the main enemy
+     */
+    public double mainEnemyKill() {
+        return mainEnemyKill;
+    }
+
+    /**
+     * The life change of the main enemy
+     * If no main enemy is defined, this value will be 0
+     *
+     * @return Negative value for damage, and positive for heal
+     *
+     * @see #setMainEnemy(FighterData) to define the main enemy
+     */
+    public double mainEnemyLife() {
+        return mainEnemyLife;
     }
 
     /**
@@ -320,6 +367,10 @@ public final class CastSimulation {
 
         actionPointsModifier += simulation.actionPointsModifier * percent / 100d;
         invocation += simulation.invocation * percent / 100d;
+
+        mainEnemyLife += simulation.mainEnemyLife * percent / 100d;
+        mainEnemyBoost += simulation.mainEnemyBoost * percent / 100d;
+        mainEnemyKill += simulation.mainEnemyKill * percent / 100d;
     }
 
     /**
@@ -400,6 +451,15 @@ public final class CastSimulation {
      */
     private double computeCappedEffect(Interval value, double maxValue) {
         return computeCappedEffect(value, maxValue, cappedProbability(value, maxValue));
+    }
+
+    /**
+     * Define the main enemy of the current fighter
+     *
+     * When set, a score will be computed with this particular enemy, allowing to prioritize cast that targets this enemy
+     */
+    public void setMainEnemy(FighterData mainEnemy) {
+        this.mainEnemy = mainEnemy;
     }
 
     /**

@@ -121,8 +121,24 @@ class GeneratorBuilderTest extends TestCase {
     }
 
     @Test
+    void moveToAttackWithSuicideStrategy() {
+        assertInstanceOf(MoveToAttack.class, builder.moveToAttack(simulator, Attack.SuicideStrategy.ALLOW).build());
+    }
+
+    @Test
     void attack() {
         assertInstanceOf(Attack.class, builder.attack(simulator).build());
+    }
+
+    @Test
+    void attackWithSuicideStrategy() throws NoSuchFieldException, IllegalAccessException {
+        ActionGenerator generator = builder.attack(simulator, Attack.SuicideStrategy.ALLOW).build();
+        assertInstanceOf(Attack.class, generator);
+
+        Field strategy = Attack.class.getDeclaredField("suicideStrategy");
+        strategy.setAccessible(true);
+
+        assertSame(Attack.SuicideStrategy.ALLOW, strategy.get(generator));
     }
 
     @Test
