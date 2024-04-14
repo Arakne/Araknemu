@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAlly;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttractEnemy;
@@ -381,6 +382,17 @@ public class GeneratorBuilder {
      */
     public final GeneratorBuilder moveNearAllies() {
         return add(new MoveNearAllies());
+    }
+
+    /**
+     * Try to move near the main ally (e.g. invoker in case of summoned creature)
+     *
+     * @return The builder instance
+     *
+     * @see MoveNearAlly The used action generator
+     */
+    public final GeneratorBuilder moveNearAlly() {
+        return add(new MoveNearAlly());
     }
 
     /**

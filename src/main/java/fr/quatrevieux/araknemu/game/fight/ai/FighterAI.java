@@ -151,6 +151,11 @@ public final class FighterAI implements Runnable, AI {
     }
 
     @Override
+    public Optional<? extends FighterData> ally() {
+        return Optional.ofNullable(fighter.invoker()).filter(invoker -> !invoker.hidden());
+    }
+
+    @Override
     public AIHelper helper() {
         return helper;
     }

@@ -120,6 +120,37 @@ class FighterAITest extends FightBaseCase {
         assertEquals(otherEnemy, ai.enemy().get());
     }
 
+    @Test
+    void allyShouldBeEmptyForClassicFighter() {
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
+
+        assertFalse(ai.ally().isPresent());
+    }
+
+    @Test
+    void allyShouldInvokerOnInvocationFighter() {
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(112)); // Adjacent to enemy 126
+        invoc.init();
+
+        FighterAI ai = new FighterAI(invoc, fight, NullGenerator.get());
+
+        assertEquals(player.fighter(), ai.ally().get());
+    }
+
+    @Test
+    void allyShouldBeEmptyIfInvokerIsHidden() {
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(112)); // Adjacent to enemy 126
+        invoc.init();
+
+        FighterAI ai = new FighterAI(invoc, fight, NullGenerator.get());
+
+        player.fighter().setHidden(player.fighter(), true);
+
+        assertFalse(ai.ally().isPresent());
+    }
+
     @RepeatedIfExceptionsTest
     void startEmptyShouldStop() throws InterruptedException {
         fight.turnList().start();

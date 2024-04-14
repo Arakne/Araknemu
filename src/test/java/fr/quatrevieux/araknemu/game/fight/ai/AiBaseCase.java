@@ -286,4 +286,8 @@ public class AiBaseCase extends FightBaseCase {
 
         return CastSpell.SimulationSelector.class.cast(action).score(simulation);
     }
+
+    public int distance(Fighter fighter1, Fighter fighter2) {
+        return fighter1.cell().coordinate().distance(fighter2.cell().coordinate());
+    }
 }
