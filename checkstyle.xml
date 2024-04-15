@@ -287,4 +287,10 @@
         <property name="checks" value="AnonInnerLength" />
         <property name="files" value="fr.quatrevieux.araknemu.network.game.out.game.UpdateCells" />
     </module>
+
+    <!-- Ignore CastSimulation -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MethodCountCheck" />
+        <property name="files" value="(fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation)" />
+    </module>
 </module>

@@ -39,21 +39,25 @@ public final class CastSimulation {
     private final FighterData caster;
     private final BattlefieldCell target;
     private @Nullable FighterData mainEnemy = null;
+    private @Nullable FighterData mainAlly = null;
 
     private double enemiesLife;
     private double alliesLife;
     private double selfLife;
     private double mainEnemyLife;
+    private double mainAllyLife;
 
     private double enemiesBoost;
     private double alliesBoost;
     private double selfBoost;
     private double mainEnemyBoost;
+    private double mainAllyBoost;
     private double invocation;
 
     private double killedAllies;
     private double killedEnemies;
     private double mainEnemyKill;
+    private double mainAllyKill;
     private double suicide;
 
     private double actionPointsModifier = 0;
@@ -62,6 +66,24 @@ public final class CastSimulation {
         this.spell = spell;
         this.caster = caster;
         this.target = target;
+    }
+
+    /**
+     * Define the main enemy of the current fighter
+     *
+     * When set, a score will be computed with this particular enemy, allowing to prioritize cast that targets this enemy
+     */
+    public void setMainEnemy(FighterData mainEnemy) {
+        this.mainEnemy = mainEnemy;
+    }
+
+    /**
+     * Define the main ally of the current fighter
+     *
+     * When set, a score will be computed with this particular ally, allowing to prioritize boost or heal that targets this ally
+     */
+    public void setMainAlly(FighterData mainAlly) {
+        this.mainAlly = mainAlly;
     }
 
     /**
@@ -217,6 +239,12 @@ public final class CastSimulation {
             mainEnemyKill += values.killProbability();
             mainEnemyBoost += values.boost();
         }
+
+        if (target.equals(mainAlly)) {
+            mainAllyLife += values.lifeChange();
+            mainAllyKill += values.killProbability();
+            mainAllyBoost += values.boost();
+        }
     }
 
     /**
@@ -284,6 +312,42 @@ public final class CastSimulation {
      */
     public double mainEnemyLife() {
         return mainEnemyLife;
+    }
+
+    /**
+     * Get the boost value applied to the main enemy
+     * If no main enemy is defined, this value will be 0
+     *
+     * @return Negative value for malus, and positive for bonus
+     *
+     * @see #setMainAlly(FighterData) to define the main enemy
+     */
+    public double mainAllyBoost() {
+        return mainAllyBoost;
+    }
+
+    /**
+     * The probability to kill the main enemy
+     * If no main enemy is defined, this value will be 0
+     *
+     * @return The value is between 0 (no chance to kill) and 1 (sure to kill)
+     *
+     * @see #setMainAlly(FighterData) to define the main enemy
+     */
+    public double mainAllyKill() {
+        return mainAllyKill;
+    }
+
+    /**
+     * The life change of the main enemy
+     * If no main enemy is defined, this value will be 0
+     *
+     * @return Negative value for damage, and positive for heal
+     *
+     * @see #setMainAlly(FighterData) to define the main enemy
+     */
+    public double mainAllyLife() {
+        return mainAllyLife;
     }
 
     /**
@@ -371,6 +435,10 @@ public final class CastSimulation {
         mainEnemyLife += simulation.mainEnemyLife * percent / 100d;
         mainEnemyBoost += simulation.mainEnemyBoost * percent / 100d;
         mainEnemyKill += simulation.mainEnemyKill * percent / 100d;
+
+        mainAllyLife += simulation.mainAllyLife * percent / 100d;
+        mainAllyBoost += simulation.mainAllyBoost * percent / 100d;
+        mainAllyKill += simulation.mainAllyKill * percent / 100d;
     }
 
     /**
@@ -451,15 +519,6 @@ public final class CastSimulation {
      */
     private double computeCappedEffect(Interval value, double maxValue) {
         return computeCappedEffect(value, maxValue, cappedProbability(value, maxValue));
-    }
-
-    /**
-     * Define the main enemy of the current fighter
-     *
-     * When set, a score will be computed with this particular enemy, allowing to prioritize cast that targets this enemy
-     */
-    public void setMainEnemy(FighterData mainEnemy) {
-        this.mainEnemy = mainEnemy;
     }
 
     /**

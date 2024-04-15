@@ -21,12 +21,11 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -36,9 +35,9 @@ public class DummyGenerator implements ActionGenerator {
     public void initialize(AI ai) {}
 
     @Override
-    public Optional<Action> generate(AI ai, AiActionFactory actions) {
+    public <A extends Action> Optional<A> generate(AI ai, AiActionFactory<A> actions) {
         return Optional.of(
-            new Action() {
+            (A) new FightAction() {
                 @Override
                 public Fighter performer() {
                     return null;
@@ -52,6 +51,16 @@ public class DummyGenerator implements ActionGenerator {
                 @Override
                 public Duration duration() {
                     return Duration.ZERO;
+                }
+
+                @Override
+                public boolean validate(Turn<?> turn) {
+                    return true;
+                }
+
+                @Override
+                public ActionResult start() {
+                    return null;
                 }
             }
         );

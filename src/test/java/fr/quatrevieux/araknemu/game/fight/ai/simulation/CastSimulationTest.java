@@ -105,6 +105,31 @@ class CastSimulationTest extends FightBaseCase {
         assertEquals(6, simulation.mainEnemyLife());
     }
 
+    @Test
+    void healWithMainAlly() throws SQLException {
+        PlayerFighter mainAlly = new PlayerFighter(makeSimpleGamePlayer(11));
+        mainAlly.setTeam(fighter.team());
+        mainAlly.joinFight(fight, fight.map().get(127));
+        mainAlly.init();
+
+        simulation.setMainAlly(mainAlly);
+
+        fighter.life().damage(fighter, 10);
+        allie.life().damage(fighter, 10);
+        ennemy.life().damage(fighter, 10);
+        mainAlly.life().damage(fighter, 10);
+
+        simulation.addHeal(new Interval(5, 5), fighter);
+        simulation.addHeal(new Interval(4, 4), allie);
+        simulation.addHeal(new Interval(3, 3), ennemy);
+        simulation.addHeal(new Interval(6, 6), mainAlly);
+
+        assertEquals(5, simulation.selfLife());
+        assertEquals(10, simulation.alliesLife());
+        assertEquals(3, simulation.enemiesLife());
+        assertEquals(6, simulation.mainAllyLife());
+    }
+
     @ParameterizedTest
     @MethodSource("provideHeal")
     void healLimitByLostLife(Interval value, double expectedValue) {
@@ -155,6 +180,26 @@ class CastSimulationTest extends FightBaseCase {
         assertEquals(-4, simulation.alliesLife());
         assertEquals(-9, simulation.enemiesLife());
         assertEquals(-6, simulation.mainEnemyLife());
+    }
+
+    @Test
+    void addDamageWithMainAlly() throws SQLException {
+        PlayerFighter mainAlly = new PlayerFighter(makeSimpleGamePlayer(11));
+        mainAlly.setTeam(fighter.team());
+        mainAlly.joinFight(fight, fight.map().get(127));
+        mainAlly.init();
+
+        simulation.setMainAlly(mainAlly);
+
+        simulation.addDamage(new Interval(5, 5), fighter);
+        simulation.addDamage(new Interval(4, 4), allie);
+        simulation.addDamage(new Interval(3, 3), ennemy);
+        simulation.addDamage(new Interval(6, 6), mainAlly);
+
+        assertEquals(-5, simulation.selfLife());
+        assertEquals(-10, simulation.alliesLife());
+        assertEquals(-3, simulation.enemiesLife());
+        assertEquals(-6, simulation.mainAllyLife());
     }
 
     @Test
@@ -218,13 +263,38 @@ class CastSimulationTest extends FightBaseCase {
     }
 
     @Test
+    void addBoostWithMainAlly() throws SQLException {
+        PlayerFighter mainAlly = new PlayerFighter(makeSimpleGamePlayer(11));
+        mainAlly.setTeam(fighter.team());
+        mainAlly.joinFight(fight, fight.map().get(127));
+        mainAlly.init();
+
+        simulation.setMainAlly(mainAlly);
+
+        simulation.addBoost(5, fighter);
+        simulation.addBoost(4, allie);
+        simulation.addBoost(3, ennemy);
+        simulation.addBoost(6, mainAlly);
+
+        assertEquals(5, simulation.selfBoost());
+        assertEquals(10, simulation.alliesBoost());
+        assertEquals(3, simulation.enemiesBoost());
+        assertEquals(6, simulation.mainAllyBoost());
+    }
+
+    @Test
     void killDamage() throws SQLException {
         PlayerFighter mainEnemy = new PlayerFighter(makeSimpleGamePlayer(11));
         mainEnemy.setTeam(ennemy.team());
         mainEnemy.joinFight(fight, fight.map().get(127));
         mainEnemy.init();
-
         simulation.setMainEnemy(mainEnemy);
+
+        PlayerFighter mainAlly = new PlayerFighter(makeSimpleGamePlayer(12));
+        mainAlly.setTeam(fighter.team());
+        mainAlly.joinFight(fight, fight.map().get(128));
+        mainAlly.init();
+        simulation.setMainAlly(mainAlly);
 
         simulation.addDamage(new Interval(1000, 1000), allie);
 
@@ -232,6 +302,7 @@ class CastSimulationTest extends FightBaseCase {
         assertEquals(0, simulation.killedEnemies());
         assertEquals(0, simulation.suicideProbability());
         assertEquals(0, simulation.mainEnemyKill());
+        assertEquals(0, simulation.mainAllyKill());
 
         simulation.addDamage(new Interval(1000, 1000), ennemy);
 
@@ -239,6 +310,7 @@ class CastSimulationTest extends FightBaseCase {
         assertEquals(1, simulation.killedEnemies());
         assertEquals(0, simulation.suicideProbability());
         assertEquals(0, simulation.mainEnemyKill());
+        assertEquals(0, simulation.mainAllyKill());
 
         simulation.addDamage(new Interval(1000, 1000), fighter);
 
@@ -246,6 +318,7 @@ class CastSimulationTest extends FightBaseCase {
         assertEquals(1, simulation.killedEnemies());
         assertEquals(1, simulation.suicideProbability());
         assertEquals(0, simulation.mainEnemyKill());
+        assertEquals(0, simulation.mainAllyKill());
 
         simulation.addDamage(new Interval(1000, 1000), mainEnemy);
 
@@ -253,6 +326,15 @@ class CastSimulationTest extends FightBaseCase {
         assertEquals(2, simulation.killedEnemies());
         assertEquals(1, simulation.suicideProbability());
         assertEquals(1, simulation.mainEnemyKill());
+        assertEquals(0, simulation.mainAllyKill());
+
+        simulation.addDamage(new Interval(1000, 1000), mainAlly);
+
+        assertEquals(2, simulation.killedAllies());
+        assertEquals(2, simulation.killedEnemies());
+        assertEquals(1, simulation.suicideProbability());
+        assertEquals(1, simulation.mainEnemyKill());
+        assertEquals(1, simulation.mainAllyKill());
     }
 
     @ParameterizedTest
@@ -346,6 +428,36 @@ class CastSimulationTest extends FightBaseCase {
     }
 
     @Test
+    void mergeWithMainAlly() throws SQLException {
+        PlayerFighter mainAlly = new PlayerFighter(makeSimpleGamePlayer(11));
+        mainAlly.setTeam(fighter.team());
+        mainAlly.joinFight(fight, fight.map().get(127));
+        mainAlly.init();
+
+        simulation.setMainAlly(mainAlly);
+
+        simulation.addDamage(new Interval(15, 15), ennemy);
+        simulation.addBoost(15, ennemy);
+        simulation.addDamage(new Interval(10, 10), mainAlly);
+        simulation.addBoost(-5, mainAlly);
+
+        CastSimulation other = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
+        other.setMainAlly(mainAlly);
+
+        other.addDamage(new Interval(25, 25), ennemy);
+        other.addBoost(-10, ennemy);
+        other.addDamage(new Interval(15, 15), mainAlly);
+        other.addBoost(-2, mainAlly);
+
+        simulation.merge(other, 20);
+
+        assertEquals(-20, simulation.enemiesLife());
+        assertEquals(-13, simulation.mainAllyLife());
+        assertEquals(13, simulation.enemiesBoost());
+        assertEquals(-5.4, simulation.mainAllyBoost());
+    }
+
+    @Test
     void mergeKill() {
         simulation.addDamage(new Interval(15, 15), ennemy);
 
@@ -378,6 +490,28 @@ class CastSimulationTest extends FightBaseCase {
 
         assertEquals(.2, simulation.killedEnemies());
         assertEquals(.2, simulation.mainEnemyKill());
+    }
+
+    @Test
+    void mergeKillMainAlly() throws SQLException {
+        PlayerFighter mainAlly = new PlayerFighter(makeSimpleGamePlayer(11));
+        mainAlly.setTeam(fighter.team());
+        mainAlly.joinFight(fight, fight.map().get(127));
+        mainAlly.init();
+
+        simulation.setMainAlly(mainAlly);
+
+        simulation.addDamage(new Interval(15, 15), mainAlly);
+
+        CastSimulation other = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
+        other.setMainAlly(mainAlly);
+
+        other.addDamage(new Interval(500, 500), mainAlly);
+
+        simulation.merge(other, 20);
+
+        assertEquals(.2, simulation.killedAllies());
+        assertEquals(.2, simulation.mainAllyKill());
     }
 
     @Test

@@ -141,6 +141,28 @@ class SimulatorTest extends FightBaseCase {
         assertEquals(79, simulation.selfBoost(), .1);
         assertEquals(0, simulation.mainEnemyBoost());
         assertEquals(0, simulation.mainEnemyLife());
+        assertEquals(0, simulation.mainAllyBoost());
+        assertEquals(0, simulation.mainAllyLife());
+    }
+
+    @Test
+    void simulateBoostMainAlly() {
+        DoubleFighter invoc = new DoubleFighter(-10, fighter);
+        fight.fighters().join(invoc, fight.map().get(142));
+        ai = new FighterAI(invoc, fight, new NullGenerator());
+
+        CastSimulation simulation = simulator.simulate(getSpell(42, 1), ai, invoc, fighter.cell());
+
+        assertEquals(0, simulation.alliesLife());
+        assertEquals(0, simulation.enemiesLife());
+        assertEquals(0, simulation.selfLife());
+        assertEquals(79, simulation.alliesBoost(), .1);
+        assertEquals(0, simulation.enemiesBoost());
+        assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainEnemyBoost());
+        assertEquals(0, simulation.mainEnemyLife());
+        assertEquals(79, simulation.mainAllyBoost(), .1);
+        assertEquals(0, simulation.mainAllyLife());
     }
 
     @Test
@@ -154,6 +176,27 @@ class SimulatorTest extends FightBaseCase {
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
         assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainAllyBoost());
+        assertEquals(0, simulation.mainAllyLife());
+    }
+
+    @Test
+    void simulateWithProbableEffectsMainAlly() {
+        DoubleFighter invoc = new DoubleFighter(-10, fighter);
+        fight.fighters().join(invoc, fight.map().get(142));
+        ai = new FighterAI(invoc, fight, new NullGenerator());
+
+        CastSimulation simulation = simulator.simulate(getSpell(109, 5), ai, invoc, fighter.cell());
+
+        assertEquals(-23.5, simulation.alliesLife(), .1);
+        assertEquals(0, simulation.enemiesLife());
+        assertEquals(0, simulation.mainEnemyLife());
+        assertEquals(0, simulation.selfLife());
+        assertEquals(0, simulation.alliesBoost());
+        assertEquals(0, simulation.enemiesBoost());
+        assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainAllyBoost());
+        assertEquals(-23.5, simulation.mainAllyLife(), .1);
     }
 
     @Test

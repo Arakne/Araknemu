@@ -85,6 +85,7 @@ public final class Boost implements ActionGenerator, CastSpell.SimulationSelecto
     public double score(CastSimulation simulation) {
         double score =
             + simulation.alliesBoost() * alliesBoostRate
+            + simulation.mainAllyBoost() * alliesBoostRate
             + simulation.selfBoost() * selfBoostRate
             - simulation.enemiesBoost()
         ;

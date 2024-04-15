@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -170,6 +172,32 @@ class AttackTest extends AiBaseCase {
         );
 
         removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void disallowKillMainAlly() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet
+            .pushFunctionalSpells()
+            .pushMonsterTemplateInvocations()
+        ;
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(167).currentLife(5))
+            .addEnemy(builder -> builder.cell(137).currentLife(5))
+            .addEnemy(builder -> builder.cell(138).currentLife(5))
+            .addEnemy(builder -> builder.cell(166).currentLife(500))
+        );
+
+        InvocationFighter invoc = new InvocationFighter(
+            -15,
+            container.get(MonsterService.class).load(10001).get(5),
+            player.fighter().team(),
+            player.fighter()
+        );
+        fight.fighters().joinTurnList(invoc, fight.map().get(152));
+        configureFighterAi(invoc);
 
         assertDotNotGenerateAction();
     }

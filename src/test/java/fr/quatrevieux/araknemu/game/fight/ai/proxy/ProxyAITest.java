@@ -53,6 +53,7 @@ class ProxyAITest extends AiBaseCase {
 
         assertInstanceOf(ProxyPassiveFighter.class, proxy.enemy().get());
         assertEquals(ai.enemy().get(), proxy.enemy().get());
+        assertEquals(ai.ally(), proxy.ally());
 
         List<FighterData> fighters = proxy.fighters().collect(Collectors.toList());
 

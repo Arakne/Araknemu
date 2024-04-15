@@ -82,6 +82,11 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
             return false;
         }
 
+        // Disallow killing the main ally
+        if (simulation.mainAllyKill() > 0.1) {
+            return false;
+        }
+
         // Kill more allies than enemies
         if (simulation.killedAllies() > simulation.killedEnemies()) {
             return false;

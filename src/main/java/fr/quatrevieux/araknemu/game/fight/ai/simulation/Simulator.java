@@ -131,6 +131,7 @@ public final class Simulator {
         final CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
 
         ai.enemy().ifPresent(simulation::setMainEnemy);
+        ai.ally().ifPresent(simulation::setMainAlly);
 
         for (CastScope.EffectScope<FighterData, BattlefieldCell> effect : scope.effects()) {
             final EffectSimulator simulator = simulators.get(effect.effect().effect());
@@ -142,6 +143,7 @@ public final class Simulator {
             if (effect.effect().probability() > 0) {
                 final CastSimulation probableSimulation = new CastSimulation(spell, scope.caster(), scope.target());
                 ai.enemy().ifPresent(probableSimulation::setMainEnemy);
+                ai.ally().ifPresent(probableSimulation::setMainAlly);
 
                 simulator.simulate(probableSimulation, ai, effect);
                 simulation.merge(probableSimulation, effect.effect().probability());
