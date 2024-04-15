@@ -61,6 +61,7 @@ public final class Debuff implements ActionGenerator, CastSpell.SimulationSelect
     public double score(CastSimulation simulation) {
         final double score =
             - simulation.enemiesBoost()
+            - simulation.mainEnemyBoost()
             + simulation.alliesBoost()
             + simulation.selfBoost()
         ;

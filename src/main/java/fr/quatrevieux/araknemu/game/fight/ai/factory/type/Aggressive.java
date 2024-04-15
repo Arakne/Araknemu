@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
+import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
@@ -42,6 +43,11 @@ public final class Aggressive extends AbstractAiBuilderFactory {
 
     @Override
     public void configure(GeneratorBuilder builder, PlayableFighter fighter) {
+        final Attack.SuicideStrategy suicideStrategy = fighter.invoked()
+            ? Attack.SuicideStrategy.ALLOW
+            : Attack.SuicideStrategy.IF_KILL_ENEMY
+        ;
+
         builder
             .boostSelf(simulator)
         ;
@@ -49,10 +55,10 @@ public final class Aggressive extends AbstractAiBuilderFactory {
         // Optimisation: do not execute "move to attack" is the fighter has only close combat spell
         // because move near enemy will perform the correct movement action
         if (hasDistanceSpell(fighter)) {
-            builder.moveToAttack(simulator);
+            builder.moveToAttack(simulator, suicideStrategy);
         }
 
-        builder.attack(simulator);
+        builder.attack(simulator, suicideStrategy);
 
         builder
             .attractEnemy()

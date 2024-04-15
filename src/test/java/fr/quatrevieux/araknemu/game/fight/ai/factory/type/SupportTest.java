@@ -19,9 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +39,13 @@ class SupportTest extends AiBaseCase {
 
         actionFactory = new Support(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
+    }
+
+    @Override
+    public void tearDown() throws ContainerException {
+        super.tearDown();
+
+        action = null;
     }
 
     @Test
@@ -142,6 +151,30 @@ class SupportTest extends AiBaseCase {
         generateAndPerformMove();
         assertEquals(168, fighter.cell().id());
         assertEquals(2, distance(getAlly(1)));
+    }
+
+    @Test
+    void shouldMoveNearInvokerIfCantAttack() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(198))
+            .addAlly(fb -> fb.cell(225))
+            .addEnemy(fb -> fb.cell(165))
+        );
+
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(210));
+        invoc.init();
+
+        action = null;
+        configureFighterAi(invoc);
+
+        setAP(2);
+
+        assertEquals(5, distance(player.fighter()));
+
+        generateAndPerformMove();
+        assertEquals(197, fighter.cell().id());
+        assertEquals(2, distance(player.fighter()));
     }
 
     @Test

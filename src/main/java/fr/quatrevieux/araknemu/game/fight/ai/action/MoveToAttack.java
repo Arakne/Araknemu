@@ -40,8 +40,8 @@ public final class MoveToAttack implements ActionGenerator {
     private final MoveToCast generator;
     private final Attack attack;
 
-    private MoveToAttack(Simulator simulator, MoveToCast.TargetSelectionStrategy strategy) {
-        this.attack = new Attack(simulator);
+    private MoveToAttack(Simulator simulator, MoveToCast.TargetSelectionStrategy strategy, Attack.SuicideStrategy suicideStrategy) {
+        this.attack = new Attack(simulator, suicideStrategy);
         this.generator = new MoveToCast(simulator, attack, strategy);
     }
 
@@ -63,13 +63,30 @@ public final class MoveToAttack implements ActionGenerator {
      *       So, it do not perform the best move for maximize damage.
      */
     public static MoveToAttack nearest(Simulator simulator) {
-        return new MoveToAttack(simulator, new MoveToCast.NearestStrategy());
+        return nearest(simulator, Attack.SuicideStrategy.IF_KILL_ENEMY);
+    }
+
+    /**
+     * Select the nearest cell where a cast is possible
+     *
+     * Note: This selected cell is not the best cell for perform an attack, but the nearest cell.
+     *       So, it do not perform the best move for maximize damage.
+     */
+    public static MoveToAttack nearest(Simulator simulator, Attack.SuicideStrategy suicideStrategy) {
+        return new MoveToAttack(simulator, new MoveToCast.NearestStrategy(), suicideStrategy);
     }
 
     /**
      * Select the best target cell for cast a spell, and maximizing damage
      */
     public static MoveToAttack bestTarget(Simulator simulator) {
-        return new MoveToAttack(simulator, new MoveToCast.BestTargetStrategy());
+        return bestTarget(simulator, Attack.SuicideStrategy.IF_KILL_ENEMY);
+    }
+
+    /**
+     * Select the best target cell for cast a spell, and maximizing damage
+     */
+    public static MoveToAttack bestTarget(Simulator simulator, Attack.SuicideStrategy suicideStrategy) {
+        return new MoveToAttack(simulator, new MoveToCast.BestTargetStrategy(), suicideStrategy);
     }
 }

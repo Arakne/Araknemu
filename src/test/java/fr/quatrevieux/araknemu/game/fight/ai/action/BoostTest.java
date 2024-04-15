@@ -23,10 +23,15 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,6 +54,32 @@ class BoostTest extends AiBaseCase {
         );
 
         assertCast(126, 122);
+    }
+
+    @Test
+    void successShouldBoostMainAlly() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+        action = Boost.self(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addAlly(builder -> builder.cell(127))
+            .addEnemy(builder -> builder.cell(125))
+        );
+
+        InvocationFighter invoc = new InvocationFighter(
+            -10,
+            container.get(MonsterService.class).load(39).get(5), // Lapino
+            player.fighter().team(),
+            player.fighter()
+        );
+        fight.fighters().joinTurnList(invoc, fight.map().get(126));
+        configureFighterAi(invoc);
+
+        assertCast(582, 122);
     }
 
     @Test
@@ -238,5 +269,32 @@ class BoostTest extends AiBaseCase {
         Mockito.when(spell.apCost()).thenReturn(3);
         simulation.alterActionPoints(1);
         assertEquals(5, action.score(simulation), 0.01);
+    }
+
+    @Test
+    void scoreShouldPrioritizeMainAlly() {
+        Boost action = Boost.allies(container.get(Simulator.class));
+
+        Spell spell = Mockito.mock(Spell.class);
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(126));
+        configureFighterAi(invoc);
+
+        CastSimulation simulation = new CastSimulation(spell, invoc, fight.map().get(122));
+        simulation.setMainAlly(player.fighter());
+        simulation.addBoost(5, player.fighter());
+        Mockito.when(spell.apCost()).thenReturn(3);
+        assertEquals(6.66, action.score(simulation), 0.01);
+
+        simulation = new CastSimulation(spell, invoc, fight.map().get(122));
+        simulation.addBoost(5, player.fighter());
+        Mockito.when(spell.apCost()).thenReturn(3);
+        assertEquals(3.33, action.score(simulation), 0.01);
     }
 }

@@ -73,7 +73,7 @@ public final class Heal implements ActionGenerator, CastSpell.SimulationSelector
     }
 
     private double healScore(CastSimulation simulation) {
-        return simulation.alliesLife() + simulation.selfLife() - simulation.enemiesLife();
+        return simulation.alliesLife() + simulation.mainAllyLife() + simulation.selfLife() - simulation.enemiesLife();
     }
 
     private double boostScore(CastSimulation simulation) {

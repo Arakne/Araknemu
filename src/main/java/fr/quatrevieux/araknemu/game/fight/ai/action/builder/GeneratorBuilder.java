@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAlly;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttractEnemy;
@@ -160,6 +161,27 @@ public class GeneratorBuilder {
     }
 
     /**
+     * Try to move to the best cell for cast an attack spell
+     *
+     * To ensure that the move will be performed, add the attack action after this one.
+     * Otherwise, if an attack is possible from the current cell it will be performed,
+     * which will results to sub-optimal action.
+     *
+     * The action will not be performed if there is a tackle chance and if an attack is possible from the current cell
+     *
+     * @param simulator Simulator used by AI
+     * @param suicideStrategy Indicate if the fighter allow suicidal attack or not
+     *
+     * @return The builder instance
+     *
+     * @see GeneratorBuilder#attackFromBestCell(Simulator) For perform move and attack
+     * @see MoveToAttack#bestTarget(Simulator) The used action generator
+     */
+    public final GeneratorBuilder moveToAttack(Simulator simulator, Attack.SuicideStrategy suicideStrategy) {
+        return add(MoveToAttack.bestTarget(simulator, suicideStrategy));
+    }
+
+    /**
      * Try to attack from the nearest cell
      *
      * Try to perform in order :
@@ -194,6 +216,22 @@ public class GeneratorBuilder {
      */
     public final GeneratorBuilder attack(Simulator simulator) {
         return add(new Attack(simulator));
+    }
+
+    /**
+     * Try to attack from the current cell
+     *
+     * @param simulator Simulator used by AI
+     * @param suicideStrategy Indicate if the fighter allow suicidal attack or not
+     *
+     * @return The builder instance
+     *
+     * @see Attack The used action generator
+     * @see GeneratorBuilder#attackFromBestCell(Simulator) For perform move and attack action
+     * @see GeneratorBuilder#attackFromNearestCell(Simulator) For perform move and attack action
+     */
+    public final GeneratorBuilder attack(Simulator simulator, Attack.SuicideStrategy suicideStrategy) {
+        return add(new Attack(simulator, suicideStrategy));
     }
 
     /**
@@ -344,6 +382,17 @@ public class GeneratorBuilder {
      */
     public final GeneratorBuilder moveNearAllies() {
         return add(new MoveNearAllies());
+    }
+
+    /**
+     * Try to move near the main ally (e.g. invoker in case of summoned creature)
+     *
+     * @return The builder instance
+     *
+     * @see MoveNearAlly The used action generator
+     */
+    public final GeneratorBuilder moveNearAlly() {
+        return add(new MoveNearAlly());
     }
 
     /**

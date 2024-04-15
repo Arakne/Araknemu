@@ -85,6 +85,11 @@ public final class ProxyAI implements AI {
         return ai.enemy().map(this::getProxyFighter);
     }
 
+    @Override
+    public Optional<? extends FighterData> ally() {
+        return ai.ally().map(this::getProxyFighter);
+    }
+
     /**
      * Change the current cell of the handled fighter
      *

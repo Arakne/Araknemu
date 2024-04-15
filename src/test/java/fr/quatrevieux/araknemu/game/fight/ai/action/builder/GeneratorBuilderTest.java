@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Invoke;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAlly;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttractEnemy;
@@ -121,8 +122,24 @@ class GeneratorBuilderTest extends TestCase {
     }
 
     @Test
+    void moveToAttackWithSuicideStrategy() {
+        assertInstanceOf(MoveToAttack.class, builder.moveToAttack(simulator, Attack.SuicideStrategy.ALLOW).build());
+    }
+
+    @Test
     void attack() {
         assertInstanceOf(Attack.class, builder.attack(simulator).build());
+    }
+
+    @Test
+    void attackWithSuicideStrategy() throws NoSuchFieldException, IllegalAccessException {
+        ActionGenerator generator = builder.attack(simulator, Attack.SuicideStrategy.ALLOW).build();
+        assertInstanceOf(Attack.class, generator);
+
+        Field strategy = Attack.class.getDeclaredField("suicideStrategy");
+        strategy.setAccessible(true);
+
+        assertSame(Attack.SuicideStrategy.ALLOW, strategy.get(generator));
     }
 
     @Test
@@ -158,6 +175,11 @@ class GeneratorBuilderTest extends TestCase {
     @Test
     void moveNearAllies() {
         assertInstanceOf(MoveNearAllies.class, builder.moveNearAllies().build());
+    }
+
+    @Test
+    void moveNearAlly() {
+        assertInstanceOf(MoveNearAlly.class, builder.moveNearAlly().build());
     }
 
     @Test

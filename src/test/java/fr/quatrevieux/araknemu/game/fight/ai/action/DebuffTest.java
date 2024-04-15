@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -166,10 +167,34 @@ class DebuffTest extends AiBaseCase {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))
             .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(150)) // Will be the main enemy
         );
 
+        // Not main enemy
         assertEquals(222.222, computeScore(81, 125), 0.001); // 200 / 0.9 AP (1 bonus AP 10%)
         assertEquals(-222.222, computeScore(81, 122), 0.001); // Self target
         assertEquals(30, computeScore(168, 125), 0.001); // 90 / 3 AP
+
+        // Main enemy
+        assertEquals(444.444, computeScore(81, 150), 0.001); // 200 / 0.9 AP (1 bonus AP 10%)
+        assertEquals(60, computeScore(168, 180), 0.001); // 90 / 3 AP
+    }
+
+    @Test
+    void scoreWithInvocShouldPrioritizeEnemyNearInvoker() throws SQLException {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(110)); // Adjacent to enemy 125
+        invoc.init();
+
+        configureFighterAi(invoc);
+
+        assertEquals(222.222, computeScore(81, 125), 0.001); // 200 / 0.9 AP (1 bonus AP 10%)
+        assertEquals(444.444, computeScore(81, 150), 0.001); // 200 / 0.9 AP (1 bonus AP 10%)
     }
 }

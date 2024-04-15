@@ -62,6 +62,21 @@ public interface AI {
     public Optional<? extends FighterData> enemy();
 
     /**
+     * Get the main ally
+     * This method behavior can change, depending on the AI resolution strategy
+     *
+     * Unlike {@link #enemy()}, this method does not return a value most of the time,
+     * it is used to mark a given ally as the main target for buffs, heals, etc.
+     *
+     * In case of invocation, this method should return the invoker.
+     *
+     * An empty optional can be returned, no ally is preferred
+     */
+    public default Optional<? extends FighterData> ally() {
+        return Optional.empty();
+    }
+
+    /**
      * Get helper for the current AI
      */
     public default AIHelper helper() {

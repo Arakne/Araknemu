@@ -23,7 +23,9 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,6 +88,31 @@ class HealTest extends AiBaseCase {
         );
 
         assertDotNotGenerateAction();
+    }
+
+    @Test
+    void successShouldHealMainAlly() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(97).currentLife(10))
+            .addAlly(builder -> builder.cell(127).currentLife(10))
+            .addEnemy(builder -> builder.cell(125))
+        );
+
+        InvocationFighter invoc = new InvocationFighter(
+            -10,
+            container.get(MonsterService.class).load(39).get(5), // Lapino
+            player.fighter().team(),
+            player.fighter()
+        );
+        fight.fighters().joinTurnList(invoc, fight.map().get(126));
+        configureFighterAi(invoc);
+
+        assertCast(210, 97);
     }
 
     @Test
@@ -152,5 +179,31 @@ class HealTest extends AiBaseCase {
         assertEquals(2.50, computeScore(131, 122), 0.001); // (6 * 98% + 12.5 * 2%) * (1 + 3*0.075) / 3 AP : buff is divided by 10, so its rate is 0.075 per turn
         assertEquals(0.5, computeScore(121, 123), 0.001); // 2 (LP lost) / 4 AP
         assertEquals(1.126, computeScore(131, 123), 0.001); // (2 + (6 * 98% + 12.5 * 2%) * (3*0.075)) / 3 AP : buff heal is used as buff, so it's not capped by lost LP
+    }
+
+    @Test
+    void scoreShouldPrioritizeMainAlly() throws SQLException {
+        dataSet
+            .pushMonsterTemplateInvocations()
+            .pushMonsterSpellsInvocations()
+        ;
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(97).currentLife(10))
+            .addAlly(builder -> builder.cell(123).currentLife(10))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        InvocationFighter invoc = new InvocationFighter(
+            -10,
+            container.get(MonsterService.class).load(39).get(5), // Lapino
+            player.fighter().team(),
+            player.fighter()
+        );
+        fight.fighters().joinTurnList(invoc, fight.map().get(126));
+        configureFighterAi(invoc);
+
+        assertEquals(7.99, computeScore(210, 123), 0.001);
+        assertEquals(15.98, computeScore(210, 97), 0.001);
     }
 }

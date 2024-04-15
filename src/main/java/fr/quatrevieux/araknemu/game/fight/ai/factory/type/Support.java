@@ -53,7 +53,10 @@ public final class Support extends AbstractAiBuilderFactory {
                 .invoke(simulator)
                 .debuff(simulator)
                 .attack(simulator)
-                .moveNearAllies()
+                .when(ai -> ai.ally().isPresent(), nb -> nb
+                    .success(GeneratorBuilder::moveNearAlly)
+                    .otherwise(GeneratorBuilder::moveNearAllies)
+                )
             )
             .otherwise(sb -> aloneAi.configure(sb, fighter))
         );

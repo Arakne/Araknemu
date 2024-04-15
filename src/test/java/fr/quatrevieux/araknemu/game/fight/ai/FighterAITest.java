@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -65,6 +66,8 @@ class FighterAITest extends FightBaseCase {
         otherEnemy = new PlayerFighter(makeSimpleGamePlayer(10));
 
         fight.state(PlacementState.class).joinTeam(otherEnemy, enemy.team());
+        otherEnemy.move(fight.map().get(126));
+
         fight.nextState();
     }
 
@@ -91,6 +94,61 @@ class FighterAITest extends FightBaseCase {
         enemy.life().kill(fighter);
 
         assertEquals(otherEnemy, ai.enemy().get());
+    }
+
+    @Test
+    void enemyWhenInvokedShouldReturnNearestOfInvoker() {
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(112)); // Adjacent to enemy 126
+        invoc.init();
+
+        FighterAI ai = new FighterAI(invoc, fight, NullGenerator.get());
+
+        assertEquals(enemy, ai.enemy().get());
+    }
+
+    @Test
+    void enemyWhenInvokedButInvokerHiddenShouldReturnNearest() {
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(112)); // Adjacent to enemy 126
+        invoc.init();
+
+        player.fighter().setHidden(player.fighter(), true);
+
+        FighterAI ai = new FighterAI(invoc, fight, NullGenerator.get());
+
+        assertEquals(otherEnemy, ai.enemy().get());
+    }
+
+    @Test
+    void allyShouldBeEmptyForClassicFighter() {
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
+
+        assertFalse(ai.ally().isPresent());
+    }
+
+    @Test
+    void allyShouldInvokerOnInvocationFighter() {
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(112)); // Adjacent to enemy 126
+        invoc.init();
+
+        FighterAI ai = new FighterAI(invoc, fight, NullGenerator.get());
+
+        assertEquals(player.fighter(), ai.ally().get());
+    }
+
+    @Test
+    void allyShouldBeEmptyIfInvokerIsHidden() {
+        DoubleFighter invoc = new DoubleFighter(-10, player.fighter());
+        fight.fighters().joinTurnList(invoc, fight.map().get(112)); // Adjacent to enemy 126
+        invoc.init();
+
+        FighterAI ai = new FighterAI(invoc, fight, NullGenerator.get());
+
+        player.fighter().setHidden(player.fighter(), true);
+
+        assertFalse(ai.ally().isPresent());
     }
 
     @RepeatedIfExceptionsTest

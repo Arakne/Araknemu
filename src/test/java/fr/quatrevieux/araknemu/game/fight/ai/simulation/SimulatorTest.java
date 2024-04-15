@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
@@ -81,10 +82,29 @@ class SimulatorTest extends FightBaseCase {
 
         assertEquals(0, simulation.alliesLife());
         assertEquals(-10.2, simulation.enemiesLife(), 0.1);
+        assertEquals(-10.2, simulation.mainEnemyLife(), 0.1);
         assertEquals(0, simulation.selfLife());
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
         assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainEnemyBoost());
+    }
+
+    @Test
+    void simulateAttackNotMainEnemy() {
+        DoubleFighter invoc = new DoubleFighter(-10, other.fighter());
+        fight.fighters().join(invoc, fight.map().get(142));
+
+        CastSimulation simulation = simulator.simulate(fighter.spells().get(3), ai, fighter, invoc.cell());
+
+        assertEquals(0, simulation.alliesLife());
+        assertEquals(-10.2, simulation.enemiesLife(), 0.1);
+        assertEquals(0, simulation.mainEnemyLife(), 0.1);
+        assertEquals(0, simulation.selfLife());
+        assertEquals(0, simulation.alliesBoost());
+        assertEquals(0, simulation.enemiesBoost());
+        assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainEnemyBoost());
     }
 
     @Test
@@ -119,6 +139,30 @@ class SimulatorTest extends FightBaseCase {
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
         assertEquals(79, simulation.selfBoost(), .1);
+        assertEquals(0, simulation.mainEnemyBoost());
+        assertEquals(0, simulation.mainEnemyLife());
+        assertEquals(0, simulation.mainAllyBoost());
+        assertEquals(0, simulation.mainAllyLife());
+    }
+
+    @Test
+    void simulateBoostMainAlly() {
+        DoubleFighter invoc = new DoubleFighter(-10, fighter);
+        fight.fighters().join(invoc, fight.map().get(142));
+        ai = new FighterAI(invoc, fight, new NullGenerator());
+
+        CastSimulation simulation = simulator.simulate(getSpell(42, 1), ai, invoc, fighter.cell());
+
+        assertEquals(0, simulation.alliesLife());
+        assertEquals(0, simulation.enemiesLife());
+        assertEquals(0, simulation.selfLife());
+        assertEquals(79, simulation.alliesBoost(), .1);
+        assertEquals(0, simulation.enemiesBoost());
+        assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainEnemyBoost());
+        assertEquals(0, simulation.mainEnemyLife());
+        assertEquals(79, simulation.mainAllyBoost(), .1);
+        assertEquals(0, simulation.mainAllyLife());
     }
 
     @Test
@@ -127,6 +171,44 @@ class SimulatorTest extends FightBaseCase {
 
         assertEquals(0, simulation.alliesLife());
         assertEquals(-23.5, simulation.enemiesLife(), 0.1);
+        assertEquals(-23.5, simulation.mainEnemyLife(), 0.1);
+        assertEquals(0, simulation.selfLife());
+        assertEquals(0, simulation.alliesBoost());
+        assertEquals(0, simulation.enemiesBoost());
+        assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainAllyBoost());
+        assertEquals(0, simulation.mainAllyLife());
+    }
+
+    @Test
+    void simulateWithProbableEffectsMainAlly() {
+        DoubleFighter invoc = new DoubleFighter(-10, fighter);
+        fight.fighters().join(invoc, fight.map().get(142));
+        ai = new FighterAI(invoc, fight, new NullGenerator());
+
+        CastSimulation simulation = simulator.simulate(getSpell(109, 5), ai, invoc, fighter.cell());
+
+        assertEquals(-23.5, simulation.alliesLife(), .1);
+        assertEquals(0, simulation.enemiesLife());
+        assertEquals(0, simulation.mainEnemyLife());
+        assertEquals(0, simulation.selfLife());
+        assertEquals(0, simulation.alliesBoost());
+        assertEquals(0, simulation.enemiesBoost());
+        assertEquals(0, simulation.selfBoost());
+        assertEquals(0, simulation.mainAllyBoost());
+        assertEquals(-23.5, simulation.mainAllyLife(), .1);
+    }
+
+    @Test
+    void simulateWithProbableEffectsNotMainEnemy() {
+        DoubleFighter invoc = new DoubleFighter(-10, other.fighter());
+        fight.fighters().join(invoc, fight.map().get(142));
+
+        CastSimulation simulation = simulator.simulate(getSpell(109, 5), ai, fighter, invoc.cell());
+
+        assertEquals(0, simulation.alliesLife());
+        assertEquals(-23.5, simulation.enemiesLife(), 0.1);
+        assertEquals(0, simulation.mainEnemyLife(), 0.1);
         assertEquals(0, simulation.selfLife());
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
@@ -136,9 +218,11 @@ class SimulatorTest extends FightBaseCase {
     @Test
     void simulateShouldHandleCriticality() {
         assertEquals(-23.5, simulator.simulate(getSpell(109, 5), ai, fighter, other.fighter().cell()).enemiesLife(), 0.1);
+        assertEquals(-23.5, simulator.simulate(getSpell(109, 5), ai, fighter, other.fighter().cell()).mainEnemyLife(), 0.1);
 
         fighter.characteristics().alter(Characteristic.CRITICAL_BONUS, 100);
         assertEquals(-36.5, simulator.simulate(getSpell(109, 5), ai, fighter, other.fighter().cell()).enemiesLife(), 0.1);
+        assertEquals(-36.5, simulator.simulate(getSpell(109, 5), ai, fighter, other.fighter().cell()).mainEnemyLife(), 0.1);
     }
 
     @Test
