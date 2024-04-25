@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
@@ -36,6 +37,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class AttackTest extends AiBaseCase {
     @Override
@@ -54,6 +56,9 @@ class AttackTest extends AiBaseCase {
         );
 
         assertCast(3, 125);
+
+        assertEquals(3, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(125, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -66,6 +71,7 @@ class AttackTest extends AiBaseCase {
         other.fighter().setHidden(other.fighter(), true);
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -77,6 +83,9 @@ class AttackTest extends AiBaseCase {
         );
 
         assertCast(3, 135);
+
+        assertEquals(3, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(135, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -118,6 +127,9 @@ class AttackTest extends AiBaseCase {
 
         assertInCastEffectArea(125, 126);
         assertNotInCastEffectArea(122);
+
+        assertEquals(223, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(96, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -140,6 +152,9 @@ class AttackTest extends AiBaseCase {
         assertEquals(152, cast.target().id());
 
         assertInCastEffectArea(152, 167, 137, 138, 166);
+
+        assertEquals(145, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(152, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -220,6 +235,9 @@ class AttackTest extends AiBaseCase {
 
         assertEquals(145, cast.spell().id());
         assertEquals(152, cast.target().id());
+
+        assertEquals(145, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(152, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -241,6 +259,9 @@ class AttackTest extends AiBaseCase {
 
         assertEquals(145, cast.spell().id());
         assertEquals(152, cast.target().id());
+
+        assertEquals(145, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(152, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -260,6 +281,9 @@ class AttackTest extends AiBaseCase {
 
         assertEquals(145, cast.spell().id());
         assertEquals(152, cast.target().id());
+
+        assertEquals(145, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(152, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -283,6 +307,9 @@ class AttackTest extends AiBaseCase {
 
         assertEquals(157, cast.spell().id());
         assertEquals(137, cast.target().id());
+
+        assertEquals(157, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(137, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -335,6 +362,9 @@ class AttackTest extends AiBaseCase {
         removeSpell(3);
 
         assertCast(157, 137);
+
+        assertEquals(157, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(137, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -363,6 +393,9 @@ class AttackTest extends AiBaseCase {
         removeSpell(3);
 
         assertCast(183, 167);
+
+        assertEquals(183, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(167, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test

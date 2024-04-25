@@ -22,17 +22,24 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.util;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.TurnMemoryKey;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 
 import java.util.Optional;
 
 /**
  * Try to cast the best spell
+ * When the action is generated, the cast spell is stored in the memory at key {@link #LAST_CAST}
  */
 public final class CastSpell implements ActionGenerator {
+    public static final MemoryKey<LastCast> LAST_CAST = new TurnMemoryKey<>();
+
     private final Simulator simulator;
     private final SimulationSelector selector;
 
@@ -57,7 +64,11 @@ public final class CastSpell implements ActionGenerator {
             .simulate(simulator)
             .filter(selector::valid)
             .reduce((s1, s2) -> selector.compare(s2, s1) ? s2 : s1)
-            .map(simulation -> actions.cast(simulation.spell(), simulation.target()))
+            .map(simulation -> {
+                ai.set(LAST_CAST, new LastCast(simulation.spell(), simulation.target()));
+
+                return actions.cast(simulation.spell(), simulation.target());
+            })
         ;
     }
 
@@ -85,5 +96,32 @@ public final class CastSpell implements ActionGenerator {
          * @return The score of the simulation. 0 is null
          */
         public double score(CastSimulation simulation);
+    }
+
+    /**
+     * Store the last generated cast spell action
+     */
+    public static final class LastCast {
+        private final Spell spell;
+        private final BattlefieldCell target;
+
+        public LastCast(Spell spell, BattlefieldCell target) {
+            this.spell = spell;
+            this.target = target;
+        }
+
+        /**
+         * Get the selected spell
+         */
+        public Spell spell() {
+            return spell;
+        }
+
+        /**
+         * Get the selected target
+         */
+        public BattlefieldCell target() {
+            return target;
+        }
     }
 }

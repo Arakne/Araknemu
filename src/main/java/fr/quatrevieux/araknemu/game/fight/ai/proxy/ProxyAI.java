@@ -20,12 +20,15 @@
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -58,6 +61,16 @@ public final class ProxyAI implements AI {
         this.map = other.map;
         this.fighter = other.fighter;
         this.turn = other.turn;
+    }
+
+    @Override
+    public <T> @Nullable T get(MemoryKey<T> key) {
+        return ai.get(key);
+    }
+
+    @Override
+    public <T> void set(MemoryKey<T> key, @NonNull T value) {
+        ai.set(key, value); // @todo error ?
     }
 
     @Override

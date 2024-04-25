@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
@@ -31,6 +32,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DebuffTest extends AiBaseCase {
     @Override
@@ -50,6 +52,9 @@ class DebuffTest extends AiBaseCase {
         );
 
         assertCast(81, 270);
+
+        assertEquals(81, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(270, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -62,6 +67,7 @@ class DebuffTest extends AiBaseCase {
         other.fighter().setHidden(other.fighter(), true);
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -73,6 +79,9 @@ class DebuffTest extends AiBaseCase {
         );
 
         assertCast(168, 293);
+
+        assertEquals(168, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(293, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -84,6 +93,7 @@ class DebuffTest extends AiBaseCase {
         );
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -96,6 +106,7 @@ class DebuffTest extends AiBaseCase {
         );
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -108,6 +119,7 @@ class DebuffTest extends AiBaseCase {
         setAP(1);
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -119,6 +131,7 @@ class DebuffTest extends AiBaseCase {
         removeAllAP();
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -135,6 +148,9 @@ class DebuffTest extends AiBaseCase {
 
         assertInCastEffectArea(78, 92, 77);
         assertNotInCastEffectArea(125, 122);
+
+        assertEquals(168, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(78, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test

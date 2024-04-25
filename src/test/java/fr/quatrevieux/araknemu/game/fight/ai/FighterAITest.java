@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.AiActionFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
@@ -34,6 +35,7 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -77,6 +79,27 @@ class FighterAITest extends FightBaseCase {
 
         assertSame(fighter, ai.fighter());
         assertEquals(enemy, ai.enemy().get());
+    }
+
+    @Test
+    void memoryGetSet() {
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.get());
+
+        MemoryKey<Integer> key = new MemoryKey<Integer>() {
+            @Override
+            public @Nullable Integer defaultValue() {
+                return 42;
+            }
+
+            @Override
+            public @Nullable Integer refresh(Integer value) {
+                return null;
+            }
+        };
+
+        assertEquals(42, ai.get(key));
+        ai.set(key, 10);
+        assertEquals(10, ai.get(key));
     }
 
     @Test
@@ -183,6 +206,27 @@ class FighterAITest extends FightBaseCase {
         Mockito.verify(generator2, Mockito.never()).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
 
         assertSame(turn, ai.turn());
+        assertTrue(turn.active());
+    }
+
+    @RepeatedIfExceptionsTest
+    void startShouldCallMemoryRefresh() throws InterruptedException {
+        ActionGenerator generator = Mockito.mock(ActionGenerator.class);
+
+        fight.turnList().start();
+        FightTurn turn = fight.turnList().current().get();
+
+        FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator}));
+        MemoryKey<Object> key = Mockito.mock(MemoryKey.class);
+        Object value = new Object();
+
+        ai.set(key, value);
+
+        Mockito.when(generator.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.of(Mockito.mock(Action.class)));
+
+        ai.start(turn);
+
+        Mockito.verify(key).refresh(value);
         assertTrue(turn.active());
     }
 

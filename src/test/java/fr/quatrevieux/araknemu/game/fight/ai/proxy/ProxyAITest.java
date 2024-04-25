@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.TurnMemoryKey;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -74,6 +77,11 @@ class ProxyAITest extends AiBaseCase {
 
         assertEquals(3, proxy.turn().points().actionPoints());
         assertEquals(2, proxy.turn().points().movementPoints());
+
+        MemoryKey<Integer> key = new TurnMemoryKey<>();
+        assertNull(proxy.get(key));
+        ai.set(key, 42);
+        assertEquals(42, proxy.get(key));
     }
 
     @Test

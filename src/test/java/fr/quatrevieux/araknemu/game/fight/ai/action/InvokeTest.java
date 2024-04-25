@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
@@ -27,6 +28,9 @@ import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class InvokeTest extends AiBaseCase {
     @Override
@@ -51,6 +55,9 @@ class InvokeTest extends AiBaseCase {
         );
 
         assertCast(35, 108);
+
+        assertEquals(35, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(108, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -70,6 +77,9 @@ class InvokeTest extends AiBaseCase {
         );
 
         assertCast(35, 136);
+
+        assertEquals(35, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(136, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -81,6 +91,9 @@ class InvokeTest extends AiBaseCase {
         );
 
         assertCast(34, 108);
+
+        assertEquals(34, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(108, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -97,6 +110,9 @@ class InvokeTest extends AiBaseCase {
         player.fighter().life().damage(player.fighter(), 95);
         action.initialize(ai); // Recompute allies life ratio
         assertCast(190, 107);
+
+        assertEquals(190, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(107, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -107,6 +123,7 @@ class InvokeTest extends AiBaseCase {
         );
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -125,6 +142,7 @@ class InvokeTest extends AiBaseCase {
         fight.fighters().joinTurnList(new DoubleFighter(-42, player.fighter()), fight.map().get(107));
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -136,5 +154,6 @@ class InvokeTest extends AiBaseCase {
 
         turn.points().useActionPoints(5);
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 }
