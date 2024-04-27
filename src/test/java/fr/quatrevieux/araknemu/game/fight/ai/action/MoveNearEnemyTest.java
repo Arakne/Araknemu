@@ -38,11 +38,6 @@ class MoveNearEnemyTest extends AiBaseCase {
     }
 
     @Test
-    void generateNotInitialized() {
-        assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(AiActionFactory.class)).isPresent());
-    }
-
-    @Test
     void success() {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(122))

@@ -19,23 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class MoveNearFighterTest extends AiBaseCase {
-    @Test
-    void generateNotInitialized() {
-        action = new MoveNearFighter(AI::enemy);
-        assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(AiActionFactory.class)).isPresent());
-    }
-
     @Test
     void success() {
         action = new MoveNearFighter(ai -> Optional.of(fight.map().get(222).fighter()));
@@ -161,5 +152,20 @@ class MoveNearFighterTest extends AiBaseCase {
         );
 
         assertDotNotGenerateAction();
+    }
+
+    @Test
+    void withoutAllowBlockingShouldNotGoToAdjacentCellIfBlock() {
+        action = new MoveNearFighter(ai -> Optional.ofNullable(fight.map().get(371).fighter()), false);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(313))
+            .addAlly(builder -> builder.cell(371))
+            .addEnemy(builder -> builder.cell(250))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(341, fighter.cell().id());
+        assertEquals(1, turn.points().movementPoints());
     }
 }
