@@ -70,7 +70,7 @@ public final class ProxyAI implements AI {
 
     @Override
     public <T> void set(MemoryKey<T> key, @NonNull T value) {
-        ai.set(key, value); // @todo error ?
+        throw new UnsupportedOperationException("This AI is immutable");
     }
 
     @Override

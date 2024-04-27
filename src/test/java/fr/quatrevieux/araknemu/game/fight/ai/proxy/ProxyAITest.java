@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProxyAITest extends AiBaseCase {
@@ -82,6 +83,19 @@ class ProxyAITest extends AiBaseCase {
         assertNull(proxy.get(key));
         ai.set(key, 42);
         assertEquals(42, proxy.get(key));
+    }
+
+    @Test
+    void setNotAllowed() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).charac(Characteristic.STRENGTH, 100))
+            .addEnemy(builder -> builder.cell(167).charac(Characteristic.STRENGTH, 50))
+            .addAlly(builder -> builder.cell(166))
+        );
+
+        ProxyAI proxy = new ProxyAI(ai);
+
+        assertThrows(UnsupportedOperationException.class, () -> proxy.set(new TurnMemoryKey<>(), 42));
     }
 
     @Test
