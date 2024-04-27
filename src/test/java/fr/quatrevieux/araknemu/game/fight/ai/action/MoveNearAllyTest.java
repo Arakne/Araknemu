@@ -19,16 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MoveNearAllyTest extends AiBaseCase {
     @Override
@@ -37,11 +35,6 @@ class MoveNearAllyTest extends AiBaseCase {
         super.setUp();
 
         action = new MoveNearAlly();
-    }
-
-    @Test
-    void generateNotInitialized() {
-        assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(AiActionFactory.class)).isPresent());
     }
 
     @Test
@@ -163,6 +156,36 @@ class MoveNearAllyTest extends AiBaseCase {
 
         Fighter invoc = createInvocation(122);
         assertDotNotGenerateAction();
+    }
+
+    @Test
+    void shouldNotMoveIfAlreadyOnBestCellAndOneCellIsFreeAroundTheAlly() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(210))
+            .addEnemy(builder -> builder.cell(250))
+        );
+
+        Fighter invoc = createInvocation(195);
+
+        assertDotNotGenerateAction();
+        assertEquals(1, distance(invoc, player.fighter()));
+    }
+
+    @Test
+    void shouldNotGoToAdjacentCellIfBlock() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(371))
+            .addEnemy(builder -> builder.cell(250))
+        );
+
+        Fighter invoc = createInvocation(313);
+
+        generateAndPerformMove();
+
+        assertEquals(341, fighter.cell().id());
+        assertEquals(1, turn.points().movementPoints());
+
+        assertEquals(2, distance(invoc, player.fighter()));
     }
 
     private Fighter createInvocation(FightCell cell) {

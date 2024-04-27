@@ -31,7 +31,7 @@ public final class MoveNearAlly implements ActionGenerator {
     private final ActionGenerator moveGenerator;
 
     public MoveNearAlly() {
-        this.moveGenerator = new MoveNearFighter(AI::ally);
+        this.moveGenerator = new MoveNearFighter(AI::ally, false);
     }
 
     @Override

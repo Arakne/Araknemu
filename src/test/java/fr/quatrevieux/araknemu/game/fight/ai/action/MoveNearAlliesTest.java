@@ -170,6 +170,34 @@ class MoveNearAlliesTest extends AiBaseCase {
         assertEquals(2, distance(getAlly(1)));
     }
 
+    @Test
+    void shouldNotMoveIfAlreadyOnBestCellAndOneCellIsFreeAroundTheAlly() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(195))
+            .addAlly(builder -> builder.cell(210))
+            .addEnemy(builder -> builder.cell(250))
+        );
+
+        assertDotNotGenerateAction();
+        assertEquals(1, distance(getAlly(1)));
+    }
+
+    @Test
+    void shouldFreeCellIfBlockAlly() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(356))
+            .addAlly(builder -> builder.cell(371))
+            .addEnemy(builder -> builder.cell(250))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(341, fighter.cell().id());
+        assertEquals(2, turn.points().movementPoints());
+
+        assertEquals(2, distance(getAlly(1)));
+    }
+
     private int distance(Fighter other) {
         return fighter.cell().coordinate().distance(other.cell());
     }

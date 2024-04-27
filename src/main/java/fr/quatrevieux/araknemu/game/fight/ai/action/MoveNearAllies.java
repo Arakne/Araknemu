@@ -20,13 +20,14 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.arakne.utils.maps.CoordinateCell;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.Battlefield;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +41,7 @@ public final class MoveNearAllies implements ActionGenerator {
     private final Movement movement;
 
     private List<CoordinateCell<BattlefieldCell>> alliesCells = Collections.emptyList();
+    private @Nullable BattlefieldCell currentCell;
 
     @SuppressWarnings("methodref.receiver.bound")
     public MoveNearAllies() {
@@ -60,6 +62,7 @@ public final class MoveNearAllies implements ActionGenerator {
         }
 
         alliesCells = helper.allies().cells().map(BattlefieldCell::coordinate).collect(Collectors.toList());
+        currentCell = ai.fighter().cell();
 
         return movement.generate(ai, actions);
     }
@@ -72,6 +75,11 @@ public final class MoveNearAllies implements ActionGenerator {
      */
     private double score(CoordinateCell<BattlefieldCell> cell) {
         final BattlefieldMap map = cell.cell().map();
+
+        // Minimum free adjacent cells required to avoid blocking an ally
+        // 2 cells should be free to take in account that the selected cell will be blocked after the move
+        // In case of the selected cell is the current cell, the cell is already considered as blocked, so only 1 cell should be free
+        final int minimumFreeAdjacentCells = cell.cell().equals(currentCell) ? 1 : 2;
 
         double min = Double.MAX_VALUE;
         double total = 0;
@@ -86,28 +94,11 @@ public final class MoveNearAllies implements ActionGenerator {
             ++count;
 
             // Selected cell will block the ally because there are not enough free cell around him
-            if (distance == 1 && freeAdjacentCellsCount(map, allyCell) < 2) {
+            if (distance == 1 && Battlefield.freeAdjacentCellsCount(map, allyCell.cell()) < minimumFreeAdjacentCells) {
                 malus += 100;
             }
         }
 
         return - (min + (total / count)) - malus;
-    }
-
-    /**
-     * Compute the count of free cells around the given ally cell
-     */
-    private static int freeAdjacentCellsCount(BattlefieldMap map, CoordinateCell<BattlefieldCell> allyCell) {
-        int walkableAdjacentCellsCount = 0;
-
-        for (Direction direction : Direction.restrictedDirections()) {
-            final int adjacentCellId = allyCell.id() + direction.nextCellIncrement(map.dimensions().width());
-
-            if (adjacentCellId >= 0 && adjacentCellId < map.size() && map.get(adjacentCellId).walkable()) {
-                ++walkableAdjacentCellsCount;
-            }
-        }
-
-        return walkableAdjacentCellsCount;
     }
 }
