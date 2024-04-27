@@ -20,10 +20,14 @@
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
@@ -93,7 +97,26 @@ class RunawayTest extends AiBaseCase {
     }
 
     @Test
-    void shouldMoveFarEnemyIfCantAttack() throws NoSuchFieldException, IllegalAccessException {
+    void shouldMoveFarEnemyIfCantAttackAnymore() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(210))
+            .addEnemy(fb -> fb.cell(52))
+        );
+
+        removeSpell(6);
+        assertEquals(11, distance(getEnemy(0)));
+
+        // simulate a previous cast
+        ai.set(CastSpell.LAST_CAST, new CastSpell.LastCast(Mockito.mock(Spell.class), Mockito.mock(BattlefieldCell.class)));
+
+        generateAndPerformMove();
+
+        assertEquals(226, fighter.cell().id());
+        assertEquals(12, distance(getEnemy(0)));
+    }
+
+    @Test
+    void shouldMoveNearEnemyIfCantAttack() throws NoSuchFieldException, IllegalAccessException {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(210))
             .addEnemy(fb -> fb.cell(52))
@@ -104,8 +127,8 @@ class RunawayTest extends AiBaseCase {
 
         generateAndPerformMove();
 
-        assertEquals(226, fighter.cell().id());
-        assertEquals(12, distance(getEnemy(0)));
+        assertEquals(165, fighter.cell().id());
+        assertEquals(8, distance(getEnemy(0)));
     }
 
     @Test

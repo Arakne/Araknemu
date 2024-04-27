@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 
@@ -27,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
  * AI for run away monsters (like Tofu)
  *
  * This AI use the smallest MP quantity for attack, and flees farthest from enemies
+ * If the monster cannot attack (or cast a spell), it will move near the nearest enemy
  */
 public final class Runaway extends AbstractAiBuilderFactory {
     private final Simulator simulator;
@@ -43,7 +45,10 @@ public final class Runaway extends AbstractAiBuilderFactory {
             .invoke(simulator)
             .attackFromNearestCell(simulator)
             .boostAllies(simulator)
-            .moveFarEnemies()
+            .when(ai -> ai.get(CastSpell.LAST_CAST) != null, cb -> cb
+                .success(GeneratorBuilder::moveFarEnemies)
+                .otherwise(GeneratorBuilder::moveNearEnemy)
+            )
         ;
     }
 }

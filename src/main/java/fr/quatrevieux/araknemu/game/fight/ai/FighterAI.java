@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.ai;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.FightAiActionFactoryAdapter;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.AiMemory;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -49,6 +51,7 @@ public final class FighterAI implements Runnable, AI {
     private final Fight fight;
     private final ActionGenerator generator;
     private final AIHelper helper;
+    private final AiMemory memory;
 
     private @Nullable FightTurn turn;
 
@@ -64,6 +67,7 @@ public final class FighterAI implements Runnable, AI {
         this.fight = fight;
         this.generator = generator;
         this.helper = new AIHelper(this);
+        this.memory = new AiMemory();
     }
 
     /**
@@ -75,6 +79,7 @@ public final class FighterAI implements Runnable, AI {
     public void start(FightTurn turn) {
         this.turn = turn;
 
+        memory.refresh();
         generator.initialize(this);
         fight.execute(this);
     }
@@ -158,5 +163,15 @@ public final class FighterAI implements Runnable, AI {
     @Override
     public AIHelper helper() {
         return helper;
+    }
+
+    @Override
+    public <T> @Nullable T get(MemoryKey<T> key) {
+        return memory.get(key);
+    }
+
+    @Override
+    public <T> void set(MemoryKey<T> key, @NonNull T value) {
+        memory.set(key, value);
     }
 }

@@ -19,11 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai;
 
+import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -82,4 +85,29 @@ public interface AI {
     public default AIHelper helper() {
         return new AIHelper(this);
     }
+
+    /**
+     * Get a value from the memory
+     * This call will forward to {@link fr.quatrevieux.araknemu.game.fight.ai.memory.AiMemory#get(MemoryKey)}
+     *
+     * @param key The key of the value. Should be a static instance of {@link MemoryKey}
+     *
+     * @return The stored value or the default value if the value is not present
+     *
+     * @param <T> The type of the value
+     *
+     * @see MemoryKey#defaultValue() Used when the value is not present
+     */
+    public <T> @Nullable T get(MemoryKey<T> key);
+
+    /**
+     * Set a value in the memory
+     * This call will forward to {@link fr.quatrevieux.araknemu.game.fight.ai.memory.AiMemory#set(MemoryKey, Object)}
+     *
+     * @param key The key of the value. Should be a static instance of {@link MemoryKey}
+     * @param value The value to store
+     *
+     * @param <T> The type of the value
+     */
+    public <T> void set(MemoryKey<T> key, @NonNull T value);
 }

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
@@ -34,6 +35,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HealTest extends AiBaseCase {
     @Override
@@ -53,6 +55,9 @@ class HealTest extends AiBaseCase {
         );
 
         assertCast(121, 122);
+
+        assertEquals(121, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(122, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -64,6 +69,7 @@ class HealTest extends AiBaseCase {
 
         turn.points().useActionPoints(5);
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -75,6 +81,7 @@ class HealTest extends AiBaseCase {
 
         turn.points().useActionPoints(6);
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -88,6 +95,7 @@ class HealTest extends AiBaseCase {
         );
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -113,6 +121,9 @@ class HealTest extends AiBaseCase {
         configureFighterAi(invoc);
 
         assertCast(210, 97);
+
+        assertEquals(210, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(97, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -124,6 +135,7 @@ class HealTest extends AiBaseCase {
         );
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -141,6 +153,9 @@ class HealTest extends AiBaseCase {
 
         assertInCastEffectArea(126, 125);
         assertNotInCastEffectArea(122);
+
+        assertEquals(130, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(96, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test

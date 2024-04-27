@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
@@ -34,6 +35,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BoostTest extends AiBaseCase {
     @Override
@@ -54,6 +56,9 @@ class BoostTest extends AiBaseCase {
         );
 
         assertCast(126, 122);
+
+        assertEquals(126, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(122, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -80,6 +85,9 @@ class BoostTest extends AiBaseCase {
         configureFighterAi(invoc);
 
         assertCast(582, 122);
+
+        assertEquals(582, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(122, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -94,6 +102,9 @@ class BoostTest extends AiBaseCase {
         other.fighter().setHidden(other.fighter(), true);
 
         assertCast(126, 122);
+
+        assertEquals(126, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(122, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -108,6 +119,7 @@ class BoostTest extends AiBaseCase {
         setAP(1);
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -121,6 +133,7 @@ class BoostTest extends AiBaseCase {
         removeAllAP();
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -139,6 +152,9 @@ class BoostTest extends AiBaseCase {
 
         assertInCastEffectArea(122, 78, 92, 77);
         assertNotInCastEffectArea(125);
+
+        assertEquals(584, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(64, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -153,6 +169,7 @@ class BoostTest extends AiBaseCase {
         removeSpell(6);
 
         assertDotNotGenerateAction();
+        assertNull(ai.get(CastSpell.LAST_CAST));
     }
 
     @Test
@@ -168,6 +185,9 @@ class BoostTest extends AiBaseCase {
         removeSpell(6);
 
         assertCast(148, 136);
+
+        assertEquals(148, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(136, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -193,6 +213,9 @@ class BoostTest extends AiBaseCase {
         );
 
         assertCast(145, 122);
+
+        assertEquals(145, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(122, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -210,6 +233,9 @@ class BoostTest extends AiBaseCase {
 
         assertCast(145, 122);
         assertInCastEffectArea(136);
+
+        assertEquals(145, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(122, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
@@ -227,6 +253,9 @@ class BoostTest extends AiBaseCase {
         removeSpell(6);
 
         assertCast(148, 136);
+
+        assertEquals(148, ai.get(CastSpell.LAST_CAST).spell().id());
+        assertEquals(136, ai.get(CastSpell.LAST_CAST).target().id());
     }
 
     @Test
