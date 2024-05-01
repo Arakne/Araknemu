@@ -75,13 +75,14 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
      * Load the exploration map
      */
     public ExplorationMap load(@NonNegative int mapId) throws EntityNotFoundException {
-        final ExplorationMap loadedMap = maps.get(mapId);
+        return maps.computeIfAbsent(mapId, id -> createMap(repository.get(id)));
+    }
 
-        if (loadedMap == null) {
-            return createMap(repository.get(mapId));
-        }
-
-        return loadedMap;
+    /**
+     * Load the exploration map using the map template
+     */
+    public ExplorationMap load(MapTemplate template) {
+        return maps.computeIfAbsent(template.id(), id -> createMap(template));
     }
 
     @Override
@@ -90,7 +91,11 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
 
         final long start = System.currentTimeMillis();
 
-        repository.all().forEach(this::createMap);
+        repository.all().forEach(template -> {
+            final ExplorationMap map = createMap(template);
+
+            maps.put(map.id(), map);
+        });
 
         final long time = System.currentTimeMillis() - start;
 
@@ -139,23 +144,8 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
         };
     }
 
-    /**
-     * Load the exploration map
-     */
-    public ExplorationMap load(MapTemplate template) {
-        final ExplorationMap loadedMap = maps.get(template.id());
-
-        if (loadedMap == null) {
-            return createMap(template);
-        }
-
-        return loadedMap;
-    }
-
     private ExplorationMap createMap(MapTemplate template) {
         final ExplorationMap map = new ExplorationMap(template, loader, areaService.get(template.subAreaId()));
-
-        maps.put(map.id(), map);
 
         map.dispatcher().add(new SendNewSprite(map));
         map.dispatcher().add(new SendSpriteRemoved(map));
