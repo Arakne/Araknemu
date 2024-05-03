@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
 import fr.quatrevieux.araknemu.network.game.in.fight.KickFighterRequest;
@@ -47,8 +46,6 @@ class FightingLoaderTest extends LoaderTestCase {
     @Test
     void load() throws ContainerException {
         PacketHandler[] handlers = loader.load(container);
-
-        assertContainsOnly(EnsureFighting.class, handlers);
 
         assertHandlePacket(FighterChangePlace.class, handlers);
         assertHandlePacket(FighterReady.class, handlers);

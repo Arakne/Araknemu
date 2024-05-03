@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
-import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
 import fr.quatrevieux.araknemu.game.handler.account.CreateCharacter;
 import fr.quatrevieux.araknemu.game.handler.account.DeleteCharacter;
 import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
@@ -36,14 +35,10 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for logged packets
  */
-public final class LoggedLoader extends AbstractLoader {
-    public LoggedLoader() {
-        super(EnsureLogged::new);
-    }
-
+public final class LoggedLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
-    protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
+    public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return new PacketHandler[] {
             new ListCharacters(
                 container.get(CharactersService.class)

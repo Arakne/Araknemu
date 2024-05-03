@@ -19,18 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Change the ready state of the fighter
  */
-public final class ChangeFighterReadyState implements PacketHandler<GameSession, FighterReady> {
+public final class ChangeFighterReadyState extends AbstractFightingPacketHandler<FighterReady> {
     @Override
-    public void handle(GameSession session, FighterReady packet) {
-        NullnessUtil.castNonNull(session.fighter()).setReady(packet.ready());
+    public void handle(GameSession session, Fight fight, PlayerFighter fighter, FighterReady packet) {
+        fighter.setReady(packet.ready());
     }
 
     @Override

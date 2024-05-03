@@ -20,22 +20,21 @@
 package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
+import fr.quatrevieux.araknemu.game.handler.AbstractLoggedPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreated;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreationError;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle character creation {@link AddCharacterRequest}
  */
-public final class CreateCharacter implements PacketHandler<GameSession, AddCharacterRequest> {
+public final class CreateCharacter extends AbstractLoggedPacketHandler<AddCharacterRequest> {
     private final CharactersService service;
 
     public CreateCharacter(CharactersService service) {
@@ -43,9 +42,7 @@ public final class CreateCharacter implements PacketHandler<GameSession, AddChar
     }
 
     @Override
-    public void handle(GameSession session, AddCharacterRequest packet) throws Exception {
-        final GameAccount account = NullnessUtil.castNonNull(session.account());
-
+    public void handle(GameSession session, GameAccount account, AddCharacterRequest packet) throws Exception {
         try {
             service.create(AccountCharacter.fromRequest(account, packet));
         } catch (CharacterCreationException e) {

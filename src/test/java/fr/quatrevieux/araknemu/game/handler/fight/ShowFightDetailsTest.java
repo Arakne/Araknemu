@@ -44,7 +44,7 @@ class ShowFightDetailsTest extends FightBaseCase {
     }
 
     @Test
-    void handleSuccess() throws SQLException, ContainerException {
+    void handleSuccess() throws Exception {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         explorationPlayer().changeMap(map, 123);
 

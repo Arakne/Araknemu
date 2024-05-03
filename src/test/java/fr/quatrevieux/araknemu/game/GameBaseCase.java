@@ -402,6 +402,7 @@ public class GameBaseCase extends DatabaseTestCase {
             session.setPlayer(
                 container.get(PlayerService.class).load(
                     session,
+                    session.account(),
                     player.id()
                 )
             );
@@ -456,7 +457,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         // @todo à tester
         session.attach(new GameAccount(
-            new Account(5),
+            new Account(5, null, null, null, EnumSet.noneOf(Permission.class), null, null),
             container.get(AccountService.class),
             2
         ));
@@ -465,6 +466,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         GamePlayer gp =  container.get(PlayerService.class).load(
             session,
+            session.account(),
             player.id()
         );
 
@@ -535,7 +537,7 @@ public class GameBaseCase extends DatabaseTestCase {
         GamePlayer gp;
 
         if (load) {
-            gp = container.get(PlayerService.class).load(session, id);
+            gp = container.get(PlayerService.class).load(session, session.account(), id);
         } else {
             gp = new GamePlayer(
                 new GameAccount(

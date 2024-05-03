@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -30,9 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class PerformTurnActionTest extends FightBaseCase {
     private Fight fight;
@@ -74,25 +70,13 @@ class PerformTurnActionTest extends FightBaseCase {
         turn.start();
 
         requestStack.clear();
-
-        try {
-            handler.handle(session, new GameActionRequest(1, new String[]{"ddvedg"}));
-
-            fail("ErrorPacket is expected");
-        } catch (ErrorPacket e) {
-            assertEquals(new NoneAction().toString(), e.packet().toString());
-            assertEquals("Cannot start the action", e.getCause().getMessage());
-        }
+        handler.handle(session, new GameActionRequest(1, new String[]{"ddvedg"}));
+        requestStack.assertLast(new NoneAction());
     }
 
     @Test
     void notActiveTurn() throws Exception {
-        try {
-            handler.handle(session, new GameActionRequest(1, new String[]{"ddvedg"}));
-
-            fail("ErrorPacket is expected");
-        } catch (ErrorPacket e) {
-            assertEquals(new NoneAction().toString(), e.packet().toString());
-        }
+        handler.handle(session, new GameActionRequest(1, new String[]{"ddvedg"}));
+        requestStack.assertLast(new NoneAction());
     }
 }

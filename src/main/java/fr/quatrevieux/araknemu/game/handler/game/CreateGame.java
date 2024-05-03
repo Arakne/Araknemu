@@ -20,21 +20,20 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
+import fr.quatrevieux.araknemu.game.handler.AbstractPlayingPacketHandler;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreationError;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Create the game session
  */
-public final class CreateGame implements PacketHandler<GameSession, CreateGameRequest> {
+public final class CreateGame extends AbstractPlayingPacketHandler<CreateGameRequest> {
     private final ExplorationService service;
 
     public CreateGame(ExplorationService service) {
@@ -42,9 +41,7 @@ public final class CreateGame implements PacketHandler<GameSession, CreateGameRe
     }
 
     @Override
-    public void handle(GameSession session, CreateGameRequest packet) throws Exception {
-        final GamePlayer player = NullnessUtil.castNonNull(session.player());
-
+    public void handle(GameSession session, GamePlayer player, CreateGameRequest packet) throws Exception {
         if (packet.type() != CreateGameRequest.Type.EXPLORATION) {
             throw new ErrorPacket(new GameCreationError());
         }

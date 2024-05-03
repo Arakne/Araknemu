@@ -111,7 +111,7 @@ class PlayerContextResolverTest extends GameBaseCase {
         assertSame(context1.command("info"), context2.command("info"));
 
         PlayerContext.class.cast(context1).player().dispatcher().dispatch(new Disconnected());
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         assertNotSame(context1, resolver.resolve(adminUser, () -> "Bob"));
     }

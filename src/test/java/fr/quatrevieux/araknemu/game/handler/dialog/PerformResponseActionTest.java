@@ -63,7 +63,7 @@ class PerformResponseActionTest extends GameBaseCase {
     }
 
     @Test
-    void handleWithNext() throws ContainerException {
+    void handleWithNext() throws Exception {
         handler.handle(session, new ChosenResponse(3786, 3323));
 
         NpcQuestion question = container.get(DialogService.class).byIds(new int[] {3787}).stream().findFirst().get();
@@ -77,7 +77,7 @@ class PerformResponseActionTest extends GameBaseCase {
     }
 
     @Test
-    void handleWithLeave() {
+    void handleWithLeave() throws Exception {
         handler.handle(session, new ChosenResponse(3786, 3324));
 
         requestStack.assertLast(new DialogLeaved());

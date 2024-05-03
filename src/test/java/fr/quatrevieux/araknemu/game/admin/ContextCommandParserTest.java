@@ -148,6 +148,7 @@ class ContextCommandParserTest extends GameBaseCase {
 
         GamePlayer john = container.get(PlayerService.class).load(
             session,
+            session.account(),
             player.id()
         );
 

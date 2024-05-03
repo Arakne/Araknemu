@@ -22,23 +22,19 @@ package fr.quatrevieux.araknemu.game.handler;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
- * Ensure that the session contains a valid fighter
+ * Base type for packet handlers that require the player to be in a fight
  *
  * @param <P> Packet to handler
+ * @see GameSession#fighter() will be set
  */
-public final class EnsureFighting<P extends Packet> implements PacketHandler<GameSession, P> {
-    private final PacketHandler<GameSession, P> handler;
-
-    public EnsureFighting(PacketHandler<GameSession, P> handler) {
-        this.handler = handler;
-    }
-
+public abstract class AbstractFightingPacketHandler<P extends Packet> implements PacketHandler<GameSession, P> {
     @Override
-    public void handle(GameSession session, P packet) {
+    public final void handle(GameSession session, P packet) {
         final PlayerFighter fighter = session.fighter();
 
         if (fighter == null) {
@@ -46,21 +42,28 @@ public final class EnsureFighting<P extends Packet> implements PacketHandler<Gam
         }
 
         fighter.fight().execute(() -> {
+            final PlayerFighter currentFighter = session.fighter();
+
             // The player has left the fight before the execution of the action
-            if (session.fighter() == null) {
+            if (currentFighter == null) {
                 return;
             }
 
             try {
-                handler.handle(session, packet);
+                handle(session, fighter.fight(), fighter, packet);
             } catch (Exception e) {
                 session.exception(e, packet);
             }
         });
     }
 
-    @Override
-    public Class<P> packet() {
-        return handler.packet();
-    }
+    /**
+     * Handle the packet with a valid fighter
+     *
+     * @param session The session
+     * @param fight The current fight
+     * @param fighter The fighter
+     * @param packet The packet to handle
+     */
+    protected abstract void handle(GameSession session, Fight fight, PlayerFighter fighter, P packet) throws Exception;
 }

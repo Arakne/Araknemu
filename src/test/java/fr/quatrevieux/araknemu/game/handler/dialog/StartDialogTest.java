@@ -65,7 +65,7 @@ class StartDialogTest extends GameBaseCase {
     }
 
     @Test
-    void handleSuccess() {
+    void handleSuccess() throws Exception {
         handler.handle(session, new CreateDialogRequest(-47204));
 
         assertTrue(player.interactions().interacting());

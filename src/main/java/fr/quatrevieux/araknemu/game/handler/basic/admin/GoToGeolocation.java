@@ -20,20 +20,19 @@
 package fr.quatrevieux.araknemu.game.handler.basic.admin;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.TeleportationTarget;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Go to the requested geolocation
  */
-public final class GoToGeolocation implements PacketHandler<GameSession, AdminMove> {
+public final class GoToGeolocation extends AbstractExploringPacketHandler<AdminMove> {
     private final GeolocationService service;
 
     public GoToGeolocation(GeolocationService service) {
@@ -41,13 +40,12 @@ public final class GoToGeolocation implements PacketHandler<GameSession, AdminMo
     }
 
     @Override
-    public void handle(GameSession session, AdminMove packet) {
-        if (!NullnessUtil.castNonNull(session.account()).isMaster()) {
+    public void handle(GameSession session, ExplorationPlayer exploration, AdminMove packet) {
+        if (!exploration.account().isMaster()) {
             throw new ErrorPacket(new Noop());
         }
 
-        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
-        final ExplorationMap currentMap = player.map();
+        final ExplorationMap currentMap = exploration.map();
         final ExplorationMap targetMap = service.find(
             packet.geolocation(),
             currentMap != null
@@ -55,9 +53,9 @@ public final class GoToGeolocation implements PacketHandler<GameSession, AdminMo
                 : new GeolocationService.GeolocationContext()
         );
 
-        new TeleportationTarget(targetMap, player.cell().id())
+        new TeleportationTarget(targetMap, exploration.cell().id())
             .ensureCellWalkable()
-            .apply(player)
+            .apply(exploration)
         ;
     }
 

@@ -19,26 +19,26 @@
 
 package fr.quatrevieux.araknemu.game.handler.object;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.handler.AbstractPlayingPacketHandler;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.AlreadyEquippedException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 import org.checkerframework.common.value.qual.IntRange;
 
 /**
  * Move an object from the repository
  */
-public final class MoveObject implements PacketHandler<GameSession, ObjectMoveRequest> {
+public final class MoveObject extends AbstractPlayingPacketHandler<ObjectMoveRequest> {
     @Override
-    public void handle(GameSession session, ObjectMoveRequest packet) throws Exception {
-        final PlayerInventory inventory = NullnessUtil.castNonNull(session.player()).inventory();
+    public void handle(GameSession session, GamePlayer player, ObjectMoveRequest packet) throws Exception {
+        final PlayerInventory inventory = player.inventory();
         final @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position = packet.position();
 
         if (position != ItemEntry.DEFAULT_POSITION) {

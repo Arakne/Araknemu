@@ -62,7 +62,7 @@ class AskExchangeTest extends GameBaseCase {
     }
 
     @Test
-    void success() throws ErrorPacket {
+    void success() throws Exception {
         handler.handle(session, new ExchangeRequest(ExchangeType.PLAYER_EXCHANGE, other.id(), null));
 
         requestStack.assertLast(new ExchangeRequested(player, other, ExchangeType.PLAYER_EXCHANGE));
@@ -81,7 +81,7 @@ class AskExchangeTest extends GameBaseCase {
     }
 
     @Test
-    void successWithNpcStore() throws ErrorPacket, SQLException {
+    void successWithNpcStore() throws Exception {
         dataSet.pushNpcWithStore();
 
         GameNpc npc = container.get(NpcService.class).get(10001);

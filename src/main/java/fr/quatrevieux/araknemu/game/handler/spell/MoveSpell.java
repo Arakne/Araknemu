@@ -19,18 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler.spell;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.handler.AbstractPlayingPacketHandler;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Move the spell from spell book
  */
-public final class MoveSpell implements PacketHandler<GameSession, SpellMove> {
+public final class MoveSpell extends AbstractPlayingPacketHandler<SpellMove> {
     @Override
-    public void handle(GameSession session, SpellMove packet) throws Exception {
-        NullnessUtil.castNonNull(session.player()).properties().spells()
+    public void handle(GameSession session, GamePlayer player, SpellMove packet) throws Exception {
+        player.properties().spells()
             .entry(packet.spellId())
             .move(packet.position())
         ;

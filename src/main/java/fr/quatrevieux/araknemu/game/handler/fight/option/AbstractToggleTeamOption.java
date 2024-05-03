@@ -21,12 +21,12 @@ package fr.quatrevieux.araknemu.game.handler.fight.option;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle the toggle of a team option
@@ -38,11 +38,9 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
  *
  * @param <P> The input packet
  */
-public abstract class AbstractToggleTeamOption<P extends Packet> implements PacketHandler<GameSession, P> {
+public abstract class AbstractToggleTeamOption<P extends Packet> extends AbstractFightingPacketHandler<P> {
     @Override
-    public final void handle(GameSession session, P packet) throws Exception {
-        final PlayerFighter fighter = NullnessUtil.castNonNull(session.fighter());
-
+    public final void handle(GameSession session, Fight fight, PlayerFighter fighter, P packet) throws Exception {
         if (!fighter.isTeamLeader() || !(fighter.team().options() instanceof ConfigurableTeamOptions) || !check(session, fighter)) {
             // If the option cannot be changed, the request must be silently ignored : so send a noop packet
             throw new ErrorPacket(new Noop());

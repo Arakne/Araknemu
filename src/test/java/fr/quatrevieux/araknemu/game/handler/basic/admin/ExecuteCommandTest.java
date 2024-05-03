@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.basic.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.LogType;
@@ -27,6 +28,8 @@ import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExecuteCommandTest extends GameBaseCase {
     private ExecuteCommand handler;
@@ -62,5 +65,13 @@ class ExecuteCommandTest extends GameBaseCase {
             new CommandResult(LogType.ERROR, "Command 'badCommand' is not found"),
             new CommandResult(LogType.ERROR, "Did you mean <u><a href='asfunction:onHref,ExecCmd, addstats,false'>addstats</a></u> ? (See <u><a href='asfunction:onHref,ExecCmd, help addstats,true'>help</a></u>)")
         );
+    }
+
+    @Test
+    void handleNotAdmin() throws Exception {
+        session.setPlayer(null);
+        session.setPlayer(makeOtherPlayer());
+
+        assertThrows(CloseImmediately.class, () -> handler.handle(session, new AdminCommand("echo hello world")));
     }
 }

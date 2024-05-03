@@ -19,22 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.LeavableState;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Leave the fight
  */
-public final class LeaveFight implements PacketHandler<GameSession, LeaveFightRequest> {
+public final class LeaveFight extends AbstractFightingPacketHandler<LeaveFightRequest> {
     @Override
-    public void handle(GameSession session, LeaveFightRequest packet) {
-        final PlayerFighter fighter = NullnessUtil.castNonNull(session.fighter());
-
-        fighter.fight().state(LeavableState.class).leave(fighter);
+    public void handle(GameSession session, Fight fight, PlayerFighter fighter, LeaveFightRequest packet) {
+        fight.state(LeavableState.class).leave(fighter);
     }
 
     @Override

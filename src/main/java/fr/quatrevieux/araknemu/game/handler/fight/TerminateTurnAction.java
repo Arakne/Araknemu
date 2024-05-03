@@ -19,19 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Fight game action acknowledge
  */
-public final class TerminateTurnAction implements PacketHandler<GameSession, GameActionAcknowledge> {
+public final class TerminateTurnAction extends AbstractFightingPacketHandler<GameActionAcknowledge> {
     @Override
-    public void handle(GameSession session, GameActionAcknowledge packet) {
-        NullnessUtil.castNonNull(session.fighter()).perform(FightTurn::terminate);
+    public void handle(GameSession session, Fight fight, PlayerFighter fighter, GameActionAcknowledge packet) {
+        fighter.perform(FightTurn::terminate);
     }
 
     @Override

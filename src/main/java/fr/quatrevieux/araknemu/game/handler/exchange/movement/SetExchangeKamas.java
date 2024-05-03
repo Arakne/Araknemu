@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange.movement;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Set the kamas on the current exchange
  */
-public final class SetExchangeKamas implements PacketHandler<GameSession, KamasMovement> {
+public final class SetExchangeKamas extends AbstractExploringPacketHandler<KamasMovement> {
     @Override
-    public void handle(GameSession session, KamasMovement packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions().get(ExchangeDialog.class).kamas(packet.quantity());
+    public void handle(GameSession session, ExplorationPlayer exploration, KamasMovement packet) {
+        exploration.interactions().get(ExchangeDialog.class).kamas(packet.quantity());
     }
 
     @Override

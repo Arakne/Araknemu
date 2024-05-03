@@ -19,17 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler.basic.admin;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
+import fr.quatrevieux.araknemu.game.handler.AbstractPlayingPacketHandler;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Execute an admin command
  */
-public final class ExecuteCommand implements PacketHandler<GameSession, AdminCommand> {
+public final class ExecuteCommand extends AbstractPlayingPacketHandler<AdminCommand> {
     private final AdminSessionService service;
 
     public ExecuteCommand(AdminSessionService service) {
@@ -37,8 +38,12 @@ public final class ExecuteCommand implements PacketHandler<GameSession, AdminCom
     }
 
     @Override
-    public void handle(GameSession session, AdminCommand packet) throws Exception {
-        final AdminUser user = service.user(NullnessUtil.castNonNull(session.player()));
+    public void handle(GameSession session, GamePlayer player, AdminCommand packet) throws Exception {
+        if (!player.account().isMaster()) {
+            throw new CloseImmediately("Admin account required");
+        }
+
+        final AdminUser user = service.user(player);
 
         try {
             user.execute(packet.command());

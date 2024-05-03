@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
-import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.ExploringOrFightingSwitcher;
 import fr.quatrevieux.araknemu.game.handler.chat.SendSmileyToExplorationMap;
@@ -47,11 +46,11 @@ public final class ExploringOrFightingLoader implements Loader {
         return new PacketHandler[] {
             new ExploringOrFightingSwitcher<>(
                 new ValidateGameAction(container.get(ActionFactory.class)),
-                new EnsureFighting<>(new PerformTurnAction())
+                new PerformTurnAction()
             ),
             new ExploringOrFightingSwitcher<>(
                 new EndGameAction(),
-                new EnsureFighting<>(new TerminateTurnAction())
+                new TerminateTurnAction()
             ),
             new ExploringOrFightingSwitcher<>(
                 new UseObject(),

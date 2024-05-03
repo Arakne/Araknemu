@@ -47,7 +47,7 @@ class ListFightsTest extends FightBaseCase {
     }
 
     @Test
-    void withoutFights() throws SQLException, ContainerException {
+    void withoutFights() throws Exception {
         explorationPlayer();
 
         handler.handle(session, new ListFightsRequest());
@@ -56,7 +56,7 @@ class ListFightsTest extends FightBaseCase {
     }
 
     @Test
-    void fightsOnBadMap() throws SQLException, ContainerException {
+    void fightsOnBadMap() throws Exception {
         explorationPlayer();
 
         createSimpleFight(container.get(ExplorationMapService.class).load(10340));
@@ -68,7 +68,7 @@ class ListFightsTest extends FightBaseCase {
     }
 
     @Test
-    void fightsOnCurrentMap() throws SQLException, ContainerException {
+    void fightsOnCurrentMap() throws Exception {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         explorationPlayer().changeMap(map, 123);
 

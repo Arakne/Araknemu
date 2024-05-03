@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.dialog;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Stop the current NPC dialog
  */
-public final class StopDialog implements PacketHandler<GameSession, LeaveDialogRequest> {
+public final class StopDialog extends AbstractExploringPacketHandler<LeaveDialogRequest> {
     @Override
-    public void handle(GameSession session, LeaveDialogRequest packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions().get(NpcDialog.class).stop();
+    public void handle(GameSession session, ExplorationPlayer exploration, LeaveDialogRequest packet) {
+        exploration.interactions().get(NpcDialog.class).stop();
     }
 
     @Override

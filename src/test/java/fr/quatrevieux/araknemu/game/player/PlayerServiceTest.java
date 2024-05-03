@@ -106,14 +106,14 @@ class PlayerServiceTest extends GameBaseCase {
     void loadInvalidServer() throws ContainerException, SQLException {
         int id = dataSet.push(new Player(-1, 1, 3, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
-        assertThrows(EntityNotFoundException.class, () -> service.load(session, id));
+        assertThrows(EntityNotFoundException.class, () -> service.load(session, session.account(), id));
     }
 
     @Test
     void loadSuccess() throws ContainerException {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
-        GamePlayer player = service.load(session, id);
+        GamePlayer player = service.load(session, session.account(), id);
 
         assertEquals(id, player.id());
 
@@ -132,7 +132,7 @@ class PlayerServiceTest extends GameBaseCase {
         setConfigValue("player.restoreLifeOnLevelUp", "false");
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
-        GamePlayer player = service.load(session, id);
+        GamePlayer player = service.load(session, session.account(), id);
 
         assertEquals(id, player.id());
 
@@ -159,7 +159,7 @@ class PlayerServiceTest extends GameBaseCase {
 
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
-        GamePlayer player = service.load(session, id);
+        GamePlayer player = service.load(session, session.account(), id);
 
         assertSame(player, ref.get().player());
     }
@@ -168,7 +168,7 @@ class PlayerServiceTest extends GameBaseCase {
     void loadWillAddToOnlinePlayers() throws ContainerException, SQLException {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
-        GamePlayer player = service.load(session, id);
+        GamePlayer player = service.load(session, session.account(), id);
 
         assertTrue(
             service.online().contains(player)
@@ -179,16 +179,16 @@ class PlayerServiceTest extends GameBaseCase {
     void loadOnlinePlayerWillThrowException() throws ContainerException {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
-        service.load(session, id);
+        service.load(session, session.account(), id);
 
-        assertThrows(IllegalStateException.class, () -> service.load(session, id));
+        assertThrows(IllegalStateException.class, () -> service.load(session, session.account(), id));
     }
 
     @Test
     void loadedPlayerOnDisconnectWillBeRemovedFromOnlineList() throws ContainerException {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
-        GamePlayer player = service.load(session, id);
+        GamePlayer player = service.load(session, session.account(), id);
         session.setPlayer(player);
 
         player.dispatch(new Disconnected());
@@ -200,23 +200,23 @@ class PlayerServiceTest extends GameBaseCase {
     void filter() throws ContainerException {
         GameSession session1 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
-        service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
+        service.load(session1, session1.account(), dataSet.pushPlayer("Bob", 1, 2).id());
 
         GameSession session2 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session2.attach(new GameAccount(new Account(2), container.get(AccountService.class), 2));
-        service.load(session2, dataSet.pushPlayer("Robert", 2, 2).id());
+        service.load(session2, session2.account(), dataSet.pushPlayer("Robert", 2, 2).id());
 
         GameSession session3 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session3.attach(new GameAccount(new Account(3), container.get(AccountService.class), 2));
-        service.load(session3, dataSet.pushPlayer("Jean", 3, 2).id());
+        service.load(session3, session3.account(), dataSet.pushPlayer("Jean", 3, 2).id());
 
         GameSession session4 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session4.attach(new GameAccount(new Account(4), container.get(AccountService.class), 2));
-        service.load(session4, dataSet.pushPlayer("Kevin", 4, 2).id());
+        service.load(session4, session4.account(), dataSet.pushPlayer("Kevin", 4, 2).id());
 
         GameSession session5 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session5.attach(new GameAccount(new Account(5), container.get(AccountService.class), 2));
-        service.load(session5, dataSet.pushPlayer("Louis", 5, 2).id());
+        service.load(session5, session5.account(), dataSet.pushPlayer("Louis", 5, 2).id());
 
         assertEquals(3, service.filter(player -> player.name().contains("o")).count());
         assertEquals(1, service.filter(player -> player.name().equalsIgnoreCase("bob")).count());
@@ -229,7 +229,7 @@ class PlayerServiceTest extends GameBaseCase {
 
         GameSession session1 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
-        GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
+        GamePlayer player = service.load(session1, session1.account(), dataSet.pushPlayer("Bob", 1, 2).id());
         session1.setPlayer(player);
 
         assertTrue(service.isOnline("bob"));
@@ -248,7 +248,7 @@ class PlayerServiceTest extends GameBaseCase {
     void getSuccess() throws ContainerException {
         GameSession session1 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
-        GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
+        GamePlayer player = service.load(session1, session1.account(), dataSet.pushPlayer("Bob", 1, 2).id());
 
         assertSame(player, service.get("bob"));
     }
@@ -256,7 +256,7 @@ class PlayerServiceTest extends GameBaseCase {
     @Test
     void save() throws ContainerException {
         Player entity = dataSet.pushPlayer("Bob", 1, 2);
-        GamePlayer player = service.load(session, entity.id());
+        GamePlayer player = service.load(session, session.account(), entity.id());
 
         player.setPosition(new Position(963, 258));
 
@@ -268,7 +268,7 @@ class PlayerServiceTest extends GameBaseCase {
     @Test
     void shutdownScheduled() {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
-        service.load(session, id);
+        service.load(session, session.account(), id);
 
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         dispatcher.register(service);
@@ -280,7 +280,7 @@ class PlayerServiceTest extends GameBaseCase {
     @Test
     void savePackets() {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
-        service.load(session, id);
+        service.load(session, session.account(), id);
 
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         dispatcher.register(service);

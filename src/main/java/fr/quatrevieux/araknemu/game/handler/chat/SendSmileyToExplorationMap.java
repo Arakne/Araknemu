@@ -20,19 +20,18 @@
 package fr.quatrevieux.araknemu.game.handler.chat;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
 import fr.quatrevieux.araknemu.network.game.out.chat.Smiley;
 import fr.quatrevieux.araknemu.network.out.ServerMessage;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Send the player smiley to map
  */
-public final class SendSmileyToExplorationMap implements PacketHandler<GameSession, UseSmiley> {
+public final class SendSmileyToExplorationMap extends AbstractExploringPacketHandler<UseSmiley> {
     private final SpamCheckAttachment.Key spamCheckKey;
 
     public SendSmileyToExplorationMap(SpamCheckAttachment.Key spamCheckKey) {
@@ -40,9 +39,8 @@ public final class SendSmileyToExplorationMap implements PacketHandler<GameSessi
     }
 
     @Override
-    public void handle(GameSession session, UseSmiley packet) throws Exception {
-        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
-        final ExplorationMap map = player.map();
+    public void handle(GameSession session, ExplorationPlayer exploration, UseSmiley packet) throws Exception {
+        final ExplorationMap map = exploration.map();
 
         if (map == null) {
             return;
@@ -52,7 +50,7 @@ public final class SendSmileyToExplorationMap implements PacketHandler<GameSessi
             throw new ErrorPacket(ServerMessage.spam());
         }
 
-        map.send(new Smiley(player, packet.smiley()));
+        map.send(new Smiley(exploration, packet.smiley()));
     }
 
     @Override

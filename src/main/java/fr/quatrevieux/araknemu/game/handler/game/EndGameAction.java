@@ -19,18 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler.game;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * End the current game action with success
  */
-public final class EndGameAction implements PacketHandler<GameSession, GameActionAcknowledge> {
+public final class EndGameAction extends AbstractExploringPacketHandler<GameActionAcknowledge> {
     @Override
-    public void handle(GameSession session, GameActionAcknowledge packet) throws Exception {
-        NullnessUtil.castNonNull(session.exploration())
+    public void handle(GameSession session, ExplorationPlayer exploration, GameActionAcknowledge packet) throws Exception {
+        exploration
             .interactions()
             .end(packet.actionId())
         ;

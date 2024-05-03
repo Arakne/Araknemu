@@ -21,8 +21,6 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
-import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterReadyState;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterStartPlace;
 import fr.quatrevieux.araknemu.game.handler.fight.EndFighterTurn;
@@ -36,20 +34,16 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for fight packets
  */
-public final class FightingLoader extends AbstractLoader {
-    public FightingLoader() {
-        super(EnsureFighting::new);
-    }
-
+public final class FightingLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
-    public PacketHandler<GameSession, ?>[] handlers(Container container) {
+    public PacketHandler<GameSession, ?>[] load(Container container) {
         return new PacketHandler[] {
             new ChangeFighterStartPlace(),
             new ChangeFighterReadyState(),
             new EndFighterTurn(),
             new ShowCell(),
-            new EnsureInactiveFight<>(new KickFighter()),
+            new KickFighter(),
 
             new ToggleBlockSpectator(),
             new ToggleLockTeam(),
