@@ -20,23 +20,22 @@
 package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.NoneAction;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Perform a game action into the fight
  */
-public final class PerformTurnAction implements PacketHandler<GameSession, GameActionRequest> {
+public final class PerformTurnAction extends AbstractFightingPacketHandler<GameActionRequest> {
     @Override
-    public void handle(GameSession session, GameActionRequest packet) {
+    public void handle(GameSession session, Fight fight, PlayerFighter fighter, GameActionRequest packet) {
         try {
-            final PlayableFighter fighter = NullnessUtil.castNonNull(session.fighter());
             final FightTurn turn = fighter.turn();
 
             turn.perform(fighter.fight().actions().create(fighter, ActionType.byId(packet.type()), packet.arguments()));

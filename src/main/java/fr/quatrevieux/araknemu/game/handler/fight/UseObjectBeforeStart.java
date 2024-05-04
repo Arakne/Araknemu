@@ -19,30 +19,31 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Use an object before start the fight
  */
-public final class UseObjectBeforeStart implements PacketHandler<GameSession, ObjectUseRequest> {
+public final class UseObjectBeforeStart extends AbstractFightingPacketHandler<ObjectUseRequest> {
     @Override
-    public void handle(GameSession session, ObjectUseRequest packet) {
-        final InventoryEntry entry = NullnessUtil.castNonNull(session.player()).inventory().get(packet.objectId());
+    public void handle(GameSession session, Fight fight, PlayerFighter fighter, ObjectUseRequest packet) {
+        final InventoryEntry entry = fighter.player().inventory().get(packet.objectId());
         final UsableItem item = UsableItem.class.cast(entry.item());
 
-        if (!item.checkFighter(NullnessUtil.castNonNull(session.fighter()))) {
+        if (!item.checkFighter(fighter)) {
             session.send(new Noop());
             return;
         }
 
         try {
-            item.applyToFighter(NullnessUtil.castNonNull(session.fighter()));
+            item.applyToFighter(fighter);
         } finally {
             entry.remove(1);
         }

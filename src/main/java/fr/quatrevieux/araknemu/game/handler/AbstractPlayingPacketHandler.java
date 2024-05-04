@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2024 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.handler;
@@ -22,32 +22,33 @@ package fr.quatrevieux.araknemu.game.handler;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
- * Wrap packet handler for ensure that as admin access
+ * Base type for packet handle that needs the player to be in a game session
  *
- * @param <P> The packet to handle
+ * @param <P> The packet type
+ * @see GameSession#player() will not be null
  */
-public final class EnsureAdmin<P extends Packet> implements PacketHandler<GameSession, P> {
-    private final PacketHandler<GameSession, P> inner;
-
-    public EnsureAdmin(PacketHandler<GameSession, P> inner) {
-        this.inner = inner;
-    }
-
+public abstract class AbstractPlayingPacketHandler<P extends Packet> implements PacketHandler<GameSession, P> {
     @Override
-    public void handle(GameSession session, P packet) throws Exception {
-        if (session.player() == null || !NullnessUtil.castNonNull(session.account()).isMaster()) {
-            throw new CloseImmediately("Admin account required");
+    public final void handle(GameSession session, P packet) throws Exception {
+        final GamePlayer player = session.player();
+
+        if (player == null) {
+            throw new CloseImmediately("A character must be selected to handle the packet " + packet.getClass().getSimpleName());
         }
 
-        inner.handle(session, packet);
+        handle(session, player, packet);
     }
 
-    @Override
-    public Class<P> packet() {
-        return inner.packet();
-    }
+    /**
+     * Handle the packet with a selected character
+     *
+     * @param session The current game session
+     * @param player The selected character
+     * @param packet packet to handle
+     */
+    protected abstract void handle(GameSession session, GamePlayer player, P packet) throws Exception;
 }

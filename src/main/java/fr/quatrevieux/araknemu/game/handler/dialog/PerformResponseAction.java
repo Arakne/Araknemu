@@ -19,22 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.dialog;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Perform actions for the given dialog response
  */
-public final class PerformResponseAction implements PacketHandler<GameSession, ChosenResponse> {
+public final class PerformResponseAction extends AbstractExploringPacketHandler<ChosenResponse> {
     @Override
-    public void handle(GameSession session, ChosenResponse packet) {
-        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
-
-        player.interactions().get(NpcDialog.class)
+    public void handle(GameSession session, ExplorationPlayer exploration, ChosenResponse packet) {
+        exploration.interactions().get(NpcDialog.class)
             .forQuestion(packet.question())
             .answer(packet.response())
         ;

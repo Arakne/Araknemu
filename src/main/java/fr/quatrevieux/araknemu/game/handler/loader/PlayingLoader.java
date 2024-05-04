@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.handler.EnsureFightingOrSpectator;
 import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
-import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
 import fr.quatrevieux.araknemu.game.handler.account.BoostCharacteristic;
 import fr.quatrevieux.araknemu.game.handler.chat.SaveSubscription;
 import fr.quatrevieux.araknemu.game.handler.chat.SendMessage;
@@ -43,14 +42,10 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for playing packets
  */
-public final class PlayingLoader extends AbstractLoader {
-    public PlayingLoader() {
-        super(EnsurePlaying::new);
-    }
-
+public final class PlayingLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
-    protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
+    public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return new PacketHandler[] {
             new CreateGame(
                 container.get(ExplorationService.class)
@@ -60,12 +55,12 @@ public final class PlayingLoader extends AbstractLoader {
                 container.get(SpamCheckAttachment.Key.class)
             ),
             new SaveSubscription(),
-            new EnsureInactiveFight(new MoveObject()),
-            new EnsureInactiveFight(new RemoveObject()),
-            new EnsureInactiveFight(new BoostCharacteristic()),
-            new EnsureInactiveFight(new UpgradeSpell()),
+            new EnsureInactiveFight<>(new MoveObject()),
+            new EnsureInactiveFight<>(new RemoveObject()),
+            new EnsureInactiveFight<>(new BoostCharacteristic()),
+            new EnsureInactiveFight<>(new UpgradeSpell()),
             new MoveSpell(),
-            new EnsureFightingOrSpectator(new LeaveFight(), new LeaveSpectatorFight()),
+            new EnsureFightingOrSpectator(new LeaveFight(), new LeaveSpectatorFight()), // @todo ? how to handle this case
         };
     }
 }

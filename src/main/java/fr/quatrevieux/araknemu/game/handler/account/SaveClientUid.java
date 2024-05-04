@@ -19,16 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.handler.AbstractLoggedPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.ClientUid;
 
 /**
  * Save the client Uid into connection log
  */
-public final class SaveClientUid implements PacketHandler<GameSession, ClientUid> {
+public final class SaveClientUid extends AbstractLoggedPacketHandler<ClientUid> {
     @Override
-    public void handle(GameSession session, ClientUid packet) {
+    public void handle(GameSession session, GameAccount account, ClientUid packet) {
         session.log().ifPresent(log -> log.setClientUid(packet.uid()));
     }
 

@@ -20,25 +20,25 @@
 package fr.quatrevieux.araknemu.game.handler.emote;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Change the exploration player orientation for role player
  *
  * @see SetOrientationRequest
  */
-public final class ChangeOrientation implements PacketHandler<GameSession, SetOrientationRequest> {
+public final class ChangeOrientation extends AbstractExploringPacketHandler<SetOrientationRequest> {
     @Override
-    public void handle(GameSession session, SetOrientationRequest packet) throws Exception {
-        if (!NullnessUtil.castNonNull(session.player()).restrictions().canMoveAllDirections() && !packet.orientation().restricted()) {
+    public void handle(GameSession session, ExplorationPlayer exploration, SetOrientationRequest packet) throws Exception {
+        if (!exploration.player().restrictions().canMoveAllDirections() && !packet.orientation().restricted()) {
             throw new ErrorPacket(new Noop());
         }
 
-        NullnessUtil.castNonNull(session.exploration()).setOrientation(packet.orientation());
+        exploration.setOrientation(packet.orientation());
     }
 
     @Override

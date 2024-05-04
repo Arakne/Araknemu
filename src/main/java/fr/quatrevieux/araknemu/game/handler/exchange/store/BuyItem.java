@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange.store;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.npc.StoreDialog;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.store.BuyRequest;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle buying an item from a store
  */
-public final class BuyItem implements PacketHandler<GameSession, BuyRequest> {
+public final class BuyItem extends AbstractExploringPacketHandler<BuyRequest> {
     @Override
-    public void handle(GameSession session, BuyRequest packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions().get(StoreDialog.class).buy(packet.itemId(), packet.quantity());
+    public void handle(GameSession session, ExplorationPlayer exploration, BuyRequest packet) {
+        exploration.interactions().get(StoreDialog.class).buy(packet.itemId(), packet.quantity());
     }
 
     @Override

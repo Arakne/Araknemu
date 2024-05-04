@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.TargetExchangeRequestDialog;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Accept the exchange request and start the exchange
  */
-public final class StartExchange implements PacketHandler<GameSession, AcceptExchangeRequest> {
+public final class StartExchange extends AbstractExploringPacketHandler<AcceptExchangeRequest> {
     @Override
-    public void handle(GameSession session, AcceptExchangeRequest packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions().get(TargetExchangeRequestDialog.class).accept();
+    public void handle(GameSession session, ExplorationPlayer exploration, AcceptExchangeRequest packet) {
+        exploration.interactions().get(TargetExchangeRequestDialog.class).accept();
     }
 
     @Override

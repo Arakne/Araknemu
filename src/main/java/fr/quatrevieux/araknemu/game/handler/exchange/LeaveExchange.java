@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Leave the current exchange or request
  */
-public final class LeaveExchange implements PacketHandler<GameSession, LeaveExchangeRequest> {
+public final class LeaveExchange extends AbstractExploringPacketHandler<LeaveExchangeRequest> {
     @Override
-    public void handle(GameSession session, LeaveExchangeRequest packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions().get(ExchangeInteraction.class).leave();
+    public void handle(GameSession session, ExplorationPlayer exploration, LeaveExchangeRequest packet) {
+        exploration.interactions().get(ExchangeInteraction.class).leave();
     }
 
     @Override

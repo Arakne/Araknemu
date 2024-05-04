@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
 import fr.quatrevieux.araknemu.game.handler.basic.admin.GoToGeolocation;
 import fr.quatrevieux.araknemu.game.handler.dialog.PerformResponseAction;
 import fr.quatrevieux.araknemu.game.handler.dialog.StartDialog;
@@ -48,14 +47,10 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for exploration packets
  */
-public final class ExploringLoader extends AbstractLoader {
-    public ExploringLoader() {
-        super(EnsureExploring::new);
-    }
-
+public final class ExploringLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
-    public PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
+    public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return new PacketHandler[] {
             new LoadExtraInfo(container.get(FightService.class)),
             new CancelGameAction(),

@@ -23,21 +23,16 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
-import fr.quatrevieux.araknemu.game.handler.EnsureAdmin;
 import fr.quatrevieux.araknemu.game.handler.basic.admin.ExecuteCommand;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
  * Loader for admin packets
  */
-public final class AdminLoader extends AbstractLoader {
-    public AdminLoader() {
-        super(EnsureAdmin::new);
-    }
-
+public final class AdminLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
-    protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
+    public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return new PacketHandler[] {
             new ExecuteCommand(
                 container.get(AdminSessionService.class)

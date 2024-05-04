@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange.store;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.npc.StoreDialog;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle selling an item to an NPC store
  */
-public final class SellItem implements PacketHandler<GameSession, SellRequest> {
+public final class SellItem extends AbstractExploringPacketHandler<SellRequest> {
     @Override
-    public void handle(GameSession session, SellRequest packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions()
+    public void handle(GameSession session, ExplorationPlayer exploration, SellRequest packet) {
+        exploration.interactions()
             .get(StoreDialog.class)
             .sell(packet.itemId(), packet.quantity())
         ;

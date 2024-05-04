@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
 import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
@@ -44,8 +43,6 @@ class LoggedLoaderTest extends LoaderTestCase {
     @Test
     void load() throws ContainerException {
         PacketHandler[] handlers = loader.load(container);
-
-        assertContainsOnly(EnsureLogged.class, handlers);
 
         assertHandlePacket(AskCharacterList.class, handlers);
         assertHandlePacket(AddCharacterRequest.class, handlers);

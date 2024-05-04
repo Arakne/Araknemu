@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange.movement;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Set items into the exchange
  */
-public final class SetExchangeItems implements PacketHandler<GameSession, ItemsMovement> {
+public final class SetExchangeItems extends AbstractExploringPacketHandler<ItemsMovement> {
     @Override
-    public void handle(GameSession session, ItemsMovement packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions().get(ExchangeDialog.class).item(packet.id(), packet.quantity());
+    public void handle(GameSession session, ExplorationPlayer exploration, ItemsMovement packet) {
+        exploration.interactions().get(ExchangeDialog.class).item(packet.id(), packet.quantity());
     }
 
     @Override

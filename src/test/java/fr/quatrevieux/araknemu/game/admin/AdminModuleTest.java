@@ -65,6 +65,7 @@ import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -74,6 +75,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class AdminModuleTest extends GameBaseCase {
+    @BeforeEach
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        gamePlayer(); // Log the player
+    }
+
     @Test
     void instances() throws SQLException, CommandNotFoundException {
         Container container = new ItemPoolContainer();
@@ -102,6 +111,7 @@ class AdminModuleTest extends GameBaseCase {
 
     @Test
     void playerResolver() throws SQLException, ContextException, CommandNotFoundException {
+        gamePlayer();
         Container container = new ItemPoolContainer();
 
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
@@ -109,7 +119,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
         container.register(new AdminModule(app));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(PlayerContextResolver.class).resolve(gamePlayer());
 
@@ -140,7 +150,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
         container.register(new AdminModule(app));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(PlayerContextResolver.class).resolve(gamePlayer());
 
@@ -158,7 +168,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
         container.register(new AdminModule(app));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(AccountContextResolver.class).resolve(gamePlayer().account());
 
@@ -179,7 +189,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
         container.register(new AdminModule(app));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(AccountContextResolver.class).resolve(gamePlayer().account());
 
@@ -197,7 +207,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
         container.register(new AdminModule(app));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(DebugContextResolver.class).resolve(null, null);
 
@@ -218,7 +228,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
         container.register(new AdminModule(app));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(DebugContextResolver.class).resolve(null, null);
 
@@ -235,7 +245,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new AdminModule(app));
         container.register(configurator -> configurator.set(RealmConnector.class, Mockito.mock(RealmConnector.class)));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(ServerContextResolver.class).resolve(null, null);
 
@@ -262,7 +272,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new AdminModule(app));
         container.register(configurator -> configurator.set(RealmConnector.class, Mockito.mock(RealmConnector.class)));
 
-        container.get(PlayerService.class).load(session, gamePlayer().id());
+        container.get(PlayerService.class).load(session, session.account(), gamePlayer().id());
 
         Context context = container.get(ServerContextResolver.class).resolve(null, null);
 

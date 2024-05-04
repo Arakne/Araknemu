@@ -20,21 +20,21 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.handler.AbstractPlayingPacketHandler;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemDeletionError;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle object deletion
  */
-public final class RemoveObject implements PacketHandler<GameSession, ObjectDeleteRequest> {
+public final class RemoveObject extends AbstractPlayingPacketHandler<ObjectDeleteRequest> {
     @Override
-    public void handle(GameSession session, ObjectDeleteRequest packet) throws Exception {
+    public void handle(GameSession session, GamePlayer player, ObjectDeleteRequest packet) throws Exception {
         try {
-            NullnessUtil.castNonNull(session.player()).inventory()
+            player.inventory()
                 .get(packet.id())
                 .remove(packet.quantity())
             ;

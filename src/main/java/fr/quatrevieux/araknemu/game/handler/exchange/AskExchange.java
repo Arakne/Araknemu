@@ -20,19 +20,18 @@
 package fr.quatrevieux.araknemu.game.handler.exchange;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequestError;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle the exchange request
  */
-public final class AskExchange implements PacketHandler<GameSession, ExchangeRequest> {
+public final class AskExchange extends AbstractExploringPacketHandler<ExchangeRequest> {
     private final ExchangeFactory factory;
 
     public AskExchange(ExchangeFactory factory) {
@@ -40,9 +39,8 @@ public final class AskExchange implements PacketHandler<GameSession, ExchangeReq
     }
 
     @Override
-    public void handle(GameSession session, ExchangeRequest packet) throws ErrorPacket {
-        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
-        final ExplorationMap map = player.map();
+    public void handle(GameSession session, ExplorationPlayer exploration, ExchangeRequest packet) throws ErrorPacket {
+        final ExplorationMap map = exploration.map();
 
         if (map == null) {
             throw new ErrorPacket(new ExchangeRequestError(ExchangeRequestError.Error.CANT_EXCHANGE));
@@ -52,7 +50,7 @@ public final class AskExchange implements PacketHandler<GameSession, ExchangeReq
             // @todo check creature type ?
             packet.id()
                 .map(map::creature)
-                .ifPresent(target -> player.interactions().start(factory.create(packet.type(), player, target)))
+                .ifPresent(target -> exploration.interactions().start(factory.create(packet.type(), exploration, target)))
             ;
         } catch (RuntimeException e) {
             throw new ErrorPacket(new ExchangeRequestError(ExchangeRequestError.Error.CANT_EXCHANGE));

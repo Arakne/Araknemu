@@ -20,20 +20,20 @@
 package fr.quatrevieux.araknemu.game.handler.spell;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.handler.AbstractPlayingPacketHandler;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellUpgradeError;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Upgrade the spell
  */
-public final class UpgradeSpell implements PacketHandler<GameSession, SpellUpgrade> {
+public final class UpgradeSpell extends AbstractPlayingPacketHandler<SpellUpgrade> {
     @Override
-    public void handle(GameSession session, SpellUpgrade packet) throws Exception {
+    public void handle(GameSession session, GamePlayer player, SpellUpgrade packet) throws Exception {
         try {
-            NullnessUtil.castNonNull(session.player()).properties().spells()
+            player.properties().spells()
                 .entry(packet.spellId())
                 .upgrade()
             ;

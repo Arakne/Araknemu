@@ -19,19 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightList;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * List fights on the current map
  */
-public final class ListFights implements PacketHandler<GameSession, ListFightsRequest> {
+public final class ListFights extends AbstractExploringPacketHandler<ListFightsRequest> {
     private final FightService service;
 
     public ListFights(FightService service) {
@@ -39,8 +38,7 @@ public final class ListFights implements PacketHandler<GameSession, ListFightsRe
     }
 
     @Override
-    public void handle(GameSession session, ListFightsRequest packet) {
-        final ExplorationPlayer exploration = NullnessUtil.castNonNull(session.exploration());
+    public void handle(GameSession session, ExplorationPlayer exploration, ListFightsRequest packet) {
         final ExplorationMap map = exploration.map();
 
         if (map != null) {

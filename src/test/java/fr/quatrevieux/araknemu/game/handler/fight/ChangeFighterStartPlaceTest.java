@@ -54,15 +54,8 @@ class ChangeFighterStartPlaceTest extends FightBaseCase {
         fight = createFight();
         fighter = player.fighter();
 
-        try {
-            handler.handle(session, new FighterChangePlace(256));
-            fail("ErrorPacket must be thrown");
-        } catch (ErrorPacket e) {
-            assertEquals(
-                new ChangeFighterPlaceError().toString(),
-                e.packet().toString()
-            );
-        }
+        handler.handle(session, new FighterChangePlace(256));
+        requestStack.assertLast(new ChangeFighterPlaceError());
     }
 
     @Test
@@ -70,15 +63,8 @@ class ChangeFighterStartPlaceTest extends FightBaseCase {
         fight = createFight();
         fighter = player.fighter();
 
-        try {
-            handler.handle(session, new FighterChangePlace(1000));
-            fail("ErrorPacket must be thrown");
-        } catch (ErrorPacket e) {
-            assertEquals(
-                new ChangeFighterPlaceError().toString(),
-                e.packet().toString()
-            );
-        }
+        handler.handle(session, new FighterChangePlace(1000));
+        requestStack.assertLast(new ChangeFighterPlaceError());
     }
 
     @Test

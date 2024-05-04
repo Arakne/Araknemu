@@ -20,24 +20,22 @@
 package fr.quatrevieux.araknemu.game.handler.dialog;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Start a new dialog with NPC
  */
-public final class StartDialog implements PacketHandler<GameSession, CreateDialogRequest> {
+public final class StartDialog extends AbstractExploringPacketHandler<CreateDialogRequest> {
     @Override
-    public void handle(GameSession session, CreateDialogRequest packet) {
-        final ExplorationPlayer exploration = NullnessUtil.castNonNull(session.exploration());
+    public void handle(GameSession session, ExplorationPlayer exploration, CreateDialogRequest packet) {
         final ExplorationMap map = exploration.map();
 
         if (map == null) {

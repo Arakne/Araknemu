@@ -20,13 +20,14 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.TeamOptions;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.out.fight.FightOption;
@@ -35,7 +36,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.MapReady;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collection;
 
@@ -44,7 +44,7 @@ import java.util.Collection;
  *
  * @todo refactor with extract info provider
  */
-public final class LoadExtraInfo implements PacketHandler<GameSession, AskExtraInfo> {
+public final class LoadExtraInfo extends AbstractExploringPacketHandler<AskExtraInfo> {
     private final FightService fightService;
 
     public LoadExtraInfo(FightService fightService) {
@@ -52,8 +52,8 @@ public final class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
     }
 
     @Override
-    public void handle(GameSession session, AskExtraInfo packet) throws Exception {
-        final ExplorationMap map = NullnessUtil.castNonNull(session.exploration()).map();
+    public void handle(GameSession session, ExplorationPlayer exploration, AskExtraInfo packet) throws Exception {
+        final ExplorationMap map = exploration.map();
 
         if (map == null) {
             throw new CloseImmediately("A map should be loaded before get extra info");

@@ -49,12 +49,7 @@ class SendSmileyToFightTest extends FightBaseCase {
         handlePacket(new UseSmiley(3));
         requestStack.clear();
 
-        try {
-            handlePacket(new UseSmiley(3));
-        } catch (ErrorPacket error) {
-            assertEquals(ServerMessage.spam().toString(), error.packet().toString());
-        }
-
-        requestStack.assertEmpty();
+        handlePacket(new UseSmiley(3));
+        requestStack.assertAll(ServerMessage.spam());
     }
 }

@@ -19,19 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * End the turn of the current fighter
  */
-public final class EndFighterTurn implements PacketHandler<GameSession, TurnEnd> {
+public final class EndFighterTurn extends AbstractFightingPacketHandler<TurnEnd> {
     @Override
-    public void handle(GameSession session, TurnEnd packet) {
-        NullnessUtil.castNonNull(session.fighter()).perform(FightTurn::stop);
+    public void handle(GameSession session, Fight fight, PlayerFighter fighter, TurnEnd packet) {
+        fighter.perform(FightTurn::stop);
     }
 
     @Override

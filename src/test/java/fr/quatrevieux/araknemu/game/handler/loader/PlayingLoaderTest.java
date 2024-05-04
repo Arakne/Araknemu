@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
@@ -48,8 +47,6 @@ class PlayingLoaderTest extends LoaderTestCase {
     @Test
     void load() throws ContainerException {
         PacketHandler[] handlers = loader.load(container);
-
-        assertContainsOnly(EnsurePlaying.class, handlers);
 
         assertHandlePacket(CreateGameRequest.class, handlers);
         assertHandlePacket(Message.class, handlers);

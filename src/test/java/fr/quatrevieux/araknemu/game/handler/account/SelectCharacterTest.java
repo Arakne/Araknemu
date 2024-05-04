@@ -84,7 +84,7 @@ class SelectCharacterTest extends GameBaseCase {
     }
 
     @Test
-    void handleSuccess() {
+    void handleSuccess() throws Exception {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
@@ -115,7 +115,7 @@ class SelectCharacterTest extends GameBaseCase {
     }
 
     @Test
-    void handleWillSendLastSession() {
+    void handleWillSendLastSession() throws Exception {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
         ConnectionLog log = dataSet.push(new ConnectionLog(session.account().id(), Instant.parse("2020-05-10T15:25:00.00Z"), "145.0.23.65"));
         log.setEndDate(Instant.parse("2020-05-10T18:25:00.00Z"));

@@ -73,31 +73,31 @@ class GlobalChannelTest extends GameBaseCase {
 
         GameSession session1 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
-        gp1 = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
+        gp1 = service.load(session1, session1.account(), dataSet.pushPlayer("Bob", 1, 2).id());
         gp1.dispatcher().add(BroadcastedMessage.class, e -> receivers.add(gp1));
         session1.setPlayer(gp1);
 
         GameSession session2 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session2.attach(new GameAccount(new Account(2), container.get(AccountService.class), 2));
-        gp2 = service.load(session2, dataSet.pushPlayer("Robert", 2, 2).id());
+        gp2 = service.load(session2, session2.account(), dataSet.pushPlayer("Robert", 2, 2).id());
         gp2.dispatcher().add(BroadcastedMessage.class, e -> receivers.add(gp2));
         session2.setPlayer(gp2);
 
         GameSession session3 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session3.attach(new GameAccount(new Account(3), container.get(AccountService.class), 2));
-        gp3 = service.load(session3, dataSet.pushPlayer("Jean", 3, 2).id());
+        gp3 = service.load(session3, session3.account(), dataSet.pushPlayer("Jean", 3, 2).id());
         gp3.dispatcher().add(BroadcastedMessage.class, e -> receivers.add(gp3));
         session3.setPlayer(gp3);
 
         GameSession session4 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session4.attach(new GameAccount(new Account(4), container.get(AccountService.class), 2));
-        gp4 = service.load(session4, dataSet.pushPlayer("Kevin", 4, 2).id());
+        gp4 = service.load(session4, session4.account(), dataSet.pushPlayer("Kevin", 4, 2).id());
         gp4.dispatcher().add(BroadcastedMessage.class, e -> receivers.add(gp4));
         session4.setPlayer(gp4);
 
         GameSession session5 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session5.attach(new GameAccount(new Account(5), container.get(AccountService.class), 2));
-        gp5 = service.load(session5, dataSet.pushPlayer("Louis", 5, 2).id());
+        gp5 = service.load(session5, session5.account(), dataSet.pushPlayer("Louis", 5, 2).id());
         gp5.dispatcher().add(BroadcastedMessage.class, e -> receivers.add(gp5));
         session5.setPlayer(gp5);
     }

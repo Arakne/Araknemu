@@ -19,18 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler.game;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Cancel the current game action
  */
-public final class CancelGameAction implements PacketHandler<GameSession, GameActionCancel> {
+public final class CancelGameAction extends AbstractExploringPacketHandler<GameActionCancel> {
     @Override
-    public void handle(GameSession session, GameActionCancel packet) throws Exception {
-        NullnessUtil.castNonNull(session.exploration())
+    public void handle(GameSession session, ExplorationPlayer exploration, GameActionCancel packet) throws Exception {
+        exploration
             .interactions()
             .cancel(
                 packet.actionId(),

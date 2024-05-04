@@ -19,21 +19,21 @@
 
 package fr.quatrevieux.araknemu.game.handler.chat;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.handler.AbstractPlayingPacketHandler;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Save chat channel subscriptions
  */
-public final class SaveSubscription implements PacketHandler<GameSession, SubscribeChannels> {
+public final class SaveSubscription extends AbstractPlayingPacketHandler<SubscribeChannels> {
     @Override
-    public void handle(GameSession session, SubscribeChannels packet) throws Exception {
+    public void handle(GameSession session, GamePlayer player, SubscribeChannels packet) throws Exception {
         if (packet.isSubscribe()) {
-            NullnessUtil.castNonNull(session.player()).subscriptions().addAll(packet.channels());
+            player.subscriptions().addAll(packet.channels());
         } else {
-            NullnessUtil.castNonNull(session.player()).subscriptions().removeAll(packet.channels());
+            player.subscriptions().removeAll(packet.channels());
         }
     }
 

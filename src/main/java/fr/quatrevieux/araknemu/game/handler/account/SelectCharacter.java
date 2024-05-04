@@ -19,13 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
-import java.time.LocalDateTime;
-
 import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.handler.AbstractLoggedPacketHandler;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.event.GameJoined;
@@ -36,10 +35,12 @@ import fr.quatrevieux.araknemu.network.game.out.account.CharacterSelectionError;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 
+import java.time.LocalDateTime;
+
 /**
  * Handle character select for entering game
  */
-public final class SelectCharacter implements PacketHandler<GameSession, ChoosePlayingCharacter> {
+public final class SelectCharacter extends AbstractLoggedPacketHandler<ChoosePlayingCharacter> {
     private final PlayerService service;
     private final GameConfiguration configuration;
 
@@ -49,8 +50,7 @@ public final class SelectCharacter implements PacketHandler<GameSession, ChooseP
     }
 
     @Override
-    @SuppressWarnings("contracts.precondition") // Cannot prove that account is not null here
-    public void handle(GameSession session, ChoosePlayingCharacter packet) {
+    public void handle(GameSession session, GameAccount account, ChoosePlayingCharacter packet) {
         final GamePlayer player;
 
         synchronized (session) {
@@ -59,7 +59,7 @@ public final class SelectCharacter implements PacketHandler<GameSession, ChooseP
             }
 
             try {
-                player = service.load(session, packet.id());
+                player = service.load(session, account, packet.id());
                 player.register(session);
             } catch (EntityNotFoundException e) {
                 throw new CloseWithPacket(new CharacterSelectionError());

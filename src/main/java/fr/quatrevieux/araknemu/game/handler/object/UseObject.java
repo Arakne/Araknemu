@@ -20,12 +20,12 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
@@ -39,10 +39,10 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
 /**
  * Use an object
  */
-public final class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
+public final class UseObject extends AbstractExploringPacketHandler<ObjectUseRequest> {
     @Override
-    public void handle(GameSession session, ObjectUseRequest packet) throws Exception {
-        final GamePlayer player = NullnessUtil.castNonNull(session.player());
+    public void handle(GameSession session, ExplorationPlayer exploration, ObjectUseRequest packet) throws Exception {
+        final GamePlayer player = exploration.player();
 
         if (!player.restrictions().canUseObject()) {
             throw new ErrorPacket(Error.cantDoOnCurrentState());
@@ -55,8 +55,8 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
 
         try {
             result = packet.isTarget()
-                ? handleForTarget(NullnessUtil.castNonNull(session.exploration()), item, packet)
-                : handleForSelf(NullnessUtil.castNonNull(session.exploration()), item)
+                ? handleForTarget(exploration, item, packet)
+                : handleForSelf(exploration, item)
             ;
         } finally {
             if (result) {

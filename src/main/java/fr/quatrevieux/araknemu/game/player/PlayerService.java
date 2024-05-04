@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.listener.player.ComputeLifePoints;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeRestrictions;
@@ -45,8 +46,6 @@ import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -86,13 +85,13 @@ public final class PlayerService implements EventsSubscriber, Sender {
      * Load the player for entering game
      *
      * @param session The current session
+     * @param account The logged account
      * @param id The player id
      *
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found player on server
      * @throws RepositoryException For any other repository errors
      */
-    @RequiresNonNull("#1.account()")
-    public GamePlayer load(GameSession session, int id) throws RepositoryException {
+    public GamePlayer load(GameSession session, GameAccount account, int id) throws RepositoryException {
         if (onlinePlayers.containsKey(id)) {
             throw new IllegalStateException("The player is already loaded");
         }
@@ -100,13 +99,13 @@ public final class PlayerService implements EventsSubscriber, Sender {
         final Player player = repository.getForGame(
             Player.forGame(
                 id,
-                session.account().id(),
+                account.id(),
                 configuration.id()
             )
         );
 
         final GamePlayer gamePlayer = new GamePlayer(
-            NullnessUtil.castNonNull(session.account()),
+            account,
             player,
             playerRaceService.get(player.race()),
             session,

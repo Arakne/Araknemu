@@ -20,13 +20,15 @@
 package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.handler.AbstractFightingPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.KickFighterRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
  * Kick a fighter during placement state
@@ -36,10 +38,12 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
  *
  * @see PlacementState#kick(Fighter)
  */
-public final class KickFighter implements PacketHandler<GameSession, KickFighterRequest> {
+public final class KickFighter extends AbstractFightingPacketHandler<KickFighterRequest> {
     @Override
-    public void handle(GameSession session, KickFighterRequest packet) {
-        final Fighter fighter = NullnessUtil.castNonNull(session.fighter());
+    public void handle(GameSession session, Fight fight, PlayerFighter fighter, KickFighterRequest packet) {
+        if (fight.active()) {
+            throw new ErrorPacket(Error.cantDoDuringFight());
+        }
 
         if (!fighter.isTeamLeader() || packet.fighterId() == fighter.id()) {
             // @todo Im error ?
