@@ -962,7 +962,7 @@ public class GameDataSet extends TestingDataSet {
     }
 
     public GameDataSet pushMonsterTemplateInvocations() throws SQLException, ContainerException {
-        if (repository(MonsterTemplate.class).has(new MonsterTemplate(36, null, 0, null, null, null))) {
+        if (repository(MonsterTemplate.class).has(new MonsterTemplate(115, null, 0, null, null, null))) {
             return this;
         }
 
@@ -986,7 +986,7 @@ public class GameDataSet extends TestingDataSet {
         use(MonsterRewardData.class, MonsterRewardItem.class);
 
         connection.query(
-            "INSERT INTO `MONSTER_REWARD` (`MONSTER_ID`, `MIN_KAMAS`, `MAX_KAMAS`, `EXPERIENCES`) VALUES " +
+            "INSERT OR IGNORE INTO `MONSTER_REWARD` (`MONSTER_ID`, `MIN_KAMAS`, `MAX_KAMAS`, `EXPERIENCES`) VALUES " +
                 "(36, 0, 0, '5|7|9|12|14|16')"
         );
 
@@ -994,7 +994,7 @@ public class GameDataSet extends TestingDataSet {
     }
 
     public GameDataSet pushMonsterSpellsInvocations() throws SQLException, ContainerException {
-        if (repository(SpellTemplate.class).has(new SpellTemplate(1709, null, 0, null, null, null))) {
+        if (repository(SpellTemplate.class).has(new SpellTemplate(2003, null, 0, null, null, null))) {
             return this;
         }
 

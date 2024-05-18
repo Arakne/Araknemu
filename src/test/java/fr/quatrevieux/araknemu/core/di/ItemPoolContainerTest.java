@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -89,6 +90,35 @@ class ItemPoolContainerTest {
         assertTrue(container.get(ConnectionKey.class) instanceof ConnectionKey);
         assertEquals("123", container.get(ConnectionKey.class).key());
         assertSame(container.get(ConnectionKey.class), container.get(ConnectionKey.class));
+    }
+
+    @Test
+    void instantiator() {
+        assertInstanceOf(ContainerInstantiator.class, container.instantiator());
+
+        assertInstanceOf(B.class, container.instantiator().instantiate(B.class));
+        assertInstanceOf(A.class, container.instantiator().instantiate(B.class).a);
+
+        class Foo {
+            public String bar;
+
+            public Foo(String bar) {
+                this.bar = bar;
+            }
+        }
+
+        class Wrapper {
+            public Foo foo;
+
+            public Wrapper(Foo foo) {
+                this.foo = foo;
+            }
+        }
+
+        assertThrows(InstantiatorException.class, () -> container.instantiator().instantiate(Wrapper.class));
+
+        container.register(configurator -> configurator.set(new Foo("bar")));
+        assertEquals("bar", container.instantiator().instantiate(Wrapper.class).foo.bar);
     }
 
     static public class A {}

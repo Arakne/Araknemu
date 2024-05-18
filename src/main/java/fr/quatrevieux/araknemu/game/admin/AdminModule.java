@@ -24,7 +24,9 @@ import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
+import fr.quatrevieux.araknemu.core.scripting.ScriptLoader;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameService;
@@ -83,7 +85,10 @@ import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
@@ -177,7 +182,7 @@ public final class AdminModule implements ContainerModule {
     private void configureResolvers(ContainerConfigurator configurator) {
         configurator.persist(
             PlayerContextResolver.class,
-            container -> configureScripts(new PlayerContextResolver(container.get(PlayerService.class), container.get(AccountContextResolver.class))
+            container -> configureScripts(container, new PlayerContextResolver(container.get(PlayerService.class), container.get(AccountContextResolver.class))
                 .register(new AbstractContextConfigurator<PlayerContext>() {
                     @Override
                     public void configure(PlayerContext context) {
@@ -200,7 +205,7 @@ public final class AdminModule implements ContainerModule {
 
         configurator.persist(
             AccountContextResolver.class,
-            container -> configureScripts(new AccountContextResolver(container.get(AccountService.class), container.get(GlobalContext.class))
+            container -> configureScripts(container, new AccountContextResolver(container.get(AccountService.class), container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<AccountContext>() {
                     @Override
                     public void configure(AccountContext context) {
@@ -215,7 +220,7 @@ public final class AdminModule implements ContainerModule {
 
         configurator.persist(
             DebugContextResolver.class,
-            container -> configureScripts(new DebugContextResolver(container.get(GlobalContext.class))
+            container -> configureScripts(container, new DebugContextResolver(container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<DebugContext>() {
                     @Override
                     public void configure(DebugContext context) {
@@ -230,7 +235,7 @@ public final class AdminModule implements ContainerModule {
 
         configurator.persist(
             ServerContextResolver.class,
-            container -> configureScripts(new ServerContextResolver(container.get(GlobalContext.class))
+            container -> configureScripts(container, new ServerContextResolver(container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<ServerContext>() {
                     @Override
                     public void configure(ServerContext context) {
@@ -258,12 +263,27 @@ public final class AdminModule implements ContainerModule {
         );
     }
 
-    private <C extends Context, R extends ConfigurableContextResolver<C>> R configureScripts(R resolver, Function<C, Container> containerResolver, AdminConfiguration.ContextConfiguration configuration) {
+    private <C extends Context, R extends ConfigurableContextResolver<C>> R configureScripts(Container container, R resolver, Function<C, Container> containerResolver, AdminConfiguration.ContextConfiguration configuration) {
         if (configuration.enableScripts()) {
+            final Logger logger = LogManager.getLogger(AdminModule.class);
+            final Path scriptsPath = Paths.get(configuration.scriptsPath());
+            final ScriptLoader loader;
+
+            try {
+                loader = new ScriptLoader(
+                    scriptsPath,
+                    container.instantiator(),
+                    logger
+                );
+            } catch (MalformedURLException e) {
+                throw new ContainerException(e);
+            }
+
             resolver.register(new ScriptLoaderContextConfigurator<>(
-                Paths.get(configuration.scriptsPath()),
+                loader,
+                scriptsPath,
                 containerResolver,
-                LogManager.getLogger(AdminModule.class)
+                logger
             ));
         }
 

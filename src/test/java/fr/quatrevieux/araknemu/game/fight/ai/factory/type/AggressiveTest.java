@@ -46,6 +46,11 @@ class AggressiveTest extends AiBaseCase {
     }
 
     @Test
+    void name() {
+        assertEquals("AGGRESSIVE", actionFactory.name());
+    }
+
+    @Test
     void allowSuicideWhenInvoked() throws SQLException {
         dataSet
             .pushMonsterTemplateInvocations()

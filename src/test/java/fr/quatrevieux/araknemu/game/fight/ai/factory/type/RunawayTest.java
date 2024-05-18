@@ -44,6 +44,11 @@ class RunawayTest extends AiBaseCase {
     }
 
     @Test
+    void name() {
+        assertEquals("RUNAWAY", actionFactory.name());
+    }
+
+    @Test
     void shouldBoostFirst() {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(342))

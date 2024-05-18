@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin.script;
 
+import fr.quatrevieux.araknemu.core.scripting.ScriptLoader;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,18 +46,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
     @Test
-    void loadSimpleCommand() throws AdminException, SQLException {
+    void loadSimpleCommand() throws AdminException, SQLException, MalformedURLException {
         Logger logger = Mockito.mock(Logger.class);
         DebugContext context = new DebugContext(
             new NullContext(),
             Arrays.asList(
-                new ScriptLoaderContextConfigurator<>(Paths.get("src/test/scripts/commands/simple"), c -> container, logger)
+                new ScriptLoaderContextConfigurator<>(
+                    new ScriptLoader(Paths.get("src/test/scripts/commands/simple"), container.instantiator(), logger),
+                    Paths.get("src/test/scripts/commands/simple"),
+                    c -> container,
+                    logger
+                )
             )
         );
 
         context.commands(); // Load context
 
-        Mockito.verify(logger).debug(Mockito.eq("Load command script {}"), Mockito.endsWith("SimpleCommand.groovy"));
+        Mockito.verify(logger).debug(Mockito.eq("Load script {}"), Mockito.endsWith("SimpleCommand.groovy"));
         Mockito.verify(logger).debug(Mockito.eq("Find command {}"), Mockito.eq("SimpleCommand"));
 
         command = context.command("simple");
@@ -73,12 +80,17 @@ class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
     }
 
     @Test
-    void loadCommandWithDependencies() throws AdminException, SQLException, NoSuchFieldException, IllegalAccessException {
+    void loadCommandWithDependencies() throws AdminException, SQLException, NoSuchFieldException, IllegalAccessException, MalformedURLException {
         Logger logger = Mockito.mock(Logger.class);
         DebugContext context = new DebugContext(
             new NullContext(),
             Arrays.asList(
-                new ScriptLoaderContextConfigurator<>(Paths.get("src/test/scripts/commands/with_dep"), c -> container, logger)
+                new ScriptLoaderContextConfigurator<>(
+                    new ScriptLoader(Paths.get("src/test/scripts/commands/with_dep"), container.instantiator(), logger),
+                    Paths.get("src/test/scripts/commands/with_dep"),
+                    c -> container,
+                    logger
+                )
             )
         );
 
@@ -91,12 +103,17 @@ class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
     }
 
     @Test
-    void hydrators() throws AdminException, SQLException {
+    void hydrators() throws AdminException, SQLException, MalformedURLException {
         Logger logger = Mockito.mock(Logger.class);
         DebugContext context = new DebugContext(
             new NullContext(),
             Arrays.asList(
-                new ScriptLoaderContextConfigurator<>(Paths.get("src/test/scripts/commands/hydrators"), c -> container, logger)
+                new ScriptLoaderContextConfigurator<>(
+                    new ScriptLoader(Paths.get("src/test/scripts/commands/hydrators"), container.instantiator(), logger),
+                    Paths.get("src/test/scripts/commands/hydrators"),
+                    c -> container,
+                    logger
+                )
             )
         );
 
@@ -118,28 +135,38 @@ class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
     }
 
     @Test
-    void invalidFileShouldLogAsError() {
+    void invalidFileShouldLogAsError() throws MalformedURLException {
         Logger logger = Mockito.mock(Logger.class);
         DebugContext context = new DebugContext(
             new NullContext(),
             Arrays.asList(
-                new ScriptLoaderContextConfigurator<>(Paths.get("src/test/scripts/commands/invalid"), c -> container, logger)
+                new ScriptLoaderContextConfigurator<>(
+                    new ScriptLoader(Paths.get("src/test/scripts/commands/invalid"), container.instantiator(), logger),
+                    Paths.get("src/test/scripts/commands/invalid"),
+                    c -> container,
+                    logger
+                )
             )
         );
 
         context.commands(); // load commands
 
-        Mockito.verify(logger).debug(Mockito.eq("Load command script {}"), Mockito.endsWith("InvalidCommand.groovy"));
-        Mockito.verify(logger).error(Mockito.eq("Fail to load command script"), Mockito.<Exception>any());
+        Mockito.verify(logger).debug(Mockito.eq("Load script {}"), Mockito.endsWith("InvalidCommand.groovy"));
+        Mockito.verify(logger).error(Mockito.startsWith("Fail to load script"), Mockito.<Exception>any());
     }
 
     @Test
-    void directoryNotFoundShouldSkip() {
+    void directoryNotFoundShouldSkip() throws MalformedURLException {
         Logger logger = Mockito.mock(Logger.class);
         DebugContext context = new DebugContext(
             new NullContext(),
             Arrays.asList(
-                new ScriptLoaderContextConfigurator<>(Paths.get("src/test/scripts/commands/not_found"), c -> container, logger)
+                new ScriptLoaderContextConfigurator<>(
+                    new ScriptLoader(Paths.get("src/test/scripts/commands/not_found"), container.instantiator(), logger),
+                    Paths.get("src/test/scripts/commands/not_found"),
+                    c -> container,
+                    logger
+                )
             )
         );
 
@@ -149,9 +176,14 @@ class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
     }
 
     @Test
-    void loadShouldKeepCompiledClassAfterReload() throws AdminException, SQLException {
+    void loadShouldKeepCompiledClassAfterReload() throws AdminException, SQLException, MalformedURLException {
         Logger logger = Mockito.mock(Logger.class);
-        ScriptLoaderContextConfigurator<DebugContext> loader = new ScriptLoaderContextConfigurator<>(Paths.get("src/test/scripts/commands/simple"), c -> container, logger);
+        ScriptLoaderContextConfigurator<DebugContext> loader = new ScriptLoaderContextConfigurator<>(
+            new ScriptLoader(Paths.get("src/test/scripts/commands/simple"), container.instantiator(), logger),
+            Paths.get("src/test/scripts/commands/simple"),
+            c -> container,
+            logger
+        );
 
         DebugContext context = new DebugContext(new NullContext(), Arrays.asList(loader));
 
@@ -179,7 +211,12 @@ class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
         }
 
         Logger logger = Mockito.mock(Logger.class);
-        ScriptLoaderContextConfigurator<DebugContext> loader = new ScriptLoaderContextConfigurator<>(directory, c -> container, logger);
+        ScriptLoaderContextConfigurator<DebugContext> loader = new ScriptLoaderContextConfigurator<>(
+            new ScriptLoader(directory, container.instantiator(), logger),
+            directory,
+            c -> container,
+            logger
+        );
 
         DebugContext context = new DebugContext(new NullContext(), Arrays.asList(loader));
         assertTrue(context.commands().isEmpty());

@@ -40,6 +40,11 @@ class TacticalTest extends AiBaseCase {
     }
 
     @Test
+    void name() {
+        assertEquals("TACTICAL", actionFactory.name());
+    }
+
+    @Test
     void shouldBoostFirst() {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(342))

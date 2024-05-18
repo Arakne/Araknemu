@@ -27,6 +27,8 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.common.value.qual.IntRange;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -449,6 +451,36 @@ public final class GameConfiguration {
          */
         public @NonNegative int initialErosion() {
             return pool.nonNegativeInteger("fight.initialErosion", 10);
+        }
+
+        /**
+         * Does scripts are enabled for AI ?
+         * Default value : true
+         */
+        public boolean scriptsEnabled() {
+            return pool.bool("fight.ai.scripts.enable", true);
+        }
+
+        /**
+         * Get the path where AI scripts are stored
+         * Default value : "scripts/ai"
+         */
+        public Path scriptsPath() {
+            return Paths.get(pool.string("fight.ai.scripts.path", "scripts/ai"));
+        }
+
+        /**
+         * Enable hot reloading of AI scripts
+         * When enabled, modifications of scripts will be taken into account without restarting the server
+         * when a new fight is started.
+         * It's advised to use this feature only in development environment, as it may have a performance impact.
+         * Note that it's not necessary to enable this feature to allow loading of new scripts,
+         * because when a new AI is requested, all scripts are reloaded.
+         *
+         * Default value : false
+         */
+        public boolean scriptsHotReload() {
+            return pool.bool("fight.ai.scripts.hot-reload", false);
         }
     }
 }

@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class FixedTest extends AiBaseCase {
     @BeforeEach
     @Override
@@ -32,6 +34,11 @@ class FixedTest extends AiBaseCase {
 
         actionFactory = new Fixed(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
+    }
+
+    @Test
+    void name() {
+        assertEquals("FIXED", actionFactory.name());
     }
 
     @Test

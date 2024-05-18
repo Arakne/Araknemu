@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.common.account.banishment.network.BanIpCheck;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
@@ -131,10 +132,14 @@ import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AggregateAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactoryLoader;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AiNameResolver;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.DoubleAiFactory;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.ListAiFactoryLoader;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.ScriptingAiLoader;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Blocking;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Fixed;
@@ -174,9 +179,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulato
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SwitchPositionOnAttackSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddItems;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddKamas;
@@ -190,6 +195,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmKam
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmXpProvider;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CarryingModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -257,7 +263,10 @@ import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Module for game service
@@ -922,7 +931,7 @@ public final class GameModule implements ContainerModule {
         configurator.persist(
             AiFactory.class,
             container -> new ChainAiFactory(
-                container.get(MonsterAiFactory.class),
+                container.get(AggregateAiFactory.class),
                 container.get(DoubleAiFactory.class)
             )
         );
@@ -1056,19 +1065,51 @@ public final class GameModule implements ContainerModule {
         });
 
         configurator.persist(
-            MonsterAiFactory.class,
+            ScriptingAiLoader.class,
             container -> {
-                final MonsterAiFactory factory = new MonsterAiFactory();
+                try {
+                    return new ScriptingAiLoader(
+                        container.get(GameConfiguration.class).fight().scriptsPath(),
+                        container.instantiator(),
+                        container.get(Logger.class), // @todo fight logger
+                        container.get(GameConfiguration.class).fight().scriptsHotReload()
+                    );
+                } catch (MalformedURLException e) {
+                    throw new ContainerException(e);
+                }
+            }
+        );
+
+        configurator.persist(
+            ListAiFactoryLoader.class,
+            container -> {
                 final Simulator simulator = container.get(Simulator.class);
 
-                factory.register("AGGRESSIVE", new Aggressive(simulator));
-                factory.register("RUNAWAY", new Runaway(simulator));
-                factory.register("SUPPORT", new Support(simulator));
-                factory.register("TACTICAL", new Tactical(simulator));
-                factory.register("FIXED", new Fixed(simulator));
-                factory.register("BLOCKING", new Blocking());
+                return new ListAiFactoryLoader<>(
+                    new Aggressive(simulator),
+                    new Runaway(simulator),
+                    new Support(simulator),
+                    new Tactical(simulator),
+                    new Fixed(simulator),
+                    new Blocking()
+                );
+            }
+        );
 
-                return factory;
+        configurator.persist(
+            AggregateAiFactory.class,
+            container -> {
+                final Collection<AiFactoryLoader<PlayableFighter>> loaders = new ArrayList<>();
+                loaders.add(container.get(ListAiFactoryLoader.class));
+
+                if (container.get(GameConfiguration.class).fight().scriptsEnabled()) {
+                    loaders.add(container.get(ScriptingAiLoader.class));
+                }
+
+                return new AggregateAiFactory<PlayableFighter>(
+                    loaders,
+                    new AiNameResolver()
+                );
             }
         );
 
