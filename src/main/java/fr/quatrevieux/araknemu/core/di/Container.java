@@ -111,4 +111,11 @@ public interface Container {
     public default Container withAll(ScopedContainer.Mapping<?>... mappings) {
         return ScopedContainer.fromMapping(this, mappings);
     }
+
+    /**
+     * Create an instantiator from the container
+     */
+    public default Instantiator instantiator() {
+        return new ContainerInstantiator(this);
+    }
 }

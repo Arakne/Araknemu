@@ -32,7 +32,7 @@ public interface ActionGenerator {
      * Initialize the action generator when turn starts
      * This method must be called before {@link ActionGenerator#generate(AI, AiActionFactory)}
      */
-    public void initialize(AI ai);
+    public default void initialize(AI ai) {}
 
     /**
      * Try to generate an action

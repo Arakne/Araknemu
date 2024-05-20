@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -115,6 +116,9 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(1.0, configuration.fight().xpRate());
         assertEquals(1.0, configuration.fight().dropRate());
         assertEquals(10, configuration.fight().initialErosion());
+        assertTrue(configuration.fight().scriptsEnabled());
+        assertFalse(configuration.fight().scriptsHotReload());
+        assertEquals(Paths.get("scripts/ai"), configuration.fight().scriptsPath());
     }
 
     @Test

@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * AiFactory implementation using a generator builder for configure the AI
  */
-public abstract class AbstractAiBuilderFactory implements AiFactory<PlayableFighter> {
+public abstract class AbstractAiBuilderFactory implements NamedAiFactory<PlayableFighter> {
     /**
      * Configure the AI generator
      */

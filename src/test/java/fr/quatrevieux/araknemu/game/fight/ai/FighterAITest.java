@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
@@ -34,12 +35,16 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
+import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.FightAction;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -195,7 +200,10 @@ class FighterAITest extends FightBaseCase {
 
         FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
-        Mockito.when(generator1.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.of(Mockito.mock(Action.class)));
+        FightAction action = Mockito.mock(FightAction.class);
+        Mockito.when(action.validate(Mockito.any())).thenReturn(true);
+        Mockito.when(action.start()).thenReturn(Mockito.mock(ActionResult.class));
+        Mockito.when(generator1.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.of(action));
 
         ai.start(turn);
 
@@ -207,6 +215,25 @@ class FighterAITest extends FightBaseCase {
 
         assertSame(turn, ai.turn());
         assertTrue(turn.active());
+    }
+
+    @RepeatedIfExceptionsTest
+    void startWithExceptionShouldStopTurn() throws InterruptedException {
+        ActionGenerator generator1 = Mockito.mock(ActionGenerator.class);
+        Mockito.when(generator1.generate(Mockito.any(), Mockito.any())).thenThrow(new RuntimeException("Test"));
+
+        fight.turnList().start();
+        FightTurn turn = fight.turnList().current().get();
+
+        FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1}));
+
+        ai.start(turn);
+
+        Mockito.verify(generator1).initialize(ai);
+
+        Mockito.verify(generator1).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
+
+        assertFalse(turn.active());
     }
 
     @RepeatedIfExceptionsTest
@@ -222,7 +249,10 @@ class FighterAITest extends FightBaseCase {
 
         ai.set(key, value);
 
-        Mockito.when(generator.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.of(Mockito.mock(Action.class)));
+        FightAction action = Mockito.mock(FightAction.class);
+        Mockito.when(action.validate(Mockito.any())).thenReturn(true);
+        Mockito.when(action.start()).thenReturn(Mockito.mock(ActionResult.class));
+        Mockito.when(generator.generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class))).thenReturn(Optional.of(action));
 
         ai.start(turn);
 

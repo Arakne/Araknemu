@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
@@ -60,7 +62,37 @@ public class DummyGenerator implements ActionGenerator {
 
                 @Override
                 public ActionResult start() {
-                    return null;
+                    return new ActionResult() {
+                        @Override
+                        public int action() {
+                            return 0;
+                        }
+
+                        @Override
+                        public PlayableFighter performer() {
+                            return (PlayableFighter) ai.fighter();
+                        }
+
+                        @Override
+                        public Object[] arguments() {
+                            return new Object[0];
+                        }
+
+                        @Override
+                        public boolean success() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean secret() {
+                            return false;
+                        }
+
+                        @Override
+                        public void apply(FightTurn turn) {
+
+                        }
+                    };
                 }
             }
         );

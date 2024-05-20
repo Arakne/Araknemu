@@ -39,6 +39,11 @@ class BlockingTest extends AiBaseCase {
     }
 
     @Test
+    void name() {
+        assertEquals("BLOCKING", actionFactory.name());
+    }
+
+    @Test
     void shouldMoveNearEnemy() {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(210))

@@ -44,6 +44,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.apache.logging.log4j.Logger;
+import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class AiBaseCase extends FightBaseCase {
         configurator.accept(builder);
 
         fight = builder.build(true);
-        fight.register(new AiModule(new ChainAiFactory()));
+        fight.register(new AiModule(new ChainAiFactory(), fight, Mockito.mock(Logger.class)));
         fight.register(new CommonEffectsModule(fight));
 
         fighter = player.fighter();

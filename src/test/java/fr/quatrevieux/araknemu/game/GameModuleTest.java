@@ -65,18 +65,20 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AggregateAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.DoubleAiFactory;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.ListAiFactoryLoader;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.ScriptingAiLoader;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
-import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory;
@@ -107,8 +109,9 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class GameModuleTest extends GameBaseCase {
+class GameModuleTest extends FightBaseCase {
     @Test
     void instances() throws ContainerException, SQLException {
         Container container = new ItemPoolContainer();
@@ -163,8 +166,9 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(PvmType.class, container.get(PvmType.class));
         assertInstanceOf(ChallengeType.class, container.get(ChallengeType.class));
         assertInstanceOf(ChainAiFactory.class, container.get(AiFactory.class));
-        assertInstanceOf(MonsterAiFactory.class, container.get(MonsterAiFactory.class));
         assertInstanceOf(DoubleAiFactory.class, container.get(DoubleAiFactory.class));
+        assertInstanceOf(ScriptingAiLoader.class, container.get(ScriptingAiLoader.class));
+        assertInstanceOf(ListAiFactoryLoader.class, container.get(ListAiFactoryLoader.class));
         assertInstanceOf(ActivityService.class, container.get(ActivityService.class));
         assertInstanceOf(DefaultExchangeFactory.class, container.get(ExchangeFactory.class));
         assertInstanceOf(BankService.class, container.get(BankService.class));
@@ -189,5 +193,27 @@ class GameModuleTest extends GameBaseCase {
             container.get(ListenerAggregate.class),
             container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
         );
+    }
+
+    @Test
+    void availableAiTypes() throws Exception {
+        Container container = new ItemPoolContainer();
+
+        container.register(new ConnectorModule());
+        container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
+        container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
+        container.register(new GameModule(app));
+
+        AggregateAiFactory aiFactory = container.get(AggregateAiFactory.class);
+
+        createFight();
+        PlayerFighter fighter = player.fighter();
+
+        assertTrue(aiFactory.create(fighter, "AGGRESSIVE").isPresent());
+        assertTrue(aiFactory.create(fighter, "FIXED").isPresent());
+        assertTrue(aiFactory.create(fighter, "RUNAWAY").isPresent());
+        assertTrue(aiFactory.create(fighter, "SUPPORT").isPresent());
+        assertTrue(aiFactory.create(fighter, "TACTICAL").isPresent());
+        assertTrue(aiFactory.create(fighter, "BLOCKING").isPresent());
     }
 }

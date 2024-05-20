@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.core.di;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,6 +71,34 @@ class ScopedContainerTest {
         assertSame(oc, scoped.get(OtherClass.class));
         assertSame(c, scoped.get(ItemPoolContainerTest.C.class));
         assertSame(baseContainer.get(ItemPoolContainerTest.A.class), scoped.get(ItemPoolContainerTest.A.class));
+    }
+
+    @Test
+    void instantiator() {
+        class Foo {
+            public String bar;
+
+            public Foo(String bar) {
+                this.bar = bar;
+            }
+        }
+
+        class Wrapper {
+            public Foo foo;
+
+            public Wrapper(Foo foo) {
+                this.foo = foo;
+            }
+        }
+
+        ScopedContainer scoped = ScopedContainer.fromMapping(baseContainer,
+            new ScopedContainer.Mapping[] {
+                new ScopedContainer.Mapping<>(new Foo("bar")),
+            }
+        );
+
+        assertInstanceOf(ContainerInstantiator.class, scoped.instantiator());
+        assertEquals("bar", scoped.instantiator().instantiate(Wrapper.class).foo.bar);
     }
 
     @Test

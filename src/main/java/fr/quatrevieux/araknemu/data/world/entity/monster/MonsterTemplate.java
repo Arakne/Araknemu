@@ -80,6 +80,9 @@ public final class MonsterTemplate {
 
     /**
      * The monster AI type to use on fight
+     *
+     * This value is case-insensitive (prefer uppercase), with at most 12 characters,
+     * and must not be empty.
      */
     public String ai() {
         return ai;

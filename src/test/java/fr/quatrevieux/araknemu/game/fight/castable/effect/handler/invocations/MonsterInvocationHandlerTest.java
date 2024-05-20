@@ -43,6 +43,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -70,7 +71,7 @@ class MonsterInvocationHandlerTest extends FightBaseCase {
         dataSet.pushMonsterTemplateInvocations().pushMonsterSpellsInvocations().pushRewardItems();
 
         fight = createFight();
-        fight.register(new AiModule(container.get(AiFactory.class)));
+        fight.register(new AiModule(container.get(AiFactory.class), fight, Mockito.mock(Logger.class)));
         fight.nextState();
 
         caster = player.fighter();

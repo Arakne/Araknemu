@@ -67,8 +67,10 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.UpdateCells;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -110,7 +112,7 @@ public class FunctionalTest extends FightBaseCase {
         fight.register(new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)));
         fight.register(new MonsterInvocationModule(container.get(MonsterService.class), container.get(FighterFactory.class), fight));
         fight.register(new SpiritualLeashModule(fight));
-        fight.register(new AiModule(container.get(AiFactory.class)));
+        fight.register(new AiModule(container.get(AiFactory.class), fight, Mockito.mock(Logger.class)));
         fight.register(new FighterInitializationModule(container.get(GameConfiguration.class).fight()));
 
         fighter1 = player.fighter();

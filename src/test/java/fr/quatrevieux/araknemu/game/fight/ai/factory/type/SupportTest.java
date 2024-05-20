@@ -49,6 +49,11 @@ class SupportTest extends AiBaseCase {
     }
 
     @Test
+    void name() {
+        assertEquals("SUPPORT", actionFactory.name());
+    }
+
+    @Test
     void shouldBoostAlliesFirst() throws NoSuchFieldException, IllegalAccessException {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(210).spell(27, 5))
