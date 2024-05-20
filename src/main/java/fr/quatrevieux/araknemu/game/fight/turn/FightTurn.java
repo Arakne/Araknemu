@@ -108,8 +108,8 @@ public final class FightTurn implements Turn<FightAction> {
 
         fighter.play(this);
         active.set(true);
-        fight.dispatch(new TurnStarted(this));
         timer = fight.schedule(this::stop, duration);
+        fight.dispatch(new TurnStarted(this));
 
         return true;
     }

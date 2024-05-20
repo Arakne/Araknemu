@@ -91,29 +91,34 @@ public final class FighterAI implements Runnable, AI {
         }
 
         final Turn<FightAction> currentTurn = turn;
+        boolean stop = true;
 
         if (!currentTurn.active()) {
             turn = null;
             return;
         }
 
-        final Optional<FightAction> action = generator.generate(
-            this,
-            new FightAiActionFactoryAdapter(
-                fighter,
-                fight,
-                fight.actions()
-            )
-        );
+        try {
+            final Optional<FightAction> action = generator.generate(
+                this,
+                new FightAiActionFactoryAdapter(
+                    fighter,
+                    fight,
+                    fight.actions()
+                )
+            );
 
-        if (action.isPresent()) {
-            currentTurn.perform(action.get());
-            currentTurn.later(() -> fight.schedule(this, Duration.ofMillis(800)));
-            return;
+            if (action.isPresent()) {
+                currentTurn.perform(action.get());
+                currentTurn.later(() -> fight.schedule(this, Duration.ofMillis(800)));
+                stop = false;
+            }
+        } finally {
+            if (stop) {
+                turn = null;
+                currentTurn.stop();
+            }
         }
-
-        turn = null;
-        currentTurn.stop();
     }
 
     @Override

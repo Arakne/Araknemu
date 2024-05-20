@@ -31,8 +31,10 @@ import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -53,7 +55,7 @@ class SimulatorTest extends FightBaseCase {
 
         fight = createFight();
         fighter = player.fighter();
-        fight.register(new AiModule(new ChainAiFactory()));
+        fight.register(new AiModule(new ChainAiFactory(), fight, Mockito.mock(Logger.class)));
         simulator = container.get(Simulator.class);
         ai = new FighterAI(fighter, fight, new NullGenerator());
     }

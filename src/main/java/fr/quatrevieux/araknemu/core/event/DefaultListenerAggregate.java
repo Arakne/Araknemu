@@ -75,7 +75,7 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
             for (Listener listener : container) {
                 try {
                     listener.on(event);
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     logger.error("Error during execution of listener " + listener.getClass().getName(), e);
                 }
             }

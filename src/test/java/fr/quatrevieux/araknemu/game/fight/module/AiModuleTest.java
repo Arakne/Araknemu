@@ -23,12 +23,17 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import groovy.util.logging.Log;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,7 +43,7 @@ class AiModuleTest extends FightBaseCase {
     void fighterInitialized() throws Exception {
         Fight fight = createPvmFight();
 
-        fight.register(new AiModule(container.get(AiFactory.class)));
+        fight.register(new AiModule(container.get(AiFactory.class), fight, Mockito.mock(Logger.class)));
         fight.nextState();
 
         for (Fighter monster : fight.team(1).fighters()) {
@@ -51,7 +56,7 @@ class AiModuleTest extends FightBaseCase {
     @Test
     void turnStartedWithoutAi() throws Exception {
         Fight fight = createPvmFight();
-        fight.register(new AiModule(container.get(AiFactory.class)));
+        fight.register(new AiModule(container.get(AiFactory.class), fight, Mockito.mock(Logger.class)));
         fight.nextState();
         fight.turnList().start();
 
@@ -70,7 +75,7 @@ class AiModuleTest extends FightBaseCase {
     @RepeatedIfExceptionsTest
     void turnStartedWithAi() throws Exception {
         Fight fight = createPvmFight();
-        fight.register(new AiModule(container.get(AiFactory.class)));
+        fight.register(new AiModule(container.get(AiFactory.class), fight, Mockito.mock(Logger.class)));
         fight.nextState();
         fight.turnList().start();
         requestStack.clear();
@@ -88,5 +93,32 @@ class AiModuleTest extends FightBaseCase {
 
         // Move action started
         requestStack.assertOne("GA0;1;-2;ab-fbGdbU");
+    }
+
+    @RepeatedIfExceptionsTest
+    void exceptionOnTurnStartShouldStopTheTurn() throws Exception {
+        Logger logger = Mockito.mock(Logger.class);
+
+        Fight fight = createPvmFight();
+        fight.register(new AiModule(container.get(AiFactory.class), fight, logger));
+        fight.nextState();
+        fight.turnList().start();
+
+        // The AI will throw an exception on start
+        Fighter fighter = fight.turnList().fighters().get(1);
+        fighter.attachment(FighterAI.class).set(new MemoryKey<Object>() {
+            @Override
+            public @Nullable Object refresh(Object value) {
+                throw new RuntimeException("error");
+            }
+        }, true);
+
+        requestStack.clear();
+        fight.turnList().current().get().stop();
+
+        Mockito.verify(logger).debug("Starting AI for {}", fighter);
+        Mockito.verify(logger).error(Mockito.eq("Error during AI execution. Stop the turn."), Mockito.any(RuntimeException.class));
+
+        assertEquals(fight.turnList().fighters().get(2), fight.turnList().current().get().fighter());
     }
 }
