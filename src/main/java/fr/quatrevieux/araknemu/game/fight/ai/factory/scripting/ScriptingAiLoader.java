@@ -17,10 +17,12 @@
  * Copyright (c) 2017-2024 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.ai.factory;
+package fr.quatrevieux.araknemu.game.fight.ai.factory.scripting;
 
 import fr.quatrevieux.araknemu.core.di.Instantiator;
 import fr.quatrevieux.araknemu.core.scripting.ScriptLoader;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactoryLoader;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.NamedAiFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import org.apache.logging.log4j.Logger;
 

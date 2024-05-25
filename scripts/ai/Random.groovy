@@ -1,7 +1,6 @@
-import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement
-import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory
+import fr.quatrevieux.araknemu.game.fight.ai.factory.scripting.AbstractScriptingAiBuilderFactory
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator
 
@@ -27,12 +26,12 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator
 /**
  * Example of a random AI
  *
- * To create a new AI type you have to extends AbstractAiBuilderFactory and override one of the configure method
+ * To create a new AI type you have to extends AbstractScriptingAiBuilderFactory and override one of the configure method
  * The AI name will be the class name in upper case. If you want to change the name, you can override the name() method
  *
  * Note: be aware of the maximum length of the name. By default the maximum length is 12 characters.
  */
-class Random extends AbstractAiBuilderFactory {
+class Random extends AbstractScriptingAiBuilderFactory {
     final Simulator simulator
     final java.util.Random random
 
@@ -43,27 +42,38 @@ class Random extends AbstractAiBuilderFactory {
         this.random = new java.util.Random()
     }
 
-
     // Override this method to configure the AI
-    // Note: you can also override configure(GeneratorBuilder builder, PlayableFighter fighter) instead of this one to have access to the fighter
+    // Note: you can also override configure(PlayableFighter fighter) instead of this one to have access to the fighter
     @Override
-    protected void configure(GeneratorBuilder builder) {
+    protected void configure() {
         // Now you can add actions to the AI pipeline
         // The pipeline defines the priority of the actions
         // If the first action can be executed, it will be executed until it can't
         // And then the second action will be executed, and so on
-        builder
-            .add(new Movement({ Math.random() }, { true }))
-            .add(new CastSpell(simulator, new CastSpell.SimulationSelector() {
-                @Override
-                boolean valid(CastSimulation simulation) {
-                    random.nextBoolean()
-                }
+        add(new CastSpell(simulator, new CastSpell.SimulationSelector() {
+            @Override
+            boolean valid(CastSimulation simulation) {
+                random.nextBoolean()
+            }
 
-                @Override
-                double score(CastSimulation simulation) {
-                    Math.random()
-                }
-            }))
+            @Override
+            double score(CastSimulation simulation) {
+                Math.random()
+            }
+        }))
+
+        // You can also add conditions to the pipeline
+        // The first parameter is a predicate that takes the AI as parameter and returns a boolean
+        // The second parameter will be used to build the AI if the predicate returns true
+        whether({ random.nextBoolean() }) {
+            moveNearAllies()
+
+            // Call "otherwise" to add an action that will be executed if the condition is false
+            otherwise {
+                moveFarEnemies()
+            }
+        }
+
+        add(new Movement({ Math.random() }, { true }))
     }
 }
