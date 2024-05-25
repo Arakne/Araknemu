@@ -72,7 +72,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.DoubleAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ListAiFactoryLoader;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.ScriptingAiLoader;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.scripting.ScriptingAiLoader;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;

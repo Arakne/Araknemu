@@ -139,7 +139,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiNameResolver;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.DoubleAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ListAiFactoryLoader;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.ScriptingAiLoader;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.scripting.ScriptingAiLoader;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Blocking;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Fixed;

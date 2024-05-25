@@ -242,6 +242,23 @@ fight.rate.drop = ${DROP_RATE:-1.0}
 ; > Default value : 10
 ;fight.initialErosion = 10
 
+; AI scripts
+; ----------
+; > Does scripts are enabled for AI ?
+; > Default value : true
+;fight.ai.scripts.enable = true
+; > Get the path where AI scripts are stored
+; > Default value : "scripts/ai"
+fight.ai.scripts.path = "${AI_SCRIPT_PATH:-scripts/ai}"
+; > Enable hot reloading of AI scripts
+; > When enabled, modifications of scripts will be taken into account without restarting the server
+; > when a new fight is started.
+; > It's advised to use this feature only in development environment, as it may have a performance impact.
+; > Note that it's not necessary to enable this feature to allow loading of new scripts,
+; > because when a new AI is requested, all scripts are reloaded.
+; > Default value : false
+;fight.ai.scripts.hot-reload = false
+
 ; Auto save
 ; ---------
 ; > The interval between two automatic save of connected players
