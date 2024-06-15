@@ -30,6 +30,12 @@ public final class SQLiteDriver implements Driver {
     private final DatabaseConfiguration.Connection configuration;
 
     public SQLiteDriver(DatabaseConfiguration.Connection configuration) {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("SQLite JDBC driver not found", e);
+        }
+
         this.configuration = configuration;
     }
 

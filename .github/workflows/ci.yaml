@@ -20,21 +20,6 @@ jobs:
           mysql password: 'araknemu'
           mysql root password: 'root'
 
-      - name: Reset mysql password
-        run: |
-          while :
-          do
-            sleep 1
-            mysql -h 127.0.0.1 -u root --password=root -e 'select version()' && break
-          done
-
-          cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
-            CREATE USER 'araknemu'@'%';
-            GRANT ALL PRIVILEGES ON *.* TO 'araknemu'@'%';
-            UPDATE mysql.user SET authentication_string = null WHERE user = 'araknemu';
-            FLUSH PRIVILEGES;
-          EOF
-
       - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:

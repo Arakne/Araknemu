@@ -20,7 +20,7 @@ client.version = ${CLIENT_VERSION:-1.29.1}
 ; > Available algorithms : argon2, plain
 ; > The first value will be the default hash algorithm
 ; > Default value: "argon2, plain"
-;password.defaultHash = argon2
+password.defaultHash = "${PASSWORD_HASH:-argon2, plain}"
 ; > The number of iterations. Default: 4
 ;password.argon2.iterations = 4
 ; > The memory, in kilobits. Default: 65536 (64Mo)
@@ -89,6 +89,7 @@ realm.user = ${DB_USER:-araknemu}
 realm.password = $DB_PASSWORD
 realm.dbname = ${DB_NAME:-araknemu}
 realm.path = ${DB_NAME:-araknemu.db}
+realm.poolSize = ${DB_POOL_SIZE:-8}
 
 ; Configure database for game server
 game.type = ${DB_TYPE:-mysql}
@@ -96,6 +97,7 @@ game.host = ${DB_HOST:-127.0.0.1}
 game.user = ${DB_USER:-araknemu}
 game.password = $DB_PASSWORD
 game.dbname = ${DB_NAME:-araknemu}
+game.poolSize = ${DB_POOL_SIZE:-8}
 
 [game]
 ; Section for configure the game server
@@ -113,7 +115,7 @@ server.timezone = ${TIMEZONE:-Europe/Paris}
 ; Antispam & other
 ; ----------------
 ; > The server ID. By default 1
-;id = 1
+id = ${GAME_SERVER_ID:-1}
 ; > The maximum inactivity time, as duration
 ; > By default, 15min ("PT15M" or "15m")
 ;inactivityTime = 15m
@@ -184,7 +186,7 @@ server.timezone = ${TIMEZONE:-Europe/Paris}
 ; Activity
 ; --------
 ; > Number of threads to use for the activity service
-;activity.threadsCount = 1
+activity.threadsCount = ${ACTIVITY_THREADS:-1}
 ; > Number of seconds for move monster groups
 ; > By default 120s = 2min
 ;activity.monsters.moveInterval = 120
@@ -198,7 +200,7 @@ server.timezone = ${TIMEZONE:-Europe/Paris}
 ; > The delay divisor for respawn a monster group
 ; > With a factor of 2, the respawn will be 2 times faster
 ; > By default 1
-;activity.monsters.respawnSpeedFactor = 1
+activity.monsters.respawnSpeedFactor = ${RESPAWN_SPEED_FACTOR:-1}
 
 ; Economy
 ; -------
@@ -217,7 +219,7 @@ server.timezone = ${TIMEZONE:-Europe/Paris}
 ; > The threads count for run fight actions and AI
 ; > This value should be greater than 2. A good value may be around 1 thread per 100 fights
 ; > By default, 4
-;fight.threadsCount = 4
+fight.threadsCount = ${FIGHT_THREADS:-4}
 ; > The fight turn duration
 ; > The value should be a duration string like 30s, 1m10s
 ; > Default value : 30s
@@ -229,13 +231,13 @@ server.timezone = ${TIMEZONE:-Europe/Paris}
 ; > Get the XP multiplier
 ; > The value should be a positive decimal number.
 ; > Default value : 1.0
-fight.rate.xp = ${XP_RATE:-1.0}
+fight.rate.xp = ${RATE_XP:-1.0}
 ; > Get the drop rate multiplier
 ; > The value should be a positive decimal number.
 ; > This value will modify the object drop chance, but not the maximum dropped items per monster
 ; > nor minimal discernment requirement.
 ; > Default value : 1.0
-fight.rate.drop = ${DROP_RATE:-1.0}
+fight.rate.drop = ${RATE_DROP:-1.0}
 ; > Get the initial erosion rate for fighters
 ; > This value is a percentage, representing the percent of damage that will be transformed to permanent life loss
 ; > It must be between 0 and 100, where 0 means no erosion and 100 means all damage are permanent

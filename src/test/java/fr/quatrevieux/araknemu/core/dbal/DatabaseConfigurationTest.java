@@ -81,7 +81,7 @@ class DatabaseConfigurationTest {
         assertEquals("mysql", config.type());
         assertEquals("araknemu", config.dbname());
         assertEquals("araknemu", config.user());
-        assertEquals("", config.password());
+        assertEquals("araknemu", config.password());
         assertEquals(16, config.maxPoolSize());
     }
 
