@@ -1,0 +1,30 @@
+services:
+  araknemu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    env_file:
+      - .env
+    restart: on-failure # Database may not be ready when the app starts
+    ports:
+      - "4444:4444"
+      - "5555:5555"
+    volumes:
+      - ./logs:/srv/logs
+      - ./scripts:/srv/scripts
+      #- ./araknemu.db:/srv/araknemu.db
+      #- ./config.ini:/srv/config.ini
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11.3
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: 1
+      MARIADB_DATABASE: araknemu
+      MARIADB_USER: araknemu
+      MARIADB_PASSWORD: araknemu
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./resources/db:/docker-entrypoint-initdb.d

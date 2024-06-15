@@ -20,7 +20,7 @@ jobs:
           mysql password: 'araknemu'
           mysql root password: 'root'
 
-      - name: Reset mysql password
+      - name: Create MySQL user
         run: |
           while :
           do
@@ -29,9 +29,8 @@ jobs:
           done
 
           cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
-            CREATE USER 'araknemu'@'%';
+            CREATE USER 'araknemu'@'%' IDENTIFIED BY 'araknemu';
             GRANT ALL PRIVILEGES ON *.* TO 'araknemu'@'%';
-            UPDATE mysql.user SET authentication_string = null WHERE user = 'araknemu';
             FLUSH PRIVILEGES;
           EOF
 
@@ -71,7 +70,7 @@ jobs:
           mysql password: 'araknemu'
           mysql root password: 'root'
 
-      - name: Reset mysql password
+      - name: Create MySQL user
         run: |
           while :
           do
@@ -80,9 +79,8 @@ jobs:
           done
 
           cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
-            CREATE USER 'araknemu'@'%';
+            CREATE USER 'araknemu'@'%' IDENTIFIED BY 'araknemu';
             GRANT ALL PRIVILEGES ON *.* TO 'araknemu'@'%';
-            UPDATE mysql.user SET authentication_string = null WHERE user = 'araknemu';
             FLUSH PRIVILEGES;
           EOF
 
