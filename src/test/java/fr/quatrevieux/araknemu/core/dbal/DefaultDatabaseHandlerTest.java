@@ -108,6 +108,11 @@ class DefaultDatabaseHandlerTest extends TestCase {
     }
 
     @Test
+    void getWithPoolDisabled() throws SQLException {
+        assertInstanceOf(SingleConnectionPool.class, handler.get("no_pool"));
+    }
+
+    @Test
     void getWithRefreshPool() throws SQLException {
         assertInstanceOf(RefreshConnectionPool.class, handler.get("test_refresh"));
         handler.stop(); // Ensure that refresh task is stopped
