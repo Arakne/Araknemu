@@ -66,11 +66,15 @@ public final class DefaultDatabaseHandler implements DatabaseHandler {
             throw new IllegalArgumentException("Invalid database driver " + config.type());
         }
 
-        pool = new SimpleConnectionPool(
-            factory.create(config),
-            config.maxPoolSize(),
-            logger
-        );
+        if (config.maxPoolSize() <= 0) {
+            pool = new SingleConnectionPool(factory.create(config));
+        } else {
+            pool = new SimpleConnectionPool(
+                factory.create(config),
+                config.maxPoolSize(),
+                logger
+            );
+        }
 
         if (config.refreshPoolInterval() > 0) {
             pool = new RefreshConnectionPool(pool, config.refreshPoolInterval(), logger);
