@@ -60,4 +60,4 @@ JAVA_OPTS="$JAVA_MEMORY -XX:+Use${JAVA_GC} $JAVA_GC_LOG $JAVA_OPTS"
 
 echo "Starting Araknemu with java options: $JAVA_OPTS"
 
-java $JAVA_OPTS -jar araknemu.jar
+exec java $JAVA_OPTS -jar araknemu.jar
