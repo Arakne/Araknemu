@@ -47,6 +47,7 @@ public final class GameService implements Service, EventsSubscriber {
     private final Collection<PreloadableService> preloadables;
     private final ListenerAggregate dispatcher;
     private final Collection<EventsSubscriber> subscribers;
+    private volatile boolean running = false;
 
     public GameService(GameConfiguration configuration, RealmConnector connector, Server<GameSession> server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;
@@ -93,12 +94,17 @@ public final class GameService implements Service, EventsSubscriber {
 
         updateState(GameHost.State.ONLINE, true);
 
+        running = true;
         dispatcher.dispatch(new GameStarted(this));
         logger.info("Game server {} started in {}ms", configuration.id(), System.currentTimeMillis() - startTime);
     }
 
     @Override
     public void shutdown() {
+        if (!running) {
+            return;
+        }
+
         logger.info("Stopping game server {}", configuration.id());
 
         updateState(GameHost.State.OFFLINE, false);
@@ -112,6 +118,7 @@ public final class GameService implements Service, EventsSubscriber {
         }
 
         logger.info("Game server {} stopped", configuration.id());
+        running = false;
     }
 
     /**

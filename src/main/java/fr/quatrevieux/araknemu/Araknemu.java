@@ -100,22 +100,7 @@ public class Araknemu {
      * Stop all services
      */
     public void shutdown() {
-        if (!started) {
-            return;
-        }
-
-        logger.info("Shutdown requested...");
-        started = false;
-
-        for (Service service : services) {
-            service.shutdown();
-        }
-
-        services.clear();
-        database.stop();
-        System.gc();
-
-        logger.info("Araknemu successfully stopped");
+        shutdown(null);
     }
 
     /**
@@ -158,6 +143,40 @@ public class Araknemu {
     }
 
     /**
+     * Stop all services
+     *
+     * @param error An error that caused the shutdown. If null, the shutdown is considered as normal
+     */
+    private void shutdown(@Nullable Exception error) {
+        if (!started && error == null) {
+            return;
+        }
+
+        if (error != null) {
+            logger.fatal("An unrecoverable error has occur, and the server must stop.", error);
+        } else {
+            logger.info("Shutdown requested...");
+        }
+
+        started = false;
+
+        for (Service service : services) {
+            service.shutdown();
+        }
+
+        services.clear();
+        database.stop();
+        System.gc();
+
+        logger.info("Araknemu successfully stopped");
+        LogManager.shutdown();
+
+        if (error != null) {
+            System.exit(1);
+        }
+    }
+
+    /**
      * Application entry point
      */
     public static void main(String[] args) throws Exception {
@@ -183,7 +202,12 @@ public class Araknemu {
         app.add(realmContainer.get(RealmService.class));
         app.add(gameContainer.get(GameService.class));
 
-        app.boot();
+        try {
+            app.boot();
+        } catch (Exception e) {
+            app.shutdown(e);
+            return;
+        }
 
         Runtime.getRuntime().addShutdownHook(new Thread(app::shutdown));
     }

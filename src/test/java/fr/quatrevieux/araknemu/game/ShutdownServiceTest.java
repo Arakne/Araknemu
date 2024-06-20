@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game;
 
+import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
@@ -28,8 +29,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -113,8 +116,13 @@ class ShutdownServiceTest extends GameBaseCase {
     }
 
     @Test
-    void shutdownShouldSendShutdownMessageAndCloseSessions() throws SQLException, InterruptedException {
+    void shutdownShouldSendShutdownMessageAndCloseSessions() throws SQLException, InterruptedException, BootException, NoSuchFieldException, IllegalAccessException {
         gamePlayer(true);
+
+        Field runningField = GameService.class.getDeclaredField("running");
+        runningField.setAccessible(true);
+
+        runningField.set(container.get(GameService.class), true);
         service.now();
 
         requestStack.assertOne(ServerMessage.shutdown());

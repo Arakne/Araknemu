@@ -18,7 +18,7 @@
   ~ Copyright (c) 2017-2020 Vincent Quatrevieux
   -->
 
-<Configuration status="WARN">
+<Configuration status="WARN" shutdownHook="disable">
     <Properties>
         <Property name="FILE_LOG_PATTERN">%d %p %c{1.} [%t] %m%n</Property>
     </Properties>
