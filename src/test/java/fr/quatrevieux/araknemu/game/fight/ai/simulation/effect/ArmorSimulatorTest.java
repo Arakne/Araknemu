@@ -23,12 +23,16 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.SpellEffectStub;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -43,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ArmorSimulatorTest extends FightBaseCase {
     private Fight fight;
@@ -203,6 +208,89 @@ class ArmorSimulatorTest extends FightBaseCase {
         simulator.score(score, effect, fighter.characteristics());
         assertEquals(20, score.score());
         assertEquals(20, score.boost());
+    }
+
+    @Test
+    void onReduceableDamageSuccess() {
+        Damage damage = new Damage(10, Element.EARTH);
+        Buff buff = new Buff(
+            SpellEffectStub.fixed(105, 3),
+            Mockito.mock(Spell.class),
+            other.fighter(),
+            other.fighter(),
+            new BuffHook() {}
+        );
+
+        ArmorSimulator simulator = new ArmorSimulator();
+
+        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertEquals(7, damage.value());
+        assertEquals(3, damage.reducedDamage());
+    }
+
+    @Test
+    void onReduceableDamageShouldBeoostedByIntelligence() {
+        other.fighter().characteristics().alter(Characteristic.INTELLIGENCE, 100);
+
+        Damage damage = new Damage(10, Element.EARTH);
+        Buff buff = new Buff(
+            SpellEffectStub.fixed(105, 3),
+            Mockito.mock(Spell.class),
+            other.fighter(),
+            other.fighter(),
+            new BuffHook() {}
+        );
+
+        ArmorSimulator simulator = new ArmorSimulator();
+
+        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertEquals(6, damage.value());
+        assertEquals(4, damage.reducedDamage());
+    }
+
+    @Test
+    void onReduceableDamageShouldBeoostedByDamageElement() {
+        other.fighter().characteristics().alter(Characteristic.STRENGTH, 100);
+
+        Damage damage = new Damage(10, Element.EARTH);
+        Buff buff = new Buff(
+            SpellEffectStub.fixed(105, 3),
+            Mockito.mock(Spell.class),
+            other.fighter(),
+            other.fighter(),
+            new BuffHook() {}
+        );
+
+        ArmorSimulator simulator = new ArmorSimulator();
+
+        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertEquals(6, damage.value());
+        assertEquals(4, damage.reducedDamage());
+    }
+
+    @Test
+    void onReduceableDamageShouldFilterDamageElement() {
+        other.fighter().characteristics().alter(Characteristic.STRENGTH, 100);
+
+        Buff buff = new Buff(
+            SpellEffectStub.fixed(105, 3).setSpecial(4), // Water
+            Mockito.mock(Spell.class),
+            other.fighter(),
+            other.fighter(),
+            new BuffHook() {}
+        );
+
+        ArmorSimulator simulator = new ArmorSimulator();
+
+        Damage damage = new Damage(10, Element.EARTH);
+        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertEquals(10, damage.value());
+        assertEquals(0, damage.reducedDamage());
+
+        damage = new Damage(10, Element.WATER);
+        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertEquals(7, damage.value());
+        assertEquals(3, damage.reducedDamage());
     }
 
     private CastSimulation performSimulation(Spell spell, SpellEffect effect) {

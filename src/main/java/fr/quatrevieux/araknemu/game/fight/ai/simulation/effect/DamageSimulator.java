@@ -23,6 +23,7 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
@@ -42,9 +43,11 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler
  */
 public final class DamageSimulator implements EffectSimulator {
+    private final Simulator simulator;
     private final Element element;
 
-    public DamageSimulator(Element element) {
+    public DamageSimulator(Simulator simulator, Element element) {
+        this.simulator = simulator;
         this.element = element;
     }
 
@@ -64,8 +67,8 @@ public final class DamageSimulator implements EffectSimulator {
                 .interval()
             ;
 
-            final Interval damage = value.map(base -> computeDamage(base, target));
             final int duration = spellEffect.duration();
+            final Interval damage = value.map(base -> computeDamage(base, simulation, target, duration == 0));
 
             if (duration == 0) {
                 simulation.addDamage(damage, target);
@@ -86,11 +89,21 @@ public final class DamageSimulator implements EffectSimulator {
         score.addDamage(value * boost / 100);
     }
 
-    private @NonNegative int computeDamage(@NonNegative int value, FighterData target) {
-        final Damage damage = new Damage(value, element)
+    private @NonNegative int computeDamage(@NonNegative int value, CastSimulation simulation, FighterData target, boolean direct) {
+        Damage damage = new Damage(value, element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;
+
+        if (direct) {
+            damage = simulator.applyReduceableDamageBuffs(target, damage);
+        }
+
+        final int reflectedDamage = damage.reflectedDamage() + target.characteristics().get(Characteristic.COUNTER_DAMAGE);
+
+        if (reflectedDamage > 0) {
+            simulation.addDamage(Interval.of(reflectedDamage), simulation.caster());
+        }
 
         return Asserter.castNonNegative(damage.value());
     }

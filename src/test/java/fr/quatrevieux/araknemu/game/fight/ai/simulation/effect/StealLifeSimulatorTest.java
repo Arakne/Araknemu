@@ -23,12 +23,16 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.SpellEffectStub;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -71,6 +75,30 @@ class StealLifeSimulatorTest extends FightBaseCase {
     }
 
     @Test
+    void simulateWithCounterDamage() {
+        other.fighter().characteristics().alter(Characteristic.COUNTER_DAMAGE, 10);
+
+        assertEquals(-15, simulate().enemiesLife());
+        assertEquals(-3, simulate().selfLife());
+    }
+
+    @Test
+    void simulateWithArmorBuff() {
+        other.fighter().buffs().add(
+            new Buff(
+                SpellEffectStub.fixed(105, 10),
+                Mockito.mock(Spell.class),
+                other.fighter(),
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        assertEquals(-5, simulate().enemiesLife());
+        assertEquals(2, simulate().selfLife());
+    }
+
+    @Test
     void simulateWithResistance() {
         target.characteristics().alter(Characteristic.RESISTANCE_EARTH, 5);
         assertEquals(-10, simulate().enemiesLife());
@@ -86,7 +114,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateBuff() {
-        StealLifeSimulator simulator = new StealLifeSimulator(Element.EARTH);
+        StealLifeSimulator simulator = new StealLifeSimulator(container.get(Simulator.class), Element.EARTH);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -121,7 +149,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateArea() {
-        StealLifeSimulator simulator = new StealLifeSimulator(Element.EARTH);
+        StealLifeSimulator simulator = new StealLifeSimulator(container.get(Simulator.class), Element.EARTH);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -146,7 +174,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
     void score() {
         fighter.player().properties().characteristics().base().set(Characteristic.STRENGTH, 0);
 
-        StealLifeSimulator simulator = new StealLifeSimulator(Element.EARTH);
+        StealLifeSimulator simulator = new StealLifeSimulator(container.get(Simulator.class), Element.EARTH);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Mockito.when(effect.min()).thenReturn(10);
@@ -179,7 +207,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
-        new StealLifeSimulator(Element.EARTH).simulate(simulation, ai, scope.effects().get(0));
+        new StealLifeSimulator(container.get(Simulator.class), Element.EARTH).simulate(simulation, ai, scope.effects().get(0));
 
         return simulation;
     }

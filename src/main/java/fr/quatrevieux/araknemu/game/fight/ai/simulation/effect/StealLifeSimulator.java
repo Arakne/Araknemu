@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
@@ -38,8 +39,8 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 public final class StealLifeSimulator implements EffectSimulator {
     private final DamageSimulator simulator;
 
-    public StealLifeSimulator(Element element) {
-        this.simulator = new DamageSimulator(element);
+    public StealLifeSimulator(Simulator simulator, Element element) {
+        this.simulator = new DamageSimulator(simulator, element);
     }
 
     @Override

@@ -22,9 +22,16 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.SpellEffectStub;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.BuffEffectSimulator;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
@@ -36,8 +43,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SimulatorTest extends FightBaseCase {
@@ -329,6 +340,111 @@ class SimulatorTest extends FightBaseCase {
         assertTrue(score.isAttack());
         assertFalse(score.isHeal());
         assertFalse(score.isSuicide());
+    }
+
+    @Test
+    void applyReduceableDamageBuffsWithoutBuff() {
+        simulator = new Simulator(new BaseCriticalityStrategy());
+
+        Damage damage = new Damage(10, Element.EARTH);
+        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+
+        assertSame(damage, returned);
+        assertEquals(10, returned.value());
+        assertEquals(0, returned.reflectedDamage());
+        assertEquals(0, returned.reducedDamage());
+    }
+
+    @Test
+    void applyReduceableDamageBuffsWithBuffNotMatching() {
+        other.fighter().buffs().add(
+            new Buff(
+                new SpellEffectStub(100, 10),
+                Mockito.mock(Spell.class),
+                other.fighter(),
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        AtomicBoolean called = new AtomicBoolean(false);
+
+        simulator = new Simulator(new BaseCriticalityStrategy());
+        simulator.registerBuff(101, new BuffEffectSimulator() {
+            @Override
+            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+                called.set(true);
+                return damage;
+            }
+        });
+
+        Damage damage = new Damage(10, Element.EARTH);
+        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+
+        assertSame(damage, returned);
+        assertEquals(10, returned.value());
+        assertFalse(called.get());
+    }
+
+    @Test
+    void applyReduceableDamageBuffsWithBuffMatching() {
+        other.fighter().buffs().add(
+            new Buff(
+                new SpellEffectStub(100, 10),
+                Mockito.mock(Spell.class),
+                other.fighter(),
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        AtomicBoolean called = new AtomicBoolean(false);
+
+        simulator = new Simulator(new BaseCriticalityStrategy());
+        simulator.registerBuff(100, new BuffEffectSimulator() {
+            @Override
+            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+                called.set(true);
+
+                return damage.reduce(5);
+            }
+        });
+
+        Damage damage = new Damage(10, Element.EARTH);
+        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+
+        assertSame(damage, returned);
+        assertEquals(5, returned.value());
+        assertEquals(5, returned.reducedDamage());
+        assertTrue(called.get());
+    }
+
+    @Test
+    void applyReduceableDamageBuffsWithBuffMatchingReturnedNewInstance() {
+        other.fighter().buffs().add(
+            new Buff(
+                new SpellEffectStub(100, 20),
+                Mockito.mock(Spell.class),
+                other.fighter(),
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        simulator = new Simulator(new BaseCriticalityStrategy());
+        simulator.registerBuff(100, new BuffEffectSimulator() {
+            @Override
+            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+                return new Damage(buff.effect().min(), Element.NEUTRAL);
+            }
+        });
+
+        Damage damage = new Damage(10, Element.EARTH);
+        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+
+        assertNotSame(damage, returned);
+        assertEquals(20, returned.value());
+        assertEquals(Element.NEUTRAL, returned.element());
     }
 
     private Spell getSpell(int id, int level) {
