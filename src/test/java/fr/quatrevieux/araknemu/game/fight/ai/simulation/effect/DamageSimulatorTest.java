@@ -23,13 +23,20 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.SpellEffectStub;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -89,7 +96,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateBuff() {
-        DamageSimulator simulator = new DamageSimulator(Element.EARTH);
+        DamageSimulator simulator = new DamageSimulator(container.get(Simulator.class), Element.EARTH);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -124,7 +131,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateInfiniteBuff() {
-        DamageSimulator simulator = new DamageSimulator(Element.EARTH);
+        DamageSimulator simulator = new DamageSimulator(container.get(Simulator.class), Element.EARTH);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -147,7 +154,7 @@ class DamageSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateArea() {
-        DamageSimulator simulator = new DamageSimulator(Element.EARTH);
+        DamageSimulator simulator = new DamageSimulator(container.get(Simulator.class), Element.EARTH);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -169,10 +176,58 @@ class DamageSimulatorTest extends FightBaseCase {
     }
 
     @Test
+    void simulateWithCounterDamage() {
+        other.fighter().characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
+
+        CastSimulation simulation = doSimulation();
+        assertEquals(-15, simulation.enemiesLife());
+        assertEquals(-5, simulation.selfLife());
+    }
+
+    @Test
+    void simulateWithReduceDamageBuff() {
+        other.fighter().buffs().add(
+            new Buff(
+                SpellEffectStub.fixed(105, 5),
+                Mockito.mock(Spell.class),
+                fighter,
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        assertEquals(-10, simulate());
+    }
+
+    @Test
+    void simulateWithCounterDamageBuff() {
+        // @todo use actual simulator when it will be implemented
+        container.get(Simulator.class).registerBuff(107, new BuffEffectSimulator() {
+            @Override
+            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+                return damage.reflect(buff.effect().min());
+            }
+        });
+
+        other.fighter().buffs().add(
+            new Buff(
+                SpellEffectStub.fixed(107, 5),
+                Mockito.mock(Spell.class),
+                fighter,
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        assertEquals(-15, doSimulation().enemiesLife());
+        assertEquals(-5, doSimulation().selfLife());
+    }
+
+    @Test
     void score() {
         fighter.player().properties().characteristics().base().set(Characteristic.STRENGTH, 0);
 
-        DamageSimulator simulator = new DamageSimulator(Element.EARTH);
+        DamageSimulator simulator = new DamageSimulator(container.get(Simulator.class), Element.EARTH);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Mockito.when(effect.min()).thenReturn(10);
@@ -192,6 +247,10 @@ class DamageSimulatorTest extends FightBaseCase {
     }
 
     private double simulate() {
+        return doSimulation().enemiesLife();
+    }
+
+    private CastSimulation doSimulation() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
@@ -205,8 +264,8 @@ class DamageSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
 
         CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
-        new DamageSimulator(Element.EARTH).simulate(simulation, ai, scope.effects().get(0));
+        new DamageSimulator(container.get(Simulator.class), Element.EARTH).simulate(simulation, ai, scope.effects().get(0));
 
-        return simulation.enemiesLife();
+        return simulation;
     }
 }

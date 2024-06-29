@@ -57,7 +57,7 @@ public final class EffectValue implements Cloneable {
     private @NonNegative int multiply = 1;
     private @NonNegative int value = 0;
 
-    EffectValue(SpellEffect effect) {
+    public EffectValue(SpellEffect effect) {
         this.effect = effect;
     }
 
@@ -191,6 +191,7 @@ public final class EffectValue implements Cloneable {
      * @param target The target on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)} will be called
      *
      * @return The configured effect
+     * @todo Use Fighter instead of FighterData
      */
     public static EffectValue create(SpellEffect effect, FighterData caster, FighterData target) {
         final EffectValue value = new EffectValue(effect);

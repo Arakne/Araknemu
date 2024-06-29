@@ -20,20 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.arakne.utils.value.Interval;
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
 import fr.quatrevieux.araknemu.util.Asserter;
-import org.checkerframework.checker.index.qual.GTENegativeOne;
-
-import java.util.Collection;
 
 /**
  * Simulator for damage depending on the life of the caster effect
@@ -42,53 +34,18 @@ import java.util.Collection;
  * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PercentLifeLostDamageHandler The simulated effect
  * @see PercentLifeDamageSimulator The opposite effect
  */
-public final class PercentLifeLostDamageSimulator implements EffectSimulator {
-    private final Element element;
-
-    public PercentLifeLostDamageSimulator(Element element) {
-        this.element = element;
+public final class PercentLifeLostDamageSimulator extends AbstractElementalDamageSimulator {
+    public PercentLifeLostDamageSimulator(Simulator simulator, Element element) {
+        super(simulator, element);
     }
 
     @Override
-    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        final SpellEffect spellEffect = effect.effect();
-        final Interval baseDamage = damage(ai.fighter(), spellEffect);
-
-        if (spellEffect.duration() == 0) {
-            simulateDamage(simulation, baseDamage, effect.targets());
-        } else {
-            simulatePoison(simulation, baseDamage, spellEffect.duration(), effect.targets());
-        }
-    }
-
-    private Interval damage(FighterData caster, SpellEffect effect) {
+    protected Interval computeBaseDamage(FighterData caster, SpellEffect effect) {
         final Life casterLife = caster.life();
         final int lostLife = Asserter.castNonNegative(casterLife.max() - casterLife.current());
 
         return Interval.of(effect.min(), Math.max(effect.max(), effect.min()))
             .map(value -> value * lostLife / 100)
         ;
-    }
-
-    private Interval applyResistances(Interval damage, FighterData target) {
-        return damage.map(value -> Asserter.castNonNegative(new Damage(value, element)
-            .percent(target.characteristics().get(element.percentResistance()))
-            .fixed(target.characteristics().get(element.fixedResistance()))
-            .value()
-        ));
-    }
-
-    private void simulatePoison(CastSimulation simulation, Interval damage, @GTENegativeOne int duration, Collection<? extends FighterData> targets) {
-        final int capedDuration = Formula.capedDuration(duration);
-
-        for (FighterData target : targets) {
-            simulation.addPoison(applyResistances(damage, target), capedDuration, target);
-        }
-    }
-
-    private void simulateDamage(CastSimulation simulation, Interval damage, Collection<? extends FighterData> targets) {
-        for (FighterData target : targets) {
-            simulation.addDamage(applyResistances(damage, target), target);
-        }
     }
 }

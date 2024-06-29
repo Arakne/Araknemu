@@ -940,27 +940,27 @@ public final class GameModule implements ContainerModule {
         configurator.persist(Simulator.class, container -> {
             final Simulator simulator = new Simulator(container.get(CriticalityStrategy.class));
 
-            simulator.register(91, new StealLifeSimulator(Element.WATER));
-            simulator.register(92, new StealLifeSimulator(Element.EARTH));
-            simulator.register(93, new StealLifeSimulator(Element.AIR));
-            simulator.register(94, new StealLifeSimulator(Element.FIRE));
-            simulator.register(95, new StealLifeSimulator(Element.NEUTRAL));
+            simulator.register(91, new StealLifeSimulator(simulator, Element.WATER));
+            simulator.register(92, new StealLifeSimulator(simulator, Element.EARTH));
+            simulator.register(93, new StealLifeSimulator(simulator, Element.AIR));
+            simulator.register(94, new StealLifeSimulator(simulator, Element.FIRE));
+            simulator.register(95, new StealLifeSimulator(simulator, Element.NEUTRAL));
 
-            simulator.register(96,  new DamageSimulator(Element.WATER));
-            simulator.register(97,  new DamageSimulator(Element.EARTH));
-            simulator.register(98,  new DamageSimulator(Element.AIR));
-            simulator.register(99,  new DamageSimulator(Element.FIRE));
-            simulator.register(100, new DamageSimulator(Element.NEUTRAL));
+            simulator.register(96,  new DamageSimulator(simulator, Element.WATER));
+            simulator.register(97,  new DamageSimulator(simulator, Element.EARTH));
+            simulator.register(98,  new DamageSimulator(simulator, Element.AIR));
+            simulator.register(99,  new DamageSimulator(simulator, Element.FIRE));
+            simulator.register(100, new DamageSimulator(simulator, Element.NEUTRAL));
 
-            simulator.register(85, new PercentLifeDamageSimulator(Element.WATER));
-            simulator.register(86, new PercentLifeDamageSimulator(Element.EARTH));
-            simulator.register(87, new PercentLifeDamageSimulator(Element.AIR));
-            simulator.register(88, new PercentLifeDamageSimulator(Element.FIRE));
-            simulator.register(89, new PercentLifeDamageSimulator(Element.NEUTRAL));
-            simulator.register(671, new PercentLifeDamageSimulator(Element.NEUTRAL)); // The actual effect is applied as "indirect damage" but it works mostly like a simple percent life damage.
+            simulator.register(85, new PercentLifeDamageSimulator(simulator, Element.WATER));
+            simulator.register(86, new PercentLifeDamageSimulator(simulator, Element.EARTH));
+            simulator.register(87, new PercentLifeDamageSimulator(simulator, Element.AIR));
+            simulator.register(88, new PercentLifeDamageSimulator(simulator, Element.FIRE));
+            simulator.register(89, new PercentLifeDamageSimulator(simulator, Element.NEUTRAL));
+            simulator.register(671, new PercentLifeDamageSimulator(simulator, Element.NEUTRAL)); // The actual effect is applied as "indirect damage" but it works mostly like a simple percent life damage.
 
-            simulator.register(276, new PercentLifeLostDamageSimulator(Element.EARTH));
-            simulator.register(279, new PercentLifeLostDamageSimulator(Element.NEUTRAL));
+            simulator.register(276, new PercentLifeLostDamageSimulator(simulator, Element.EARTH));
+            simulator.register(279, new PercentLifeLostDamageSimulator(simulator, Element.NEUTRAL));
 
             simulator.register(82, new FixedStealLifeSimulator());
             simulator.register(131, new DamageOnActionPointUseSimulator());
@@ -1035,10 +1035,10 @@ public final class GameModule implements ContainerModule {
             simulator.register(320, new StealCharacteristicSimulator(5)); // sight
 
             // Armors
-            simulator.register(105, new ArmorSimulator());
+            simulator.registerEffectAndBuff(105, new ArmorSimulator());
             simulator.register(106, new SpellReturnSimulator(20));
             simulator.register(107, new AlterCharacteristicSimulator(5)); // Reflect damage. Considered as simple characteristic boost to simplify the code
-            simulator.register(265, new ArmorSimulator());
+            simulator.registerEffectAndBuff(265, new ArmorSimulator());
 
             // Heal
             simulator.register(90, new GivePercentLifeSimulator());

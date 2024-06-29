@@ -21,59 +21,40 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
-import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import fr.quatrevieux.araknemu.util.Asserter;
-import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Simulate simple damage effect
  *
  * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler
  */
-public final class DamageSimulator implements EffectSimulator {
+public final class DamageSimulator extends AbstractElementalDamageSimulator {
     private final Element element;
 
-    public DamageSimulator(Element element) {
+    public DamageSimulator(Simulator simulator, Element element) {
+        super(simulator, element);
+
         this.element = element;
     }
 
     @Override
-    public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        final FighterData caster = simulation.caster();
+    protected Interval computeBaseDamage(FighterData caster, SpellEffect effect) {
         final int boost = caster.characteristics().get(element.boost());
         final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);
         final int fixed = caster.characteristics().get(Characteristic.FIXED_DAMAGE);
 
-        for (FighterData target : effect.targets()) {
-            final SpellEffect spellEffect = effect.effect();
-            final Interval value = EffectValue.create(spellEffect, simulation.caster(), target)
-                .percent(boost)
-                .percent(percent)
-                .fixed(fixed)
-                .interval()
-            ;
-
-            final Interval damage = value.map(base -> computeDamage(base, target));
-            final int duration = spellEffect.duration();
-
-            if (duration == 0) {
-                simulation.addDamage(damage, target);
-            } else {
-                // Limit duration to 10
-                simulation.addPoison(damage, Formula.capedDuration(effect.effect().duration()), target);
-            }
-        }
+        return new EffectValue(effect)
+            .percent(boost)
+            .percent(percent)
+            .fixed(fixed)
+            .interval()
+        ;
     }
 
     @Override
@@ -84,14 +65,5 @@ public final class DamageSimulator implements EffectSimulator {
         final int boost = Math.max(100 + characteristics.get(element.boost()), 100);
 
         score.addDamage(value * boost / 100);
-    }
-
-    private @NonNegative int computeDamage(@NonNegative int value, FighterData target) {
-        final Damage damage = new Damage(value, element)
-            .percent(target.characteristics().get(element.percentResistance()))
-            .fixed(target.characteristics().get(element.fixedResistance()))
-        ;
-
-        return Asserter.castNonNegative(damage.value());
     }
 }

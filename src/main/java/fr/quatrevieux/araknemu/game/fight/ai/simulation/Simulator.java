@@ -20,8 +20,11 @@
 package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.BuffEffectSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.EffectSimulator;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
@@ -29,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +42,7 @@ import java.util.Map;
  */
 public final class Simulator {
     private final Map<Integer, EffectSimulator> simulators = new HashMap<>();
+    private final Map<Integer, BuffEffectSimulator> buffSimulators = new HashMap<>();
     private final CriticalityStrategy criticalityStrategy;
 
     public Simulator(CriticalityStrategy criticalityStrategy) {
@@ -52,6 +57,32 @@ public final class Simulator {
      */
     public void register(int effectId, EffectSimulator simulator) {
         simulators.put(effectId, simulator);
+    }
+
+    /**
+     * Register a buff effect simulator
+     *
+     * The simulator is called only if the buff effect corresponds to this id.
+     * The buff effect id is retrieved using {@code buff.effect().effect()}.
+     *
+     * @param effectId The buff effect to simulate
+     * @param simulator The simulator
+     */
+    public void registerBuff(int effectId, BuffEffectSimulator simulator) {
+        buffSimulators.put(effectId, simulator);
+    }
+
+    /**
+     * Register the instance as both effect and buff simulator
+     *
+     * @param effectId The effect id to simulate
+     * @param simulator The simulator
+     *
+     * @param <E> The type of the simulator
+     */
+    public <E extends BuffEffectSimulator & EffectSimulator> void registerEffectAndBuff(int effectId, E simulator) {
+        simulators.put(effectId, simulator);
+        buffSimulators.put(effectId, simulator);
     }
 
     /**
@@ -111,6 +142,28 @@ public final class Simulator {
         }
 
         return score;
+    }
+
+    /**
+     * Simulate buff effects on reduceable damage effect
+     *
+     * @param target The target of the damage
+     * @param damage The computed damage
+     *
+     * @return The modified damage
+     *
+     * @see BuffEffectSimulator#onReduceableDamage(Buff, FighterData, Damage) The called buff method
+     */
+    public Damage applyReduceableDamageBuffs(FighterData target, Damage damage) {
+        for (Buff buff : target.buffs()) {
+            final @Nullable BuffEffectSimulator buffSimulator = buffSimulators.get(buff.effect().effect());
+
+            if (buffSimulator != null) {
+                damage = buffSimulator.onReduceableDamage(buff, target, damage);
+            }
+        }
+
+        return damage;
     }
 
     /**

@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -34,7 +36,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 import java.util.EnumSet;
 import java.util.Set;
 
-public final class ArmorSimulator implements EffectSimulator {
+public final class ArmorSimulator implements EffectSimulator, BuffEffectSimulator {
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         if (effect.effect().duration() == 0) {
@@ -70,5 +72,37 @@ public final class ArmorSimulator implements EffectSimulator {
         final int boost = Math.max(100 + characteristics.get(Characteristic.INTELLIGENCE), 100);
 
         score.addBoost(effect.min() * boost / 100);
+    }
+
+    @Override
+    public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+        if (!supportsElement(buff, damage.element())) {
+            return damage;
+        }
+
+        final Characteristics characteristics = target.characteristics();
+
+        final int boost = 200 + characteristics.get(Characteristic.INTELLIGENCE) + characteristics.get(damage.element().boost());
+        final int reduce = buff.effect().min() * boost / 200;
+
+        if (reduce < 0) {
+            return damage;
+        }
+
+        damage.reduce(reduce);
+
+        return damage;
+    }
+
+    /**
+     * Check if the armor supports the damage element
+     *
+     * @param buff The buff
+     * @param element The damage element
+     *
+     * @return true if the armor supports the element
+     */
+    private boolean supportsElement(Buff buff, Element element) {
+        return buff.effect().special() == 0 || Element.fromBitSet(buff.effect().special()).contains(element);
     }
 }
