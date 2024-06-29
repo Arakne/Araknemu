@@ -229,7 +229,7 @@ class ArmorSimulatorTest extends FightBaseCase {
     }
 
     @Test
-    void onReduceableDamageShouldBeoostedByIntelligence() {
+    void onReduceableDamageShouldBeBoostedByIntelligence() {
         other.fighter().characteristics().alter(Characteristic.INTELLIGENCE, 100);
 
         Damage damage = new Damage(10, Element.EARTH);
@@ -249,7 +249,27 @@ class ArmorSimulatorTest extends FightBaseCase {
     }
 
     @Test
-    void onReduceableDamageShouldBeoostedByDamageElement() {
+    void onReduceableDamageShouldIgnoreNegativeReduce() {
+        other.fighter().characteristics().alter(Characteristic.INTELLIGENCE, -1000);
+
+        Damage damage = new Damage(10, Element.EARTH);
+        Buff buff = new Buff(
+            SpellEffectStub.fixed(105, 3),
+            Mockito.mock(Spell.class),
+            other.fighter(),
+            other.fighter(),
+            new BuffHook() {}
+        );
+
+        ArmorSimulator simulator = new ArmorSimulator();
+
+        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertEquals(10, damage.value());
+        assertEquals(0, damage.reducedDamage());
+    }
+
+    @Test
+    void onReduceableDamageShouldBeBoostedByDamageElement() {
         other.fighter().characteristics().alter(Characteristic.STRENGTH, 100);
 
         Damage damage = new Damage(10, Element.EARTH);

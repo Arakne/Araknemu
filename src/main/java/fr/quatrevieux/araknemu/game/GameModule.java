@@ -952,15 +952,15 @@ public final class GameModule implements ContainerModule {
             simulator.register(99,  new DamageSimulator(simulator, Element.FIRE));
             simulator.register(100, new DamageSimulator(simulator, Element.NEUTRAL));
 
-            simulator.register(85, new PercentLifeDamageSimulator(Element.WATER));
-            simulator.register(86, new PercentLifeDamageSimulator(Element.EARTH));
-            simulator.register(87, new PercentLifeDamageSimulator(Element.AIR));
-            simulator.register(88, new PercentLifeDamageSimulator(Element.FIRE));
-            simulator.register(89, new PercentLifeDamageSimulator(Element.NEUTRAL));
-            simulator.register(671, new PercentLifeDamageSimulator(Element.NEUTRAL)); // The actual effect is applied as "indirect damage" but it works mostly like a simple percent life damage.
+            simulator.register(85, new PercentLifeDamageSimulator(simulator, Element.WATER));
+            simulator.register(86, new PercentLifeDamageSimulator(simulator, Element.EARTH));
+            simulator.register(87, new PercentLifeDamageSimulator(simulator, Element.AIR));
+            simulator.register(88, new PercentLifeDamageSimulator(simulator, Element.FIRE));
+            simulator.register(89, new PercentLifeDamageSimulator(simulator, Element.NEUTRAL));
+            simulator.register(671, new PercentLifeDamageSimulator(simulator, Element.NEUTRAL)); // The actual effect is applied as "indirect damage" but it works mostly like a simple percent life damage.
 
-            simulator.register(276, new PercentLifeLostDamageSimulator(Element.EARTH));
-            simulator.register(279, new PercentLifeLostDamageSimulator(Element.NEUTRAL));
+            simulator.register(276, new PercentLifeLostDamageSimulator(simulator, Element.EARTH));
+            simulator.register(279, new PercentLifeLostDamageSimulator(simulator, Element.NEUTRAL));
 
             simulator.register(82, new FixedStealLifeSimulator());
             simulator.register(131, new DamageOnActionPointUseSimulator());

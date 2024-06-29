@@ -23,12 +23,18 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.SpellEffectStub;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -63,7 +69,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
         target.life().alterMax(target, 1000);
         fighter.life().damage(target, 100);
         ai = new FighterAI(fighter, fight, new NullGenerator());
-        simulator = new PercentLifeLostDamageSimulator(Element.EARTH);
+        simulator = new PercentLifeLostDamageSimulator(container.get(Simulator.class), Element.EARTH);
     }
 
     @Test
@@ -73,6 +79,54 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
 
         fighter.life().heal(fighter, 50);
         assertEquals(-5, simulate().enemiesLife());
+    }
+
+    @Test
+    void simulateWithArmorBuff() {
+        target.buffs().add(new Buff(
+            SpellEffectStub.fixed(105, 5),
+            Mockito.mock(Spell.class),
+            target,
+            target,
+            new BuffHook() {}
+        ));
+
+        assertEquals(-5, simulate().enemiesLife());
+        assertEquals(0, simulate().selfLife());
+
+        fighter.life().heal(fighter, 50);
+        assertEquals(0, simulate().enemiesLife());
+    }
+
+    @Test
+    void simulateWithCounterDamageCharacteristic() {
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 10);
+
+        assertEquals(-10, simulate().enemiesLife());
+        assertEquals(-10, simulate().selfLife());
+    }
+
+    @Test
+    void simulateWithCounterDamageBuff() {
+        container.get(Simulator.class).registerBuff(999, new BuffEffectSimulator() {
+            @Override
+            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+                return damage.reflect(10);
+            }
+        });
+
+        target.buffs().add(
+            new Buff(
+                SpellEffectStub.fixed(999, 10),
+                Mockito.mock(Spell.class),
+                target,
+                target,
+                new BuffHook() {}
+            )
+        );
+
+        assertEquals(-10, simulate().enemiesLife());
+        assertEquals(-10, simulate().selfLife());
     }
 
     @Test
@@ -86,7 +140,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
         fighter.life().damage(fighter, 100);
         assertEquals(-10, simulate().enemiesLife());
 
-        simulator = new PercentLifeLostDamageSimulator(Element.WATER);
+        simulator = new PercentLifeLostDamageSimulator(container.get(Simulator.class), Element.WATER);
         assertEquals(-20, simulate().enemiesLife());
     }
 
@@ -127,6 +181,35 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
 
         simulation = new CastSimulation(spell, fighter, target.cell());
         simulator.simulate(simulation, ai, scope.effects().get(0));
+        assertEquals(-15, simulation.enemiesLife());
+    }
+
+    @Test
+    void simulatePoisonShouldIgnoreArmorBuff() {
+        target.buffs().add(new Buff(
+            SpellEffectStub.fixed(105, 5),
+            Mockito.mock(Spell.class),
+            target,
+            target,
+            new BuffHook() {}
+        ));
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(2);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastSimulation simulation = new CastSimulation(spell, fighter, target.cell());
+
+        CastScope<Fighter, FightCell> scope = makeCastScope(fighter, spell, effect, target.cell());
+        simulator.simulate(simulation, ai, scope.effects().get(0));
+
         assertEquals(-15, simulation.enemiesLife());
     }
 
