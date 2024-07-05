@@ -152,14 +152,14 @@ public final class Simulator {
      *
      * @return The modified damage
      *
-     * @see BuffEffectSimulator#onReduceableDamage(Buff, FighterData, Damage) The called buff method
+     * @see BuffEffectSimulator#onReduceableDamage(CastSimulation simulation, Buff, FighterData, Damage) The called buff method
      */
-    public Damage applyReduceableDamageBuffs(FighterData target, Damage damage) {
+    public Damage applyReduceableDamageBuffs(CastSimulation simulation, FighterData target, Damage damage) {
         for (Buff buff : target.buffs()) {
             final @Nullable BuffEffectSimulator buffSimulator = buffSimulators.get(buff.effect().effect());
 
             if (buffSimulator != null) {
-                damage = buffSimulator.onReduceableDamage(buff, target, damage);
+                damage = buffSimulator.onReduceableDamage(simulation, buff, target, damage);
             }
         }
 

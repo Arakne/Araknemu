@@ -222,8 +222,9 @@ class ArmorSimulatorTest extends FightBaseCase {
         );
 
         ArmorSimulator simulator = new ArmorSimulator();
+        CastSimulation simulation = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
 
-        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertSame(damage, simulator.onReduceableDamage(simulation, buff, other.fighter(), damage));
         assertEquals(7, damage.value());
         assertEquals(3, damage.reducedDamage());
     }
@@ -242,8 +243,9 @@ class ArmorSimulatorTest extends FightBaseCase {
         );
 
         ArmorSimulator simulator = new ArmorSimulator();
+        CastSimulation simulation = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
 
-        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertSame(damage, simulator.onReduceableDamage(simulation, buff, other.fighter(), damage));
         assertEquals(6, damage.value());
         assertEquals(4, damage.reducedDamage());
     }
@@ -262,8 +264,9 @@ class ArmorSimulatorTest extends FightBaseCase {
         );
 
         ArmorSimulator simulator = new ArmorSimulator();
+        CastSimulation simulation = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
 
-        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertSame(damage, simulator.onReduceableDamage(simulation, buff, other.fighter(), damage));
         assertEquals(10, damage.value());
         assertEquals(0, damage.reducedDamage());
     }
@@ -282,8 +285,9 @@ class ArmorSimulatorTest extends FightBaseCase {
         );
 
         ArmorSimulator simulator = new ArmorSimulator();
+        CastSimulation simulation = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
 
-        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertSame(damage, simulator.onReduceableDamage(simulation, buff, other.fighter(), damage));
         assertEquals(6, damage.value());
         assertEquals(4, damage.reducedDamage());
     }
@@ -301,14 +305,15 @@ class ArmorSimulatorTest extends FightBaseCase {
         );
 
         ArmorSimulator simulator = new ArmorSimulator();
+        CastSimulation simulation = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
 
         Damage damage = new Damage(10, Element.EARTH);
-        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertSame(damage, simulator.onReduceableDamage(simulation, buff, other.fighter(), damage));
         assertEquals(10, damage.value());
         assertEquals(0, damage.reducedDamage());
 
         damage = new Damage(10, Element.WATER);
-        assertSame(damage, simulator.onReduceableDamage(buff, other.fighter(), damage));
+        assertSame(damage, simulator.onReduceableDamage(simulation, buff, other.fighter(), damage));
         assertEquals(7, damage.value());
         assertEquals(3, damage.reducedDamage());
     }

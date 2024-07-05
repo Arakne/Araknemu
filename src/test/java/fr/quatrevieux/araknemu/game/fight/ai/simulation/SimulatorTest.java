@@ -347,7 +347,7 @@ class SimulatorTest extends FightBaseCase {
         simulator = new Simulator(new BaseCriticalityStrategy());
 
         Damage damage = new Damage(10, Element.EARTH);
-        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+        Damage returned = simulator.applyReduceableDamageBuffs(new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123)), other.fighter(), damage);
 
         assertSame(damage, returned);
         assertEquals(10, returned.value());
@@ -372,14 +372,14 @@ class SimulatorTest extends FightBaseCase {
         simulator = new Simulator(new BaseCriticalityStrategy());
         simulator.registerBuff(101, new BuffEffectSimulator() {
             @Override
-            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+            public Damage onReduceableDamage(CastSimulation simulation, Buff buff, FighterData target, Damage damage) {
                 called.set(true);
                 return damage;
             }
         });
 
         Damage damage = new Damage(10, Element.EARTH);
-        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+        Damage returned = simulator.applyReduceableDamageBuffs(new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123)), other.fighter(), damage);
 
         assertSame(damage, returned);
         assertEquals(10, returned.value());
@@ -403,7 +403,7 @@ class SimulatorTest extends FightBaseCase {
         simulator = new Simulator(new BaseCriticalityStrategy());
         simulator.registerBuff(100, new BuffEffectSimulator() {
             @Override
-            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+            public Damage onReduceableDamage(CastSimulation simulation, Buff buff, FighterData target, Damage damage) {
                 called.set(true);
 
                 return damage.reduce(5);
@@ -411,7 +411,7 @@ class SimulatorTest extends FightBaseCase {
         });
 
         Damage damage = new Damage(10, Element.EARTH);
-        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+        Damage returned = simulator.applyReduceableDamageBuffs(new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123)), other.fighter(), damage);
 
         assertSame(damage, returned);
         assertEquals(5, returned.value());
@@ -434,13 +434,13 @@ class SimulatorTest extends FightBaseCase {
         simulator = new Simulator(new BaseCriticalityStrategy());
         simulator.registerBuff(100, new BuffEffectSimulator() {
             @Override
-            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+            public Damage onReduceableDamage(CastSimulation simulation, Buff buff, FighterData target, Damage damage) {
                 return new Damage(buff.effect().min(), Element.NEUTRAL);
             }
         });
 
         Damage damage = new Damage(10, Element.EARTH);
-        Damage returned = simulator.applyReduceableDamageBuffs(other.fighter(), damage);
+        Damage returned = simulator.applyReduceableDamageBuffs(new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123)), other.fighter(), damage);
 
         assertNotSame(damage, returned);
         assertEquals(20, returned.value());

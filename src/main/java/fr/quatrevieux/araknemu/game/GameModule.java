@@ -170,6 +170,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.MultiplyDamageSim
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PercentLifeLostDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ReflectDamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SkipTurnSimulator;
@@ -1036,8 +1037,8 @@ public final class GameModule implements ContainerModule {
 
             // Armors
             simulator.registerEffectAndBuff(105, new ArmorSimulator());
-            simulator.register(106, new SpellReturnSimulator(20));
-            simulator.register(107, new AlterCharacteristicSimulator(5)); // Reflect damage. Considered as simple characteristic boost to simplify the code
+            simulator.registerEffectAndBuff(106, new SpellReturnSimulator(20));
+            simulator.registerEffectAndBuff(107, new ReflectDamageSimulator(5));
             simulator.registerEffectAndBuff(265, new ArmorSimulator());
 
             // Heal
