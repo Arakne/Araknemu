@@ -75,7 +75,7 @@ public final class ArmorSimulator implements EffectSimulator, BuffEffectSimulato
     }
 
     @Override
-    public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+    public Damage onReduceableDamage(CastSimulation simulation, Buff buff, FighterData target, Damage damage) {
         if (!supportsElement(buff, damage.element())) {
             return damage;
         }

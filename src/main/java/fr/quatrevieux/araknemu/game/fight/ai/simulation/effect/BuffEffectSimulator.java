@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -35,9 +36,9 @@ public interface BuffEffectSimulator {
      * @param damage Computed damage before reduction
      *
      * @return The reduced damage
-     * @see fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator#applyReduceableDamageBuffs(FighterData, Damage) Caller of this method
+     * @see fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator#applyReduceableDamageBuffs(CastSimulation, FighterData, Damage) Caller of this method
      */
-    public default Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+    public default Damage onReduceableDamage(CastSimulation simulation, Buff buff, FighterData target, Damage damage) {
         return damage;
     }
 }

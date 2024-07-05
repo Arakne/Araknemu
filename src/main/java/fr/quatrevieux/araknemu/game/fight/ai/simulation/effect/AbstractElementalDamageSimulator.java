@@ -79,8 +79,16 @@ public abstract class AbstractElementalDamageSimulator implements EffectSimulato
         return baseDamageInterval.map(value -> Asserter.castNonNegative(createDamage(value, target).value()));
     }
 
-    private Interval applyResistancesAndArmor(Interval baseDamageInterval, CastSimulation simulation, FighterData target) {
-        return baseDamageInterval.map(value -> Asserter.castNonNegative(createDamageWithArmor(value, simulation, target).value()));
+    private IntervalAndReflectedDamage applyResistancesAndArmor(Interval baseDamageInterval, CastSimulation simulation, FighterData target) {
+        final int baseCounterDamage = Math.max(target.characteristics().get(Characteristic.COUNTER_DAMAGE), 0);
+        final Damage min = createDamageWithArmor(baseDamageInterval.min(), simulation, target);
+        final Damage max = createDamageWithArmor(baseDamageInterval.max(), simulation, target);
+        final Interval reflectedDamage = Interval.of(min.reflectedDamage(), max.reflectedDamage()).map(v -> v + baseCounterDamage);
+
+        return new IntervalAndReflectedDamage(
+            Interval.of(Math.max(min.value(), 0), Math.max(max.value(), 0)),
+            reflectedDamage
+        );
     }
 
     private Damage createDamage(@NonNegative int baseDamage, FighterData target) {
@@ -91,14 +99,7 @@ public abstract class AbstractElementalDamageSimulator implements EffectSimulato
     }
 
     private Damage createDamageWithArmor(@NonNegative int baseDamage, CastSimulation simulation, FighterData target) {
-        final Damage damage = simulator.applyReduceableDamageBuffs(target, createDamage(baseDamage, target));
-        final int reflectedDamage = damage.reflectedDamage() + target.characteristics().get(Characteristic.COUNTER_DAMAGE);
-
-        if (reflectedDamage > 0) {
-            simulation.addDamage(Interval.of(reflectedDamage), simulation.caster());
-        }
-
-        return damage;
+        return simulator.applyReduceableDamageBuffs(simulation, target, createDamage(baseDamage, target));
     }
 
     private void simulatePoison(CastSimulation simulation, Interval damage, @GTENegativeOne int duration, Collection<? extends FighterData> targets) {
@@ -111,7 +112,20 @@ public abstract class AbstractElementalDamageSimulator implements EffectSimulato
 
     private void simulateDamage(CastSimulation simulation, Interval damage, Collection<? extends FighterData> targets) {
         for (FighterData target : targets) {
-            simulation.addDamage(applyResistancesAndArmor(damage, simulation, target), target);
+            final IntervalAndReflectedDamage value = applyResistancesAndArmor(damage, simulation, target);
+
+            simulation.addDamage(value.interval, target);
+            simulation.addDamage(value.reflectedDamage, simulation.caster());
+        }
+    }
+
+    private static final class IntervalAndReflectedDamage {
+        private final Interval interval;
+        private final Interval reflectedDamage;
+
+        private IntervalAndReflectedDamage(Interval interval, Interval reflectedDamage) {
+            this.interval = interval;
+            this.reflectedDamage = reflectedDamage;
         }
     }
 }

@@ -32,11 +32,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -201,14 +198,6 @@ class DamageSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateWithCounterDamageBuff() {
-        // @todo use actual simulator when it will be implemented
-        container.get(Simulator.class).registerBuff(107, new BuffEffectSimulator() {
-            @Override
-            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
-                return damage.reflect(buff.effect().min());
-            }
-        });
-
         other.fighter().buffs().add(
             new Buff(
                 SpellEffectStub.fixed(107, 5),
@@ -221,6 +210,38 @@ class DamageSimulatorTest extends FightBaseCase {
 
         assertEquals(-15, doSimulation().enemiesLife());
         assertEquals(-5, doSimulation().selfLife());
+    }
+
+    @Test
+    void simulateWithCounterDamageBuffNotFixedDamage() {
+        other.fighter().buffs().add(
+            new Buff(
+                SpellEffectStub.fixed(107, 5),
+                Mockito.mock(Spell.class),
+                fighter,
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        assertEquals(-18.5, doSimulation(10, 15).enemiesLife());
+        assertEquals(-5, doSimulation(10, 15).selfLife());
+    }
+
+    @Test
+    void simulateWithReturnSpell() {
+        other.fighter().buffs().add(
+            new Buff(
+                SpellEffectStub.fixed(106, 5).setSpecial(100),
+                Mockito.mock(Spell.class),
+                fighter,
+                other.fighter(),
+                new BuffHook() {}
+            )
+        );
+
+        assertEquals(0, doSimulation().enemiesLife());
+        assertEquals(-15, doSimulation().selfLife());
     }
 
     @Test
@@ -251,11 +272,16 @@ class DamageSimulatorTest extends FightBaseCase {
     }
 
     private CastSimulation doSimulation() {
+        return doSimulation(10, 0);
+    }
+
+    private CastSimulation doSimulation(int min, int max) {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
-        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.min()).thenReturn(min);
+        Mockito.when(effect.max()).thenReturn(max);
         Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);

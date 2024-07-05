@@ -110,7 +110,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
     void simulateWithCounterDamageBuff() {
         container.get(Simulator.class).registerBuff(999, new BuffEffectSimulator() {
             @Override
-            public Damage onReduceableDamage(Buff buff, FighterData target, Damage damage) {
+            public Damage onReduceableDamage(CastSimulation simulation, Buff buff, FighterData target, Damage damage) {
                 return damage.reflect(10);
             }
         });

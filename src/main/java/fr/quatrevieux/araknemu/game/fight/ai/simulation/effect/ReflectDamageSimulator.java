@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2023 Vincent Quatrevieux
+ * Copyright (c) 2017-2024 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation.effect;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.util.Formula;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
@@ -30,64 +30,45 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
- * Simulate spell return effect
+ * Handle simulator for reflect damage effect
  *
- * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler
+ * For simulation, will be considered as simple characteristic boost to simplify the code.
+ * Also provides a buff effect simulator for compute reflected damage.
+ *
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReflectDamageHandler The actual effect handler
  */
-public final class SpellReturnSimulator implements EffectSimulator, BuffEffectSimulator {
-    private final int multiplier;
+public final class ReflectDamageSimulator implements EffectSimulator, BuffEffectSimulator {
+    private final EffectSimulator baseSimulator;
 
-    public SpellReturnSimulator(int multiplier) {
-        this.multiplier = multiplier;
+    /**
+     * @param multiplier The value multiplier for buff score. Forwards to {@link AlterCharacteristicSimulator}.
+     */
+    public ReflectDamageSimulator(int multiplier) {
+        this.baseSimulator = new AlterCharacteristicSimulator(multiplier);
     }
 
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
-        final double value = score(effect.effect());
-
-        for (FighterData target : effect.targets()) {
-            simulation.addBoost(value, target);
-        }
+        baseSimulator.simulate(simulation, ai, effect);
     }
 
     @Override
     public void score(SpellScore score, SpellEffect effect, Characteristics characteristics) {
-        score.addBoost(Asserter.castNonNegative((int) score(effect)));
+        baseSimulator.score(score, effect, characteristics);
     }
 
     @Override
     public Damage onReduceableDamage(CastSimulation simulation, Buff buff, FighterData target, Damage damage) {
-        final SpellEffect effect = buff.effect();
-        final int level = Math.max(effect.min(), effect.max());
-        final double percent = effect.special();
+        final int wisdom = buff.target().characteristics().get(Characteristic.WISDOM);
+        final int baseReflect = buff.effect().min();
+        final int reflect = baseReflect + baseReflect * wisdom / 100;
 
-        // Ignore the effect if it's too random, or doesn't apply to the current cast
-        if (percent < 90 || level < simulation.spell().level()) {
-            return damage;
+        if (reflect > 0) {
+            damage.reflect(reflect);
         }
 
-        final int currentDamage = damage.value();
-
-        if (currentDamage <= 0) {
-            return damage;
-        }
-
-        // Simulate return effect by reducing all damage, and mark it as reflected
-        // This is not the actual behavior (i.e. change the target), but it's enough for simulation
-        return damage
-            .reflect(currentDamage)
-            .reduce(currentDamage)
-        ;
-    }
-
-    private double score(SpellEffect effect) {
-        final int level = Math.max(effect.min(), effect.max());
-        final double percent = effect.special() / 100d;
-        final int duration = Formula.capedDuration(effect.duration());
-
-        return level * percent * multiplier * duration;
+        return damage;
     }
 }
