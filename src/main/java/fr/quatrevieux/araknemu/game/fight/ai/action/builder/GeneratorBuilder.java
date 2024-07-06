@@ -35,9 +35,11 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttractEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToBoost;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToCast;
 import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 
 import java.util.ArrayList;
@@ -304,6 +306,35 @@ public class GeneratorBuilder {
      */
     public final GeneratorBuilder debuff(Simulator simulator) {
         return add(new Debuff(simulator));
+    }
+
+    /**
+     * Try to cast a spell, using the given selector
+     *
+     * @param simulator Simulator used by AI
+     * @param selector The spell cast selector. If a lambda is used, it will be used as a score function.
+     *
+     * @return The builder instance
+     * @see CastSpell The used action generator
+     */
+    public final GeneratorBuilder cast(Simulator simulator, CastSpell.SimulationSelector selector) {
+        return add(new CastSpell(simulator, selector));
+    }
+
+    /**
+     * Move to the best cell for cast a spell, and then cast it.
+     *
+     * @param simulator Simulator used by AI
+     * @param selector The spell cast selector. If a lambda is used, it will be used as a score function.
+     *
+     * @return The builder instance
+     * @see CastSpell The used action generator
+     */
+    public final GeneratorBuilder castFromBestCell(Simulator simulator, CastSpell.SimulationSelector selector) {
+        add(new MoveToCast(simulator, selector, new MoveToCast.BestTargetStrategy()));
+        cast(simulator, selector);
+
+        return this;
     }
 
     /**

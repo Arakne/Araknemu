@@ -35,10 +35,12 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttractEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToBoost;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToCast;
 import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import org.junit.jupiter.api.BeforeEach;
@@ -195,6 +197,16 @@ class GeneratorBuilderTest extends TestCase {
     @Test
     void debuff() {
         assertInstanceOf(Debuff.class, builder.debuff(simulator).build());
+    }
+
+    @Test
+    void cast() {
+        assertInstanceOf(CastSpell.class, builder.cast(simulator, simulation -> 0).build());
+    }
+
+    @Test
+    void castFromBestCell() throws NoSuchFieldException, IllegalAccessException {
+        assertActions(builder.castFromBestCell(simulator, simulation -> 0).build(), MoveToCast.class, CastSpell.class);
     }
 
     @Test
