@@ -76,7 +76,9 @@ public final class CastSpell implements ActionGenerator {
         /**
          * Check if the simulation is valid
          */
-        public boolean valid(CastSimulation simulation);
+        public default boolean valid(CastSimulation simulation) {
+            return score(simulation) > 0;
+        }
 
         /**
          * Compare the two simulation

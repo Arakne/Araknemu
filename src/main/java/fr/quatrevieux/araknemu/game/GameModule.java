@@ -143,6 +143,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.scripting.ScriptingAiLoader
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Blocking;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Fixed;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Lunatic;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
@@ -1092,7 +1093,8 @@ public final class GameModule implements ContainerModule {
                     new Support(simulator),
                     new Tactical(simulator),
                     new Fixed(simulator),
-                    new Blocking()
+                    new Blocking(),
+                    new Lunatic(simulator)
                 );
             }
         );

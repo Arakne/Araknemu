@@ -215,5 +215,6 @@ class GameModuleTest extends FightBaseCase {
         assertTrue(aiFactory.create(fighter, "SUPPORT").isPresent());
         assertTrue(aiFactory.create(fighter, "TACTICAL").isPresent());
         assertTrue(aiFactory.create(fighter, "BLOCKING").isPresent());
+        assertTrue(aiFactory.create(fighter, "LUNATIC").isPresent());
     }
 }
