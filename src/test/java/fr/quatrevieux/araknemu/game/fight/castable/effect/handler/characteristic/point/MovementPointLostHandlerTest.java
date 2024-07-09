@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -91,7 +91,7 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         assertTrue(buff.isPresent());
         assertEquals(2, buff.get().effect().min());
@@ -107,9 +107,9 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
         AtomicReference<Integer> hookValue = new AtomicReference<>();
 
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+            public void onCharacteristicAltered(FightBuff buff, Characteristic characteristic, int value) {
                 hookCharacteristic.set(characteristic);
                 hookValue.set(value);
             }
@@ -153,7 +153,7 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         assertTrue(buff.isPresent());
         assertEquals(2, buff.get().effect().min());
@@ -183,7 +183,7 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         assertTrue(buff.isPresent());
         assertEquals(1, buff.get().effect().min());
@@ -215,7 +215,7 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         assertFalse(buff.isPresent());
         assertEquals(3, target.characteristics().get(Characteristic.MOVEMENT_POINT));
@@ -243,7 +243,7 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         assertTrue(buff.isPresent());
         assertBetween(1, 2, buff.get().effect().min());
@@ -276,8 +276,8 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
-        Optional<Buff> buff2 = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff1 = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff2 = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -306,7 +306,7 @@ class MovementPointLostHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
 
         requestStack.assertAll(
             ActionEffect.buff(buff.get(), -2),

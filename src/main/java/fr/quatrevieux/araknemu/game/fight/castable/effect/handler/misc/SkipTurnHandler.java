@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -40,7 +40,7 @@ public final class SkipTurnHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            final Buff buff = new Buff(effect.effect(), cast.action(), cast.caster(), target, this);
+            final FightBuff buff = new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this);
 
             // The duration must be at least 1 to ensure that the next turn will be skipped
             buff.incrementRemainingTurns();
@@ -51,17 +51,17 @@ public final class SkipTurnHandler implements EffectHandler, BuffHook {
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public boolean onStartTurn(Buff buff) {
+    public boolean onStartTurn(FightBuff buff) {
         return false;
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
+    public void onBuffStarted(FightBuff buff) {
         fight.send(ActionEffect.skipNextTurn(buff.caster(), buff.target()));
     }
 }

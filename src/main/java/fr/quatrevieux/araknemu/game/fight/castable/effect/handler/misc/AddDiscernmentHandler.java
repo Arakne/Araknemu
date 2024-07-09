@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.BaseCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
@@ -50,7 +50,7 @@ public final class AddDiscernmentHandler implements EffectHandler, BuffHook {
         final Fighter caster = cast.caster();
 
         EffectValue.forEachTargets(spellEffect, caster, cast.targets(), (target, effectValue) -> {
-            target.buffs().add(new Buff(
+            target.buffs().add(new FightBuff(
                 BuffEffect.fixed(spellEffect, effectValue.value()),
                 action,
                 caster,
@@ -61,12 +61,12 @@ public final class AddDiscernmentHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
+    public void onBuffStarted(FightBuff buff) {
         buff.target().characteristics().alterDiscernment(buff.effect().min());
     }
 
     @Override
-    public void onBuffTerminated(Buff buff) {
+    public void onBuffTerminated(FightBuff buff) {
         buff.target().characteristics().alterDiscernment(-buff.effect().min());
     }
 }

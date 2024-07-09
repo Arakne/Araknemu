@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -97,7 +97,7 @@ class ReduceDamageHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -114,7 +114,7 @@ class ReduceDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(7);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
 
@@ -132,7 +132,7 @@ class ReduceDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(7);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
 
@@ -148,7 +148,7 @@ class ReduceDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(10);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
         handler.onDirectDamage(buff, caster, damage);
@@ -176,7 +176,7 @@ class ReduceDamageHandlerTest extends FightBaseCase {
         Mockito.when(returnEffect.min()).thenReturn(10);
         Mockito.when(returnEffect.special()).thenReturn(8);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
         handler.onDirectDamage(buff, caster, damage);
@@ -194,7 +194,7 @@ class ReduceDamageHandlerTest extends FightBaseCase {
         Mockito.when(returnEffect.min()).thenReturn(10);
         Mockito.when(returnEffect.special()).thenReturn(8);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         Damage damage = new Damage(20, Element.AIR);
         handler.onIndirectDamage(buff, caster, damage);

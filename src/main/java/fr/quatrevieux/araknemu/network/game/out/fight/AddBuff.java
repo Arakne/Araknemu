@@ -19,16 +19,16 @@
 
 package fr.quatrevieux.araknemu.network.game.out.fight;
 
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
 /**
  * Add buff to fighter
  */
 public final class AddBuff {
-    private final Buff buff;
+    private final FightBuff buff;
 
-    public AddBuff(Buff buff) {
+    public AddBuff(FightBuff buff) {
         this.buff = buff;
     }
 

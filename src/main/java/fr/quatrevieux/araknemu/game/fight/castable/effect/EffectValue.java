@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -187,13 +187,13 @@ public final class EffectValue implements Cloneable {
      * Create and configure an effect value for a given caster and target
      *
      * @param effect The spell effect
-     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
-     * @param target The target on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)} will be called
+     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onEffectValueCast(EffectValue)} will be called
+     * @param target The target on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onEffectValueTarget(EffectValue)} will be called
      *
      * @return The configured effect
      * @todo Use Fighter instead of FighterData
      */
-    public static EffectValue create(SpellEffect effect, FighterData caster, FighterData target) {
+    public static EffectValue create(SpellEffect effect, Fighter caster, Fighter target) {
         final EffectValue value = new EffectValue(effect);
 
         caster.buffs().onEffectValueCast(value);
@@ -206,7 +206,7 @@ public final class EffectValue implements Cloneable {
      * Create and configure multiple effect values for multiple targets
      *
      * Only one "dice" will be used for all targets, but each target will receive their own EffectValue,
-     * configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)}.
+     * configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onEffectValueTarget(EffectValue)}.
      *
      * So {@link EffectValue#minimize()} and {@link EffectValue#maximize()} are effective, without change the effects value of others targets
      *
@@ -221,11 +221,11 @@ public final class EffectValue implements Cloneable {
      * }</pre>
      *
      * @param effect The spell effect
-     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
-     * @param targets Targets used to configure the effect value using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)}
+     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onEffectValueCast(EffectValue)} will be called
+     * @param targets Targets used to configure the effect value using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onEffectValueTarget(EffectValue)}
      * @param action Action to perform on each target, with their related effect value
      */
-    public static <F extends FighterData> void forEachTargets(SpellEffect effect, FighterData caster, Iterable<F> targets, BiConsumer<F, EffectValue> action) {
+    public static <F extends Fighter> void forEachTargets(SpellEffect effect, Fighter caster, Iterable<F> targets, BiConsumer<F, EffectValue> action) {
         final Context context = preRoll(effect, caster);
 
         for (F target : targets) {
@@ -238,7 +238,7 @@ public final class EffectValue implements Cloneable {
      *
      * The "dice" will be rolled and configured for the caster, and a factory will be returned
      * to configure the effect value for each target.
-     * The final effect value is configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueTarget(EffectValue)}.
+     * The final effect value is configured using {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onEffectValueTarget(EffectValue)}.
      *
      * So {@link EffectValue#minimize()} and {@link EffectValue#maximize()} are effective, without change the effects value of others targets
      *
@@ -258,9 +258,9 @@ public final class EffectValue implements Cloneable {
      * }</pre>
      *
      * @param effect The spell effect
-     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onEffectValueCast(EffectValue)} will be called
+     * @param caster The spell caster on which {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onEffectValueCast(EffectValue)} will be called
      */
-    public static Context preRoll(SpellEffect effect, FighterData caster) {
+    public static Context preRoll(SpellEffect effect, Fighter caster) {
         final EffectValue value = new EffectValue(effect);
 
         caster.buffs().onEffectValueCast(value);
@@ -310,6 +310,6 @@ public final class EffectValue implements Cloneable {
          *
          * @return The new instance of effect value, configured for the target
          */
-        public EffectValue forTarget(FighterData target);
+        public EffectValue forTarget(Fighter target);
     }
 }

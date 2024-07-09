@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -75,7 +75,7 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
 
         if (stolen > 0) {
             caster.buffs().add(
-                new Buff(
+                new FightBuff(
                     BuffEffect.withCustomEffect(effect.effect(), addPointEffect, stolen),
                     cast.action(),
                     caster,

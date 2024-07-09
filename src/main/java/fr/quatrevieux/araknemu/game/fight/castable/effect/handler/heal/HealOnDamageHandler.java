@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -33,7 +33,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  *
  * This effect is boosted by {@link Characteristic#INTELLIGENCE} and {@link Characteristic#HEALTH_BOOST}
  *
- * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onLifeAltered(int)
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onLifeAltered(int)
  */
 public final class HealOnDamageHandler implements EffectHandler, BuffHook {
     @Override
@@ -47,12 +47,12 @@ public final class HealOnDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onLifeAltered(Buff buff, int value) {
+    public void onLifeAltered(FightBuff buff, int value) {
         if (value < 0) {
             apply(buff.caster(), buff.effect(), buff.target());
         }

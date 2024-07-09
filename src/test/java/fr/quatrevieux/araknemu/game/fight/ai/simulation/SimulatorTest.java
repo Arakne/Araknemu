@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.BuffEffectSimulat
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
@@ -358,7 +359,7 @@ class SimulatorTest extends FightBaseCase {
     @Test
     void applyReduceableDamageBuffsWithBuffNotMatching() {
         other.fighter().buffs().add(
-            new Buff(
+            new FightBuff(
                 new SpellEffectStub(100, 10),
                 Mockito.mock(Spell.class),
                 other.fighter(),
@@ -389,7 +390,7 @@ class SimulatorTest extends FightBaseCase {
     @Test
     void applyReduceableDamageBuffsWithBuffMatching() {
         other.fighter().buffs().add(
-            new Buff(
+            new FightBuff(
                 new SpellEffectStub(100, 10),
                 Mockito.mock(Spell.class),
                 other.fighter(),
@@ -422,7 +423,7 @@ class SimulatorTest extends FightBaseCase {
     @Test
     void applyReduceableDamageBuffsWithBuffMatchingReturnedNewInstance() {
         other.fighter().buffs().add(
-            new Buff(
+            new FightBuff(
                 new SpellEffectStub(100, 20),
                 Mockito.mock(Spell.class),
                 other.fighter(),

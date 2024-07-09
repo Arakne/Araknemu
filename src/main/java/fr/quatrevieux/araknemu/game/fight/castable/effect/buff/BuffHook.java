@@ -41,30 +41,30 @@ public interface BuffHook {
      *
      * @return False if the fighter cannot start the turn
      */
-    public default boolean onStartTurn(Buff buff) {
+    public default boolean onStartTurn(FightBuff buff) {
         return true;
     }
 
     /**
      * Apply effect on turn ending
      */
-    public default void onEndTurn(Buff buff, Turn turn) {}
+    public default void onEndTurn(FightBuff buff, Turn turn) {}
 
     /**
      * Start the buff
      */
-    public default void onBuffStarted(Buff buff) {}
+    public default void onBuffStarted(FightBuff buff) {}
 
     /**
      * The buff is terminated (buff expired, debuff...)
      */
-    public default void onBuffTerminated(Buff buff) {}
+    public default void onBuffTerminated(FightBuff buff) {}
 
     /**
      * The fighter has cast a spell or close combat attack
-     * This buff is called before apply effects and resolve targets using {@link BuffHook#onCastTarget(Buff, FightCastScope)}
+     * This buff is called before apply effects and resolve targets using {@link BuffHook#onCastTarget(FightBuff, FightCastScope)}
      */
-    public default void onCast(Buff buff, FightCastScope cast) {}
+    public default void onCast(FightBuff buff, FightCastScope cast) {}
 
     /**
      * The fighter is a target of a cast
@@ -118,27 +118,27 @@ public interface BuffHook {
      * @see CastScope#removeTarget(FighterData)
      * @see CastScope#replaceTarget(FighterData, FighterData)
      */
-    public default boolean onCastTarget(Buff buff, FightCastScope cast) {
+    public default boolean onCastTarget(FightBuff buff, FightCastScope cast) {
         return true;
     }
 
     /**
      * The fighter will take damages
      */
-    public default void onDamage(Buff buff, Damage value) {}
+    public default void onDamage(FightBuff buff, Damage value) {}
 
     /**
      * The fighter will take damages
      */
-    public default void onDirectDamage(Buff buff, Fighter caster, Damage value) {
+    public default void onDirectDamage(FightBuff buff, Fighter caster, Damage value) {
         onDamage(buff, value);
     }
 
     /**
      * Direct damage has been applied to the current fighter
-     * This hook is called after {@link BuffHook#onDirectDamage(Buff, Fighter, Damage)}
+     * This hook is called after {@link BuffHook#onDirectDamage(FightBuff, Fighter, Damage)}
      *
-     * Unlike {@link BuffHook#onLifeAltered(Buff, int)} this hook is only called by direct damage attack, so it ignores
+     * Unlike {@link BuffHook#onLifeAltered(FightBuff, int)} this hook is only called by direct damage attack, so it ignores
      * poison, push damage and some special effects.
      *
      * Note: this hook is not called if the attack has killed the fighter
@@ -147,12 +147,12 @@ public interface BuffHook {
      * @param caster Attack caster
      * @param damage Applied damage. Always positive. If an attack is inefficient, this hook will not be called.
      */
-    public default void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {}
+    public default void onDirectDamageApplied(FightBuff buff, Fighter caster, @Positive int damage) {}
 
     /**
      * The fighter will take damages indirectly (like poison)
      */
-    public default void onIndirectDamage(Buff buff, Fighter caster, Damage value) {
+    public default void onIndirectDamage(FightBuff buff, Fighter caster, Damage value) {
         onDamage(buff, value);
     }
 
@@ -163,14 +163,14 @@ public interface BuffHook {
      * @param poison The poison buff
      * @param value The damage to apply
      */
-    public default void onBuffDamage(Buff buff, Buff poison, Damage value) {
+    public default void onBuffDamage(FightBuff buff, FightBuff poison, Damage value) {
         onIndirectDamage(buff, buff.caster(), value);
     }
 
     /**
      * The fighter life has been altered
      *
-     * Unlike {@link BuffHook#onDamage(Buff, Damage)}, the effects has already been applied
+     * Unlike {@link BuffHook#onDamage(FightBuff, Damage)}, the effects has already been applied
      *
      * @param buff The active buff
      * @param value Altered life value. Negative for a damage, positive for a heal
@@ -178,16 +178,16 @@ public interface BuffHook {
      * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#damage(Fighter, int)
      * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
      */
-    public default void onLifeAltered(Buff buff, int value) {}
+    public default void onLifeAltered(FightBuff buff, int value) {}
 
     /**
      * The fighter has suffered a damage, so its life has been altered
-     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(Buff, int)}
+     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(FightBuff, int)}
      *
      * This buff is always called when damage is applied, even if the damage is completely absorbed,
      * or in case of direct or indirect damage.
      *
-     * Unlike {@link BuffHook#onDamage(Buff, Damage)}, the effects has already been applied
+     * Unlike {@link BuffHook#onDamage(FightBuff, Damage)}, the effects has already been applied
      *
      * Note: this hook is not called if the attack has killed the fighter
      *
@@ -195,27 +195,27 @@ public interface BuffHook {
      * @param value Altered life value. Can be 0 when the effect is completely absorbed
      *
      * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#damage(Fighter, int)
-     * @see #onDirectDamageApplied(Buff, Fighter, int) To hook only damage applied by direct attack
+     * @see #onDirectDamageApplied(FightBuff, Fighter, int) To hook only damage applied by direct attack
      */
-    public default void onDamageApplied(Buff buff, @NonNegative int value) {
+    public default void onDamageApplied(FightBuff buff, @NonNegative int value) {
         onLifeAltered(buff, -value);
     }
 
     /**
      * Elemental damage has been applied to the current fighter
      *
-     * This hook is called after {@link BuffHook#onDamageApplied(Buff, int)}, but only in case
+     * This hook is called after {@link BuffHook#onDamageApplied(FightBuff, int)}, but only in case
      * of damage related to an element (e.i. fire, water, air, earth, neutral)
      *
      * @param buff The active buff
      * @param element The element of the damage
      * @param value The damage value. Can be 0 if the damage is completely absorbed
      */
-    public default void onElementDamageApplied(Buff buff, Element element, @NonNegative int value) {}
+    public default void onElementDamageApplied(FightBuff buff, Element element, @NonNegative int value) {}
 
     /**
      * The fighter life has been healed
-     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(Buff, int)}
+     * By default, this method will forward the call to {@link BuffHook#onLifeAltered(FightBuff, int)}
      *
      * This hook is called after heal is applied.
      *
@@ -224,7 +224,7 @@ public interface BuffHook {
      *
      * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#heal(Fighter, int)
      */
-    public default void onHealApplied(Buff buff, @NonNegative int value) {
+    public default void onHealApplied(FightBuff buff, @NonNegative int value) {
         onLifeAltered(buff, value);
     }
 
@@ -237,39 +237,39 @@ public interface BuffHook {
      * @param buff The active buff
      * @param damage The reflected damage
      */
-    public default void onReflectedDamage(Buff buff, ReflectedDamage damage) {}
+    public default void onReflectedDamage(FightBuff buff, ReflectedDamage damage) {}
 
     /**
      * A damage will be applied on target
      * Use this hook to configure damage before apply it
      *
-     * Unlike {@link BuffHook#onDamage(Buff, Damage)} this hook is called on the caster instead of the target
+     * Unlike {@link BuffHook#onDamage(FightBuff, Damage)} this hook is called on the caster instead of the target
      *
      * @param buff The active buff
      * @param damage Damage to configure
      * @param target The effect target
      */
-    public default void onCastDamage(Buff buff, Damage damage, Fighter target) {}
+    public default void onCastDamage(FightBuff buff, Damage damage, Fighter target) {}
 
     /**
      * A new effect value is generated by the current fighter
      *
-     * Note: {@link BuffHook#onEffectValueTarget(Buff, EffectValue)} is always called on the target after
+     * Note: {@link BuffHook#onEffectValueTarget(FightBuff, EffectValue)} is always called on the target after
      *
      * @param buff The active buff
      * @param value The new effect value which will be applied
      */
-    public default void onEffectValueCast(Buff buff, EffectValue value) {}
+    public default void onEffectValueCast(FightBuff buff, EffectValue value) {}
 
     /**
      * An effect value will be applied on the current fighter
      *
-     * Note: {@link BuffHook#onEffectValueCast(Buff, EffectValue)} is always called on the caster before
+     * Note: {@link BuffHook#onEffectValueCast(FightBuff, EffectValue)} is always called on the caster before
      *
      * @param buff The active buff
      * @param value The effect value which will be applied
      */
-    public default void onEffectValueTarget(Buff buff, EffectValue value) {}
+    public default void onEffectValueTarget(FightBuff buff, EffectValue value) {}
 
     /**
      * A characteristic of the fighter has been altered
@@ -278,5 +278,5 @@ public interface BuffHook {
      * @param characteristic The altered characteristic
      * @param value The characteristic modifier. Positive for add the characteristic, or negative to remove.
      */
-    public default void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {}
+    public default void onCharacteristicAltered(FightBuff buff, Characteristic characteristic, int value) {}
 }

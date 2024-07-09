@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -213,7 +213,7 @@ class ArmorSimulatorTest extends FightBaseCase {
     @Test
     void onReduceableDamageSuccess() {
         Damage damage = new Damage(10, Element.EARTH);
-        Buff buff = new Buff(
+        FightBuff buff = new FightBuff(
             SpellEffectStub.fixed(105, 3),
             Mockito.mock(Spell.class),
             other.fighter(),
@@ -234,7 +234,7 @@ class ArmorSimulatorTest extends FightBaseCase {
         other.fighter().characteristics().alter(Characteristic.INTELLIGENCE, 100);
 
         Damage damage = new Damage(10, Element.EARTH);
-        Buff buff = new Buff(
+        FightBuff buff = new FightBuff(
             SpellEffectStub.fixed(105, 3),
             Mockito.mock(Spell.class),
             other.fighter(),
@@ -255,7 +255,7 @@ class ArmorSimulatorTest extends FightBaseCase {
         other.fighter().characteristics().alter(Characteristic.INTELLIGENCE, -1000);
 
         Damage damage = new Damage(10, Element.EARTH);
-        Buff buff = new Buff(
+        FightBuff buff = new FightBuff(
             SpellEffectStub.fixed(105, 3),
             Mockito.mock(Spell.class),
             other.fighter(),
@@ -276,7 +276,7 @@ class ArmorSimulatorTest extends FightBaseCase {
         other.fighter().characteristics().alter(Characteristic.STRENGTH, 100);
 
         Damage damage = new Damage(10, Element.EARTH);
-        Buff buff = new Buff(
+        FightBuff buff = new FightBuff(
             SpellEffectStub.fixed(105, 3),
             Mockito.mock(Spell.class),
             other.fighter(),
@@ -296,7 +296,7 @@ class ArmorSimulatorTest extends FightBaseCase {
     void onReduceableDamageShouldFilterDamageElement() {
         other.fighter().characteristics().alter(Characteristic.STRENGTH, 100);
 
-        Buff buff = new Buff(
+        FightBuff buff = new FightBuff(
             SpellEffectStub.fixed(105, 3).setSpecial(4), // Water
             Mockito.mock(Spell.class),
             other.fighter(),

@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -325,7 +325,7 @@ class DamageHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -362,7 +362,7 @@ class DamageHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.max()).thenReturn(15);
 
-        assertTrue(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+        assertTrue(handler.onStartTurn(new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler)));
 
         int damage = target.life().max() - target.life().current();
 
@@ -377,7 +377,7 @@ class DamageHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.min()).thenReturn(100000);
 
-        assertFalse(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+        assertFalse(handler.onStartTurn(new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler)));
     }
 
     @Test
@@ -393,7 +393,7 @@ class DamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+        handler.applyFromHook(new FightBuff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
 
         int damage = target.life().max() - target.life().current();
 
@@ -406,9 +406,9 @@ class DamageHandlerTest extends FightBaseCase {
     void applyFromHookShouldApplyIndirectDamage() {
         AtomicBoolean called = new AtomicBoolean(false);
 
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, new BuffHook() {
             @Override
-            public void onIndirectDamage(Buff buff, Fighter caster, Damage value) {
+            public void onIndirectDamage(FightBuff buff, Fighter caster, Damage value) {
                 called.set(true);
             }
         }));
@@ -424,7 +424,7 @@ class DamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+        handler.applyFromHook(new FightBuff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
 
         assertBetween(10, 15, target.life().max() - target.life().current());
         assertTrue(called.get());

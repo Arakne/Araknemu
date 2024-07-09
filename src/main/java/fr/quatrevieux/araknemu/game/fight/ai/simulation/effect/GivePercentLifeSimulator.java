@@ -37,7 +37,7 @@ public final class GivePercentLifeSimulator implements EffectSimulator {
     @Override
     public void simulate(CastSimulation simulation, AI ai, CastScope.EffectScope<? extends FighterData, ? extends BattlefieldCell> effect) {
         final FighterData caster = ai.fighter();
-        final int heal = EffectValue.create(effect.effect(), caster, caster).value() * caster.life().current() / 100;
+        final int heal = new EffectValue(effect.effect()).value() * caster.life().current() / 100;
 
         simulation.addDamage(Interval.of(heal), caster);
 

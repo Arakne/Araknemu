@@ -19,13 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -34,7 +33,6 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -106,8 +104,8 @@ class AddDiscernmentHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -120,9 +118,9 @@ class AddDiscernmentHandlerTest extends FightBaseCase {
 
     @Test
     void buffWithOneTargetMaximized() {
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value) {
+            public void onEffectValueTarget(FightBuff buff, EffectValue value) {
                 value.maximize();
             }
         }));
@@ -143,8 +141,8 @@ class AddDiscernmentHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(target, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -161,7 +159,7 @@ class AddDiscernmentHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(50);
         Mockito.when(effect.duration()).thenReturn(5);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler);
 
         handler.onBuffStarted(buff);
         assertEquals(150, target.characteristics().discernment());

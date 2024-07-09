@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier;
 import fr.quatrevieux.araknemu.game.fight.castable.BaseCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -51,21 +51,21 @@ public final class IncreaseWeaponSkillHandler implements EffectHandler, BuffHook
     @Override
     public void buff(FightCastScope cast, BaseCastScope<Fighter, FightCell>.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
+    public void onBuffStarted(FightBuff buff) {
         weapon(buff).ifPresent(weapon -> weapon.increaseAbility(buff.effect().max()));
     }
 
     @Override
-    public void onBuffTerminated(Buff buff) {
+    public void onBuffTerminated(FightBuff buff) {
         weapon(buff).ifPresent(weapon -> weapon.decreaseAbility(buff.effect().max()));
     }
 
-    private Optional<CastableWeapon> weapon(Buff buff) {
+    private Optional<CastableWeapon> weapon(FightBuff buff) {
         return buff.target().closeCombat()
             .filter(CastableWeapon.class::isInstance)
             .map(CastableWeapon.class::cast)

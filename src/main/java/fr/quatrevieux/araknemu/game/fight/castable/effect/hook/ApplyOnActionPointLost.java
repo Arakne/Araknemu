@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.hook;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 
@@ -32,7 +32,7 @@ public final class ApplyOnActionPointLost extends AbstractEffectHookHandler {
     protected BuffHook createHook(EffectHandler handler) {
         return new BuffHook() {
             @Override
-            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+            public void onCharacteristicAltered(FightBuff buff, Characteristic characteristic, int value) {
                 if (value >= 0 || characteristic != Characteristic.ACTION_POINT) {
                     return;
                 }

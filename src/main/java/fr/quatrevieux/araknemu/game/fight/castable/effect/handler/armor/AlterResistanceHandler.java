@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
@@ -64,7 +64,7 @@ public final class AlterResistanceHandler implements EffectHandler, BuffHook {
             spellEffect,
             caster,
             effect.targets(),
-            (target, effectValue) -> target.buffs().add(new Buff(
+            (target, effectValue) -> target.buffs().add(new FightBuff(
                 BuffEffect.fixed(spellEffect, effectValue.value()),
                 cast.action(),
                 caster,
@@ -75,7 +75,7 @@ public final class AlterResistanceHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onDamage(Buff buff, Damage value) {
+    public void onDamage(FightBuff buff, Damage value) {
         if (value.element().physical() != physical) {
             return;
         }

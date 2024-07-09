@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -34,16 +34,13 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
-import fr.quatrevieux.araknemu.game.world.creature.Life;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -92,7 +89,7 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.handle(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertBetween(50, 60, buff1.get().effect().min());
@@ -118,8 +115,8 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -135,9 +132,9 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
         AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
         AtomicReference<Integer> hookValue = new AtomicReference<>();
 
-        caster.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, new BuffHook() {
+        caster.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, new BuffHook() {
             @Override
-            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+            public void onCharacteristicAltered(FightBuff buff, Characteristic characteristic, int value) {
                 hookCharacteristic.set(characteristic);
                 hookValue.set(value);
             }
@@ -164,9 +161,9 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
 
     @Test
     void buffWithOneTargetMaximized() {
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value) {
+            public void onEffectValueTarget(FightBuff buff, EffectValue value) {
                 value.maximize();
             }
         }));
@@ -187,8 +184,8 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(target, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -205,7 +202,7 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(50);
         Mockito.when(effect.duration()).thenReturn(5);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler);
 
         handler.onBuffStarted(buff);
 
@@ -231,9 +228,9 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.applyFromHook(new Buff(effect, spell, caster, target, handler));
+        handler.applyFromHook(new FightBuff(effect, spell, caster, target, handler));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
 
         assertBetween(50, 60, buff.effect().min());
         assertEquals(0,buff.effect().max());

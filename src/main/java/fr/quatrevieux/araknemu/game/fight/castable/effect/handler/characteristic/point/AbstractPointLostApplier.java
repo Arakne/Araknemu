@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -84,7 +84,7 @@ public abstract class AbstractPointLostApplier {
         }
 
         if (lost > 0) {
-            target.buffs().add(new Buff(buffEffect(effect, lost), cast.action(), caster, target, hook));
+            target.buffs().add(new FightBuff(buffEffect(effect, lost), cast.action(), caster, target, hook));
         }
 
         return lost;

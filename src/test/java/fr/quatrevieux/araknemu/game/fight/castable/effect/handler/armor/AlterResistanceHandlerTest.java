@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -102,7 +102,7 @@ class AlterResistanceHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().effect() == 184).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().effect() == 184).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -116,9 +116,9 @@ class AlterResistanceHandlerTest extends FightBaseCase {
 
     @Test
     void buffWithOneTargetMaximized() {
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value) {
+            public void onEffectValueTarget(FightBuff buff, EffectValue value) {
             value.maximize();
             }
         }));
@@ -139,8 +139,8 @@ class AlterResistanceHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(target, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -155,7 +155,7 @@ class AlterResistanceHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(7);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
 
@@ -170,7 +170,7 @@ class AlterResistanceHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(7);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
 
@@ -185,7 +185,7 @@ class AlterResistanceHandlerTest extends FightBaseCase {
 
         Mockito.when(returnEffect.min()).thenReturn(10);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         Damage damage = new Damage(20, Element.WATER);
 
@@ -200,7 +200,7 @@ class AlterResistanceHandlerTest extends FightBaseCase {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(returnEffect.min()).thenReturn(10);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
         handler.onDirectDamage(buff, caster, damage);
@@ -218,7 +218,7 @@ class AlterResistanceHandlerTest extends FightBaseCase {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(returnEffect.min()).thenReturn(10);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
         handler.onDirectDamage(buff, caster, damage);

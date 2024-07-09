@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -67,7 +67,7 @@ class AlterVitalityHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(50);
         Mockito.when(effect.duration()).thenReturn(5);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), caster, target, hook);
         hook.onBuffStarted(buff);
 
         requestStack.assertAll(
@@ -96,7 +96,7 @@ class AlterVitalityHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(20);
         Mockito.when(effect.duration()).thenReturn(5);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), caster, target, hook);
         hook.onBuffStarted(buff);
 
         requestStack.assertAll(

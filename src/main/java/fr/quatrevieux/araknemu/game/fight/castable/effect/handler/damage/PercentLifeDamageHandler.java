@@ -23,11 +23,10 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -68,25 +67,25 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void applyFromHook(Buff buff) {
+    public void applyFromHook(FightBuff buff) {
         applyBuff(buff);
     }
 
     @Override
-    public boolean onStartTurn(Buff buff) {
+    public boolean onStartTurn(FightBuff buff) {
         applyBuff(buff);
 
         return !buff.target().dead();
     }
 
-    private void applyBuff(Buff buff) {
-        final FighterData caster = buff.caster();
-        final FighterData target = buff.target();
+    private void applyBuff(FightBuff buff) {
+        final Fighter caster = buff.caster();
+        final Fighter target = buff.target();
         final int damage = caster.life().current() * (EffectValue.create(buff.effect(), caster, target)).value() / 100;
 
         applier.applyFixed(buff, damage);

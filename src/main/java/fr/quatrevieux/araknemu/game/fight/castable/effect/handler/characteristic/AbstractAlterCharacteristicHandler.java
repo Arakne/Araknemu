@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
@@ -37,7 +37,7 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
 
     /**
      * @param hook Buff hook which handle characteristic change
-     * @param canBeDispelled Added buff effect can be dispelled. See: {@link Buff#canBeDispelled()}
+     * @param canBeDispelled Added buff effect can be dispelled. See: {@link FightBuff#canBeDispelled()}
      */
     public AbstractAlterCharacteristicHandler(AlterCharacteristicHook hook, boolean canBeDispelled) {
         this.hook = hook;
@@ -58,7 +58,7 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
             spellEffect,
             caster,
             effect.targets(),
-            (target, effectValue) -> target.buffs().add(new Buff(
+            (target, effectValue) -> target.buffs().add(new FightBuff(
                 BuffEffect.fixed(spellEffect, effectValue.value()),
                 cast.action(),
                 caster,
@@ -70,13 +70,13 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
     }
 
     @Override
-    public void applyFromHook(Buff buff) {
+    public void applyFromHook(FightBuff buff) {
         final SpellEffect spellEffect = buff.effect();
         final Fighter caster = buff.caster();
         final Fighter target = buff.target();
         final EffectValue effectValue = EffectValue.create(spellEffect, caster, target);
 
-        target.buffs().add(new Buff(
+        target.buffs().add(new FightBuff(
             BuffEffect.fixed(spellEffect, effectValue.value()),
             buff.action(),
             caster,
@@ -87,12 +87,12 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
+    public void onBuffStarted(FightBuff buff) {
         hook.onBuffStarted(buff);
     }
 
     @Override
-    public void onBuffTerminated(Buff buff) {
+    public void onBuffTerminated(FightBuff buff) {
         hook.onBuffTerminated(buff);
     }
 }

@@ -25,10 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageApplier;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -89,13 +88,13 @@ class ApplyOnElementDamageTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
         requestStack.assertLast(new AddBuff(buff));
         requestStack.clear();
 
         new DamageApplier(Element.AIR, fight).applyFixed(caster, 1, target);
 
-        Buff addedBuff = target.buffs().stream().filter(b -> b.effect().effect() == 145 && b.hook() instanceof AddCharacteristicHandler).findFirst().get();
+        FightBuff addedBuff = target.buffs().stream().filter(b -> b.effect().effect() == 145 && b.hook() instanceof AddCharacteristicHandler).findFirst().get();
 
         requestStack.assertAll(
             ActionEffect.alterLifePoints(caster, target, -1),
@@ -125,7 +124,7 @@ class ApplyOnElementDamageTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
         requestStack.assertLast(new AddBuff(buff));
         requestStack.clear();
 
@@ -159,8 +158,8 @@ class ApplyOnElementDamageTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff1 = target.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
-        Buff buff2 = caster.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
+        FightBuff buff1 = target.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
+        FightBuff buff2 = caster.buffs().stream().filter(b -> b.effect().effect() == 145).findFirst().get();
 
         requestStack.assertAll(
             new AddBuff(buff1),

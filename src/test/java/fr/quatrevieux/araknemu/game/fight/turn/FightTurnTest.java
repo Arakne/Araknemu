@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -232,7 +232,7 @@ class FightTurnTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect.duration()).thenReturn(5);
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), new BuffHook() {});
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), new BuffHook() {});
 
         player.fighter().buffs().add(buff);
 
@@ -249,7 +249,7 @@ class FightTurnTest extends FightBaseCase {
         BuffHook hook = Mockito.mock(BuffHook.class);
 
         Mockito.when(effect.duration()).thenReturn(0);
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
         Mockito.when(hook.onStartTurn(buff)).thenReturn(true);
 
         player.fighter().buffs().add(buff);
@@ -282,7 +282,7 @@ class FightTurnTest extends FightBaseCase {
 
         Mockito.when(effect.duration()).thenReturn(5);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
         Mockito.when(hook.onStartTurn(buff)).thenReturn(false);
 
         player.fighter().buffs().add(buff);
@@ -345,7 +345,7 @@ class FightTurnTest extends FightBaseCase {
 
         Mockito.when(effect.duration()).thenReturn(5);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
         Mockito.when(hook.onStartTurn(buff)).thenReturn(true);
 
         player.fighter().buffs().add(buff);

@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AlterCharacteristicHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.TurnPoints;
@@ -45,7 +45,7 @@ public class AlterPointHook extends AlterCharacteristicHook {
     }
 
     @Override
-    protected void apply(Buff buff, Fighter target, int value) {
+    protected void apply(FightBuff buff, Fighter target, int value) {
         super.apply(buff, target, value);
 
         fight.turnList().current()

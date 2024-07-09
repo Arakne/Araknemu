@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -67,7 +67,7 @@ class AlterCharacteristicHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(BuffEffect.fixed(effect, 50), spell, caster, target, hook);
+        FightBuff buff = new FightBuff(BuffEffect.fixed(effect, 50), spell, caster, target, hook);
         target.buffs().add(buff);
 
         assertEquals(50, target.characteristics().get(Characteristic.STRENGTH));
@@ -89,7 +89,7 @@ class AlterCharacteristicHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(BuffEffect.fixed(effect, 50), spell, caster, target, hook);
+        FightBuff buff = new FightBuff(BuffEffect.fixed(effect, 50), spell, caster, target, hook);
         target.buffs().add(buff);
 
         assertEquals(-50, target.characteristics().get(Characteristic.STRENGTH));

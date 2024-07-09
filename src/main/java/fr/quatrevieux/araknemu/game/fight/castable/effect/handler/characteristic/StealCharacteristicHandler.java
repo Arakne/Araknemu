@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -89,7 +89,7 @@ public class StealCharacteristicHandler implements EffectHandler {
         EffectValue.forEachTargets(spellEffect, caster, effect.targets(), applier);
 
         if (applier.total() > 0) {
-            caster.buffs().add(new Buff(
+            caster.buffs().add(new FightBuff(
                 BuffEffect.withCustomEffect(spellEffect, addEffectId, applier.total()),
                 action,
                 caster,
@@ -119,7 +119,7 @@ public class StealCharacteristicHandler implements EffectHandler {
             final int value = effectValue.value();
             total += value;
 
-            target.buffs().add(new Buff(
+            target.buffs().add(new FightBuff(
                 BuffEffect.withCustomEffect(spellEffect, removeEffectId, value),
                 action,
                 caster,

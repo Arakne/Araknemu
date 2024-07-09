@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -204,7 +204,7 @@ class FixedHealHandlerTest extends FightBaseCase {
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(spell.constraints()).thenReturn(Mockito.mock(SpellConstraints.class));
 
-        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+        handler.applyFromHook(new FightBuff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
 
         requestStack.assertAll(ActionEffect.alterLifePoints(caster, target, 10));
         assertEquals(10, computeHeal());
@@ -226,7 +226,7 @@ class FixedHealHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -263,7 +263,7 @@ class FixedHealHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.max()).thenReturn(15);
 
-        assertTrue(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+        assertTrue(handler.onStartTurn(new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler)));
 
         assertBetween(10, 15, computeHeal());
 
@@ -277,15 +277,15 @@ class FixedHealHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
 
         // Kill on heal
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, new BuffHook() {
             @Override
-            public void onLifeAltered(Buff buff, int value) {
+            public void onLifeAltered(FightBuff buff, int value) {
                 buff.target().life().kill(buff.caster());
             }
         }));
         requestStack.clear();
 
-        assertFalse(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+        assertFalse(handler.onStartTurn(new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler)));
 
         assertTrue(target.dead());
         requestStack.assertAll(

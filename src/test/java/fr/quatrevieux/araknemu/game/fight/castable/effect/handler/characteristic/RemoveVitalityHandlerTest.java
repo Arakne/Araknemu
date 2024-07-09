@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -89,7 +89,7 @@ class RemoveVitalityHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.handle(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertBetween(50, 60, buff1.get().effect().min());
@@ -115,8 +115,8 @@ class RemoveVitalityHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -132,9 +132,9 @@ class RemoveVitalityHandlerTest extends FightBaseCase {
         AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
         AtomicReference<Integer> hookValue = new AtomicReference<>();
 
-        caster.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, new BuffHook() {
+        caster.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, new BuffHook() {
             @Override
-            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+            public void onCharacteristicAltered(FightBuff buff, Characteristic characteristic, int value) {
                 hookCharacteristic.set(characteristic);
                 hookValue.set(value);
             }
@@ -168,9 +168,9 @@ class RemoveVitalityHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(20);
         Mockito.when(effect.duration()).thenReturn(5);
 
-        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+        handler.applyFromHook(new FightBuff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
 
-        Optional<Buff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
 
         assertTrue(buff.isPresent());
         assertEquals(20, buff.get().effect().min());
@@ -182,9 +182,9 @@ class RemoveVitalityHandlerTest extends FightBaseCase {
 
     @Test
     void buffWithOneTargetMaximized() {
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value) {
+            public void onEffectValueTarget(FightBuff buff, EffectValue value) {
                 value.maximize();
             }
         }));
@@ -205,8 +205,8 @@ class RemoveVitalityHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(target, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -224,7 +224,7 @@ class RemoveVitalityHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.duration()).thenReturn(5);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler);
 
         handler.onBuffStarted(buff);
 

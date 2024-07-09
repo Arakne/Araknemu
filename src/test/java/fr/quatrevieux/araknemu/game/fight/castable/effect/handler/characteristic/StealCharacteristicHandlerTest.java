@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -108,8 +108,8 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> targetBuff = target.buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst();
+        Optional<FightBuff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> targetBuff = target.buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst();
 
         assertTrue(casterBuff.isPresent());
         assertTrue(targetBuff.isPresent());
@@ -139,9 +139,9 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
         AtomicReference<Integer> hookValue = new AtomicReference<>();
 
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+            public void onCharacteristicAltered(FightBuff buff, Characteristic characteristic, int value) {
                 hookCharacteristic.set(characteristic);
                 hookValue.set(value);
             }
@@ -168,9 +168,9 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
 
     @Test
     void buffSingleTargetMaximized() {
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value) {
+            public void onEffectValueTarget(FightBuff buff, EffectValue value) {
                 value.maximize();
             }
         }));
@@ -193,8 +193,8 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> targetBuff = target.buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst();
+        Optional<FightBuff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> targetBuff = target.buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst();
 
         assertTrue(casterBuff.isPresent());
         assertTrue(targetBuff.isPresent());
@@ -237,7 +237,7 @@ class StealCharacteristicHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, fight.map().get(15));
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> casterBuff = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertFalse(casterBuff.isPresent());
 

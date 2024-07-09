@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
@@ -42,7 +42,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
@@ -152,7 +151,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
-        Optional<Buff> found = other.fighter().buffs().stream().filter(buff -> buff.effect().effect() == 100).findFirst();
+        Optional<FightBuff> found = other.fighter().buffs().stream().filter(buff -> buff.effect().effect() == 100).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(player.fighter(), found.get().caster());
@@ -179,7 +178,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
-        Optional<Buff> found = other.fighter().buffs().stream().filter(buff -> buff.effect().effect() == 100).findFirst();
+        Optional<FightBuff> found = other.fighter().buffs().stream().filter(buff -> buff.effect().effect() == 100).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(player.fighter(), found.get().caster());
@@ -271,7 +270,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(effect, spell, player.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, spell, player.fighter(), player.fighter(), hook);
         other.fighter().buffs().add(buff);
 
         FightCastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
@@ -293,7 +292,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(effect, spell, player.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, spell, player.fighter(), player.fighter(), hook);
         player.fighter().buffs().add(buff);
 
         FightCastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
@@ -315,11 +314,11 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(effect, spell, player.fighter(), other.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, spell, player.fighter(), other.fighter(), hook);
         other.fighter().buffs().add(buff);
 
         BuffHook hook2 = Mockito.mock(BuffHook.class);
-        Buff buff2 = new Buff(effect, spell, player.fighter(), player.fighter(), hook2);
+        FightBuff buff2 = new FightBuff(effect, spell, player.fighter(), player.fighter(), hook2);
         player.fighter().buffs().add(buff2);
 
         FightCastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
@@ -351,7 +350,7 @@ class EffectsHandlerTest extends FightBaseCase {
 
         handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
 
-        Optional<Buff> buff = other.fighter().buffs().stream().filter(b -> b.effect().effect() == 100).findFirst();
+        Optional<FightBuff> buff = other.fighter().buffs().stream().filter(b -> b.effect().effect() == 100).findFirst();
         assertTrue(buff.isPresent());
 
         requestStack.assertLast(new AddBuff(buff.get()));

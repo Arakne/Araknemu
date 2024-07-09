@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -175,7 +175,7 @@ class SpellReturnSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
         Damage damage = simulator.onReduceableDamage(
             simulation,
-            new Buff(
+            new FightBuff(
                 SpellEffectStub.fixed(100, 5).setSpecial(100),
                 Mockito.mock(Spell.class),
                 fighter,
@@ -208,7 +208,7 @@ class SpellReturnSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
         Damage damage = simulator.onReduceableDamage(
             simulation,
-            new Buff(
+            new FightBuff(
                 SpellEffectStub.fixed(100, 4).setSpecial(100),
                 Mockito.mock(Spell.class),
                 fighter,
@@ -241,7 +241,7 @@ class SpellReturnSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
         Damage damage = simulator.onReduceableDamage(
             simulation,
-            new Buff(
+            new FightBuff(
                 SpellEffectStub.fixed(100, 5).setSpecial(50),
                 Mockito.mock(Spell.class),
                 fighter,
@@ -274,7 +274,7 @@ class SpellReturnSimulatorTest extends FightBaseCase {
         CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
         Damage damage = simulator.onReduceableDamage(
             simulation,
-            new Buff(
+            new FightBuff(
                 SpellEffectStub.fixed(100, 5).setSpecial(100),
                 Mockito.mock(Spell.class),
                 fighter,

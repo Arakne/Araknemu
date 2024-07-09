@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -60,7 +60,7 @@ class RefreshBuffsTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect.duration()).thenReturn(5);
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), new BuffHook() {});
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), new BuffHook() {});
 
         fighter.buffs().add(buff);
 

@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.hook;
 
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
@@ -32,7 +32,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * Decorate a spell effect to remove the area and target,
  * so it can be safely used to apply an effect from a hook (the effect will be applied only on the target of the buff)
  *
- * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler#applyFromHook(Buff)
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler#applyFromHook(FightBuff)
  *
  */
 public final class HookedSpellEffect implements SpellEffect {

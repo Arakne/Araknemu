@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
@@ -53,13 +53,13 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
 
         for (Fighter target : effect.targets()) {
             if (!target.equals(caster)) {
-                target.buffs().add(new Buff(effect.effect(), cast.action(), caster, target, this));
+                target.buffs().add(new FightBuff(effect.effect(), cast.action(), caster, target, this));
             }
         }
     }
 
     @Override
-    public boolean onCastTarget(Buff buff, FightCastScope cast) {
+    public boolean onCastTarget(FightBuff buff, FightCastScope cast) {
         if (!isDamageCast(cast)) {
             return true;
         }
@@ -74,7 +74,7 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
     }
 
     @Override
-    public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
+    public void onReflectedDamage(FightBuff buff, ReflectedDamage damage) {
         final Fighter buffCaster = buff.caster();
         final Fighter target = buff.target();
 

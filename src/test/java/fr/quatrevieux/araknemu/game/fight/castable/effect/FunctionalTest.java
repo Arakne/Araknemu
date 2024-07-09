@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CloseCombatValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
@@ -131,8 +131,8 @@ public class FunctionalTest extends FightBaseCase {
     void poisonSpell() {
         castNormal(181, fighter1.cell()); // Tremblement
 
-        Optional<Buff> buff1 = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 99).findFirst();
-        Optional<Buff> buff2 = fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 99).findFirst();
+        Optional<FightBuff> buff1 = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 99).findFirst();
+        Optional<FightBuff> buff2 = fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 99).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
@@ -171,7 +171,7 @@ public class FunctionalTest extends FightBaseCase {
     void skipNextTurn() {
         castNormal(1630, fighter2.cell());
 
-        Optional<Buff> found = fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 140).findFirst();
+        Optional<FightBuff> found = fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 140).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(140, found.get().effect().effect());
@@ -237,10 +237,10 @@ public class FunctionalTest extends FightBaseCase {
     void pointsChange() {
         castNormal(115, fighter1.cell()); // Odorat
 
-        Optional<Buff> addAp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 111).findFirst();
-        Optional<Buff> remAp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 168).findFirst();
-        Optional<Buff> addMp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 128).findFirst();
-        Optional<Buff> remMp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 169).findFirst();
+        Optional<FightBuff> addAp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 111).findFirst();
+        Optional<FightBuff> remAp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 168).findFirst();
+        Optional<FightBuff> addMp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 128).findFirst();
+        Optional<FightBuff> remMp = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 169).findFirst();
 
         assertTrue(addAp.isPresent());
         assertTrue(remAp.isPresent());
@@ -273,7 +273,7 @@ public class FunctionalTest extends FightBaseCase {
     void addCharacteristic() {
         castNormal(42, fighter1.cell()); // Chance
 
-        Optional<Buff> addLuck = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> addLuck = fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(addLuck.isPresent());
         assertBetween(51, 60, addLuck.get().effect().min());
@@ -289,7 +289,7 @@ public class FunctionalTest extends FightBaseCase {
     void removeCharacteristic() {
         castNormal(468, fighter2.cell()); // Flêche d'huile
 
-        Optional<Buff> removeIntel = fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 155).findFirst();
+        Optional<FightBuff> removeIntel = fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 155).findFirst();
 
         assertTrue(removeIntel.isPresent());
         assertEquals(400, removeIntel.get().effect().min());
@@ -719,7 +719,7 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(81, fighter2.cell()); // Ralentissement
 
-        Buff buff = fighter2.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
+        FightBuff buff = fighter2.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
         assertEquals(4, fighter2.characteristics().get(Characteristic.ACTION_POINT));
         requestStack.assertOne(ActionEffect.buff(buff, -2));
 
@@ -737,7 +737,7 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(50, fighter2.cell()); // Maladresse
 
-        Buff buff = fighter2.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
+        FightBuff buff = fighter2.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
         assertEquals(1, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
         requestStack.assertOne(ActionEffect.buff(buff, -2));
 
@@ -755,8 +755,8 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(98, fighter2.cell()); // Vol du Temps
 
-        Buff buffT = fighter2.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
-        Buff buffC = fighter1.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst().get();
+        FightBuff buffT = fighter2.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
+        FightBuff buffC = fighter1.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst().get();
 
         assertEquals(8, fighter1.characteristics().get(Characteristic.ACTION_POINT));
         assertEquals(4, fighter1.turn().points().actionPoints());
@@ -784,7 +784,7 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(170, fighter2.cell()); // Flèche Immobilisation
 
-        Buff buffT = fighter2.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
+        FightBuff buffT = fighter2.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
 
         assertEquals(4, fighter1.turn().points().movementPoints());
         assertEquals(2, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
@@ -1156,7 +1156,7 @@ public class FunctionalTest extends FightBaseCase {
         castNormal(183, fighter1.cell()); // Simple attack
 
         int damage = lifeBefore - fighter1.life().current();
-        Buff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
+        FightBuff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
 
         assertEquals(damage, fighter1.characteristics().get(Characteristic.LUCK));
         assertEquals(damage, buff.effect().min());
@@ -1175,7 +1175,7 @@ public class FunctionalTest extends FightBaseCase {
         castNormal(183, fighter1.cell()); // Simple attack
 
         int damage = fighter1.life().max() - fighter1.life().current();
-        Buff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 108).findFirst().get();
+        FightBuff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 108).findFirst().get();
 
         assertEquals(damage, fighter1.characteristics().get(Characteristic.VITALITY));
         assertEquals(295 + damage, fighter1.life().max());
@@ -2293,7 +2293,7 @@ public class FunctionalTest extends FightBaseCase {
         castNormal(81, fighter1.cell()); // Ralentissement
 
         assertEquals(8, fighter1.characteristics().get(Characteristic.ACTION_POINT));
-        List<Buff> buffs = fighter1.buffs().stream().filter(b -> b.effect().effect() == 111).collect(Collectors.toList());
+        List<FightBuff> buffs = fighter1.buffs().stream().filter(b -> b.effect().effect() == 111).collect(Collectors.toList());
 
         assertCount(3, buffs);
         assertEquals(2, buffs.get(1).effect().min());

@@ -21,12 +21,13 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 
 /**
  * Buff effect for adding characteristic points
  * Unlike {@link AddCharacteristicHandler}, the buff cannot be dispelled
  *
- * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff#canBeDispelled()
+ * @see FightBuff#canBeDispelled()
  */
 public final class AddNotDispellableCharacteristicHandler extends AbstractAlterCharacteristicHandler {
     public AddNotDispellableCharacteristicHandler(Fight fight, Characteristic characteristic) {

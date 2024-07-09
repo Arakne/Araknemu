@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -45,7 +45,7 @@ public final class ChangeAppearanceHandler implements EffectHandler, BuffHook {
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         final int newGfxId = effect.effect().special();
 
-        for (FighterData target : effect.targets()) {
+        for (Fighter target : effect.targets()) {
             if (newGfxId > 0) {
                 // Positive effect : change the appearance
                 fight.send(ActionEffect.changeAppearance(cast.caster(), target, newGfxId, 1));
@@ -59,12 +59,12 @@ public final class ChangeAppearanceHandler implements EffectHandler, BuffHook {
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
+    public void onBuffStarted(FightBuff buff) {
         final FighterData caster = buff.caster();
         final FighterData target = buff.target();
 
@@ -77,10 +77,10 @@ public final class ChangeAppearanceHandler implements EffectHandler, BuffHook {
     /**
      * Get the current active appearance sprite id
      */
-    private int getCurrentGfxId(FighterData fighter) {
+    private int getCurrentGfxId(Fighter fighter) {
         int gfxId = fighter.sprite().gfxId();
 
-        for (Buff buff : fighter.buffs()) {
+        for (FightBuff buff : fighter.buffs()) {
             if (buff.hook() instanceof ChangeAppearanceHandler) {
                 gfxId = buff.effect().special();
             }

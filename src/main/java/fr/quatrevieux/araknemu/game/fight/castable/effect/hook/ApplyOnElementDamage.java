@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.hook;
 
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -39,7 +39,7 @@ public final class ApplyOnElementDamage extends AbstractEffectHookHandler {
     protected BuffHook createHook(EffectHandler handler) {
         return new BuffHook() {
             @Override
-            public void onElementDamageApplied(Buff buff, Element element, @NonNegative int value) {
+            public void onElementDamageApplied(FightBuff buff, Element element, @NonNegative int value) {
                 if (ApplyOnElementDamage.this.element == element) {
                     handler.applyFromHook(buff);
                 }
