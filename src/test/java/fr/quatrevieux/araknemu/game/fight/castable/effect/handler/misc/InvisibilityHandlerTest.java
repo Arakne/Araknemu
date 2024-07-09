@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -103,7 +103,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -428,7 +428,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(otherBuffEffect.effect()).thenReturn(144);
         Mockito.when(otherBuffEffect.duration()).thenReturn(10);
 
-        target.buffs().add(new Buff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class)));
+        target.buffs().add(new FightBuff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class)));
 
         assertTrue(target.hidden());
         requestStack.clear();
@@ -463,7 +463,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         SpellEffect otherBuffEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(otherBuffEffect.effect()).thenReturn(144);
         Mockito.when(otherBuffEffect.duration()).thenReturn(10);
-        target.buffs().add(new Buff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class)));
+        target.buffs().add(new FightBuff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class)));
 
         handler.buff(scope, scope.effects().get(0));
         handler.buff(scope, scope.effects().get(0));
@@ -487,7 +487,7 @@ class InvisibilityHandlerTest extends FightBaseCase {
         SpellEffect otherBuffEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(otherBuffEffect.effect()).thenReturn(144);
         Mockito.when(otherBuffEffect.duration()).thenReturn(10);
-        Buff fakeBuff = new Buff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class));
+        FightBuff fakeBuff = new FightBuff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class));
 
         target.setHidden(target, true);
 

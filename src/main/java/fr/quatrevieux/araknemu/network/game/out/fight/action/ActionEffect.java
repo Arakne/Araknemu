@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -143,7 +143,7 @@ public final class ActionEffect {
      *
      * @param buff The applied buff
      */
-    public static ActionEffect buff(Buff buff, int value) {
+    public static ActionEffect buff(FightBuff buff, int value) {
         return new ActionEffect(buff.effect().effect(), buff.caster(), buff.target().id(), value, buff.effect().duration());
     }
 

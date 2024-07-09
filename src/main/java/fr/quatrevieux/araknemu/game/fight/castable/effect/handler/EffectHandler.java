@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.hook.HookedSpellEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -56,7 +56,7 @@ public interface EffectHandler extends CastConstraintValidator<Castable> {
      * @param buff The buff to apply
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.hook.EffectHookHandler for more details
      */
-    public default void applyFromHook(Buff buff) {
+    public default void applyFromHook(FightBuff buff) {
         final Fighter target = buff.target();
         final FightCell cell = target.cell();
         final Castable spell = buff.action();

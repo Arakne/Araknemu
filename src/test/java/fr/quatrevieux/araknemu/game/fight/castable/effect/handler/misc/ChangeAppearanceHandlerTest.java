@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -80,7 +80,7 @@ class ChangeAppearanceHandlerTest extends FightBaseCase {
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(spell.constraints()).thenReturn(Mockito.mock(SpellConstraints.class));
 
-        handler.applyFromHook(new Buff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
+        handler.applyFromHook(new FightBuff(effect, spell, caster, target, Mockito.mock(BuffHook.class)));
 
         requestStack.assertOne(new ActionEffect(149, caster, target.id(), 90, 1234, 1));
     }
@@ -101,7 +101,7 @@ class ChangeAppearanceHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -172,7 +172,7 @@ class ChangeAppearanceHandlerTest extends FightBaseCase {
         SpellEffect previousAppearanceEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(previousAppearanceEffect.special()).thenReturn(1234);
 
-        Buff buff = new Buff(previousAppearanceEffect, Mockito.mock(Spell.class), caster, target, handler);
+        FightBuff buff = new FightBuff(previousAppearanceEffect, Mockito.mock(Spell.class), caster, target, handler);
         target.buffs().add(buff);
         requestStack.clear();
 
@@ -197,7 +197,7 @@ class ChangeAppearanceHandlerTest extends FightBaseCase {
         SpellEffect previousAppearanceEffect = Mockito.mock(SpellEffect.class);
         Mockito.when(previousAppearanceEffect.special()).thenReturn(4321);
 
-        Buff buff = new Buff(previousAppearanceEffect, Mockito.mock(Spell.class), caster, target, handler);
+        FightBuff buff = new FightBuff(previousAppearanceEffect, Mockito.mock(Spell.class), caster, target, handler);
         target.buffs().add(buff);
         requestStack.clear();
 

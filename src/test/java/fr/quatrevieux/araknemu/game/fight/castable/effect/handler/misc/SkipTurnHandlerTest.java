@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -80,7 +80,7 @@ class SkipTurnHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = target.buffs().stream().findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().findFirst();
 
         assertTrue(buff.isPresent());
         assertSame(effect, buff.get().effect());
@@ -106,7 +106,7 @@ class SkipTurnHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.handle(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = caster.buffs().stream().findFirst();
+        Optional<FightBuff> buff = caster.buffs().stream().findFirst();
 
         assertEquals(2, buff.get().remainingTurns());
     }
@@ -126,7 +126,7 @@ class SkipTurnHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = target.buffs().stream().findFirst();
+        Optional<FightBuff> buff = target.buffs().stream().findFirst();
 
         assertTrue(buff.isPresent());
         assertSame(effect, buff.get().effect());

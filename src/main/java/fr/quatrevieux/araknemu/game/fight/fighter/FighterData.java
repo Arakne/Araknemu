@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
@@ -55,7 +56,7 @@ public interface FighterData extends Creature<BattlefieldCell> {
     /**
      * Get the current buffs
      */
-    public Buffs buffs();
+    public Buffs<? extends Buff> buffs();
 
     /**
      * Get the fighter states

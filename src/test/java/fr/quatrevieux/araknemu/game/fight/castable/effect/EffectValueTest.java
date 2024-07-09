@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -263,8 +263,8 @@ class EffectValueTest extends FightBaseCase {
         BuffHook casterHook = Mockito.mock(BuffHook.class);
         BuffHook targetHook = Mockito.mock(BuffHook.class);
 
-        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
-        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+        FightBuff casterBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        FightBuff targetBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
 
         caster.buffs().add(casterBuff);
         target.buffs().add(targetBuff);
@@ -291,8 +291,8 @@ class EffectValueTest extends FightBaseCase {
         BuffHook casterHook = Mockito.mock(BuffHook.class);
         BuffHook targetHook = Mockito.mock(BuffHook.class);
 
-        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
-        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+        FightBuff casterBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        FightBuff targetBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
 
         caster.buffs().add(casterBuff);
         target.buffs().add(targetBuff);
@@ -328,9 +328,9 @@ class EffectValueTest extends FightBaseCase {
         Fighter caster = player.fighter();
         Fighter target = other.fighter();
 
-        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        FightBuff targetBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value) {
+            public void onEffectValueTarget(FightBuff buff, EffectValue value) {
                 value.maximize();
             }
         });
@@ -365,8 +365,8 @@ class EffectValueTest extends FightBaseCase {
         BuffHook casterHook = Mockito.mock(BuffHook.class);
         BuffHook targetHook = Mockito.mock(BuffHook.class);
 
-        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
-        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+        FightBuff casterBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        FightBuff targetBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
 
         caster.buffs().add(casterBuff);
         target.buffs().add(targetBuff);
@@ -396,9 +396,9 @@ class EffectValueTest extends FightBaseCase {
         Fighter caster = player.fighter();
         Fighter target = other.fighter();
 
-        Buff maximuzeBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        FightBuff maximuzeBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value) {
+            public void onEffectValueTarget(FightBuff buff, EffectValue value) {
                 value.maximize();
             }
         });
@@ -407,8 +407,8 @@ class EffectValueTest extends FightBaseCase {
         BuffHook casterHook = Mockito.mock(BuffHook.class);
         BuffHook targetHook = Mockito.mock(BuffHook.class);
 
-        Buff casterBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
-        Buff targetBuff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
+        FightBuff casterBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, casterHook);
+        FightBuff targetBuff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, targetHook);
 
         caster.buffs().add(casterBuff);
         target.buffs().add(targetBuff);

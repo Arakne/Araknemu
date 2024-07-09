@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.closeCombat.CastableWeapon;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.race.DefaultCloseCombat;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -105,8 +105,8 @@ class IncreaseWeaponSkillHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 165).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 165).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 165).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 165).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());

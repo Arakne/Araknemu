@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.hook.EffectHookHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
@@ -98,8 +98,8 @@ public final class EffectsHandler implements CastConstraintValidator<Castable> {
     /**
      * Apply a cast to the fight
      *
-     * First, this method will call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCast(Buff, FightCastScope)} to caster
-     * Then call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCastTarget(Buff, FightCastScope)} to all targets
+     * First, this method will call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCast(FightBuff, FightCastScope)} to caster
+     * Then call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCastTarget(FightBuff, FightCastScope)} to all targets
      *
      * After that, all effects will be applied by calling :
      * - Checking if the effect has a hook with {@link EffectTarget#isHook()}
@@ -145,7 +145,7 @@ public final class EffectsHandler implements CastConstraintValidator<Castable> {
     }
 
     /**
-     * Call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastTarget(FightCastScope)}
+     * Call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffListHooks#onCastTarget(FightCastScope)}
      * on each target.
      *
      * If a target is changed (by calling {@link CastScope#replaceTarget(FighterData, FighterData)}),

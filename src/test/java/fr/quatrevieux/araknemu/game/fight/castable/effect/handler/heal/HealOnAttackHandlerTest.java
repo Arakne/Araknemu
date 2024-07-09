@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageApplier;
@@ -107,7 +107,7 @@ class HealOnAttackHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -171,9 +171,9 @@ class HealOnAttackHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        target.buffs().add(new Buff(effect, spell, target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(effect, spell, target, target, new BuffHook() {
             @Override
-            public void onDamage(Buff buff, Damage value) {
+            public void onDamage(FightBuff buff, Damage value) {
                 value.multiply(-1); // Transform damage to heal
             }
         }));

@@ -22,12 +22,11 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -72,7 +71,7 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
         final Fighter caster = cast.caster();
 
         for (Fighter target : cast.targets()) {
-            target.buffs().add(new Buff(
+            target.buffs().add(new FightBuff(
                 spellEffect,
                 cast.action(),
                 caster,
@@ -110,7 +109,7 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
     }
 
     @Override
-    public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
+    public void onDirectDamageApplied(FightBuff buff, Fighter caster, @Positive int damage) {
         final Fighter target = buff.target();
         final int boostEffectId = buff.effect().min();
         final AlterCharacteristicHook hook = hooksMapping.get(boostEffectId);
@@ -125,7 +124,7 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
             return;
         }
 
-        target.buffs().add(new Buff(
+        target.buffs().add(new FightBuff(
             BuffEffect.withCustomEffectAndDuration(buff.effect(), boostEffectId, Math.min(maximalValue, damage), Asserter.assertGTENegativeOne(buff.effect().special())),
             buff.action(),
             buff.caster(),
@@ -134,13 +133,13 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
         ));
     }
 
-    private @NonNegative int currentBoostValue(Buff buff, FighterData target) {
+    private @NonNegative int currentBoostValue(FightBuff buff, Fighter target) {
         // Add 1 to duration in case of self damage
         final int expectedEffectDuration = buff.effect().special() + (target.equals(fight.turnList().currentFighter()) ? 1 : 0);
 
         int boost = 0;
 
-        for (Buff activeBuff : target.buffs()) {
+        for (FightBuff activeBuff : target.buffs()) {
             if (activeBuff.effect().effect() == buff.effect().min()
                 && activeBuff.remainingTurns() == expectedEffectDuration
                 && activeBuff.action().equals(buff.action())

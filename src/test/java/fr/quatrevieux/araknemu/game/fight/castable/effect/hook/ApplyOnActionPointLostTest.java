@@ -24,10 +24,8 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -91,14 +89,14 @@ class ApplyOnActionPointLostTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
         requestStack.assertLast(new AddBuff(buff));
         requestStack.clear();
 
         target.buffs().onCharacteristicAltered(Characteristic.ACTION_POINT, -1);
         assertEquals(10, target.characteristics().get(Characteristic.FIXED_DAMAGE));
 
-        Buff effectBuff = target.buffs().stream().filter(b -> b.effect().effect() == 96 && b.hook().equals(handler)).findFirst().get();
+        FightBuff effectBuff = target.buffs().stream().filter(b -> b.effect().effect() == 96 && b.hook().equals(handler)).findFirst().get();
         assertEquals(10, effectBuff.effect().min());
         assertEquals(5, effectBuff.remainingTurns());
 
@@ -126,14 +124,14 @@ class ApplyOnActionPointLostTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
         requestStack.assertLast(new AddBuff(buff));
         requestStack.clear();
 
         target.buffs().onCharacteristicAltered(Characteristic.ACTION_POINT, -3);
         assertEquals(30, target.characteristics().get(Characteristic.FIXED_DAMAGE));
 
-        List<Buff> buffs = target.buffs().stream().filter(b -> b.effect().effect() == 96 && b.hook().equals(handler)).collect(Collectors.toList());
+        List<FightBuff> buffs = target.buffs().stream().filter(b -> b.effect().effect() == 96 && b.hook().equals(handler)).collect(Collectors.toList());
         assertCount(3, buffs);
         assertEquals(10, buffs.get(0).effect().min());
         assertEquals(10, buffs.get(1).effect().min());
@@ -167,7 +165,7 @@ class ApplyOnActionPointLostTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
         requestStack.assertLast(new AddBuff(buff));
         requestStack.clear();
 
@@ -197,7 +195,7 @@ class ApplyOnActionPointLostTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
         requestStack.assertLast(new AddBuff(buff));
         requestStack.clear();
 
@@ -227,7 +225,7 @@ class ApplyOnActionPointLostTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
         requestStack.assertLast(new AddBuff(buff));
         requestStack.clear();
 
@@ -257,8 +255,8 @@ class ApplyOnActionPointLostTest extends FightBaseCase {
 
         assertFalse(hook.apply(handler, scope, scope.effects().get(0)));
 
-        Buff buff1 = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
-        Buff buff2 = caster.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        FightBuff buff1 = target.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
+        FightBuff buff2 = caster.buffs().stream().filter(b -> b.effect().effect() == 96).findFirst().get();
 
         requestStack.assertAll(
             new AddBuff(buff1),

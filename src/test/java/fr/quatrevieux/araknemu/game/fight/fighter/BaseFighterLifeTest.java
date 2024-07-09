@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
@@ -316,10 +316,10 @@ class BaseFighterLifeTest extends FightBaseCase {
         life.damage(fighter, 50);
 
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
-        Mockito.doCallRealMethod().when(hook).onHealApplied(Mockito.any(Buff.class), Mockito.anyInt());
+        Mockito.doCallRealMethod().when(hook).onHealApplied(Mockito.any(FightBuff.class), Mockito.anyInt());
 
         life.heal(fighter, 10);
 
@@ -331,7 +331,7 @@ class BaseFighterLifeTest extends FightBaseCase {
         life.damage(fighter, 50);
 
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
         life.heal(fighter, 10);
@@ -342,7 +342,7 @@ class BaseFighterLifeTest extends FightBaseCase {
     @Test
     void healShouldCallOnHealAppliedBuffsEvenIfNoEffect() {
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
         life.heal(fighter, 10);
@@ -353,10 +353,10 @@ class BaseFighterLifeTest extends FightBaseCase {
     @Test
     void damageShouldCallOnLifeAlteredBuffs() {
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
-        Mockito.doCallRealMethod().when(hook).onDamageApplied(Mockito.any(Buff.class), Mockito.anyInt());
+        Mockito.doCallRealMethod().when(hook).onDamageApplied(Mockito.any(FightBuff.class), Mockito.anyInt());
 
         life.damage(fighter, 10);
 
@@ -366,7 +366,7 @@ class BaseFighterLifeTest extends FightBaseCase {
     @Test
     void damageShouldCallOnDamageAppliedBuffs() {
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
         life.damage(fighter, 10);
@@ -377,7 +377,7 @@ class BaseFighterLifeTest extends FightBaseCase {
     @Test
     void damageShouldCallOnDamageAppliedBuffsEvenWithNoDamage() {
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
         life.damage(fighter, 0);
@@ -388,7 +388,7 @@ class BaseFighterLifeTest extends FightBaseCase {
     @Test
     void damageShouldNotCallOnLifeAlteredBuffsWhenDie() {
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
         fighter.buffs().add(buff);
 
         life.damage(fighter, 1000);

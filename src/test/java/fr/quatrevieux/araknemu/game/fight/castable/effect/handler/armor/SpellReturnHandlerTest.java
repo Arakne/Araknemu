@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -96,7 +96,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -123,7 +123,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         assertTrue(handler.onCastTarget(buff, scope));
 
@@ -148,7 +148,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         assertTrue(handler.onCastTarget(buff, scope));
 
@@ -173,7 +173,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         assertTrue(handler.onCastTarget(buff, scope));
 
@@ -200,7 +200,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(returnEffect.max()).thenReturn(5);
         Mockito.when(returnEffect.special()).thenReturn(100);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         assertTrue(handler.onCastTarget(buff, scope));
 
@@ -227,7 +227,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(returnEffect.max()).thenReturn(5);
         Mockito.when(returnEffect.special()).thenReturn(0);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         assertTrue(handler.onCastTarget(buff, scope));
 
@@ -254,7 +254,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(returnEffect.max()).thenReturn(6);
         Mockito.when(returnEffect.special()).thenReturn(100);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         assertFalse(handler.onCastTarget(buff, scope));
 
@@ -282,7 +282,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(returnEffect.max()).thenReturn(6);
         Mockito.when(returnEffect.special()).thenReturn(100);
 
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
+        FightBuff buff = new FightBuff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
         assertFalse(handler.onCastTarget(buff, scope));
 

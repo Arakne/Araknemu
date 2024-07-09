@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -93,8 +93,8 @@ class StealActionPointHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buffT = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
-        Optional<Buff> buffC = caster.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
+        Optional<FightBuff> buffT = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
+        Optional<FightBuff> buffC = caster.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
 
         assertTrue(buffT.isPresent());
         assertTrue(buffC.isPresent());
@@ -133,8 +133,8 @@ class StealActionPointHandlerTest extends FightBaseCase {
         handler.handle(scope, scope.effects().get(0));
 
 
-        Optional<Buff> buffT = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
-        Optional<Buff> buffC = caster.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
+        Optional<FightBuff> buffT = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
+        Optional<FightBuff> buffC = caster.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
 
         assertTrue(buffT.isPresent());
         assertFalse(buffC.isPresent());
@@ -157,9 +157,9 @@ class StealActionPointHandlerTest extends FightBaseCase {
         AtomicReference<Characteristic> hookCharacteristic = new AtomicReference<>();
         AtomicReference<Integer> hookValue = new AtomicReference<>();
 
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+        target.buffs().add(new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
             @Override
-            public void onCharacteristicAltered(Buff buff, Characteristic characteristic, int value) {
+            public void onCharacteristicAltered(FightBuff buff, Characteristic characteristic, int value) {
                 hookCharacteristic.set(characteristic);
                 hookValue.set(value);
             }
@@ -203,7 +203,7 @@ class StealActionPointHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff = caster.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
+        Optional<FightBuff> buff = caster.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
 
         assertFalse(buff.isPresent());
         requestStack.assertEmpty();
@@ -259,8 +259,8 @@ class StealActionPointHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buffT = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
-        Optional<Buff> buffC = caster.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
+        Optional<FightBuff> buffT = target.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
+        Optional<FightBuff> buffC = caster.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
 
         assertTrue(buffT.isPresent());
         assertTrue(buffC.isPresent());
@@ -307,9 +307,9 @@ class StealActionPointHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(getFighter(0), spell, effect, fight.map().get(150));
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff0 = getFighter(0).buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
-        Optional<Buff> buff1 = getFighter(1).buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
-        Optional<Buff> buff2 = getFighter(2).buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
+        Optional<FightBuff> buff0 = getFighter(0).buffs().stream().filter(b -> b.effect().effect() == 111).findFirst();
+        Optional<FightBuff> buff1 = getFighter(1).buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
+        Optional<FightBuff> buff2 = getFighter(2).buffs().stream().filter(b -> b.effect().effect() == 101).findFirst();
 
         assertTrue(buff0.isPresent());
         assertTrue(buff1.isPresent());

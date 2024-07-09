@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.listener.fight.spectator;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FighterList;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
@@ -81,8 +81,8 @@ public final class SendFightStateToSpectator implements Listener<StartWatchFight
     /**
      * Send all buffs of a fighter to the spectator
      */
-    private void sendBuffs(Buffs buffs) {
-        for (Buff buff : buffs) {
+    private void sendBuffs(BuffList buffs) {
+        for (FightBuff buff : buffs) {
             spectator.send(new AddBuff(buff));
         }
     }

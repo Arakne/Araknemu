@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.hook;
 
 import fr.quatrevieux.araknemu.game.fight.castable.BaseCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -55,7 +55,7 @@ public abstract class AbstractEffectHookHandler implements EffectHookHandler {
         final BuffHook hook = createHook(handler);
 
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, hook));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, hook));
         }
 
         return false;

@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
@@ -41,12 +41,12 @@ public final class ReduceDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onDirectDamage(Buff buff, Fighter caster, Damage value) {
+    public void onDirectDamage(FightBuff buff, Fighter caster, Damage value) {
         if (!supportsElement(buff, value.element())) {
             return;
         }
@@ -71,7 +71,7 @@ public final class ReduceDamageHandler implements EffectHandler, BuffHook {
      *
      * @return true if the armor supports the element
      */
-    private boolean supportsElement(Buff buff, Element element) {
+    private boolean supportsElement(FightBuff buff, Element element) {
         return buff.effect().special() == 0 || Element.fromBitSet(buff.effect().special()).contains(element);
     }
 }

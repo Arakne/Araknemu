@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.AlterPointHook;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -42,7 +42,7 @@ public final class RemoveMovementPointsHandler extends AbstractAlterCharacterist
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
         fight.turnList().current().ifPresent(turn -> {
-            final ActiveFighter fighter = turn.fighter();
+            final PlayableFighter fighter = turn.fighter();
             final EffectValue value = EffectValue.create(effect.effect(), fighter, fighter);
             final int mp = turn.points().removeMovementPoints(value.value());
 

@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.hook;
 
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 
@@ -31,7 +31,7 @@ public final class ApplyOnHeal extends AbstractEffectHookHandler {
     protected BuffHook createHook(EffectHandler handler) {
         return new BuffHook() {
             @Override
-            public void onHealApplied(Buff buff, int value) {
+            public void onHealApplied(FightBuff buff, int value) {
                 handler.applyFromHook(buff);
             }
         };

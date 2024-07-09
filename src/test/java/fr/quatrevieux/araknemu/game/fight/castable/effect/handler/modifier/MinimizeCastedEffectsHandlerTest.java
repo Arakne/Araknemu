@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageApplier;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -102,8 +102,8 @@ class MinimizeCastedEffectsHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        Optional<FightBuff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());

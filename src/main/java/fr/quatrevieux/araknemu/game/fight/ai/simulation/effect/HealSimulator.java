@@ -46,7 +46,7 @@ public final class HealSimulator implements EffectSimulator {
 
         for (FighterData target : effect.targets()) {
             final SpellEffect spellEffect = effect.effect();
-            final Interval value = EffectValue.create(spellEffect, simulation.caster(), target)
+            final Interval value = new EffectValue(spellEffect)
                 .percent(boost)
                 .fixed(fixed)
                 .interval()

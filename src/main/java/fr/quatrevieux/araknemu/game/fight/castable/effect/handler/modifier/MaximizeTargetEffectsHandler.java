@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier;
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -40,12 +40,12 @@ public final class MaximizeTargetEffectsHandler implements EffectHandler, BuffHo
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onEffectValueTarget(Buff buff, EffectValue value) {
+    public void onEffectValueTarget(FightBuff buff, EffectValue value) {
         value.maximize();
     }
 }

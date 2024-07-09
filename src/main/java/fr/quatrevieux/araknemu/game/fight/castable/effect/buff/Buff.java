@@ -14,124 +14,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2024 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
-import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
-import org.checkerframework.checker.index.qual.GTENegativeOne;
 
 /**
- * Persistent effect
+ * Base type for buff applied to a fighter
  *
- * The duration will be taken from the effect.
- * For overload the buff effect value (or duration), you must create a new effect instance
+ * This interface is used by both AI and fight system,
+ * and its intended to be overridden to use appropriate types (e.g. fighter type)
  */
-public final class Buff {
-    private final SpellEffect effect;
-    private final Castable action;
-    private final Fighter caster;
-    private final Fighter target;
-    private final BuffHook hook;
-    private final boolean canBeDispelled;
-
-    private @GTENegativeOne int remainingTurns;
-
-    public Buff(SpellEffect effect, Castable action, Fighter caster, Fighter target, BuffHook hook) {
-        this(effect, action, caster, target, hook, true);
-    }
-
-    public Buff(SpellEffect effect, Castable action, Fighter caster, Fighter target, BuffHook hook, boolean canBeDispelled) {
-        this.effect = effect;
-        this.action = action;
-        this.caster = caster;
-        this.target = target;
-        this.hook = hook;
-        this.canBeDispelled = canBeDispelled;
-
-        this.remainingTurns = effect.duration();
-    }
-
+public interface Buff {
     /**
      * Get the buff effect
+     * For most cases, {@link SpellEffect#min()} is used as the buff value, and {@link SpellEffect#max()} set to 0
      */
-    public SpellEffect effect() {
-        return effect;
-    }
+    public SpellEffect effect();
 
     /**
-     * Get the action which generates this buff
+     * Get the buff caster (i.e. the fighter who cast the spell that applied the buff)
      */
-    public Castable action() {
-        return action;
-    }
+    public FighterData caster();
 
     /**
-     * Get the buff caster
+     * Get the buff target (i.e. the fighter who is affected by the buff)
      */
-    public Fighter caster() {
-        return caster;
-    }
-
-    /**
-     * Get the buff target
-     */
-    public Fighter target() {
-        return target;
-    }
-
-    /**
-     * Remaining turns for the buff effect
-     *
-     * When this value reached 0, the buff should be removed
-     * In case of infinite effect, the returned value is -1
-     */
-    public @GTENegativeOne int remainingTurns() {
-        return remainingTurns;
-    }
-
-    /**
-     * Decrements the remaining turns
-     *
-     * You should call {@link Buff#valid()} for check if the buff is still valid or not
-     */
-    public void decrementRemainingTurns() {
-        if (remainingTurns > 0) {
-            --remainingTurns;
-        }
-    }
-
-    /**
-     * Increment remaining turns
-     * Use this method when a self-buff is added
-     */
-    public void incrementRemainingTurns() {
-        if (remainingTurns != -1) {
-            ++remainingTurns;
-        }
-    }
-
-    /**
-     * Get the related hook for the buff
-     */
-    public BuffHook hook() {
-        return hook;
-    }
-
-    /**
-     * Check if the buff is still valid
-     */
-    public boolean valid() {
-        return remainingTurns != 0;
-    }
-
-    /**
-     * Check if the buff can be removed
-     */
-    public boolean canBeDispelled() {
-        return canBeDispelled;
-    }
+    public FighterData target();
 }

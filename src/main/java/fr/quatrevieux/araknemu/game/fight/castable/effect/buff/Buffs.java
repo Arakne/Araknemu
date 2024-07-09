@@ -19,112 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Positive;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 
 /**
  * Handle and store buff list for a fighter
  */
-public interface Buffs extends Iterable<Buff> {
+public interface Buffs<B extends Buff> extends Iterable<B> {
     /**
      * Add and start a buff
      */
-    public void add(Buff buff);
-
-    /**
-     * @see BuffHook#onCast(Buff, FightCastScope)
-     */
-    public void onCast(FightCastScope cast);
-
-    /**
-     * Apply buffs when the fighter is a target of a cast
-     *
-     * If false is returned, the scope targets should be reloaded to call this hook on new targets,
-     * and following hooks will be ignored.
-     *
-     * @return true to continue, or false if the target has changed (or is removed)
-     *
-     * @see BuffHook#onCastTarget(Buff, FightCastScope)
-     */
-    public boolean onCastTarget(FightCastScope cast);
-
-    /**
-     * @see BuffHook#onDirectDamage(Buff, Fighter, Damage)
-     */
-    public void onDirectDamage(Fighter caster, Damage value);
-
-    /**
-     * @see BuffHook#onIndirectDamage(Buff, Fighter, Damage)
-     */
-    public void onIndirectDamage(Fighter caster, Damage value);
-
-    /**
-     * @see BuffHook#onBuffDamage(Buff, Buff, Damage)
-     */
-    public void onBuffDamage(Buff poison, Damage value);
-
-    /**
-     * @see BuffHook#onDirectDamageApplied(Buff, Fighter, int)
-     */
-    public void onDirectDamageApplied(Fighter caster, @Positive int value);
-
-    /**
-     * @see BuffHook#onElementDamageApplied(Buff, Element element, int)
-     */
-    public void onElementDamageApplied(Element element, @NonNegative int actualDamage);
-
-    /**
-     * @see BuffHook#onDamageApplied(Buff, int)
-     */
-    public void onDamageApplied(@NonNegative int value);
-
-    /**
-     * @see BuffHook#onHealApplied(Buff, int)
-     */
-    public void onHealApplied(@NonNegative int value);
-
-    /**
-     * @see BuffHook#onReflectedDamage(Buff, ReflectedDamage)
-     */
-    public void onReflectedDamage(ReflectedDamage damage);
-
-    /**
-     * @see BuffHook#onStartTurn(Buff)
-     */
-    public boolean onStartTurn();
-
-    /**
-     * @see BuffHook#onEndTurn(Buff, Turn)
-     */
-    public void onEndTurn(Turn turn);
-
-    /**
-     * @see BuffHook#onCastDamage(Buff, Damage, Fighter)
-     */
-    public void onCastDamage(Damage damage, Fighter target);
-
-    /**
-     * @see BuffHook#onEffectValueCast(Buff, EffectValue)
-     */
-    public void onEffectValueCast(EffectValue value);
-
-    /**
-     * @see BuffHook#onEffectValueTarget(Buff, EffectValue)
-     */
-    public void onEffectValueTarget(EffectValue value);
-
-    /**
-     * @see BuffHook#onCharacteristicAltered(Buff, Characteristic, int)
-     */
-    public void onCharacteristicAltered(Characteristic characteristic, int value);
+    public void add(B buff);
 
     /**
      * Refresh the buff list after turn end
@@ -132,7 +36,7 @@ public interface Buffs extends Iterable<Buff> {
     public void refresh();
 
     /**
-     * Remove all buffs than can be removed, and fire {@link BuffHook#onBuffTerminated(Buff)}
+     * Remove all buffs than can be removed, and fire {@link BuffHook#onBuffTerminated(FightBuff)}
      *
      * @return true if there is at least one removed buff
      */
@@ -143,5 +47,5 @@ public interface Buffs extends Iterable<Buff> {
      *
      * @return true if there is at least one removed buff
      */
-    public boolean removeByCaster(Fighter caster);
+    public boolean removeByCaster(FighterData caster);
 }

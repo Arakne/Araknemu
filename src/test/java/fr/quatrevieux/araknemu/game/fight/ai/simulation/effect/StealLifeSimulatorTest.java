@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.SpellScore;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -85,7 +85,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
     @Test
     void simulateWithArmorBuff() {
         other.fighter().buffs().add(
-            new Buff(
+            new FightBuff(
                 SpellEffectStub.fixed(105, 10),
                 Mockito.mock(Spell.class),
                 other.fighter(),

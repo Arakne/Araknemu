@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.AbstractPreRollEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
@@ -48,12 +48,12 @@ public final class FixedDamageHandler extends AbstractPreRollEffectHandler imple
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public boolean onStartTurn(Buff buff) {
+    public boolean onStartTurn(FightBuff buff) {
         buff.target().life().damage(buff.caster(), EffectValue.create(buff.effect(), buff.caster(), buff.target()).value());
 
         return !buff.target().dead();

@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -292,7 +292,7 @@ class IndirectIndirectPercentLifeDamageHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, hook);
         target.buffs().add(buff);
 
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());

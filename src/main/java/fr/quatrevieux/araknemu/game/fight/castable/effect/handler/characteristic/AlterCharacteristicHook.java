@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristi
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -55,7 +55,7 @@ public class AlterCharacteristicHook implements BuffHook {
     }
 
     @Override
-    public final void onBuffStarted(Buff buff) {
+    public final void onBuffStarted(FightBuff buff) {
         final Fighter target = buff.target();
         final int effectValue = buff.effect().min();
         final int appliedValue = effectValue * multiplier;
@@ -66,7 +66,7 @@ public class AlterCharacteristicHook implements BuffHook {
     }
 
     @Override
-    public final void onBuffTerminated(Buff buff) {
+    public final void onBuffTerminated(FightBuff buff) {
         apply(buff, buff.target(), -buff.effect().min() * multiplier);
     }
 
@@ -78,7 +78,7 @@ public class AlterCharacteristicHook implements BuffHook {
      * @param target Buff target
      * @param value Value to apply. Negative for removing, positive for adding
      */
-    protected void apply(Buff buff, Fighter target, int value) {
+    protected void apply(FightBuff buff, Fighter target, int value) {
         target.characteristics().alter(characteristic, value);
     }
 

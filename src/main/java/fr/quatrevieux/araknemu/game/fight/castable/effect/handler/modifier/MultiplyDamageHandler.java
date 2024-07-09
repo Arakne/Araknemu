@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier;
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
@@ -42,12 +42,12 @@ public final class MultiplyDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onCastDamage(Buff buff, Damage damage, Fighter target) {
+    public void onCastDamage(FightBuff buff, Damage damage, Fighter target) {
         damage.multiply(buff.effect().min());
     }
 }

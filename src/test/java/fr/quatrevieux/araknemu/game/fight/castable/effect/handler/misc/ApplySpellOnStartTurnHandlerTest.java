@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -89,7 +89,7 @@ class ApplySpellOnStartTurnHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -140,7 +140,7 @@ class ApplySpellOnStartTurnHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -169,7 +169,7 @@ class ApplySpellOnStartTurnHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.handle(scope, scope.effects().get(0));
 
-        Optional<Buff> found = caster.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = caster.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());

@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
@@ -55,7 +55,7 @@ public final class BoostCasterSightHandler implements EffectHandler, BuffHook {
         final SpellEffect spellEffect = effect.effect();
         final Fighter caster = cast.caster();
 
-        caster.buffs().add(new Buff(
+        caster.buffs().add(new FightBuff(
             BuffEffect.fixed(spellEffect, EffectValue.create(spellEffect, caster, caster).value()),
             cast.action(),
             caster,
@@ -65,7 +65,7 @@ public final class BoostCasterSightHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
+    public void onBuffStarted(FightBuff buff) {
         final int value = buff.effect().min();
         final FighterData target = buff.target();
 
@@ -74,7 +74,7 @@ public final class BoostCasterSightHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onBuffTerminated(Buff buff) {
+    public void onBuffTerminated(FightBuff buff) {
         buff.target().characteristics().alter(Characteristic.SIGHT_BOOST, -buff.effect().min());
     }
 }

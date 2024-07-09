@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -168,7 +168,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
 
         assertEquals(1, target.characteristics().get(Characteristic.MOVEMENT_POINT));
         assertEquals(2, buff.effect().min());
@@ -200,7 +200,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         applier.apply(scope, caster, effect);
 
-        Buff buff = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
+        FightBuff buff = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
 
         assertEquals(1, caster.characteristics().get(Characteristic.MOVEMENT_POINT));
         assertEquals(1, caster.turn().points().movementPoints());
@@ -258,7 +258,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         applier.apply(scope, target, effect);
 
-        Buff buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
+        FightBuff buff = target.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
 
         assertEquals(2, target.characteristics().get(Characteristic.MOVEMENT_POINT));
         assertEquals(1, buff.effect().min());

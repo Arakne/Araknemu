@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier;
 
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -37,8 +37,8 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
  * Note: There is no game action packet related to this effect
  *
  * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList#boost(int, SpellsBoosts.Modifier, int)
- * @see BuffHook#onBuffStarted(Buff) Hook used for apply the boost
- * @see BuffHook#onBuffTerminated(Buff) Hook used for removed the boost
+ * @see BuffHook#onBuffStarted(FightBuff) Hook used for apply the boost
+ * @see BuffHook#onBuffTerminated(FightBuff) Hook used for removed the boost
  */
 public final class BoostSpellHandler implements EffectHandler, BuffHook {
     private final SpellsBoosts.Modifier modifier;
@@ -58,17 +58,17 @@ public final class BoostSpellHandler implements EffectHandler, BuffHook {
     @Override
     public void buff(FightCastScope cast, FightCastScope.EffectScope effect) {
         for (Fighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            target.buffs().add(new FightBuff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
+    public void onBuffStarted(FightBuff buff) {
         buff.target().spells().boost(buff.effect().min(), modifier, buff.effect().special());
     }
 
     @Override
-    public void onBuffTerminated(Buff buff) {
+    public void onBuffTerminated(FightBuff buff) {
         buff.target().spells().boost(buff.effect().min(), modifier, -buff.effect().special());
     }
 }

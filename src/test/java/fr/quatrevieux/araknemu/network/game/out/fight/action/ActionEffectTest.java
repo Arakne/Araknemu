@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.fight.action;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FighterSprite;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.InvocationFighter;
@@ -165,7 +165,7 @@ class ActionEffectTest extends FightBaseCase {
         Mockito.when(caster.id()).thenReturn(123);
         Mockito.when(target.id()).thenReturn(456);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, null);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), caster, target, null);
 
         assertEquals("GA;111;123;456,3,5", ActionEffect.buff(buff, 3).toString());
         assertEquals("GA;111;123;456,-3,5", ActionEffect.buff(buff, -3).toString());

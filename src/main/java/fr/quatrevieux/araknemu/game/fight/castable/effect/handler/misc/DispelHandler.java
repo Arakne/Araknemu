@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -47,12 +47,12 @@ public final class DispelHandler implements EffectHandler {
 
     @Override
     public void handle(FightCastScope cast, FightCastScope.EffectScope effect) {
-        for (FighterData fighter : effect.targets()) {
+        for (Fighter fighter : effect.targets()) {
             fighter.buffs().removeAll();
             fight.send(ActionEffect.dispelBuffs(cast.caster(), fighter));
 
             // Send not dispellable buffs
-            for (Buff buff : fighter.buffs()) {
+            for (FightBuff buff : fighter.buffs()) {
                 fight.send(new AddBuff(buff));
             }
         }

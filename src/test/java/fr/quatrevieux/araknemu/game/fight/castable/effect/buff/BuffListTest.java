@@ -66,13 +66,13 @@ class BuffListTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         BuffHook hook = Mockito.mock(BuffHook.class);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
 
         list.add(buff);
 
         requestStack.assertLast(new AddBuff(buff));
         Mockito.verify(hook).onBuffStarted(buff);
-        assertArrayEquals(new Buff[] {buff}, list.stream().toArray());
+        assertArrayEquals(new FightBuff[] {buff}, list.stream().toArray());
     }
 
     @Test
@@ -83,7 +83,7 @@ class BuffListTest extends FightBaseCase {
 
         Mockito.when(effect.duration()).thenReturn(0);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
 
         list.add(buff);
 
@@ -97,7 +97,7 @@ class BuffListTest extends FightBaseCase {
 
         Mockito.when(effect.duration()).thenReturn(-1);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
 
         list.add(buff);
 
@@ -113,15 +113,15 @@ class BuffListTest extends FightBaseCase {
 
     @Test
     void addMultiple() {
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
         list.add(buff3);
 
-        assertArrayEquals(new Buff[] {buff1, buff2, buff3}, list.stream().toArray());
+        assertArrayEquals(new FightBuff[] {buff1, buff2, buff3}, list.stream().toArray());
     }
 
     @Test
@@ -134,7 +134,7 @@ class BuffListTest extends FightBaseCase {
 
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook);
 
         list.add(buff);
 
@@ -151,7 +151,7 @@ class BuffListTest extends FightBaseCase {
 
         Mockito.when(effect.duration()).thenReturn(0);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook);
 
         list.add(buff);
 
@@ -167,7 +167,7 @@ class BuffListTest extends FightBaseCase {
     void onStartTurnWithOneBuffWillReturnTheBuffHookResponse() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        FightBuff buff = new FightBuff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
 
         Mockito.when(hook.onStartTurn(buff)).thenReturn(false);
 
@@ -181,9 +181,9 @@ class BuffListTest extends FightBaseCase {
     void onStartTurnWithMultipleBuff() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         Mockito.when(hook1.onStartTurn(buff1)).thenReturn(true);
         Mockito.when(hook2.onStartTurn(buff2)).thenReturn(false);
@@ -205,9 +205,9 @@ class BuffListTest extends FightBaseCase {
         Turn turn = Mockito.mock(Turn.class);
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -224,9 +224,9 @@ class BuffListTest extends FightBaseCase {
     void onCast() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -245,9 +245,9 @@ class BuffListTest extends FightBaseCase {
     void onCastTarget() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -270,9 +270,9 @@ class BuffListTest extends FightBaseCase {
     void onCastTargetWithReturnFalseShouldStopNextHooks() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -295,9 +295,9 @@ class BuffListTest extends FightBaseCase {
     void onDirectDamage() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -317,9 +317,9 @@ class BuffListTest extends FightBaseCase {
     void onDirectDamageApplied() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -338,9 +338,9 @@ class BuffListTest extends FightBaseCase {
     void onElementDamageApplied() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -358,16 +358,16 @@ class BuffListTest extends FightBaseCase {
     @Test
     void addingBuffDuringHookCall() {
         BuffHook hook2 = Mockito.mock(BuffHook.class);
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2);
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2);
 
         BuffHook hook1 = new BuffHook() {
             @Override
-            public void onDirectDamageApplied(Buff buff, Fighter caster, @Positive int damage) {
+            public void onDirectDamageApplied(FightBuff buff, Fighter caster, @Positive int damage) {
                 list.add(buff2);
             }
         };
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1);
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1);
 
         list.add(buff1);
 
@@ -383,9 +383,9 @@ class BuffListTest extends FightBaseCase {
     void onIndirectDamage() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -405,16 +405,16 @@ class BuffListTest extends FightBaseCase {
     void onBuffDamage() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
         list.add(buff3);
 
         Damage damage = new Damage(10, Element.NEUTRAL);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
 
         list.onBuffDamage(buff, damage);
 
@@ -427,9 +427,9 @@ class BuffListTest extends FightBaseCase {
     void onDamageApplied() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -446,9 +446,9 @@ class BuffListTest extends FightBaseCase {
     void onHealApplied() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -465,9 +465,9 @@ class BuffListTest extends FightBaseCase {
     void onReflectedDamage() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -486,9 +486,9 @@ class BuffListTest extends FightBaseCase {
     void onCastDamage() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -507,9 +507,9 @@ class BuffListTest extends FightBaseCase {
     void onEffectValueCast() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -528,9 +528,9 @@ class BuffListTest extends FightBaseCase {
     void onEffectValueTarget() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -549,9 +549,9 @@ class BuffListTest extends FightBaseCase {
     void onCharacteristicAltered() {
         BuffHook hook1, hook2, hook3;
 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -576,9 +576,9 @@ class BuffListTest extends FightBaseCase {
         Mockito.when(effect2.duration()).thenReturn(2);
         Mockito.when(effect3.duration()).thenReturn(3);
 
-        Buff buff1 = new Buff(effect1, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(effect2, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(effect3, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(effect1, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(effect2, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(effect3, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -586,7 +586,7 @@ class BuffListTest extends FightBaseCase {
 
         list.refresh();
 
-        assertArrayEquals(new Buff[] {buff2, buff3}, list.stream().toArray());
+        assertArrayEquals(new FightBuff[] {buff2, buff3}, list.stream().toArray());
 
         Mockito.verify(hook1).onBuffTerminated(buff1);
     }
@@ -594,9 +594,9 @@ class BuffListTest extends FightBaseCase {
     @Test
     void addMultipleAndRemoveThoseThatCanBeRemoved(){
         BuffHook hook1, hook2, hook3; 
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class), false);
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class), true);
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class), false);
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class), true);
 
         list.add(buff1);
         list.add(buff2);
@@ -616,9 +616,9 @@ class BuffListTest extends FightBaseCase {
     @Test
     void removeAllWithoutUndispellableBuff(){
         BuffHook hook1, hook2, hook3;
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
 
         list.add(buff1);
         list.add(buff2);
@@ -638,9 +638,9 @@ class BuffListTest extends FightBaseCase {
     @Test
     void removeByCaster(){
         BuffHook hook1, hook2, hook3;
-        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class), false);
-        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class), true);
+        FightBuff buff1 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        FightBuff buff2 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class), false);
+        FightBuff buff3 = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class), true);
 
         list.add(buff1);
         list.add(buff2);

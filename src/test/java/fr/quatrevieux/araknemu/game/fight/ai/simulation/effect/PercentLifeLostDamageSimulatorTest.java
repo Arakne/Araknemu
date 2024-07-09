@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
@@ -83,7 +84,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
 
     @Test
     void simulateWithArmorBuff() {
-        target.buffs().add(new Buff(
+        target.buffs().add(new FightBuff(
             SpellEffectStub.fixed(105, 5),
             Mockito.mock(Spell.class),
             target,
@@ -116,7 +117,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
         });
 
         target.buffs().add(
-            new Buff(
+            new FightBuff(
                 SpellEffectStub.fixed(999, 10),
                 Mockito.mock(Spell.class),
                 target,
@@ -186,7 +187,7 @@ class PercentLifeLostDamageSimulatorTest extends FightBaseCase {
 
     @Test
     void simulatePoisonShouldIgnoreArmorBuff() {
-        target.buffs().add(new Buff(
+        target.buffs().add(new FightBuff(
             SpellEffectStub.fixed(105, 5),
             Mockito.mock(Spell.class),
             target,

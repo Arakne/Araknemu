@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
@@ -72,7 +72,7 @@ public final class DispelDeadFighterBuff implements Listener<FighterDie> {
         fight.send(new ClearAllBuffs());
 
         for (Fighter fighter : fight.fighters()) {
-            for (Buff buff : fighter.buffs()) {
+            for (FightBuff buff : fighter.buffs()) {
                 fight.send(new AddBuff(buff));
             }
         }

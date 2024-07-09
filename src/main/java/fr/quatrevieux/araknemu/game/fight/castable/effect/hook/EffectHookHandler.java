@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.hook;
 
 import fr.quatrevieux.araknemu.game.fight.castable.BaseCastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 
 /**
@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
  *
  * The expecting behavior of this handler is:
  * - Create buff hook instance, taking the effect handler as parameter.
- * - Implements the required hook methods, and call {@link EffectHandler#applyFromHook(Buff)} to apply the effect.
+ * - Implements the required hook methods, and call {@link EffectHandler#applyFromHook(FightBuff)} to apply the effect.
  * - Add a buff to each target, following the original effect target.
  *   The buff is created and added by the implementation of this handler, and take the previously created hook as parameter.
  * - Return false to prevent the effect to be applied directly, or true to apply it.

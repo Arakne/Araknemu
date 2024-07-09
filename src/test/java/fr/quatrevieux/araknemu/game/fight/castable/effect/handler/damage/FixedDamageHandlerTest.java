@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.FightCastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.FightBuff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -116,7 +116,7 @@ class FixedDamageHandlerTest extends FightBaseCase {
     @Test
     void applyShouldNotCallBuffHooks() {
         BuffHook hook = Mockito.mock(BuffHook.class);
-        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
+        FightBuff buff = new FightBuff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
 
         target.buffs().add(buff);
 
@@ -258,7 +258,7 @@ class FixedDamageHandlerTest extends FightBaseCase {
         FightCastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+        Optional<FightBuff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
         assertTrue(found.isPresent());
         assertEquals(caster, found.get().caster());
@@ -295,7 +295,7 @@ class FixedDamageHandlerTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.max()).thenReturn(15);
 
-        assertTrue(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+        assertTrue(handler.onStartTurn(new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler)));
 
         int damage = target.life().max() - target.life().current();
 
@@ -310,6 +310,6 @@ class FixedDamageHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.min()).thenReturn(100000);
 
-        assertFalse(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+        assertFalse(handler.onStartTurn(new FightBuff(effect, Mockito.mock(Spell.class), caster, target, handler)));
     }
 }
