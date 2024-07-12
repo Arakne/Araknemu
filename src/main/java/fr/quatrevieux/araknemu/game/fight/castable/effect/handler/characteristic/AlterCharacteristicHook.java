@@ -60,14 +60,14 @@ public class AlterCharacteristicHook implements BuffHook {
         final int effectValue = buff.effect().min();
         final int appliedValue = effectValue * multiplier;
 
-        apply(buff, target, appliedValue);
+        apply(buff, target, appliedValue, false);
         fight.send(ActionEffect.buff(buff, applyMultiplierOnPacketValue ? appliedValue : effectValue));
         target.buffs().onCharacteristicAltered(characteristic, appliedValue);
     }
 
     @Override
     public final void onBuffTerminated(FightBuff buff) {
-        apply(buff, buff.target(), -buff.effect().min() * multiplier);
+        apply(buff, buff.target(), -buff.effect().min() * multiplier, true);
     }
 
     /**
@@ -77,8 +77,9 @@ public class AlterCharacteristicHook implements BuffHook {
      * @param buff Buff to apply
      * @param target Buff target
      * @param value Value to apply. Negative for removing, positive for adding
+     * @param buffTerminated If this method is called because the buff is terminated (i.e. the value parameter is negative)
      */
-    protected void apply(FightBuff buff, Fighter target, int value) {
+    protected void apply(FightBuff buff, Fighter target, int value, boolean buffTerminated) {
         target.characteristics().alter(characteristic, value);
     }
 

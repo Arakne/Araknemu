@@ -205,5 +205,6 @@ class AddActionPointsHandlerTest extends FightBaseCase {
 
         handler.onBuffTerminated(buff);
         assertEquals(6, caster.characteristics().get(Characteristic.ACTION_POINT));
+        assertEquals(9, caster.turn().points().actionPoints());
     }
 }
