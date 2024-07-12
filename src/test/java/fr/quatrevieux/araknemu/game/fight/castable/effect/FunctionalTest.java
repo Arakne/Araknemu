@@ -2302,6 +2302,36 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(4, buffs.get(2).remainingTurns());
     }
 
+    @Test
+    void endOfActionPointLostShouldNotChangeCurrentTurnPoints() {
+        fighter1.move(fight.map().get(210));
+        fighter2.move(fight.map().get(150));
+        fighter2.characteristics().alter(Characteristic.ACTION_POINT, 4); // 10 AP
+
+        castNormal(85, fight.map().get(150)); // Flou
+        fighter1.turn().stop();
+
+        assertEquals(8, fighter2.turn().points().actionPoints());
+        castNormal(188, fighter2.cell()); // Ronce insolente
+
+        // Remove only the spell cost, do not change current turn points
+        assertEquals(4, fighter2.turn().points().actionPoints());
+    }
+
+    @Test
+    void endOfActionPointAddShouldNotChangeCurrentTurnPoints() {
+        fighter1.move(fight.map().get(210));
+        fighter2.move(fight.map().get(150));
+
+        castNormal(126, fight.map().get(210)); // Mot stimulant
+        assertEquals(6, fighter1.turn().points().actionPoints()); // -2 + 2
+
+        castNormal(188, fighter1.cell()); // Ronce insolente
+
+        // Remove only the spell cost, do not change current turn points
+        assertEquals(2, fighter1.turn().points().actionPoints());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

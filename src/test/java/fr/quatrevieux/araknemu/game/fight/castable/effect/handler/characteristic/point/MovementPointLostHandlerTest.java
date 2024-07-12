@@ -196,6 +196,39 @@ class MovementPointLostHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void debuffOnCurrentTurnShouldNotModifyTurnPoints() {
+        requestStack.clear();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(127);
+        Mockito.when(effect.min()).thenReturn(2);
+        Mockito.when(effect.duration()).thenReturn(2);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        Optional<FightBuff> buff = caster.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst();
+
+        assertTrue(buff.isPresent());
+        assertEquals(1, buff.get().effect().min());
+        assertEquals(3, buff.get().remainingTurns());
+        assertEquals(2, caster.characteristics().get(Characteristic.MOVEMENT_POINT));
+        assertEquals(2, caster.turn().points().movementPoints());
+
+        caster.buffs().removeAll(); // Debuff
+
+        assertEquals(3, caster.characteristics().get(Characteristic.MOVEMENT_POINT));
+        assertEquals(2, caster.turn().points().movementPoints());
+    }
+
+    @Test
     void dodgedAllShouldNotAddBuff() {
         target.characteristics().alter(Characteristic.RESISTANCE_MOVEMENT_POINT, 1000);
         requestStack.clear();

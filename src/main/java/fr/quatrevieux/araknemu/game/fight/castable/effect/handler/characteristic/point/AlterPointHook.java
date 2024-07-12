@@ -29,7 +29,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Buff hook for handle altering turn point characteristics (i.e. {@link Characteristic#ACTION_POINT} and {@link Characteristic#MOVEMENT_POINT})
- * This hook will also update point of the current active turn, if applicable
+ * This hook will also update point of the current active turn, if applicable (only on buff start, debuff is ignored)
  *
  * Use factory methods for create the hook instance
  */
@@ -45,13 +45,17 @@ public class AlterPointHook extends AlterCharacteristicHook {
     }
 
     @Override
-    protected void apply(FightBuff buff, Fighter target, int value) {
-        super.apply(buff, target, value);
+    protected void apply(FightBuff buff, Fighter target, int value, boolean buffTerminated) {
+        super.apply(buff, target, value, buffTerminated);
 
-        fight.turnList().current()
-            .filter(turn -> turn.fighter().equals(target))
-            .ifPresent(turn -> modifier.modify(turn.points(), buff.effect().min()))
-        ;
+        // Only modify turn points on buff start
+        // So turn points will not be modified on debuff / buff caster killed
+        if (!buffTerminated) {
+            fight.turnList().current()
+                .filter(turn -> turn.fighter().equals(target))
+                .ifPresent(turn -> modifier.modify(turn.points(), buff.effect().min()))
+            ;
+        }
     }
 
     /**

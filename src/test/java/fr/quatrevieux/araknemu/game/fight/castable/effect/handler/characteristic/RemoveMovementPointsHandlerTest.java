@@ -205,5 +205,6 @@ class RemoveMovementPointsHandlerTest extends FightBaseCase {
 
         handler.onBuffTerminated(buff);
         assertEquals(3, caster.characteristics().get(Characteristic.MOVEMENT_POINT));
+        assertEquals(0, caster.turn().points().movementPoints());
     }
 }
