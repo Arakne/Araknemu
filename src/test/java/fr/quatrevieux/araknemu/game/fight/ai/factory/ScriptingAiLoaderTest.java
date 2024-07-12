@@ -31,6 +31,7 @@ import org.mockito.Mockito;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -82,7 +83,9 @@ class ScriptingAiLoaderTest extends GameBaseCase {
         assertSame(container.get(Simulator.class), f.get(HotReloadableScript.class.cast(factories.get(1)).getInternalInstance()));
     }
 
-    private <T> List<T> toList(Iterable<T> i) {
-        return StreamSupport.stream(i.spliterator(), false).collect(Collectors.toList());
+    private <T extends NamedAiFactory> List<T> toList(Iterable<T> i) {
+        return StreamSupport.stream(i.spliterator(), false)
+            .sorted(Comparator.comparing(NamedAiFactory::name))
+            .collect(Collectors.toList());
     }
 }
