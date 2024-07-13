@@ -128,13 +128,13 @@ public final class RealmModule implements ContainerModule {
             container -> new SessionConfigurator<>(RealmSession::new)
                 .add(new BanIpCheck<>(container.get(BanIpService.class)))
                 .add(new RateLimiter.Configurator<>(container.get(RealmConfiguration.class).packetRateLimit()))
-                .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
                 .add(new RealmSessionConfigurator(
                     container.get(Dispatcher.class),
                     new PacketParser[] {DofusVersion.parser(), Credentials.parser()},
                     container.get(PacketParser.class),
                     container.get(Logger.class)
                 ))
+                .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
         );
 
         configurator.factory(

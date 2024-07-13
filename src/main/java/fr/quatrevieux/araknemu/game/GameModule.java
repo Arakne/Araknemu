@@ -363,8 +363,8 @@ public final class GameModule implements ContainerModule {
             container -> new SessionConfigurator<>(GameSession::new)
                 .add(new BanIpCheck<>(container.get(BanIpService.class)))
                 .add(new RateLimiter.Configurator<>(container.get(GameConfiguration.class).packetRateLimit()))
-                .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
                 .add(new GameExceptionConfigurator(container.get(Logger.class)))
+                .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
                 .add(new GamePacketConfigurator(
                     container.get(Dispatcher.class),
                     container.get(PacketParser.class)

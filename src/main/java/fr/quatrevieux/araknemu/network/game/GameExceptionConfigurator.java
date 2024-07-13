@@ -30,6 +30,8 @@ import org.apache.logging.log4j.MarkerManager;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
+import java.io.IOException;
+
 /**
  * Configure base exception for a game session
  */
@@ -57,7 +59,7 @@ public final class GameExceptionConfigurator implements SessionConfigurator.Conf
         });
 
         inner.addExceptionHandler(CloseImmediately.class, (cause, packet) -> {
-            logger.error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", context(session, packet), cause.getMessage() == null ? cause.toString() : cause.getMessage());
+            logger.warn(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", context(session, packet), cause.getMessage() == null ? cause.toString() : cause.getMessage());
 
             return true;
         });
@@ -69,10 +71,22 @@ public final class GameExceptionConfigurator implements SessionConfigurator.Conf
         });
 
         inner.addExceptionHandler(RateLimitException.class, cause -> {
-            logger.error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", session);
+            logger.warn(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", session);
             session.close();
 
             return true;
+        });
+
+        inner.addExceptionHandler(IOException.class, cause -> {
+            // Ignore connection reset errors
+            if (
+                !"Connection reset by peer".equals(cause.getMessage())
+                && !"Connexion ré-initialisée par le correspondant".equals(cause.getMessage())
+            ) {
+                logger.error("[{}] IOException : {}", session, cause.getMessage() == null ? cause.toString() : cause.getMessage());
+            }
+
+            return false;
         });
     }
 
