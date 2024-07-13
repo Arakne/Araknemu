@@ -55,7 +55,7 @@ public final class ProxyTurn implements Turn<Action> {
     }
 
     @Override
-    public void perform(Action action) throws FightException {
+    public boolean perform(Action action) throws FightException {
         throw new UnsupportedOperationException("This is a proxy turn");
     }
 

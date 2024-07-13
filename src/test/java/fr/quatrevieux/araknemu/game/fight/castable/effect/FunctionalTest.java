@@ -1268,7 +1268,7 @@ public class FunctionalTest extends FightBaseCase {
 
         passTurns(3); // spell cooldown
 
-        assertThrows(FightException.class, () -> castNormal(35, fight.map().get(200)));
+        castNormal(35, fight.map().get(200));
         requestStack.assertLast(Error.cantCastMaxSummonedCreaturesReached(1));
         assertFalse(fight.map().get(200).hasFighter());
     }
@@ -1381,7 +1381,7 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.packet(fighter1, new UpdateCells(UpdateCells.Data.fromProperties(126, true, UpdateCells.LAYER_2_OBJECT_NUMBER.set(25)))));
         requestStack.clear();
 
-        assertThrows(FightException.class, () -> castNormal(65, fight.map().get(126))); // Already a trap
+        castNormal(65, fight.map().get(126)); // Already a trap
         requestStack.assertLast(ActionEffect.spellBlockedByInvisibleObstacle(fighter1, service.get(65).level(5)));
         assertEquals(1, fight.map().objects().stream().count());
         requestStack.clear();
@@ -1565,7 +1565,7 @@ public class FunctionalTest extends FightBaseCase {
 
         passTurns(9); // spell cooldown
 
-        assertThrows(FightException.class, () -> castNormal(74, fight.map().get(200)));
+        castNormal(74, fight.map().get(200));
         requestStack.assertLast(Error.cantCastMaxSummonedCreaturesReached(1));
     }
 
@@ -1699,7 +1699,7 @@ public class FunctionalTest extends FightBaseCase {
         fight.fighters().leave(ally);
         requestStack.clear();
 
-        assertThrows(FightException.class, () -> castNormal(420, fight.map().get(200))); // Laisse spirituelle
+        castNormal(420, fight.map().get(200)); // Laisse spirituelle
 
         assertTrue(ally.dead());
         assertFalse(fight.map().get(200).hasFighter());

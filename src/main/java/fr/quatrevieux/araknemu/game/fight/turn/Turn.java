@@ -41,8 +41,9 @@ public interface Turn<A extends Action> {
      * Perform a fight action
      *
      * @param action The action to perform
+     * @return true if the action is successfully performed, or false if the action cannot be performed
      */
-    public void perform(A action) throws FightException;
+    public boolean perform(A action) throws FightException;
 
     /**
      * Execute the action when the current is terminated

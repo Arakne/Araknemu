@@ -38,7 +38,9 @@ public final class PerformTurnAction extends AbstractFightingPacketHandler<GameA
         try {
             final FightTurn turn = fighter.turn();
 
-            turn.perform(fighter.fight().actions().create(fighter, ActionType.byId(packet.type()), packet.arguments()));
+            if (!turn.perform(fighter.fight().actions().create(fighter, ActionType.byId(packet.type()), packet.arguments()))) {
+                session.send(new NoneAction());
+            }
         } catch (Exception e) {
             throw new ErrorPacket(new NoneAction(), e);
         }

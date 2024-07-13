@@ -142,7 +142,7 @@ public final class FightTurn implements Turn<FightAction> {
     }
 
     @Override
-    public void perform(FightAction action) throws FightException {
+    public boolean perform(FightAction action) throws FightException {
         if (!active.get()) {
             throw new FightException("Turn is not active");
         }
@@ -151,9 +151,7 @@ public final class FightTurn implements Turn<FightAction> {
             throw new FightException("The fighter is dead");
         }
 
-        if (!actionHandler.start(action)) {
-            throw new FightException("Cannot start the action");
-        }
+        return actionHandler.start(action);
     }
 
     /**

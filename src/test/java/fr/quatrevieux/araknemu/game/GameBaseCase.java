@@ -441,7 +441,15 @@ public class GameBaseCase extends DatabaseTestCase {
         return makeOtherPlayer(1);
     }
 
+    public GameSession makeOtherPlayerSession() throws Exception {
+        return makeOtherPlayerSession(1);
+    }
+
     public GamePlayer makeOtherPlayer(int level) throws Exception {
+        return makeOtherPlayerSession(level).player();
+    }
+
+    public GameSession makeOtherPlayerSession(int level) throws Exception {
         dataSet
             .pushSpells()
             .pushRaces()
@@ -472,7 +480,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         session.setPlayer(gp);
 
-        return gp;
+        return session;
     }
 
     public ExplorationPlayer makeOtherExplorationPlayer() throws Exception {

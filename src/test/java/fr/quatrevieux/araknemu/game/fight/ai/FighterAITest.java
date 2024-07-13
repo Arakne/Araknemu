@@ -237,6 +237,31 @@ class FighterAITest extends FightBaseCase {
     }
 
     @RepeatedIfExceptionsTest
+    void startWithInvalidActionShouldStopTurn() throws InterruptedException {
+        ActionGenerator generator1 = Mockito.mock(ActionGenerator.class);
+        Mockito.when(generator1.generate(Mockito.any(), Mockito.any())).thenReturn(
+            Optional.of(fight.actions().cast().create(
+                fighter,
+                fighter.spells().get(3),
+                fight.map().get(0)
+            ))
+        );
+
+        fight.turnList().start();
+        FightTurn turn = fight.turnList().current().get();
+
+        FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1}));
+
+        ai.start(turn);
+
+        Mockito.verify(generator1).initialize(ai);
+
+        Mockito.verify(generator1).generate(Mockito.eq(ai), Mockito.any(AiActionFactory.class));
+
+        assertFalse(turn.active());
+    }
+
+    @RepeatedIfExceptionsTest
     void startShouldCallMemoryRefresh() throws InterruptedException {
         ActionGenerator generator = Mockito.mock(ActionGenerator.class);
 
