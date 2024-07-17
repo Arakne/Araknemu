@@ -32,10 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GameExceptionConfiguratorTest extends GameBaseCase {
     private GameExceptionConfigurator configurator;
@@ -115,22 +112,5 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
 
         assertFalse(session.isAlive());
         Mockito.verify(logger).warn(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", gameSession);
-    }
-
-    @Test
-    void exceptionShouldIgnoreConnectionReset() {
-        gameSession.exception(new IOException("Connection reset by peer"));
-        gameSession.exception(new IOException("Connexion ré-initialisée par le correspondant"));
-
-        assertTrue(session.isAlive());
-        Mockito.verifyNoInteractions(logger);
-    }
-
-    @Test
-    void exceptionShouldLogIOException() {
-        gameSession.exception(new IOException("My error"));
-
-        assertTrue(session.isAlive());
-        Mockito.verify(logger).error("[{}] IOException : {}", gameSession, "My error");
     }
 }

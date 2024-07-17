@@ -33,6 +33,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+
 class SessionLoggerTest {
     private Session session;
     private Logger logger;
@@ -104,6 +106,14 @@ class SessionLoggerTest {
         session.exception(new HandlerNotFoundException(new Ping()));
 
         Mockito.verify(logger).warn(MarkerManager.getMarker("NETWORK_ERROR"), "Cannot found handler for packet Ping");
+    }
+
+    @Test
+    void exceptionConnectionResetShouldBeIgnored() {
+        session.exception(new IOException("Connection reset by peer"));
+        session.exception(new IOException("Connexion ré-initialisée par le correspondant"));
+
+        Mockito.verifyNoInteractions(logger);
     }
 
     @Test

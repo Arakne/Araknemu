@@ -40,10 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RealmSessionConfiguratorTest extends RealmBaseCase {
     private RealmSessionConfigurator configurator;
@@ -111,32 +108,5 @@ class RealmSessionConfiguratorTest extends RealmBaseCase {
 
         assertFalse(session.isAlive());
         Mockito.verify(logger).error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", realmSession);
-    }
-
-    @Test
-    void exceptionShouldIgnoreConnectionReset() {
-        ConfigurableSession session = new ConfigurableSession(channel);
-        RealmSession realmSession = new RealmSession(session);
-
-        configurator.configure(session, realmSession);
-
-        realmSession.exception(new IOException("Connection reset by peer"));
-        realmSession.exception(new IOException("Connexion ré-initialisée par le correspondant"));
-
-        assertFalse(session.isAlive());
-        Mockito.verifyNoInteractions(logger);
-    }
-
-    @Test
-    void exceptionShouldLogIOException() {
-        ConfigurableSession session = new ConfigurableSession(channel);
-        RealmSession realmSession = new RealmSession(session);
-
-        configurator.configure(session, realmSession);
-
-        realmSession.exception(new IOException("My error"));
-
-        assertFalse(session.isAlive());
-        Mockito.verify(logger).error("[{}] IOException : {}", realmSession, "My error");
     }
 }
