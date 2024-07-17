@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -41,7 +42,7 @@ class ExploringOrFightingSwitcherTest extends FightBaseCase {
 
         ExploringOrFightingSwitcher handler = new ExploringOrFightingSwitcher<>(exp, fig);
 
-        assertThrows(CloseImmediately.class, () -> handler.handle(session, Mockito.mock(Packet.class)));
+        assertThrows(ErrorPacket.class, () -> handler.handle(session, Mockito.mock(Packet.class)));
     }
 
     @Test

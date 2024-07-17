@@ -28,7 +28,6 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.MarkerManager;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.io.IOException;
 
@@ -47,12 +46,28 @@ public final class GameExceptionConfigurator implements SessionConfigurator.Conf
         inner.addExceptionHandler(WritePacket.class, (cause, packet) -> {
             session.send(cause.packet());
 
-            if (cause instanceof Exception) {
-                final Exception ex = (Exception) cause;
+            if (!(cause instanceof Exception)) {
+                return true;
+            }
 
-                if (ex.getCause() != null) {
-                    logger.warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", context(session, packet), NullnessUtil.castNonNull(ex.getCause()).toString());
+            final Exception ex = (Exception) cause;
+            final Throwable actualCause = ex.getCause();
+            final StringBuilder message = new StringBuilder();
+
+            if (ex.getMessage() != null) {
+                message.append(ex.getMessage());
+            }
+
+            if (actualCause != null) {
+                if (message.length() > 0) {
+                    message.append(" - ");
                 }
+
+                message.append(actualCause);
+            }
+
+            if (message.length() > 0) {
+                logger.warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", context(session, packet), message.toString());
             }
 
             return true;

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +54,7 @@ class AbstractFightingPacketHandlerTest extends FightBaseCase {
             }
         };
 
-        assertThrows(CloseImmediately.class, () -> handler.handle(session, new Packet() {}));
+        assertThrows(ErrorPacket.class, () -> handler.handle(session, new Packet() {}));
         assertEquals(false, called.get());
     }
 

@@ -78,11 +78,19 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
     }
 
     @Test
+    void exceptionCaughtWritePacketWithMessage() {
+        gameSession.exception(new ErrorPacket("my error message", new LoginTokenError()));
+
+        requestStack.assertLast(new LoginTokenError());
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "my error message");
+    }
+
+    @Test
     void exceptionCaughtWritePacketWithCauseException() {
         gameSession.exception(new ErrorPacket(new LoginTokenError(), new Exception("My error")));
 
         requestStack.assertLast(new LoginTokenError());
-        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "java.lang.Exception: My error");
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "java.lang.Exception: My error - java.lang.Exception: My error");
     }
 
     @Test
@@ -90,7 +98,7 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new ErrorPacket(new LoginTokenError(), new Exception("My error")), "foo");
 
         requestStack.assertLast(new LoginTokenError());
-        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession + "; packet=foo", "java.lang.Exception: My error");
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession + "; packet=foo", "java.lang.Exception: My error - java.lang.Exception: My error");
     }
 
     @Test

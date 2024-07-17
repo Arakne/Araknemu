@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class SendSmileyToExplorationMapTest extends GameBaseCase {
     @Test
     void notExploring()  {
-        assertThrows(CloseImmediately.class, () -> handlePacket(new UseSmiley(3)));
+        assertThrows(ErrorPacket.class, () -> handlePacket(new UseSmiley(3)));
     }
 
     @Test

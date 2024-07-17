@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.network.game.in.fight.ShowCellRequest;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ShowCellTest extends FightBaseCase {
     @Test
     void notInFight() {
-        assertThrows(CloseImmediately.class, () -> handlePacket(new ShowCellRequest(123)));
+        assertThrows(ErrorPacket.class, () -> handlePacket(new ShowCellRequest(123)));
     }
 
     @Test

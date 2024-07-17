@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.fight.option;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -80,7 +81,7 @@ class ToggleLockTeamTest extends FightBaseCase {
 
     @Test
     void notInFightShouldFail() {
-        assertThrows(CloseImmediately.class, () -> handlePacket(new LockTeamRequest()));
+        assertThrows(ErrorPacket.class, () -> handlePacket(new LockTeamRequest()));
     }
 
     @Test

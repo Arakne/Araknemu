@@ -81,7 +81,7 @@ class ChangeFighterStartPlaceTest extends FightBaseCase {
 
     @Test
     void functionalNotInFight() {
-        assertThrows(CloseImmediately.class, () -> handlePacket(new FighterChangePlace(123)));
+        assertThrows(ErrorPacket.class, () -> handlePacket(new FighterChangePlace(123)));
     }
 
     @RepeatedIfExceptionsTest

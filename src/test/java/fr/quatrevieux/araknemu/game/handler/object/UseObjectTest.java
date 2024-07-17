@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -199,7 +200,7 @@ class UseObjectTest extends GameBaseCase {
         InventoryEntry entry = gamePlayer().inventory().add(container.get(ItemService.class).create(800));
         requestStack.clear();
 
-        assertThrows(CloseImmediately.class, () -> handlePacket(new ObjectUseRequest(entry.id(), 0, 0, false)));
+        assertThrows(ErrorPacket.class, () -> handlePacket(new ObjectUseRequest(entry.id(), 0, 0, false)));
         assertEquals(1, entry.quantity());
     }
 }

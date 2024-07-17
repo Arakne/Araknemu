@@ -19,10 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 
 /**
  * Switch between handler when the current player is in fight or exploring
@@ -49,7 +50,7 @@ public final class ExploringOrFightingSwitcher<P extends Packet> implements Pack
         } else if (session.exploration() != null) {
             exploringHandler.handle(session, packet);
         } else {
-            throw new CloseImmediately("The player should be in exploration or fight");
+            throw new ErrorPacket("The player should be in exploration or fight", new Noop());
         }
     }
 
