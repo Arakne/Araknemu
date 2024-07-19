@@ -26,21 +26,27 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EndGameActionTest extends GameBaseCase {
     private EndGameAction handler;
+    private Logger logger;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        handler = new EndGameAction();
+        logger = Mockito.mock(Logger.class);
+        handler = new EndGameAction(logger);
     }
 
     @Test
@@ -61,5 +67,37 @@ class EndGameActionTest extends GameBaseCase {
 
         assertFalse(player.interactions().busy());
         assertEquals(395, player.position().cell());
+    }
+
+    @Test
+    void handleIdDoesNotCorresponds() throws Exception {
+        dataSet.pushMaps().pushSubAreas().pushAreas();
+
+        ExplorationPlayer player = explorationPlayer();
+
+        player.interactions().push(
+            new Move(
+                player,
+                new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+                new PathValidator[] {new ValidateWalkable()}
+            )
+        );
+
+        handler.handle(session, new GameActionAcknowledge(404));
+        requestStack.assertLast(new Noop());
+
+        assertTrue(player.interactions().busy());
+        Mockito.verify(logger).warn("Failed to end game action {}", 404);
+    }
+
+    @Test
+    void handleWithoutPendingAction() throws Exception {
+        dataSet.pushMaps().pushSubAreas().pushAreas();
+        explorationPlayer();
+
+        handler.handle(session, new GameActionAcknowledge(404));
+        requestStack.assertLast(new Noop());
+
+        Mockito.verify(logger).warn("Failed to end game action {}", 404);
     }
 }

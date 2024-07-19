@@ -113,9 +113,10 @@ public final class InteractionHandler {
      * End an action which is successfully terminated
      *
      * @param actionId The action to end
+     * @return true if the action was ended, false if there is no pending action with this id
      */
-    public void end(int actionId) {
-        gameActions.end(actionId);
+    public boolean end(int actionId) {
+        return gameActions.end(actionId);
     }
 
     /**
