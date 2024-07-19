@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -55,7 +56,7 @@ class AbstractFightingPacketHandlerTest extends FightBaseCase {
         };
 
         assertThrows(ErrorPacket.class, () -> handler.handle(session, new Packet() {}));
-        assertEquals(false, called.get());
+        assertFalse(called.get());
     }
 
     @RepeatedIfExceptionsTest

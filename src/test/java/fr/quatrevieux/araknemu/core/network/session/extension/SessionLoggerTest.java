@@ -117,6 +117,14 @@ class SessionLoggerTest {
     }
 
     @Test
+    void exceptionIOExceptionNotConnectionResetShouldBeLogged() {
+        IOException e = new IOException("foo");
+        session.exception(e);
+
+        Mockito.verify(logger).error(MarkerManager.getMarker("NETWORK_ERROR"), "[{}] Uncaught exception", session, e);
+    }
+
+    @Test
     void exceptionWithPacket() {
         Exception e = new Exception("my error");
         session.exception(e, "foo");

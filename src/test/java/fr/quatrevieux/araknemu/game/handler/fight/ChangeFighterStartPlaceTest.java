@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -32,8 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class ChangeFighterStartPlaceTest extends FightBaseCase {
     private ChangeFighterStartPlace handler;
@@ -77,6 +76,18 @@ class ChangeFighterStartPlaceTest extends FightBaseCase {
         requestStack.assertLast(new FighterPositions(fight.fighters()));
 
         assertEquals(123, fighter.cell().id());
+    }
+
+    @Test
+    void handleInvalidState() throws Exception {
+        fight = createFight();
+        fighter = player.fighter();
+
+        fight.nextState();
+        handler.handle(session, new FighterChangePlace(123));
+
+        requestStack.assertLast(new ChangeFighterPlaceError());
+        assertNotEquals(123, fighter.cell().id());
     }
 
     @Test

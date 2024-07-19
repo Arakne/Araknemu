@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
+import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
@@ -72,6 +73,26 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new ErrorPacket(new LoginTokenError()));
 
         requestStack.assertLast(new LoginTokenError());
+    }
+
+    @Test
+    void exceptionCaughtWritePacketWithThrowableWillNotLogError() {
+        class MyFatalError extends Throwable implements WritePacket {
+            @Override
+            public String getMessage() {
+                return "my error message";
+            }
+
+            @Override
+            public Object packet() {
+                return "packet";
+            }
+        }
+
+        gameSession.exception(new MyFatalError());
+
+        requestStack.assertLast("packet");
+        Mockito.verifyNoInteractions(logger);
     }
 
     @Test
