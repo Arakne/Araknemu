@@ -43,12 +43,19 @@ public final class ChangeFighterStartPlace extends AbstractFightingPacketHandler
         final FightCell targetCell = fight.map().get(packet.cellId());
 
         try {
-            fight
-                .state(PlacementState.class)
-                .changePlace(fighter, targetCell)
-            ;
+            final boolean validState = fight.ifState(PlacementState.class, state -> state.changePlace(fighter, targetCell));
+
+            if (!validState) {
+                session.send(new ChangeFighterPlaceError());
+            }
         } catch (FightException e) {
-            throw new ErrorPacket(new ChangeFighterPlaceError());
+            final String message = e.getMessage();
+
+            if (message != null) {
+                throw new ErrorPacket(message, new ChangeFighterPlaceError());
+            } else {
+                throw new ErrorPacket(new ChangeFighterPlaceError());
+            }
         }
     }
 

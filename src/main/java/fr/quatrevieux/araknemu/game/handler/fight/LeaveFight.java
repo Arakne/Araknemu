@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 public final class LeaveFight extends AbstractFightingPacketHandler<LeaveFightRequest> {
     @Override
     public void handle(GameSession session, Fight fight, PlayerFighter fighter, LeaveFightRequest packet) {
-        fight.state(LeavableState.class).leave(fighter);
+        fight.ifState(LeavableState.class, state -> state.leave(fighter));
     }
 
     @Override

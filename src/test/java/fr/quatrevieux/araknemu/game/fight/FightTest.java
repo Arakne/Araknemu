@@ -38,6 +38,7 @@ import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
+import fr.quatrevieux.araknemu.game.fight.state.FightState;
 import fr.quatrevieux.araknemu.game.fight.state.FinishState;
 import fr.quatrevieux.araknemu.game.fight.state.InitialiseState;
 import fr.quatrevieux.araknemu.game.fight.state.NullState;
@@ -168,6 +169,20 @@ class FightTest extends GameBaseCase {
         fight.nextState();
 
         assertInstanceOf(PlacementState.class, fight.state(PlacementState.class));
+    }
+
+    @Test
+    void ifState() {
+        AtomicBoolean called = new AtomicBoolean(false);
+
+        assertFalse(fight.ifState(PlacementState.class, state -> called.set(true)));
+        assertFalse(called.get());
+
+        assertTrue(fight.ifState(NullState.class, state -> called.set(true)));
+
+        AtomicReference<FightState> ref = new AtomicReference<>();
+        fight.ifState(NullState.class, ref::set);
+        assertSame(fight.state(), ref.get());
     }
 
     @Test
