@@ -19,17 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
-import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 
 /**
  * Base type for packet handlers that require the player to be in a fight
  *
- * @param <P> Packet to handler
+ * @param <P> Packet to handle
  * @see GameSession#fighter() will be set
  */
 public abstract class AbstractFightingPacketHandler<P extends Packet> implements PacketHandler<GameSession, P> {
@@ -38,7 +39,8 @@ public abstract class AbstractFightingPacketHandler<P extends Packet> implements
         final PlayerFighter fighter = session.fighter();
 
         if (fighter == null) {
-            throw new CloseImmediately("Not in fight");
+            handleNotInFight(session, packet);
+            return;
         }
 
         fighter.fight().execute(() -> {
@@ -46,6 +48,7 @@ public abstract class AbstractFightingPacketHandler<P extends Packet> implements
 
             // The player has left the fight before the execution of the action
             if (currentFighter == null) {
+                handleNotInFight(session, packet);
                 return;
             }
 
@@ -66,4 +69,17 @@ public abstract class AbstractFightingPacketHandler<P extends Packet> implements
      * @param packet The packet to handle
      */
     protected abstract void handle(GameSession session, Fight fight, PlayerFighter fighter, P packet) throws Exception;
+
+    /**
+     * Handle the packet when the player is not in a fight
+     *
+     * By default, will close the session immediately.
+     * Override this method to change the behavior.
+     *
+     * @param session The session
+     * @param packet The received packet
+     */
+    protected void handleNotInFight(GameSession session, P packet) {
+        throw new ErrorPacket("Not in fight", new Noop());
+    }
 }

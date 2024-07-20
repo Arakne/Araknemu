@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
@@ -63,6 +64,14 @@ public final class SessionLogger implements ConfigurableSession.ExceptionHandler
         if (cause instanceof HandlerNotFoundException) {
             logger.warn(NETWORK_ERROR_MARKER, cause.getMessage() == null ? cause.toString() : cause.getMessage());
 
+            return false;
+        }
+
+        // Ignore connection reset errors
+        if (
+            cause instanceof IOException
+            && ("Connection reset by peer".equals(cause.getMessage()) || "Connexion ré-initialisée par le correspondant".equals(cause.getMessage()))
+        ) {
             return false;
         }
 

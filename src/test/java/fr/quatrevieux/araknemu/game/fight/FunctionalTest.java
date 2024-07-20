@@ -23,6 +23,7 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.arakne.utils.value.Interval;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -55,6 +56,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrate
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FightEnd;
@@ -105,7 +107,9 @@ public class FunctionalTest extends GameBaseCase {
         FightHandler<ChallengeBuilder> handler = service.handler(ChallengeBuilder.class);
 
         GamePlayer player = gamePlayer(true);
-        GamePlayer other = makeOtherPlayer();
+        GameSession otherSession = makeOtherPlayerSession();
+        GamePlayer other = otherSession.player();
+        SendingRequestStack otherRequestStack = new SendingRequestStack((DummyChannel) otherSession.channel());
 
         // Equip a weapon
         other.inventory().add(container.get(ItemService.class).create(88), 1, 1);
@@ -372,14 +376,15 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertOne(ActionEffect.alterLifePoints(other.fighter(), player.fighter(), -damage));
         nextTurn();
 
-        assertThrows(FightException.class, () -> castNormal(3, fight.map().get(95)));
+        castNormal(3, fight.map().get(95));
         requestStack.assertLast(Error.cantCastBadRange(new Interval(1, 6), 7));
         nextTurn();
 
         castNormal(6, other.fighter().cell());
         other.fighter().turn().terminate();
 
-        assertThrows(FightException.class, () -> castNormal(6, other.fighter().cell())); // Cooldown
+        castNormal(6, other.fighter().cell()); // Cooldown
+        otherRequestStack.assertLast(Error.cantCast());
 
         // Skip 5 turns
         for (int i = 0; i < 5; ++i) {

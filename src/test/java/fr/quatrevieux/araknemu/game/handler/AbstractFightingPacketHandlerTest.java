@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -53,8 +55,8 @@ class AbstractFightingPacketHandlerTest extends FightBaseCase {
             }
         };
 
-        assertThrows(CloseImmediately.class, () -> handler.handle(session, new Packet() {}));
-        assertEquals(false, called.get());
+        assertThrows(ErrorPacket.class, () -> handler.handle(session, new Packet() {}));
+        assertFalse(called.get());
     }
 
     @RepeatedIfExceptionsTest

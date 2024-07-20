@@ -47,18 +47,22 @@ public final class KickFighter extends AbstractFightingPacketHandler<KickFighter
 
         if (!fighter.isTeamLeader() || packet.fighterId() == fighter.id()) {
             // @todo Im error ?
-            throw new ErrorPacket(new Noop());
+            throw new ErrorPacket("Cannot kick himself, or if not leader", new Noop());
         }
+
+        boolean success = false;
 
         for (Fighter teammate : fighter.team().fighters()) {
             if (teammate.id() == packet.fighterId()) {
-                fighter.fight().state(PlacementState.class).kick(teammate);
-                return;
+                success = fight.ifState(PlacementState.class, state -> state.kick(teammate));
+                break;
             }
         }
 
-        // @todo Im error ?
-        session.send(new Noop());
+        if (!success) {
+            // @todo Im error ?
+            session.send(new Noop());
+        }
     }
 
     @Override

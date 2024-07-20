@@ -25,15 +25,18 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Add the dropped items to the fighter
  */
 public final class AddItems implements DropRewardAction {
     private final ItemService service;
+    private final Logger logger;
 
-    public AddItems(ItemService service) {
+    public AddItems(ItemService service, Logger logger) {
         this.service = service;
+        this.logger = logger;
     }
 
     @Override
@@ -54,7 +57,11 @@ public final class AddItems implements DropRewardAction {
 
             reward.items().forEach((itemId, quantity) -> {
                 for (int q = 0; q < quantity; ++q) {
-                    inventory.add(service.create(itemId));
+                    try {
+                        inventory.add(service.create(itemId));
+                    } catch (Exception e) {
+                        logger.error("Failed to create reward item " + itemId, e);
+                    }
                 }
             });
         }

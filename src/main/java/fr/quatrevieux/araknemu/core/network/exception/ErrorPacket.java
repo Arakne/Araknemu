@@ -27,6 +27,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class ErrorPacket extends HandlingException implements WritePacket {
     private final Object packet;
 
+    public ErrorPacket(String message, Object packet) {
+        super(message);
+        this.packet = packet;
+    }
+
     public ErrorPacket(Object packet) {
         this.packet = packet;
     }

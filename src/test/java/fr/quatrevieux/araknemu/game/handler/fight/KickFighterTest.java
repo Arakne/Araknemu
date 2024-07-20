@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -42,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class KickFighterTest extends FightBaseCase {
     @Test
     void notInFight() {
-        assertThrows(CloseImmediately.class, () -> handlePacket(new KickFighterRequest(12)));
+        assertThrows(ErrorPacket.class, () -> handlePacket(new KickFighterRequest(12)));
     }
 
     @RepeatedIfExceptionsTest

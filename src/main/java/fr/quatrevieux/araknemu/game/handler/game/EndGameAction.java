@@ -23,17 +23,30 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.handler.AbstractExploringPacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.apache.logging.log4j.Logger;
 
 /**
  * End the current game action with success
  */
 public final class EndGameAction extends AbstractExploringPacketHandler<GameActionAcknowledge> {
+    private final Logger logger;
+
+    public EndGameAction(Logger logger) {
+        this.logger = logger;
+    }
+
     @Override
     public void handle(GameSession session, ExplorationPlayer exploration, GameActionAcknowledge packet) throws Exception {
-        exploration
+        final boolean success = exploration
             .interactions()
             .end(packet.actionId())
         ;
+
+        if (!success) {
+            logger.warn("Failed to end game action {}", packet.actionId());
+            session.send(new Noop());
+        }
     }
 
     @Override

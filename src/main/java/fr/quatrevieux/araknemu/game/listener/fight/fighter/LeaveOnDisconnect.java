@@ -40,7 +40,7 @@ public final class LeaveOnDisconnect implements Listener<Disconnected> {
         final Fight fight = fighter.fight();
 
         // Issue #189 : all fight actions must be executed by the fight thread
-        fight.execute(() -> fight.state(LeavableState.class).leave(fighter));
+        fight.execute(() -> fight.ifState(LeavableState.class, state -> state.leave(fighter)));
     }
 
     @Override

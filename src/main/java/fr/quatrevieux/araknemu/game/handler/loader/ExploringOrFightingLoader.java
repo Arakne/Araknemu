@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
 import fr.quatrevieux.araknemu.game.handler.object.UseObject;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Loader for exploring or fighter switch packet handlers
@@ -49,7 +50,7 @@ public final class ExploringOrFightingLoader implements Loader {
                 new PerformTurnAction()
             ),
             new ExploringOrFightingSwitcher<>(
-                new EndGameAction(),
+                new EndGameAction(container.get(Logger.class)),
                 new TerminateTurnAction()
             ),
             new ExploringOrFightingSwitcher<>(

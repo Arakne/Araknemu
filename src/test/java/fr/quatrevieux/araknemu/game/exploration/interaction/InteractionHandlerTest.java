@@ -106,6 +106,33 @@ class InteractionHandlerTest extends TestCase {
     }
 
     @Test
+    void endSuccess() throws Exception {
+        BlockingAction current = Mockito.spy(MyBlockingAction.class);
+
+        handler.push(current);
+        assertTrue(handler.end(current.id()));
+
+        assertFalse(handler.busy());
+        Mockito.verify(current).end();
+    }
+
+    @Test
+    void endIdDoesNotCorrespond() throws Exception {
+        BlockingAction current = Mockito.spy(MyBlockingAction.class);
+
+        handler.push(current);
+        assertFalse(handler.end(404));
+
+        assertTrue(handler.busy());
+        Mockito.verify(current, Mockito.never()).end();
+    }
+
+    @Test
+    void endWithoutPendingAction() throws Exception {
+        assertFalse(handler.end(404));
+    }
+
+    @Test
     void getNoInteraction() {
         assertThrows(IllegalArgumentException.class, () -> handler.get(Interaction.class));
     }

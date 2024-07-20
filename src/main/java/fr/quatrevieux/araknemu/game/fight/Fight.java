@@ -58,6 +58,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -158,6 +159,8 @@ public final class Fight implements Dispatcher, Sender {
 
     /**
      * Get the current fight state if the type corresponds
+     *
+     * @see Fight#ifState(Class, Consumer) for safe access
      */
     @Pure
     @SuppressWarnings("unchecked")
@@ -167,6 +170,25 @@ public final class Fight implements Dispatcher, Sender {
         }
 
         return (T) statesFlow.current();
+    }
+
+    /**
+     * Execute the consumer if the current state is the given type
+     *
+     * @return true if the state is the given type, false otherwise
+     *
+     * @see Fight#state(Class) for unsafe access
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends FightState> boolean ifState(Class<T> type, Consumer<T> consumer) {
+        final FightState state = statesFlow.current();
+
+        if (!type.isInstance(state)) {
+            return false;
+        }
+
+        consumer.accept((T) state);
+        return true;
     }
 
     /**
@@ -412,7 +434,7 @@ public final class Fight implements Dispatcher, Sender {
                 executorLock.lock();
 
                 if (!alive) {
-                    logger.warn("Cannot run task " + action.getClass().toString() + " on dead fight");
+                    logger.warn("Cannot run task " + action.toString() + " on dead fight");
                     return;
                 }
 

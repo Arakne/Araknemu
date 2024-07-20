@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
+import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
@@ -56,7 +57,7 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new CloseImmediately("my error"));
 
         assertFalse(session.isLogged());
-        Mockito.verify(logger).error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", gameSession, "my error");
+        Mockito.verify(logger).warn(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", gameSession, "my error");
     }
 
     @Test
@@ -64,7 +65,7 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new CloseImmediately("my error"), "my packet");
 
         assertFalse(session.isLogged());
-        Mockito.verify(logger).error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", gameSession + "; packet=my packet", "my error");
+        Mockito.verify(logger).warn(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", gameSession + "; packet=my packet", "my error");
     }
 
     @Test
@@ -75,11 +76,39 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
     }
 
     @Test
+    void exceptionCaughtWritePacketWithThrowableWillNotLogError() {
+        class MyFatalError extends Throwable implements WritePacket {
+            @Override
+            public String getMessage() {
+                return "my error message";
+            }
+
+            @Override
+            public Object packet() {
+                return "packet";
+            }
+        }
+
+        gameSession.exception(new MyFatalError());
+
+        requestStack.assertLast("packet");
+        Mockito.verifyNoInteractions(logger);
+    }
+
+    @Test
+    void exceptionCaughtWritePacketWithMessage() {
+        gameSession.exception(new ErrorPacket("my error message", new LoginTokenError()));
+
+        requestStack.assertLast(new LoginTokenError());
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "my error message");
+    }
+
+    @Test
     void exceptionCaughtWritePacketWithCauseException() {
         gameSession.exception(new ErrorPacket(new LoginTokenError(), new Exception("My error")));
 
         requestStack.assertLast(new LoginTokenError());
-        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "java.lang.Exception: My error");
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "java.lang.Exception: My error - java.lang.Exception: My error");
     }
 
     @Test
@@ -87,7 +116,7 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new ErrorPacket(new LoginTokenError(), new Exception("My error")), "foo");
 
         requestStack.assertLast(new LoginTokenError());
-        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession + "; packet=foo", "java.lang.Exception: My error");
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession + "; packet=foo", "java.lang.Exception: My error - java.lang.Exception: My error");
     }
 
     @Test
@@ -103,6 +132,6 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new RateLimitException());
 
         assertFalse(session.isAlive());
-        Mockito.verify(logger).error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", gameSession);
+        Mockito.verify(logger).warn(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", gameSession);
     }
 }

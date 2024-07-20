@@ -42,6 +42,12 @@ class GameActionRequestTest {
         GameActionRequest.Parser parser = new GameActionRequest.Parser();
 
         assertThrows(ParsePacketException.class, () -> parser.parse("02"));
+    }
 
+    @Test
+    void string() {
+        GameActionRequest ga = new GameActionRequest(1, new String[] {"foo", "bar"});
+
+        assertEquals("GameActionRequest{type=1, arguments=foo;bar}", ga.toString());
     }
 }

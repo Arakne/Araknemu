@@ -912,7 +912,7 @@ public final class GameModule implements ContainerModule {
                 new PvmRewardsGenerator(
                     // Issue #192 (https://github.com/Arakne/Araknemu/issues/192) : Perform SynchronizeLife before AddExperience
                     // to ensure that level up (which trigger restore life) is performed after life synchronisation
-                    Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class))),
+                    Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class), container.get(Logger.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
                     Arrays.asList(
                         new PvmXpProvider(container.get(GameConfiguration.class).fight().xpRate()),

@@ -87,7 +87,7 @@ class ActionQueueTest extends GameBaseCase {
         Mockito.when(action.id()).thenReturn(1);
 
         queue.push(action);
-        queue.end(1);
+        assertTrue(queue.end(1));
 
         Mockito.verify(action).end();
         assertFalse(queue.isBusy());
@@ -102,7 +102,7 @@ class ActionQueueTest extends GameBaseCase {
         queue.push(a1);
         queue.push(a2);
 
-        queue.end(1);
+        assertTrue(queue.end(1));
 
         Mockito.verify(a1).end();
         Mockito.verify(a2).start(queue);
@@ -138,7 +138,7 @@ class ActionQueueTest extends GameBaseCase {
 
         Mockito.verify(a3).start(queue);
 
-        queue.end(3);
+        assertTrue(queue.end(3));
 
         Mockito.verify(a3).end();
 
@@ -147,7 +147,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void endWithoutAction() {
-        assertThrows(NoSuchElementException.class, () -> queue.end(1));
+        assertFalse(queue.end(1));
     }
 
     @Test
@@ -157,7 +157,7 @@ class ActionQueueTest extends GameBaseCase {
 
         queue.push(a1);
 
-        assertThrows(NoSuchElementException.class, () -> queue.end(15), "The action ID do not corresponds");
+        assertFalse(queue.end(15));
     }
 
     @Test
@@ -220,7 +220,7 @@ class ActionQueueTest extends GameBaseCase {
         Mockito.verify(a1).start(queue);
 
         queue.push(a2);
-        queue.end(a1.id());
+        assertTrue(queue.end(a1.id()));
 
         Mockito.verify(a1).end();
         Mockito.verify(a2).start(queue);

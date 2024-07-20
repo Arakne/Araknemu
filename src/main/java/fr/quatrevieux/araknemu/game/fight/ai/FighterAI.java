@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.FightAiActionFactoryAdapter;
 import fr.quatrevieux.araknemu.game.fight.ai.memory.AiMemory;
 import fr.quatrevieux.araknemu.game.fight.ai.memory.MemoryKey;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterData;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayableFighter;
@@ -109,7 +110,10 @@ public final class FighterAI implements Runnable, AI {
             );
 
             if (action.isPresent()) {
-                currentTurn.perform(action.get());
+                if (!currentTurn.perform(action.get())) {
+                    throw new FightException("The AI has generated an invalid action  + " + action.get());
+                }
+
                 currentTurn.later(() -> fight.schedule(this, Duration.ofMillis(800)));
                 stop = false;
             }

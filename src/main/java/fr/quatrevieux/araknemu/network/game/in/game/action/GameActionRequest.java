@@ -47,6 +47,11 @@ public final class GameActionRequest implements Packet {
         return arguments;
     }
 
+    @Override
+    public String toString() {
+        return "GameActionRequest{type=" + type + ", arguments=" + String.join(";", arguments) + '}';
+    }
+
     public static final class Parser implements SinglePacketParser<GameActionRequest> {
         @Override
         public GameActionRequest parse(String input) throws ParsePacketException {

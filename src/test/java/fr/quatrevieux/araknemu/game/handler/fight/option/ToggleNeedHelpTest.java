@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.fight.option;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -79,7 +80,7 @@ class ToggleNeedHelpTest extends FightBaseCase {
 
     @Test
     void notInFightShouldFail() {
-        assertThrows(CloseImmediately.class, () -> handlePacket(new NeedHelpRequest()));
+        assertThrows(ErrorPacket.class, () -> handlePacket(new NeedHelpRequest()));
     }
 
     @Test

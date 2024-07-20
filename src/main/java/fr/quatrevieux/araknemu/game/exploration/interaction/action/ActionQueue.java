@@ -76,18 +76,21 @@ public final class ActionQueue {
      * End an action which is successfully terminated
      *
      * @param actionId The action to end
+     *
+     * @return true if the action was ended, false if there is no pending action with this id
      */
-    public void end(int actionId) {
+    public boolean end(int actionId) {
         final BlockingAction current = this.current;
 
         if (current == null || current.id() != actionId) {
-            throw new NoSuchElementException("The action ID do not corresponds");
+            return false;
         }
 
         current.end();
         this.current = null;
 
         runNextAction();
+        return true;
     }
 
     /**

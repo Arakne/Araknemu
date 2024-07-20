@@ -41,7 +41,7 @@ public final class CheckFightTerminated implements Listener<FighterDie> {
             return;
         }
 
-        fight.state(ActiveState.class).terminate();
+        fight.ifState(ActiveState.class, ActiveState::terminate);
     }
 
     @Override

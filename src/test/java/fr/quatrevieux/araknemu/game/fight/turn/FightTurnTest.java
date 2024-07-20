@@ -151,7 +151,7 @@ class FightTurnTest extends FightBaseCase {
         FightAction action = Mockito.mock(FightAction.class);
         Mockito.when(action.validate(turn)).thenReturn(false);
 
-        assertThrows(FightException.class, () -> turn.perform(action));
+        assertFalse(turn.perform(action));
     }
 
     @Test
@@ -165,7 +165,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(result.success()).thenReturn(false);
 
-        turn.perform(action);
+        assertTrue(turn.perform(action));
 
         Mockito.verify(action).start();
     }
