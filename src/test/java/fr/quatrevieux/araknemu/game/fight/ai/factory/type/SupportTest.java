@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,7 @@ class SupportTest extends AiBaseCase {
         dataSet.pushFunctionalSpells();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws ContainerException {
         super.tearDown();
