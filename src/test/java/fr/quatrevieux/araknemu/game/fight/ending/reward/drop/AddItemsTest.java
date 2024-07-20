@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ending.reward.drop;
 
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
@@ -28,8 +29,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.invocation.DoubleFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +44,7 @@ class AddItemsTest extends FightBaseCase {
     private AddItems action;
     private Fight fight;
     private PlayerFighter fighter;
+    private Logger logger;
 
     @Override
     @BeforeEach
@@ -49,7 +53,8 @@ class AddItemsTest extends FightBaseCase {
 
         dataSet.pushItemSets();
 
-        action = new AddItems(container.get(ItemService.class));
+        logger = Mockito.mock(Logger.class);
+        action = new AddItems(container.get(ItemService.class), logger); // @todo test failed with logger
         fight = createPvmFight();
         fight.nextState();
 
@@ -127,5 +132,17 @@ class AddItemsTest extends FightBaseCase {
         assertEquals(39, player.inventory().get(1).item().template().id());
         assertEquals(40, player.inventory().get(2).item().template().id());
         assertEquals(2425, player.inventory().get(3).item().template().id());
+    }
+
+    @Test
+    void applyInvalidItemShouldLogWithoutCrash() {
+        Map<Integer, Integer> items = new HashMap<>();
+        items.put(-1, 1);
+
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.addItem(-1);
+
+        action.apply(reward, fighter);
+        Mockito.verify(logger).error(Mockito.eq("Failed to create reward item -1"), Mockito.any(EntityNotFoundException.class));
     }
 }
