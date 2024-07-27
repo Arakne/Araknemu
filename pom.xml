@@ -24,18 +24,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <errorProneJavac>${com.google.errorprone:javac:jar}</errorProneJavac>
+        <!-- TODO: Performance issue for > 4.42. See https://github.com/typetools/checker-framework/issues/6623 -->
         <checkerframework.version>3.42.0</checkerframework.version>
     </properties>
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.12-alpha</version>
+    <version>0.13-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
@@ -55,7 +54,7 @@
         <dependency>
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
-            <version>2.33</version>
+            <version>2.37</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -105,7 +104,7 @@
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
-            <version>2.3.2</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.checkerframework</groupId>
@@ -139,7 +138,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.11.0</version>
+            <version>5.12.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -276,7 +275,7 @@
         <profile>
             <id>checkerframework</id>
             <activation>
-                <jdk>[1.8,)</jdk>
+                <jdk>[17,)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -297,69 +296,9 @@
                                 <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                 <annotationProcessor>org.checkerframework.checker.index.IndexChecker</annotationProcessor>
                             </annotationProcessors>
-                            <compilerArgs>
+                            <compilerArgs combine.children="append">
 <!--                                <arg>-Awarns</arg>-->
                                 <arg>-AskipDefs=(Test|BaseCase|DataSet|TestCase|PacketWithParser|OtherPacket|DummyGenerator|Accessors)$</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.checkerframework</groupId>
-                    <artifactId>checker</artifactId>
-                    <version>${checkerframework.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>checkerframework-jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
-            <properties>
-                <javac.version>9+181-r4173-1</javac.version>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>com.google.errorprone</groupId>
-                    <artifactId>javac</artifactId>
-                    <version>9+181-r4173-1</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.13.0</version>
-                        <configuration>
-                            <fork>true</fork>
-                            <compilerArgs combine.children="append">
-                                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>checkerframework-jdk9orlater</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <fork>true</fork>
-                            <compilerArgs combine.children="append">
                                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
                                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
                                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
@@ -374,6 +313,13 @@
                     </plugin>
                 </plugins>
             </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker</artifactId>
+                    <version>${checkerframework.version}</version>
+                </dependency>
+            </dependencies>
             <properties>
                 <!-- Needed for animal-sniffer-maven-plugin version 1.19 (version 1.20 is fixed). -->
                 <animal.sniffer.skip>true</animal.sniffer.skip>
