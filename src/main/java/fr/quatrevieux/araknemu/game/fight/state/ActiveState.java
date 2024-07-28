@@ -163,6 +163,10 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
             return;
         }
 
+        if (!fight.active()) {
+            throw new IllegalStateException("ActiveState is already terminated");
+        }
+
         fight.dispatcher().unregister(this);
         fight.stop();
 

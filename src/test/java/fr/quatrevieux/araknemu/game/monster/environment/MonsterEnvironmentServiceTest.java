@@ -178,7 +178,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         requestStack.assertEmpty();
     }
 
-    @RepeatedIfExceptionsTest
+    @RepeatedIfExceptionsTest(repeats = 3)
     void respawnWithDelay() throws InterruptedException, SQLException {
         LivingMonsterGroupPosition monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
