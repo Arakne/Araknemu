@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler.game;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
@@ -44,6 +45,10 @@ public final class CreateGame extends AbstractPlayingPacketHandler<CreateGameReq
     public void handle(GameSession session, GamePlayer player, CreateGameRequest packet) throws Exception {
         if (packet.type() != CreateGameRequest.Type.EXPLORATION) {
             throw new ErrorPacket(new GameCreationError());
+        }
+
+        if (player.isExploring() || player.isFighting() || player.isSpectator()) {
+            throw new CloseImmediately("The player is already in exploration or fight");
         }
 
         final ExplorationPlayer exploration = service.create(player);

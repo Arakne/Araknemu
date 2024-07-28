@@ -204,6 +204,15 @@ class ActiveStateTest extends FightBaseCase {
     }
 
     @Test
+    void terminateReadyTerminated() {
+        fight.nextState();
+        state.terminate();
+        assertFalse(fight.active());
+
+        assertThrows(IllegalStateException.class, state::terminate);
+    }
+
+    @Test
     void terminateBadState() {
         state.start(fight);
         state.terminate();

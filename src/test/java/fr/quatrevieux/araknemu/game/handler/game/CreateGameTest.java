@@ -19,9 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.handler.game;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
@@ -38,10 +44,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class CreateGameTest extends GameBaseCase {
+class CreateGameTest extends FightBaseCase {
     private CreateGame handler;
 
     @Override
@@ -66,6 +73,28 @@ class CreateGameTest extends GameBaseCase {
         } catch (ErrorPacket e) {
             assertEquals(new GameCreationError().toString(), e.packet().toString());
         }
+    }
+
+    @Test
+    void handleAlreadyExploringShouldCloseSession() throws Exception {
+        explorationPlayer();
+        assertThrows(CloseImmediately.class, () -> handler.handle(session, new CreateGameRequest(CreateGameRequest.Type.EXPLORATION)));
+    }
+
+    @Test
+    void handleInFightShouldCloseSession() throws Exception {
+        createFight(true);
+        assertThrows(CloseImmediately.class, () -> handler.handle(session, new CreateGameRequest(CreateGameRequest.Type.EXPLORATION)));
+    }
+
+    @Test
+    void handleSpectatorCloseSession() throws Exception {
+        Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
+        Spectator spectator = container.get(SpectatorFactory.class).create(gamePlayer(), fight);
+
+        player.start(spectator);
+
+        assertThrows(CloseImmediately.class, () -> handler.handle(session, new CreateGameRequest(CreateGameRequest.Type.EXPLORATION)));
     }
 
     @Test
