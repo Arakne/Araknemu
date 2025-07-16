@@ -39,7 +39,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.111.Final</version>
+            <version>4.1.118.Final</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -109,12 +109,12 @@
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-            <version>${checkerframework.version}</version>
+            <version>3.42.0</version>
         </dependency>
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-util</artifactId>
-            <version>${checkerframework.version}</version>
+            <version>3.42.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.errorprone</groupId>
@@ -288,7 +288,7 @@
                                 <path>
                                     <groupId>org.checkerframework</groupId>
                                     <artifactId>checker</artifactId>
-                                    <version>${checkerframework.version}</version>
+                                    <version>3.42.0</version>
                                 </path>
                             </annotationProcessorPaths>
                             <annotationProcessors>
