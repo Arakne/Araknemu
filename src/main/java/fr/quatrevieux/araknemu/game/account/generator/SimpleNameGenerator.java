@@ -26,8 +26,9 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
  * Simple generator for character names switching between consonants and vowels
  */
 public final class SimpleNameGenerator implements NameGenerator {
-    private static final char[] CONSONANTS = new char[] {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'};
-    private static final char[] VOWELS     = new char[] {'a', 'e', 'i', 'o', 'u', 'y'};
+    private static final String[] STARTS = new String[] {"b","br","cr","d","dr","f","fr","g","gr","k","kr","l","m","n","p","pr","r","s","sh","t","tr","v","z","x"};
+    private static final String[] VOWELS = new String[] {"a","e","i","o","u","y","ae","ia","ou","ei"};
+    private static final String[] ENDS = new String[] {"n","r","s","k","l","th","ra","dor","mir","na","lia", "os","as","en","is","or","yn","ok","ar"};
 
     private final GameConfiguration.PlayerConfiguration configuration;
     private final RandomUtil random;
@@ -39,24 +40,36 @@ public final class SimpleNameGenerator implements NameGenerator {
 
     @Override
     public String generate() {
-        final int length = random.rand(configuration.minNameGeneratedLength(), configuration.maxNameGeneratedLength());
-        final StringBuilder sb = new StringBuilder(length);
+        final int syllables = random.rand(2, 4);
+        StringBuilder sb = new StringBuilder();
 
-        boolean isVowel = random.bool();
+        for (int i = 0; i < syllables; i++) {
+            sb.append(randomStart());
+            sb.append(randomVowel());
 
-        for (int i = 0; i < length; ++i) {
-            sb.append(isVowel ? randomVowel() : randomConsonant());
-            isVowel = !isVowel;
+            // 60% de chance d'ajouter une fin
+            if (random.rand(1, 100) <= 60) {
+                sb.append(randomEnds());
+            }
         }
 
-        return sb.toString();
+        String name = sb.toString();
+        if (name.length() > configuration.maxNameGeneratedLength() || name.length() < configuration.minNameGeneratedLength()) {
+            return generate();
+        }
+
+        return name;
     }
 
-    private char randomVowel() {
+    private String randomStart() {
+        return random.of(STARTS);
+    }
+
+    private String randomVowel() {
         return random.of(VOWELS);
     }
 
-    private char randomConsonant() {
-        return random.of(CONSONANTS);
+    private String randomEnds() {
+        return random.of(ENDS);
     }
 }
