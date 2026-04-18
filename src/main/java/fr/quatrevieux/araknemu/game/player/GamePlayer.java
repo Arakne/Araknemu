@@ -315,7 +315,7 @@ public final class GamePlayer implements PlayerSessionScope {
     }
 
     @Pure
-    Player entity() {
+    public Player entity() {
         return entity;
     }
 }

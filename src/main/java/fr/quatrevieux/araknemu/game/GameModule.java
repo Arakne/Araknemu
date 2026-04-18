@@ -52,6 +52,7 @@ import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepos
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
+import fr.quatrevieux.araknemu.data.living.repository.social.friend.FriendRepository;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
@@ -255,6 +256,7 @@ import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
+import fr.quatrevieux.araknemu.game.social.friend.FriendService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import fr.quatrevieux.araknemu.network.game.GameExceptionConfigurator;
@@ -1141,5 +1143,12 @@ public final class GameModule implements ContainerModule {
             container.get(GameConfiguration.class),
             container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
         ));
+
+        configurator.persist(
+                FriendService.class,
+                container -> new FriendService(
+                        container.get(FriendRepository.class)
+                )
+        );
     }
 }

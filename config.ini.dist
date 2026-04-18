@@ -165,6 +165,9 @@ id = ${GAME_SERVER_ID:-1}
 ; > Restore life points when player reach a new level
 ; > By default true
 ;player.restoreLifeOnLevelUp = true
+; > Maximum number of friends the friend list can hold
+; > By default 50 (50 friends)
+;player.friends.max = 50
 
 ; Chat
 ; ----

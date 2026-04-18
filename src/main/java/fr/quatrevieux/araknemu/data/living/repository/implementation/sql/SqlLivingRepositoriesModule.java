@@ -34,12 +34,14 @@ import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepos
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
+import fr.quatrevieux.araknemu.data.living.repository.social.friend.FriendRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.IpAddressTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -144,6 +146,11 @@ public final class SqlLivingRepositoriesModule implements ContainerModule {
         configurator.persist(
             ItemEffectsTransformer.class,
             container -> new ItemEffectsTransformer()
+        );
+
+        configurator.persist(
+                FriendRepository.class,
+                container -> new SqlFriendRepository(executor, container.get(GameConfiguration.class))
         );
 
         configurator.persist(InstantTransformer.class, container -> new InstantTransformer());

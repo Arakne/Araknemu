@@ -199,6 +199,14 @@ public final class GameConfiguration {
         return new FightConfiguration();
     }
 
+    /**
+     * Maximum number of friends the friend list can hold
+     * By default 100
+     */
+    public @NonNegative int maxFriends() {
+        return pool.nonNegativeInteger("player.friends.max", 50);
+    }
+
     public final class PlayerConfiguration {
         /**
          * The player name regex

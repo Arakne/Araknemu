@@ -126,6 +126,10 @@ public final class AccountService implements EventsSubscriber {
         return repository.findByPseudo(pseudo).map(this::instantiate);
     }
 
+    public Account findById(Integer id) {
+        return repository.findById(id);
+    }
+
     @Override
     public Listener[] listeners() {
         return new Listener[] {

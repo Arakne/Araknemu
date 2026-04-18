@@ -168,6 +168,14 @@ final class SqlAccountRepository implements AccountRepository {
         );
     }
 
+    @Override
+    public Account findById(int id) throws RepositoryException {
+        return utils.findOne(
+                "SELECT * FROM ACCOUNT WHERE ACCOUNT_ID = ?",
+                rs -> rs.setInt(1, id)
+        );
+    }
+
     private static class Loader implements RepositoryUtils.Loader<Account> {
         private final PermissionsTransformer permissionsTransformer;
 

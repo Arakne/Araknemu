@@ -59,4 +59,11 @@ public interface AccountRepository extends MutableRepository<Account> {
      * @return List of accounts
      */
     public Collection<Account> findByIds(int[] ids);
+
+    /**
+     * Find and account by its ID
+     * @param id the account ID
+     * @return the retrieved account
+     */
+    public Account findById(int id);
 }
