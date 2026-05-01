@@ -32,11 +32,12 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
-import fr.quatrevieux.araknemu.game.listener.map.SendCreatureMove;
 import fr.quatrevieux.araknemu.game.listener.map.SendNewSprite;
+import fr.quatrevieux.araknemu.game.listener.map.SendCreatureMove;
+import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRemoved;
 import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeCell;
 import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeOrientation;
-import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRemoved;
+import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeEmote;
 import fr.quatrevieux.araknemu.game.listener.map.fight.HideFightOnStart;
 import fr.quatrevieux.araknemu.game.listener.map.fight.SendCancelledFight;
 import fr.quatrevieux.araknemu.game.listener.map.fight.SendCreatedFight;
@@ -152,6 +153,7 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
         map.dispatcher().add(new SendPlayerChangeCell(map));
         map.dispatcher().add(new SendPlayerChangeOrientation(map));
         map.dispatcher().add(new SendCreatureMove(map));
+        map.dispatcher().add(new SendPlayerChangeEmote(map));
 
         dispatcher.dispatch(new MapLoaded(map));
 

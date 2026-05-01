@@ -22,8 +22,12 @@ package fr.quatrevieux.araknemu.game.listener.player;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.data.constant.Emote;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
+import fr.quatrevieux.araknemu.game.player.emote.event.EmoteChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
+import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 
@@ -43,7 +47,7 @@ public final class LifeRegeneration implements EventsSubscriber {
             new Listener<StartExploration>() {
                 @Override
                 public void on(StartExploration event) {
-                    final int rate = configuration.baseLifeRegeneration();
+                    final int rate = calculateRate(event.player().player(), false);
 
                     if (rate > 0) {
                         event.player().player().properties().life().startLifeRegeneration(rate);
@@ -54,6 +58,24 @@ public final class LifeRegeneration implements EventsSubscriber {
                 @Override
                 public Class<StartExploration> event() {
                     return StartExploration.class;
+                }
+            },
+            new Listener<EmoteChanged>() {
+                @Override
+                public void on(EmoteChanged event) {
+                    Emote emote = Emote.fromId(event.getEmoteId());
+                    int rate = calculateRate(event.player().player(), event.isEmoteActivated() && emote.boostsLifeRegeneration());
+
+                    PlayerLife life = event.player().player().properties().life();
+                    if (rate > 0) {
+                        life.startLifeRegeneration(rate);
+                        event.player().send(new StartLifeTimer(rate));
+                    }
+                }
+
+                @Override
+                public Class<EmoteChanged> event() {
+                    return EmoteChanged.class;
                 }
             },
 
@@ -70,5 +92,22 @@ public final class LifeRegeneration implements EventsSubscriber {
                 }
             },
         };
+    }
+
+    /**
+     * Calculate the regeneration rate based on level and sitting state.
+     * The higher the level, the longer the interval (slower regeneration).
+     */
+    private int calculateRate(GamePlayer player, boolean isSitting) {
+        int baseRate = configuration.baseLifeRegeneration();
+
+        if (baseRate <= 0) {
+            return 0;
+        }
+
+        // Apply level penalty: +10ms per level
+        int rate = baseRate + (player.level() * 10);
+
+        return isSitting ? rate / 2 : rate;
     }
 }

@@ -22,17 +22,19 @@ package fr.quatrevieux.araknemu.game.exploration;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.data.constant.Emote;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Explorer;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
-import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
+import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
+import fr.quatrevieux.araknemu.game.player.emote.event.EmoteChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
+import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
+import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.OrientationChanged;
-import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -44,6 +46,7 @@ import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.game.in.emote.SetEmoteRequest;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -62,6 +65,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
     private @Nullable ExplorationMap map;
     private @Nullable ExplorationMapCell cell;
     private Direction orientation = Direction.SOUTH_EAST;
+    private Emote currentEmote = Emote.NONE;
 
     @SuppressWarnings({"assignment", "argument"})
     public ExplorationPlayer(GamePlayer player) {
@@ -147,6 +151,9 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
         return orientation;
     }
 
+    @Pure
+    public Emote currentEmote() { return currentEmote; }
+
     /**
      * @todo Returns {@code Optional<ExplorationMap>}
      */
@@ -167,6 +174,13 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
         player.setPosition(player.position().newCell(cell.id()));
         this.cell = cell;
         this.orientation = orientation;
+
+        if (currentEmote != Emote.NONE) {
+            if (currentEmote.isStatic()) {
+                stopEmote(currentEmote);
+            }
+            currentEmote = Emote.NONE;
+        }
 
         map.dispatch(new PlayerMoveFinished(this, cell));
     }
@@ -295,5 +309,36 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
         if (map != null) {
             map.dispatch(new OrientationChanged(this, orientation));
         }
+    }
+
+    /**
+     * Activate or desactivate emote
+     */
+    public void setCurrentEmote(Emote requestedEmote) {
+        if(currentEmote == requestedEmote) {
+            if (requestedEmote.isStatic()) {
+                stopEmote(requestedEmote);
+                currentEmote = Emote.NONE;
+            } else {
+                playEmote(requestedEmote);
+            }
+            return;
+        }
+        if(currentEmote != Emote.NONE && currentEmote.isStatic()) {
+            stopEmote(currentEmote);
+        }
+        playEmote(requestedEmote);
+        if(requestedEmote.isStatic())
+            currentEmote = requestedEmote;
+        else
+            currentEmote = Emote.NONE;
+    }
+
+    private void playEmote(Emote emoteToPlay) {
+        dispatch(new EmoteChanged(this, emoteToPlay, true));
+    }
+
+    private void stopEmote(Emote emoteToStop) {
+        dispatch(new EmoteChanged(this, emoteToStop, false));
     }
 }

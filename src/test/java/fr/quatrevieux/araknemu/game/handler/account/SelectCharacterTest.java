@@ -99,7 +99,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void handleWillSendChatChannels() throws Exception {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics(), new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics(), new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0, 1)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 

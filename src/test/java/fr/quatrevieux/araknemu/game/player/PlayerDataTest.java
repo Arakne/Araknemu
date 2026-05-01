@@ -78,7 +78,7 @@ class PlayerDataTest  extends GameBaseCase {
         characteristics.set(Characteristic.INTELLIGENCE, 150);
         characteristics.set(Characteristic.VITALITY, 50);
 
-        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class), 0, 0, -1, 5450000, new Position(10540, 210), 0));
+        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class), 0, 0, -1, 5450000, new Position(10540, 210), 0, 1));
 
         SpellBook spellBook = container.get(SpellBookService.class).load(session, entity);
         GamePlayerExperience experience = container.get(PlayerExperienceService.class).load(session, entity);

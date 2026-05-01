@@ -55,8 +55,9 @@ public final class Player implements WalletEntity {
     private @NonNegative long experience;
     private Position savedPosition;
     private @NonNegative long kamas;
+    private @NonNegative long emotes;
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, @Positive int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, @NonNegative int boostPoints, @NonNegative int spellPoints, @NonNegative int life, @NonNegative long experience, Position savedPosition, @NonNegative long kamas) {
+    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, @Positive int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, @NonNegative int boostPoints, @NonNegative int spellPoints, @NonNegative int life, @NonNegative long experience, Position savedPosition, @NonNegative long kamas, @NonNegative long emotes) {
         this.id = id;
         this.accountId = accountId;
         this.serverId = serverId;
@@ -74,10 +75,11 @@ public final class Player implements WalletEntity {
         this.experience = experience;
         this.savedPosition = savedPosition;
         this.kamas = kamas;
+        this.emotes = emotes;
     }
 
     public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, @Positive int level, MutableCharacteristics characteristics) {
-        this(id, accountId, serverId, name, race, gender, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(0, 0), 0);
+        this(id, accountId, serverId, name, race, gender, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(0, 0), 0, 0);
     }
 
     public Player(int id) {
@@ -190,6 +192,14 @@ public final class Player implements WalletEntity {
         this.kamas = kamas;
     }
 
+    public @NonNegative long emotes() {
+        return emotes;
+    }
+
+    public void setEmotes(@NonNegative long emotes) {
+        this.emotes = emotes;
+    }
+
     /**
      * Create a new player with new race
      *
@@ -213,7 +223,8 @@ public final class Player implements WalletEntity {
             life,
             experience,
             savedPosition,
-            kamas
+            kamas,
+            emotes
         );
     }
 
@@ -231,6 +242,6 @@ public final class Player implements WalletEntity {
      * @see fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository#getForGame(Player)
      */
     public static Player forGame(int playerId, int accountId, int serverId) {
-        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0, Integer.MAX_VALUE, 0, null, 0);
+        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0, Integer.MAX_VALUE, 0, null, 0, 0);
     }
 }

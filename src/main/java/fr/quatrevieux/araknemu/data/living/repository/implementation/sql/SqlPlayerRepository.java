@@ -84,6 +84,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                     "SAVED_MAP_ID INTEGER," +
                     "SAVED_CELL_ID INTEGER," +
                     "PLAYER_KAMAS BIGINT," +
+                    "PLAYER_EMOTES BIGINT," +
                     "DELETED_AT DATETIME NULL DEFAULT NULL," +
                     "UNIQUE (PLAYER_NAME, SERVER_ID)" +
                 ")"
@@ -108,8 +109,8 @@ final class SqlPlayerRepository implements PlayerRepository {
     public Player add(Player entity) throws RepositoryException {
         return utils.update(
             "INSERT INTO PLAYER " +
-                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS, MAP_ID, CELL_ID, CHANNELS, BOOST_POINTS, SPELL_POINTS, LIFE_POINTS, PLAYER_EXPERIENCE, SAVED_MAP_ID, SAVED_CELL_ID, PLAYER_KAMAS) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS, MAP_ID, CELL_ID, CHANNELS, BOOST_POINTS, SPELL_POINTS, LIFE_POINTS, PLAYER_EXPERIENCE, SAVED_MAP_ID, SAVED_CELL_ID, PLAYER_KAMAS, PLAYER_EMOTES) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             stmt -> {
                 stmt.setInt(1,     entity.accountId());
                 stmt.setInt(2,     entity.serverId());
@@ -131,6 +132,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                 stmt.setInt(18,    entity.savedPosition().map());
                 stmt.setInt(19,    entity.savedPosition().cell());
                 stmt.setLong(20,   entity.kamas());
+                stmt.setLong(21,   entity.emotes());
             },
             entity
         );
@@ -266,7 +268,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     public void save(Player player) {
         final int rows = utils.update(
             "UPDATE PLAYER SET " +
-                "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ?, CHANNELS = ?, BOOST_POINTS = ?, SPELL_POINTS = ?, LIFE_POINTS = ?, PLAYER_EXPERIENCE = ?, SAVED_MAP_ID = ?, SAVED_CELL_ID = ?, PLAYER_KAMAS = ? " +
+                "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ?, CHANNELS = ?, BOOST_POINTS = ?, SPELL_POINTS = ?, LIFE_POINTS = ?, PLAYER_EXPERIENCE = ?, SAVED_MAP_ID = ?, SAVED_CELL_ID = ?, PLAYER_KAMAS = ?, PLAYER_EMOTES = ? " +
                 "WHERE PLAYER_ID = ?",
             stmt -> {
                 stmt.setInt(1,    player.level());
@@ -281,7 +283,8 @@ final class SqlPlayerRepository implements PlayerRepository {
                 stmt.setInt(10,   player.savedPosition().map());
                 stmt.setInt(11,   player.savedPosition().cell());
                 stmt.setLong(12,  player.kamas());
-                stmt.setInt(13,   player.id());
+                stmt.setLong(13,  player.emotes());
+                stmt.setInt(14,   player.id());
             }
         );
 
@@ -318,7 +321,8 @@ final class SqlPlayerRepository implements PlayerRepository {
                     record.getNonNegativeInt("SAVED_MAP_ID"),
                     record.getNonNegativeInt("SAVED_CELL_ID")
                 ),
-                record.getNonNegativeLong("PLAYER_KAMAS")
+                record.getNonNegativeLong("PLAYER_KAMAS"),
+                record.getNonNegativeLong("PLAYER_EMOTES")
             );
         }
 

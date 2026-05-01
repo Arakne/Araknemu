@@ -151,14 +151,14 @@ public class GameDataSet extends TestingDataSet {
      * Create a simple player data
      */
     public Player createPlayer(int id) {
-        return new Player(id, 10000 + id, 2, "PLAYER_" + id, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0);
+        return new Player(id, 10000 + id, 2, "PLAYER_" + id, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0, 1);
     }
 
     /**
      * Create an push a new player
      */
     public Player pushPlayer(String name, int accountId, int serverId) throws ContainerException {
-        Player player = new Player(-1, accountId, serverId, name, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0);
+        Player player = new Player(-1, accountId, serverId, name, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0, 1);
 
         return push(player);
     }

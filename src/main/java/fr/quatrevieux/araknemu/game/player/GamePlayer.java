@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.player.emote.EmoteBook;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.LoadedInventory;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
@@ -56,6 +57,7 @@ public final class GamePlayer implements PlayerSessionScope {
     private final SpriteInfo spriteInfo;
     private final PlayerData data;
     private final Restrictions restrictions;
+    private final EmoteBook emotes;
 
     private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
@@ -70,6 +72,7 @@ public final class GamePlayer implements PlayerSessionScope {
         this.service = service;
         this.channels = new ChannelSet(entity.channels(), dispatcher);
         this.inventory = inventory.attach(this);
+        this.emotes = new EmoteBook(dispatcher, entity);
         this.data = new PlayerData(dispatcher, this, entity, spells, experience);
         this.spriteInfo = new GamePlayerSpriteInfo(entity, this.inventory);
         this.restrictions = new Restrictions(session);
@@ -120,6 +123,14 @@ public final class GamePlayer implements PlayerSessionScope {
     @Pure
     public int id() {
         return entity.id();
+    }
+
+    /**
+     * Get the player level
+     */
+    @Pure
+    public int level() {
+        return entity.level();
     }
 
     @Pure
@@ -305,6 +316,14 @@ public final class GamePlayer implements PlayerSessionScope {
     @Pure
     public Restrictions restrictions() {
         return restrictions;
+    }
+
+    /**
+     * Get the current player emotes
+     */
+    @Pure
+    public EmoteBook getEmotes() {
+        return emotes;
     }
 
     /**

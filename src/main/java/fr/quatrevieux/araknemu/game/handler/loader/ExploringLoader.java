@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.handler.dialog.PerformResponseAction;
 import fr.quatrevieux.araknemu.game.handler.dialog.StartDialog;
 import fr.quatrevieux.araknemu.game.handler.dialog.StopDialog;
 import fr.quatrevieux.araknemu.game.handler.emote.ChangeOrientation;
+import fr.quatrevieux.araknemu.game.handler.emote.PlayEmote;
 import fr.quatrevieux.araknemu.game.handler.exchange.AcceptExchange;
 import fr.quatrevieux.araknemu.game.handler.exchange.AskExchange;
 import fr.quatrevieux.araknemu.game.handler.exchange.LeaveExchange;
@@ -69,6 +70,7 @@ public final class ExploringLoader implements Loader {
             new BuyItem(),
             new SellItem(),
             new GoToGeolocation(container.get(GeolocationService.class)),
+            new PlayEmote(),
         };
     }
 }
