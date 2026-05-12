@@ -908,21 +908,26 @@ public final class GameModule implements ContainerModule {
 
         configurator.persist(
             PvmType.class,
-            container -> new PvmType(
-                new PvmRewardsGenerator(
-                    // Issue #192 (https://github.com/Arakne/Araknemu/issues/192) : Perform SynchronizeLife before AddExperience
-                    // to ensure that level up (which trigger restore life) is performed after life synchronisation
-                    Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class), container.get(Logger.class))),
-                    Arrays.asList(new SetDead(), new ReturnToSavePosition()),
-                    Arrays.asList(
-                        new PvmXpProvider(container.get(GameConfiguration.class).fight().xpRate()),
-                        new PvmKamasProvider(),
-                        new PvmItemDropProvider(container.get(GameConfiguration.class).fight().dropRate()),
-                        new PvmEndFightActionProvider()
-                    )
-                ),
-                container.get(GameConfiguration.class).fight()
-            )
+            container -> {
+                GameConfiguration.FightConfiguration fightConfig = container.get(GameConfiguration.class).fight();
+                SynchronizeLife syncLife = new SynchronizeLife(fightConfig.pvmFullHealReward());
+
+                return new PvmType(
+                    new PvmRewardsGenerator(
+                        // Issue #192 (https://github.com/Arakne/Araknemu/issues/192) : Perform SynchronizeLife before AddExperience
+                        // to ensure that level up (which trigger restore life) is performed after life synchronisation
+                        Arrays.asList(syncLife, new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class), container.get(Logger.class))),
+                        Arrays.asList(syncLife, new ReturnToSavePosition()),
+                        Arrays.asList(
+                            new PvmXpProvider(container.get(GameConfiguration.class).fight().xpRate()),
+                            new PvmKamasProvider(),
+                            new PvmItemDropProvider(container.get(GameConfiguration.class).fight().dropRate()),
+                            new PvmEndFightActionProvider()
+                        )
+                    ),
+                    container.get(GameConfiguration.class).fight()
+                );
+            }
         );
 
         configurator.persist(

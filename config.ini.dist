@@ -228,6 +228,9 @@ fight.threadsCount = ${FIGHT_THREADS:-4}
 ; > The value should be a duration string like 30s, 1m10s
 ; > Default value : 45s
 ;fight.pvm.placementDuration = 45s
+; > Should fighters be fully healed at the end of PVM fights ?
+; > Default value : false
+;fight.pvm.fullHealReward = ${PVM_FULL_HEAL_REWARD:-false}
 ; > Get the XP multiplier
 ; > The value should be a positive decimal number.
 ; > Default value : 1.0

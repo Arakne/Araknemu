@@ -424,6 +424,14 @@ public final class GameConfiguration {
         }
 
         /**
+         * Should fighters be fully healed at the end of PVM fights ?
+         * Default value : false
+         */
+        public boolean pvmFullHealReward() {
+            return pool.bool("fight.pvm.fullHealReward", false);
+        }
+
+        /**
          * Get the XP multiplier
          * The value should be a positive decimal number.
          * Default value : 1.0

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SynchronizeLifeTest extends FightBaseCase {
-    private SynchronizeLife action;
+    
     private Fight fight;
 
     @Override
@@ -41,27 +41,65 @@ class SynchronizeLifeTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        action = new SynchronizeLife();
         fight = createPvmFight();
         fight.nextState();
     }
 
     @Test
-    void applyOnPlayer() {
+    void givenStandardSyncActionWithDamagedWinner_applyShouldSyncHp() {
+        assertEquals(295, player.properties().life().current());        
         player.fighter().life().damage(player.fighter(), 100);
 
         DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
 
-        action.apply(reward, player.fighter());
+        standardSynclife().apply(reward, player.fighter());
 
         assertEquals(195, player.properties().life().current());
     }
 
     @Test
-    void applyOnPlayerFullLife() {
+    void givenStandardSyncActionWithFullLifeWinner_applyShouldKeepFullLife() {
         DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
 
-        action.apply(reward, player.fighter());
+        standardSynclife().apply(reward, player.fighter());
+
+        assertTrue(player.properties().life().isFull());
+    }
+
+    @Test
+    void givenStandardSyncActionWithLooser_applySetsHpsToZero() {
+        DropReward reward = new DropReward(RewardType.LOOSER, player.fighter(), Collections.emptyList());
+
+        standardSynclife().apply(reward, player.fighter());
+
+        assertEquals(0, player.properties().life().current());
+    }
+
+    @Test
+    void givenfullHealSyncLifeWithDamagedWinner_applyShouldFullyHeal() {
+        player.fighter().life().damage(player.fighter(), 100);
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+
+        fullHealSyncLife().apply(reward, player.fighter());
+
+        assertTrue(player.properties().life().isFull());
+    }
+
+    @Test
+    void givenfullHealSyncLifeWithFullLifeWinner_applyShouldKeepFullLife() {
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+
+        fullHealSyncLife().apply(reward, player.fighter());
+
+        assertTrue(player.properties().life().isFull());
+    }
+
+    @Test
+    void givenfullHealSyncLifeWithLooser_applyShouldFullyHeal() {
+        DropReward reward = new DropReward(RewardType.LOOSER, player.fighter(), Collections.emptyList());
+
+        fullHealSyncLife().apply(reward, player.fighter());
 
         assertTrue(player.properties().life().isFull());
     }
@@ -72,6 +110,14 @@ class SynchronizeLifeTest extends FightBaseCase {
 
         DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
 
-        action.apply(reward, fighter);
+        standardSynclife().apply(reward, fighter);
+    }
+
+    private SynchronizeLife standardSynclife() {
+        return new SynchronizeLife(false);
+    }
+
+    private SynchronizeLife fullHealSyncLife() {
+        return new SynchronizeLife(true);
     }
 }
