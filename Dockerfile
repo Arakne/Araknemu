@@ -18,7 +18,7 @@ RUN mvn package -DskipTests -P!checkerframework
 RUN cp target/araknemu-*-with-dependencies.jar araknemu.jar
 
 # Second stage: contains only runtime dependencies
-FROM openjdk:${JAVA_VERSION}-jdk-slim AS production
+FROM eclipse-temurin:17.0.20_8-jdk-noble AS production
 
 ENV AUTH_PORT=4444
 ENV GAME_PORT=5555
